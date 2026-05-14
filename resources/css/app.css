@@ -1,0 +1,536 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&family=Public+Sans:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ===========================
+   Base Styles — Sneat Theme
+   =========================== */
+body {
+    font-family: 'Public Sans', 'Lato', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Poppins', sans-serif;
+}
+
+/* ===========================
+   Scroll Behavior
+   =========================== */
+html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 80px;
+}
+
+/* ===========================
+   Scrollbar — Sneat Style
+   =========================== */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+::-webkit-scrollbar-thumb {
+    background: #d9dee3;
+    border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #a1b0cb;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+    background: #434463;
+}
+.dark ::-webkit-scrollbar-thumb:hover {
+    background: #696cff;
+}
+
+/* ===========================
+   Sneat Sidebar Styles
+   =========================== */
+.sidebar-menu-link {
+    @apply flex items-center gap-3 px-4 py-2.5 mx-3 rounded-md text-sm font-medium transition-all duration-200;
+}
+.sidebar-menu-link.active {
+    @apply bg-[#e7e7ff] text-[#696cff];
+}
+.dark .sidebar-menu-link.active {
+    @apply bg-[#696cff] text-white;
+}
+.sidebar-menu-link:not(.active) {
+    @apply text-[#697a8d] hover:bg-[#f5f5f9] hover:text-[#566a7f];
+}
+.dark .sidebar-menu-link:not(.active) {
+    @apply text-[#a1b0cb] hover:bg-[#232333] hover:text-[#d5d5e2];
+}
+
+/* ===========================
+   Sneat Card Base
+   =========================== */
+.sneat-card {
+    @apply bg-white rounded-lg shadow-sneat border border-[#d9dee3];
+}
+.dark .sneat-card {
+    @apply bg-[#2b2c40] shadow-sneat-dark border-[#434463];
+}
+
+/* ===========================
+   Sneat Form Inputs
+   =========================== */
+.sneat-input {
+    @apply block w-full px-3 py-2 bg-white border border-[#d9dee3] rounded-md text-sm text-[#697a8d] placeholder-[#a1b0cb] transition-colors duration-200;
+}
+.sneat-input:focus {
+    @apply border-[#696cff] ring-1 ring-[#696cff] outline-none;
+}
+.dark .sneat-input {
+    @apply bg-[#232333] border-[#434463] text-[#d5d5e2] placeholder-[#636578];
+}
+
+/* ===========================
+   Sneat Floating Navbar
+   =========================== */
+.sneat-navbar {
+    @apply bg-white/95 backdrop-blur-md rounded-xl mx-4 mt-4 py-3 px-6;
+    box-shadow: 0 2px 6px 0 rgba(67, 89, 113, 0.12);
+}
+.dark .sneat-navbar {
+    @apply bg-[#2b2c40]/95;
+    box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.25);
+}
+
+/* ===========================
+   Sneat Badge / Pill
+   =========================== */
+.sneat-badge {
+    @apply inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold;
+}
+
+/* ===========================
+   Sneat Button Primary
+   =========================== */
+.sneat-btn-primary {
+    @apply inline-flex items-center gap-2 px-4 py-2 bg-[#696cff] text-white text-sm font-medium rounded-md shadow-sm hover:bg-[#5a5de6] transition-all duration-200;
+}
+.sneat-btn-primary:hover {
+    box-shadow: 0 2px 10px rgba(105, 108, 255, 0.4);
+    transform: translateY(-1px);
+}
+
+.sneat-btn-secondary {
+    @apply inline-flex items-center gap-2 px-4 py-2 bg-white text-[#697a8d] border border-[#d9dee3] text-sm font-medium rounded-md hover:bg-[#f5f5f9] transition-all duration-200;
+}
+.dark .sneat-btn-secondary {
+    @apply bg-[#2b2c40] text-[#a1b0cb] border-[#434463] hover:bg-[#232333];
+}
+
+/* ===========================
+   Theme Dropdown Menu
+   =========================== */
+.theme-dropdown {
+    @apply absolute right-0 mt-2 w-44 bg-white rounded-lg border border-[#d9dee3] py-1 z-50 opacity-0 scale-95 transition-all duration-200 origin-top-right pointer-events-none;
+    box-shadow: 0 4px 18px rgba(67, 89, 113, 0.1);
+}
+.theme-dropdown.show {
+    @apply opacity-100 scale-100 pointer-events-auto;
+}
+.dark .theme-dropdown {
+    @apply bg-[#2b2c40] border-[#434463];
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.25);
+}
+.theme-dropdown-item {
+    @apply flex items-center gap-2.5 px-4 py-2 text-sm text-[#697a8d] hover:bg-[#f5f5f9] transition-colors cursor-pointer;
+}
+.theme-dropdown-item.active {
+    @apply text-[#696cff] bg-[#e7e7ff];
+}
+.dark .theme-dropdown-item {
+    @apply text-[#a1b0cb] hover:bg-[#232333];
+}
+.dark .theme-dropdown-item.active {
+    @apply text-white bg-[#696cff];
+}
+
+/* ===========================
+   User Dropdown Menu — Sneat
+   =========================== */
+.user-dropdown {
+    @apply absolute right-0 mt-2 w-56 bg-white rounded-lg border border-[#d9dee3] py-1 z-50 opacity-0 scale-95 transition-all duration-200 origin-top-right pointer-events-none;
+    box-shadow: 0 4px 18px rgba(67, 89, 113, 0.1);
+}
+.user-dropdown.show {
+    @apply opacity-100 scale-100 pointer-events-auto;
+}
+.dark .user-dropdown {
+    @apply bg-[#2b2c40] border-[#434463];
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.25);
+}
+
+/* ===========================
+   Fade / Scroll Animations
+   =========================== */
+.fade-up {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: all 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.fade-up.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+.fade-left {
+    opacity: 0;
+    transform: translateX(-40px);
+    transition: all 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.fade-left.show {
+    opacity: 1;
+    transform: translateX(0);
+}
+.fade-right {
+    opacity: 0;
+    transform: translateX(40px);
+    transition: all 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.fade-right.show {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* Staggered children */
+.stagger-children > * {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.stagger-children.show > *:nth-child(1) { transition-delay: 0.1s; opacity: 1; transform: translateY(0); }
+.stagger-children.show > *:nth-child(2) { transition-delay: 0.2s; opacity: 1; transform: translateY(0); }
+.stagger-children.show > *:nth-child(3) { transition-delay: 0.3s; opacity: 1; transform: translateY(0); }
+.stagger-children.show > *:nth-child(4) { transition-delay: 0.4s; opacity: 1; transform: translateY(0); }
+.stagger-children.show > *:nth-child(5) { transition-delay: 0.5s; opacity: 1; transform: translateY(0); }
+.stagger-children.show > *:nth-child(6) { transition-delay: 0.6s; opacity: 1; transform: translateY(0); }
+
+/* ===========================
+   Smooth Transition Utility
+   =========================== */
+.transition-smooth {
+    transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ===========================
+   Curriculum Tabs
+   =========================== */
+.tab-btn {
+    padding: 10px 24px;
+    border-radius: 9999px;
+    font-weight: 600;
+    font-family: 'Poppins', sans-serif;
+    color: #374151;
+    background: transparent;
+    border: 2px solid #E5E7EB;
+    transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+    cursor: pointer;
+}
+.tab-btn:hover {
+    background: #EFF6FF;
+    color: #696cff;
+    border-color: #e7e7ff;
+    transform: translateY(-2px);
+}
+.tab-btn.active {
+    background: linear-gradient(135deg, #696cff, #7b7dff);
+    color: white;
+    border-color: #696cff;
+    box-shadow: 0 4px 15px rgba(105, 108, 255, 0.35);
+}
+
+.tab-content {
+    opacity: 0;
+    transform: translateY(15px);
+    transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.tab-content:not(.hidden) {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* ===========================
+   Card Item (Curriculum)
+   =========================== */
+.card-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 20px;
+    border-radius: 14px;
+    background: #FFFFFF;
+    font-weight: 500;
+    color: #374151;
+    border: 1px solid #F3F4F6;
+    transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.card-item:hover {
+    background: #e7e7ff;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(105, 108, 255, 0.1);
+    border-color: #d4d5ff;
+}
+
+/* ===========================
+   FAQ Accordion
+   =========================== */
+.faq-item .faq-answer {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s cubic-bezier(0.22, 1, 0.36, 1), padding 0.3s ease;
+    padding: 0 24px;
+}
+.faq-item.open .faq-answer {
+    max-height: 300px;
+    padding: 16px 24px 24px;
+}
+.faq-item .faq-chevron {
+    transition: transform 0.3s ease;
+}
+.faq-item.open .faq-chevron {
+    transform: rotate(180deg);
+}
+
+/* ===========================
+   Carousel
+   =========================== */
+.carousel-track {
+    display: flex;
+    transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.carousel-slide {
+    min-width: 100%;
+    padding: 0 12px;
+    box-sizing: border-box;
+}
+
+/* ===========================
+   Timeline
+   =========================== */
+.timeline-line {
+    position: absolute;
+    left: 20px;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: linear-gradient(180deg, #696cff, #059669);
+    border-radius: 2px;
+}
+.timeline-dot {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #696cff, #7b7dff);
+    border: 3px solid white;
+    box-shadow: 0 0 0 3px rgba(105, 108, 255, 0.2);
+    position: absolute;
+    left: 13px;
+    top: 24px;
+    z-index: 2;
+}
+
+/* ===========================
+   Glassmorphism Card
+   =========================== */
+.glass-card {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* ===========================
+   Gradient Text
+   =========================== */
+.gradient-text {
+    background: linear-gradient(135deg, #696cff, #059669);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* ===========================
+   Islamic Pattern Overlay
+   =========================== */
+.islamic-pattern {
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23696cff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+
+/* ===========================
+   Section Headings
+   =========================== */
+.section-heading {
+    position: relative;
+    display: inline-block;
+}
+.section-heading::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 4px;
+    background: linear-gradient(90deg, #696cff, #059669);
+    border-radius: 2px;
+}
+
+/* ===========================
+   Hover Card Effect
+   =========================== */
+.hover-card {
+    transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.hover-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px rgba(105, 108, 255, 0.12);
+}
+
+/* ===========================
+   Requirement Check Animation
+   =========================== */
+.req-item {
+    transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+    cursor: default;
+}
+.req-item:hover {
+    background: linear-gradient(135deg, #e7e7ff, #ECFDF5);
+    transform: translateX(8px);
+    border-radius: 12px;
+}
+.req-item:hover .req-check {
+    transform: scale(1.2);
+}
+
+/* ===========================
+   Pricing Card Highlight
+   =========================== */
+.pricing-highlight {
+    position: relative;
+    overflow: hidden;
+}
+.pricing-highlight::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #696cff, #059669);
+}
+
+/* ===========================
+   Button Ripple Effect
+   =========================== */
+.btn-primary {
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(135deg, #696cff, #7b7dff);
+    color: white;
+    transition: all 0.3s ease;
+}
+.btn-primary:hover {
+    box-shadow: 0 8px 25px rgba(105, 108, 255, 0.4);
+    transform: translateY(-2px);
+}
+.btn-primary::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+.btn-primary:active::after {
+    width: 300px;
+    height: 300px;
+}
+
+/* ===========================
+    Keyframes untuk efek mengambang yang halus
+   =========================== */
+@keyframes floating {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0px); }
+}
+    
+.animate-floating {
+    animation: floating 3s ease-in-out infinite;
+}
+
+/* ===========================
+   Sneat Table Styles
+   =========================== */
+.sneat-table {
+    @apply w-full text-left text-sm;
+}
+.sneat-table thead th {
+    @apply px-5 py-3.5 text-xs font-semibold uppercase tracking-wider text-[#566a7f] bg-[#f5f5f9];
+}
+.dark .sneat-table thead th {
+    @apply text-[#a1b0cb] bg-[#232333];
+}
+.sneat-table tbody td {
+    @apply px-5 py-3.5 text-[#697a8d];
+}
+.dark .sneat-table tbody td {
+    @apply text-[#a1b0cb];
+}
+.sneat-table tbody tr {
+    @apply border-b border-[#d9dee3] transition-colors;
+}
+.dark .sneat-table tbody tr {
+    @apply border-[#434463];
+}
+.sneat-table tbody tr:hover {
+    @apply bg-[#f5f5f9]/50;
+}
+.dark .sneat-table tbody tr:hover {
+    @apply bg-[#232333]/50;
+}
+
+/* ===========================
+   Sneat Section Label
+   =========================== */
+.sneat-section-label {
+    @apply text-xs font-semibold uppercase tracking-wider text-[#a1b0cb] px-4 mb-2 mt-6;
+}
+
+/* ===========================
+   SweetAlert2 Toast Dark Mode
+   =========================== */
+.dark .swal2-popup {
+    background: #2b2c40 !important;
+    color: #d5d5e2 !important;
+}
+.dark .swal2-title {
+    color: #d5d5e2 !important;
+}
+.dark .swal2-html-container {
+    color: #a1b0cb !important;
+}
+
+/* ===========================
+   Sidebar Collapse Toggle Button
+   =========================== */
+.sidebar-toggle-btn {
+    @apply absolute -right-3 top-20 w-6 h-6 bg-[#696cff] rounded-full flex items-center justify-center cursor-pointer shadow-lg z-50 transition-all duration-200;
+}
+.sidebar-toggle-btn:hover {
+    @apply bg-[#5a5de6] scale-110;
+}
