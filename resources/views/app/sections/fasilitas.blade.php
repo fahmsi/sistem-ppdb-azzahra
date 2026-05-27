@@ -32,29 +32,11 @@
                     'icon' => 'circle-dot'
                 ],
                 [
-                    'nama' => 'Taman Bermain',
+                    'nama' => 'Tempat Bermain',
                     'desc' => 'Playground outdoor dengan perlengkapan lengkap',
                     'gambar' => 'https://images.unsplash.com/photo-1606733894347-7cb201dc810b?w=600&auto=format&fit=crop',
                     'icon' => 'trees'
-                ],
-                [
-                    'nama' => 'Ruang Sholat',
-                    'desc' => 'Musholla bersih untuk praktek ibadah',
-                    'gambar' => 'https://images.unsplash.com/photo-1609599006353-e629aaabfeae?w=600&auto=format&fit=crop',
-                    'icon' => 'moon'
-                ],
-                [
-                    'nama' => 'Perpustakaan',
-                    'desc' => 'Koleksi buku cerita dan edukasi anak',
-                    'gambar' => 'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=600&auto=format&fit=crop',
-                    'icon' => 'book-open'
-                ],
-                [
-                    'nama' => 'Kolam Renang',
-                    'desc' => 'Fasilitas renang dengan pengawasan',
-                    'gambar' => 'https://images.unsplash.com/photo-1760259903993-2c4fb13e8e5f?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-                    'icon' => 'waves'
-                ],
+                ]
             ];
         @endphp
 

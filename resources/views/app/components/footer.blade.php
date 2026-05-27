@@ -14,9 +14,9 @@
                 @php
                     $socials = [
                         ['name' => 'Facebook',  'icon' => 'facebook',  'hover' => 'hover:bg-blue-600',  'url' => $settings['social_facebook'] ?? '#'],
-                        ['name' => 'Instagram', 'icon' => 'instagram', 'hover' => 'hover:bg-pink-600',  'url' => $settings['social_instagram'] ?? '#'],
+                        ['name' => 'Instagram', 'icon' => 'instagram', 'hover' => 'hover:bg-pink-500',  'url' => $settings['social_instagram'] ?? 'https://www.instagram.com/azzahra_dpk/'],
                         ['name' => 'Youtube',   'icon' => 'youtube',   'hover' => 'hover:bg-red-600',   'url' => $settings['social_youtube'] ?? '#'],
-                        ['name' => 'TikTok',    'icon' => 'music',     'hover' => 'hover:bg-gray-700',  'url' => $settings['social_tiktok'] ?? '#'],
+                        ['name' => 'TikTok',    'icon' => 'tiktok',    'hover' => 'hover:bg-gray-700',  'url' => $settings['social_tiktok'] ?? '#'],
                     ];
                 @endphp
 
@@ -24,8 +24,8 @@
                 <a href="{{ $social['url'] }}"
                     target="_blank"
                     aria-label="{{ $social['name'] }}"
-                    class="w-11 h-11 rounded-xl bg-gray-800 flex items-center justify-center {{ $social['hover'] }} transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
-                    <i data-lucide="{{ $social['icon'] }}" class="w-5 h-5 text-white"></i>
+                    class="w-11 h-11 rounded-xl bg-gray-800 flex items-center justify-center {{ $social['hover'] }} transition-all duration-300 hover:-translate-y-1 hover:shadow-lg flex-shrink-0 leading-none">
+                    <i class="{{ 'ri-' . $social['icon'] . '-fill' }} text-xl leading-none align-middle text-white"></i>
                 </a>
                 @endforeach
             </div>

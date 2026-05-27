@@ -17,7 +17,7 @@ class SuperAdminSeeder extends Seeder
             [
                 'name'              => 'Super Admin',
                 'email'             => 'superadmin@azzahra.sch.id',
-                'password'          => 'SuperAdmin123',
+                'password'          => '@dmin098',
                 'role'              => 'super_admin',
                 'email_verified_at' => now(),
             ]

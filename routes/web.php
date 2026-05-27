@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\AdminManageController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
+use App\Http\Controllers\Admin\PembayaranController;
 use App\Http\Controllers\Admin\PendaftaranManageController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\VerifikasiController;
@@ -12,8 +13,11 @@ use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\VerifyEmailController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\DokumenController;
 use App\Http\Controllers\PendaftaranController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SiswaController;
+use App\Models\Setting;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -23,7 +27,8 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    $settings = \App\Models\Setting::pluck('value', 'key')->toArray();
+    $settings = Setting::pluck('value', 'key')->toArray();
+
     return view('welcome', compact('settings'));
 })->name('home');
 
@@ -55,19 +60,19 @@ Route::middleware('guest')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
     // Profile Settings
-    Route::get('/profile', [\App\Http\Controllers\ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [\App\Http\Controllers\ProfileController::class, 'updateProfile'])->name('profile.update');
-    Route::put('/password', [\App\Http\Controllers\ProfileController::class, 'updatePassword'])->name('password.update');
-    Route::delete('/profile', [\App\Http\Controllers\ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'updateProfile'])->name('profile.update');
+    Route::put('/password', [ProfileController::class, 'updatePassword'])->name('password.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::get('verify-email', EmailVerificationPromptController::class)->name('verification.notice');
     Route::get('verify-email/{id}/{hash}', VerifyEmailController::class)->middleware(['signed', 'throttle:6,1'])->name('verification.verify');
     Route::post('email/verification-notification', [EmailVerificationNotificationController::class, 'store'])->middleware('throttle:6,1')->name('verification.send');
     Route::get('confirm-password', [ConfirmablePasswordController::class, 'show'])->name('password.confirm');
     Route::post('confirm-password', [ConfirmablePasswordController::class, 'store']);
-    
+
     // Secure Document Viewer
-    Route::get('/dokumen', [\App\Http\Controllers\DokumenController::class, 'show'])->name('dokumen.show');
+    Route::get('/dokumen', [DokumenController::class, 'show'])->name('dokumen.show');
 
     /*
     |----------------------------------------------------------------------
@@ -95,8 +100,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/status', [PendaftaranController::class, 'status'])->name('pendaftaran.status');
 
         // Pembayaran
-        Route::post('/pembayaran/{detail}', [\App\Http\Controllers\PembayaranController::class, 'store'])->name('pembayaran.store');
-        Route::get('/pembayaran/{detail}/receipt', [\App\Http\Controllers\PembayaranController::class, 'receipt'])->name('pembayaran.receipt');
+        Route::post('/pembayaran/{detail}', [App\Http\Controllers\PembayaranController::class, 'store'])->name('pembayaran.store');
+        Route::get('/pembayaran/{detail}/receipt', [App\Http\Controllers\PembayaranController::class, 'receipt'])->name('pembayaran.receipt');
     });
 
     /*
@@ -117,6 +122,8 @@ Route::middleware('auth')->group(function () {
 
         // Verifikasi (registration review & verification)
         Route::get('/verifikasi', [VerifikasiController::class, 'index'])->name('verifikasi.index');
+        // Route Export Verifikasi (define before parameterized routes to avoid conflicts)
+        Route::get('/verifikasi/export', [VerifikasiController::class, 'export'])->name('verifikasi.export');
         Route::get('/verifikasi/{detail}', [VerifikasiController::class, 'show'])->name('verifikasi.show');
         Route::patch('/verifikasi/{detail}/start', [VerifikasiController::class, 'startVerifikasi'])->name('verifikasi.start');
         Route::patch('/verifikasi/{detail}/terima', [VerifikasiController::class, 'terima'])->name('verifikasi.terima');
@@ -124,12 +131,23 @@ Route::middleware('auth')->group(function () {
         Route::patch('/verifikasi/{detail}/revisi', [VerifikasiController::class, 'revisi'])->name('verifikasi.revisi');
         Route::delete('/verifikasi/{detail}', [VerifikasiController::class, 'destroy'])->name('verifikasi.destroy');
         Route::patch('/pembayaran/{pembayaran}/verify', [VerifikasiController::class, 'verifyPembayaran'])->name('pembayaran.verify');
+
+        // Route Export Siswa (Letakkan sebelum resource siswa)
+        Route::get('/siswa/export', [App\Http\Controllers\Admin\SiswaController::class, 'export'])->name('siswa.export');
+        Route::resource('/siswa', App\Http\Controllers\Admin\SiswaController::class);
+        // Route Export Verifikasi (defined above before parameter routes)
+        Route::resource('/verifikasi', VerifikasiController::class);
+
+        // Route Export Pembayaran
+        Route::get('/pembayaran/export', [PembayaranController::class, 'export'])->name('pembayaran.export');
+        Route::resource('pembayaran', PembayaranController::class);
+
         // Data Siswa (All Students)
-        Route::get('/siswa', [\App\Http\Controllers\Admin\SiswaController::class, 'index'])->name('siswa.index');
-        Route::get('/siswa/{siswa}', [\App\Http\Controllers\Admin\SiswaController::class, 'show'])->name('siswa.show');
+        Route::get('/siswa', [App\Http\Controllers\Admin\SiswaController::class, 'index'])->name('siswa.index');
+        Route::get('/siswa/{siswa}', [App\Http\Controllers\Admin\SiswaController::class, 'show'])->name('siswa.show');
 
         // Rekap Pembayaran
-        Route::get('/pembayaran', [\App\Http\Controllers\Admin\PembayaranController::class, 'index'])->name('pembayaran.index');
+        Route::get('/pembayaran', [PembayaranController::class, 'index'])->name('pembayaran.index');
 
         // Settings (admin & super_admin)
         Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');

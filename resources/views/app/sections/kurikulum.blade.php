@@ -25,7 +25,7 @@
                     'title' => 'Program Umum',
                     'icon' => 'book-open',
                     'color' => 'primary',
-                    'desc' => 'Kurikulum nasional yang mengembangkan aspek kognitif, motorik, bahasa, sosial-emosional, dan seni.',
+                    'desc' => 'Kurikulum Merdeka yang dikolaborasikan dengan kurikulum berbasis Al-Quran yang mengembangkan aspek kognitif, motorik, bahasa, sosial-emosional, seni dan keislaman.',
                     'image' => 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=600&auto=format&fit=crop',
                     'items' => [
                         ['icon' => 'heart', 'title' => 'Pengembangan Akhlak', 'desc' => 'Membentuk karakter mulia sejak dini'],
@@ -39,7 +39,7 @@
                     'title' => 'Program Keislaman',
                     'icon' => 'moon',
                     'color' => 'secondary',
-                    'desc' => 'Program keislaman yang menanamkan nilai-nilai Qur\'ani dan akhlak mulia pada anak usia dini.',
+                    'desc' => 'Program keislaman yang dirancang untuk membentuk karakter anak sesuai dengan adab yang dicontohkan Rasulullah bagi anak usia dini, serta menanamkan nilai-nilai Qur’ani dan akhlak mulia sejak dini.',
                     'image' => 'https://images.unsplash.com/photo-1609599006353-e629aaabfeae?w=600&auto=format&fit=crop',
                     'items' => [
                         ['icon' => 'book-open', 'title' => "Membaca Al-Qur'an (KIBAR)", 'desc' => 'Metode KIBAR yang mudah & menyenangkan'],
@@ -56,9 +56,8 @@
                     'desc' => 'Kegiatan tambahan yang memperkaya pengalaman belajar dan mengembangkan bakat siswa.',
                     'image' => 'https://images.unsplash.com/photo-1606733894347-7cb201dc810b?w=600&auto=format&fit=crop',
                     'items' => [
-                        ['icon' => 'map-pin', 'title' => 'Manasik Haji', 'desc' => 'Simulasi ibadah haji sejak dini'],
+                        ['icon' => 'map-pin', 'title' => 'Manasik Haji', 'desc' => 'Simulasi ibadah haji sejak dini bersama Ayah dan Bunda'],
                         ['icon' => 'waves', 'title' => 'Berenang', 'desc' => 'Olahraga air yang menyehatkan'],
-                        ['icon' => 'award', 'title' => 'Wisuda', 'desc' => 'Perayaan kelulusan yang meriah'],
                         ['icon' => 'map', 'title' => 'Fieldtrip', 'desc' => 'Belajar dari alam dan lingkungan'],
                         ['icon' => 'trophy', 'title' => 'Lomba', 'desc' => 'Kompetisi mengasah bakat'],
                     ]

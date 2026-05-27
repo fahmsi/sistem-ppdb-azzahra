@@ -16,7 +16,7 @@ class AdminSeeder extends Seeder
             ['email' => 'admin@azzahra.sch.id'],
             [
                 'name' => 'Administrator',
-                'password' => 'Admin123!', // hashed via model cast
+                'password' => '@dmin098', // hashed via model cast
                 'role' => 'admin',
             ]
         );

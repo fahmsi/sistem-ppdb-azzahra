@@ -17,7 +17,7 @@
                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                         <i data-lucide="search" class="w-5 h-5 text-[#a1b0cb]"></i>
                     </div>
-                    <input type="text" name="search" id="search" value="{{ request('search') }}" class="sneat-input pl-10" placeholder="Cari nama anak atau No. Pendaftaran...">
+                    <input type="text" name="search" id="search" value="{{ request('search') }}" class="sneat-input !pl-10" placeholder="Cari nama anak atau No. Pendaftaran...">
                 </div>
             </div>
 
@@ -50,6 +50,21 @@
             <a href="{{ route('admin.verifikasi.index') }}" class="sneat-btn-secondary">
                 Reset
             </a>
+            <div class="relative inline-block text-left">
+                <button id="exportDropdownBtnVerifikasi" type="button" class="inline-flex items-center gap-2 px-3 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-medium rounded-md transition-colors" aria-expanded="false">
+                    <i data-lucide="download" class="w-4 h-4"></i>
+                    Export
+                    <i data-lucide="chevron-down" class="w-4 h-4"></i>
+                </button>
+
+                <div id="exportDropdownMenuVerifikasi" class="hidden origin-top-right absolute right-0 mt-2 w-40 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-50">
+                    <div class="py-1">
+                        <a href="{{ route('admin.verifikasi.export', ['type' => 'xlsx']) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Excel (.xlsx)</a>
+                        <a href="{{ route('admin.verifikasi.export', ['type' => 'csv']) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">CSV (.csv)</a>
+                        <a href="{{ route('admin.verifikasi.export', ['type' => 'pdf']) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">PDF (.pdf)</a>
+                    </div>
+                </div>
+            </div>
         </form>
     </div>
 
@@ -146,3 +161,18 @@
     </div>
 </div>
 @endsection
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var btn = document.getElementById('exportDropdownBtnVerifikasi');
+        var menu = document.getElementById('exportDropdownMenuVerifikasi');
+        if (btn) {
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                menu.classList.toggle('hidden');
+            });
+            document.addEventListener('click', function() {
+                if (!menu.classList.contains('hidden')) menu.classList.add('hidden');
+            });
+        }
+    });
+    </script>

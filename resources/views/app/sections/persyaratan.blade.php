@@ -29,9 +29,7 @@
                     "Dokumen Kartu Keluarga (KK)",
                     "Dokumen Akta Kelahiran",
                     "Dokumen KTP Orang Tua/Wali",
-                    "Pas Foto 3x4 (latar merah)",
-                    "Pas Foto 4x6 (latar biru)",
-                    "Surat Keterangan Sehat dari Dokter/Puskesmas",
+                    "Pas Foto",
                     "Mengisi formulir pendaftaran online di Aplikasi PPDB",
                     "Membayar biaya pendaftaran",
                 ];

@@ -4,10 +4,32 @@
 @section('header_title', 'Profil Biodata Anak')
 
 @section('content')
+<style>
+    @media print {
+        body * {
+            visibility: hidden !important;
+        }
+
+        #printableArea, #printableArea * {
+            visibility: visible !important;
+        }
+
+        #printableArea {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+        }
+
+        .no-print {
+            display: none !important;
+        }
+    }
+</style>
 <div class="max-w-5xl mx-auto space-y-6">
 
     <!-- Action Header -->
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 animate-fade-in">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 animate-fade-in no-print">
         <a href="{{ route('admin.siswa.index') }}" class="inline-flex items-center gap-2 text-sm font-medium text-gray-500 hover:text-primary-600 transition-colors">
             <i data-lucide="arrow-left" class="w-4 h-4"></i> Kembali ke Data Siswa
         </a>
@@ -24,7 +46,7 @@
     </div>
 
     <!-- Main Profile Card -->
-    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden animate-fade-up">
+    <div id="printableArea" class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden animate-fade-up">
         
         <!-- Header / Cover -->
         <div class="h-32 bg-gradient-to-r from-primary-600 to-primary-800 relative">

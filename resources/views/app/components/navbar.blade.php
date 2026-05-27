@@ -19,7 +19,7 @@
             @php
             $menu = [
                 ['label'=>'Home','id'=>'home'],
-                ['label'=>'Program','id'=>'program'],
+                ['label'=>'Program','id'=>'kurikulum'],
                 ['label'=>'Persyaratan','id'=>'persyaratan'],
                 ['label'=>'Biaya','id'=>'biaya'],
                 ['label'=>'Agenda','id'=>'agenda'],
@@ -40,10 +40,10 @@
                 @endforeach
 
                 {{-- Login Button --}}
-                <a href="/login"
+                <a href="/register"
                     class="ml-4 inline-flex items-center gap-2 bg-gradient-to-r from-primary-600 to-primary-500 hover:from-primary-700 hover:to-primary-600 text-white px-5 py-2.5 rounded-xl text-sm font-semibold shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-0.5">
                     <i data-lucide="log-in" class="w-4 h-4"></i>
-                    Masuk
+                    Daftar
                 </a>
 
             </div>
@@ -66,10 +66,10 @@
                 @endforeach
 
                 <div class="mt-3 pt-3 border-t border-gray-100">
-                    <a href="/login"
+                    <a href="/register"
                         class="flex items-center justify-center gap-2 bg-gradient-to-r from-primary-600 to-primary-500 text-white px-5 py-3 rounded-xl font-semibold shadow-md">
                         <i data-lucide="log-in" class="w-4 h-4"></i>
-                        Masuk
+                        Daftar
                     </a>
                 </div>
             </div>

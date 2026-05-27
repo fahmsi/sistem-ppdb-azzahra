@@ -173,47 +173,115 @@
             <p class="text-sm text-red-600 dark:text-red-400/80 mt-1">Setelah akun Anda dihapus, semua data dan riwayat pendaftaran anak Anda akan dihapus secara permanen. Tindakan ini tidak dapat dibatalkan.</p>
         </div>
 
-        <button onclick="document.getElementById('deleteAccountModal').classList.remove('hidden')" class="px-5 py-2.5 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-md transition-colors">
+        <button type="button" id="btnDeleteAccount" class="px-5 py-2.5 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-md transition-colors shadow-sm">
             Hapus Akun Secara Permanen
         </button>
 
-        <!-- Modal -->
-        <div id="deleteAccountModal" class="hidden fixed inset-0 z-50 overflow-y-auto">
-            <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:p-0">
-                <div class="fixed inset-0 transition-opacity bg-black/50" onclick="document.getElementById('deleteAccountModal').classList.add('hidden')"></div>
-                <div class="relative bg-white dark:bg-[#2b2c40] rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:max-w-lg sm:w-full border border-[#d9dee3] dark:border-[#434463]">
-                    <form method="POST" action="{{ route('profile.destroy') }}">
-                        @csrf
-                        @method('delete')
-                        <div class="px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                            <h3 class="text-lg font-medium text-[#566a7f] dark:text-[#d5d5e2] mb-2">Apakah Anda yakin ingin menghapus akun?</h3>
-                            <p class="text-sm text-[#a1b0cb] mb-4">Silakan masukkan password Anda untuk mengonfirmasi.</p>
-                            <div>
-                                <input type="password" id="delete_password" name="password" placeholder="Password Anda" required
-                                        class="sneat-input focus:!border-red-500 focus:!ring-red-500">
-                                @error('password') <span class="text-xs text-red-500 mt-1 block">{{ $message }}</span> @enderror
-                            </div>
-                        </div>
-                        <div class="bg-[#f5f5f9] dark:bg-[#232333] px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-                            <button type="submit" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 sm:ml-3 sm:w-auto sm:text-sm">Hapus Akun</button>
-                            <button type="button" onclick="document.getElementById('deleteAccountModal').classList.add('hidden')" class="mt-3 w-full inline-flex justify-center rounded-md border border-[#d9dee3] dark:border-[#434463] shadow-sm px-4 py-2 bg-white dark:bg-[#2b2c40] text-base font-medium text-[#697a8d] dark:text-[#a1b0cb] hover:bg-[#f5f5f9] dark:hover:bg-[#232333] sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">Batal</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
+        <form id="deleteAccountForm" method="POST" action="{{ route('profile.destroy') }}" class="hidden">
+            @csrf
+            @method('delete')
+            <input type="password" name="password" id="hidden_delete_password">
+        </form>
     </div>
     @endif
 
 </div>
 
-@if($errors->has('password') && old('_method') === 'delete')
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        document.getElementById('deleteAccountModal').classList.remove('hidden');
-    });
+    // --- 4. LOGIKA SWEETALERT2 UNTUK HAPUS AKUN ---
+        const btnDeleteAccount = document.getElementById('btnDeleteAccount');
+        const deleteAccountForm = document.getElementById('deleteAccountForm');
+        const hiddenPasswordInput = document.getElementById('hidden_delete_password');
+
+        if (btnDeleteAccount) {
+            btnDeleteAccount.addEventListener('click', function () {
+                Swal.fire({
+                    title: 'Hapus Akun Permanen?',
+                    // Menggunakan HTML kustom agar bisa memasukkan ikon mata
+                    html: `
+                        <p class="text-sm text-[#566a7f] dark:text-[#d5d5e2] mb-5">
+                            Tindakan ini tidak bisa dibatalkan! Semua riwayat pendaftaran anak akan hilang. Masukkan password Anda untuk mengonfirmasi.
+                        </p>
+                        <div class="relative w-full max-w-xs mx-auto">
+                            <input type="password" id="swal-input-password" class="sneat-input w-full pr-10 focus:!border-red-500 focus:!ring-red-500" placeholder="Masukkan password Anda..." autocapitalize="off" autocorrect="off">
+                            <button type="button" id="swal-toggle-password" class="absolute inset-y-0 right-0 flex items-center pr-3 text-[#a1b0cb] hover:text-[#696cff] focus:outline-none transition-colors">
+                                <i data-lucide="eye" id="swal-icon-eye" class="w-4 h-4"></i>
+                                <i data-lucide="eye-off" id="swal-icon-eye-off" class="w-4 h-4 hidden"></i>
+                            </button>
+                        </div>
+                    `,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#dc2626',
+                    cancelButtonColor: '#697a8d',
+                    confirmButtonText: 'Ya, Hapus Akun!',
+                    cancelButtonText: 'Batal',
+                    scrollbarPadding: false,
+                    heightAuto: false,
+                    customClass: {
+                        popup: 'rounded-xl',
+                        confirmButton: 'px-4 py-2 text-white font-medium rounded-md shadow-sm',
+                        cancelButton: 'px-4 py-2 text-white font-medium rounded-md shadow-sm'
+                    },
+                    // Fungsi ini akan dijalankan saat popup SweetAlert terbuka
+                    didOpen: () => {
+                        // Render ulang ikon Lucide agar ikon mata muncul di dalam popup
+                        if (typeof lucide !== 'undefined') {
+                            lucide.createIcons();
+                        }
+
+                        // Mengaktifkan fitur klik ikon mata
+                        const toggleBtn = document.getElementById('swal-toggle-password');
+                        const passwordInput = document.getElementById('swal-input-password');
+                        const iconEye = document.getElementById('swal-icon-eye');
+                        const iconEyeOff = document.getElementById('swal-icon-eye-off');
+
+                        toggleBtn.addEventListener('click', () => {
+                            if (passwordInput.type === 'password') {
+                                passwordInput.type = 'text';
+                                iconEye.classList.add('hidden');
+                                iconEyeOff.classList.remove('hidden');
+                            } else {
+                                passwordInput.type = 'password';
+                                iconEye.classList.remove('hidden');
+                                iconEyeOff.classList.add('hidden');
+                            }
+                        });
+                    },
+                    // Fungsi ini memvalidasi kotak input sebelum tombol "Ya" diproses
+                    preConfirm: () => {
+                        const password = document.getElementById('swal-input-password').value;
+                        if (!password) {
+                            Swal.showValidationMessage('Password tidak boleh kosong!');
+                        }
+                        return password;
+                    }
+                }).then((result) => {
+                    // Jika user mengisi password dan menekan konfirmasi
+                    if (result.isConfirmed) {
+                        hiddenPasswordInput.value = result.value;
+                        deleteAccountForm.submit();
+                    }
+                });
+            });
+        }
+
+        // Menangkap error dari Laravel jika password yang dimasukkan salah saat menghapus akun
+        @if($errors->has('password') && old('_method') === 'delete')
+            Swal.fire({
+                title: 'Gagal!',
+                text: '{{ $errors->first('password') }}',
+                icon: 'error',
+                confirmButtonColor: '#696cff',
+                scrollbarPadding: false,
+                heightAuto: false,
+                customClass: {
+                    popup: 'rounded-xl',
+                    confirmButton: 'px-5 py-2.5 text-white font-medium rounded-md shadow-sm'
+                }
+            });
+        @endif
 </script>
-@endif
 
 <script>
 function previewAvatar(input) {
@@ -229,6 +297,7 @@ function previewAvatar(input) {
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
+        
         // --- 1. LOGIKA TOGGLE PASSWORD (IKON MATA) ---
         const toggleButtons = document.querySelectorAll('.toggle-password');
         
@@ -260,42 +329,50 @@ function previewAvatar(input) {
 
         function toggleRule(id, isValid) {
             const el = document.getElementById(id);
+            if (!el) return; // Mencegah error jika elemen tidak ada
+            
             const iconX = el.querySelector('.icon-x');
             const iconCheck = el.querySelector('.icon-check');
 
             if (isValid) {
                 el.classList.remove('text-red-500');
                 el.classList.add('text-green-500');
-                iconX.classList.add('hidden');
-                iconCheck.classList.remove('hidden');
+                if(iconX) iconX.classList.add('hidden');
+                if(iconCheck) iconCheck.classList.remove('hidden');
             } else {
                 el.classList.remove('text-green-500');
                 el.classList.add('text-red-500');
-                iconCheck.classList.add('hidden');
-                iconX.classList.remove('hidden');
+                if(iconCheck) iconCheck.classList.add('hidden');
+                if(iconX) iconX.classList.remove('hidden');
             }
         }
 
-        passwordInput.addEventListener('input', function () {
-            const val = this.value;
-            
-            if (val.length > 0) {
-                rulesBox.classList.remove('hidden');
-            } else {
-                rulesBox.classList.add('hidden');
-            }
+        if (passwordInput) {
+            passwordInput.addEventListener('input', function () {
+                const val = this.value;
+                
+                if (val.length > 0) {
+                    rulesBox.classList.remove('hidden');
+                } else {
+                    rulesBox.classList.add('hidden');
+                }
 
-            toggleRule('rule-length', val.length >= 8);
-            toggleRule('rule-upper', /[A-Z]/.test(val));
-            toggleRule('rule-lower', /[a-z]/.test(val));
-            toggleRule('rule-number', /[0-9]/.test(val));
+                toggleRule('rule-length', val.length >= 8);
+                toggleRule('rule-upper', /[A-Z]/.test(val));
+                toggleRule('rule-lower', /[a-z]/.test(val));
+                toggleRule('rule-number', /[0-9]/.test(val));
 
-            checkMatch();
-        });
+                checkMatch();
+            });
+        }
 
-        confirmInput.addEventListener('input', checkMatch);
+        if (confirmInput) {
+            confirmInput.addEventListener('input', checkMatch);
+        }
 
         function checkMatch() {
+            if (!passwordInput || !confirmInput) return;
+            
             const passVal = passwordInput.value;
             const confVal = confirmInput.value;
 
@@ -308,21 +385,21 @@ function previewAvatar(input) {
                 if (passVal === confVal && passVal !== "") {
                     textSpan.textContent = 'Password cocok';
                     textSpan.classList.replace('text-red-500', 'text-green-500');
-                    iconX.classList.add('hidden');
-                    iconCheck.classList.remove('hidden');
+                    if(iconX) iconX.classList.add('hidden');
+                    if(iconCheck) iconCheck.classList.remove('hidden');
                 } else {
                     textSpan.textContent = 'Password tidak cocok';
                     textSpan.classList.replace('text-green-500', 'text-red-500');
-                    iconCheck.classList.add('hidden');
-                    iconX.classList.remove('hidden');
+                    if(iconCheck) iconCheck.classList.add('hidden');
+                    if(iconX) iconX.classList.remove('hidden');
                 }
             } else {
                 matchBox.classList.add('hidden');
             }
         }
-    });
-    // Logika SweetAlert2 untuk Lupa Password
-    const forgotPasswordBtn = document.getElementById('forgot-password-alert');
+
+        // --- 3. LOGIKA SWEETALERT2 UNTUK LUPA PASSWORD ---
+        const forgotPasswordBtn = document.getElementById('forgot-password-alert');
         if (forgotPasswordBtn) {
             forgotPasswordBtn.addEventListener('click', function(e) {
                 e.preventDefault(); 
@@ -333,12 +410,8 @@ function previewAvatar(input) {
                     icon: 'info',
                     confirmButtonText: 'Mengerti',
                     confirmButtonColor: '#696cff',
-                    
-                    // --- DUA BARIS INI ADALAH KUNCI FIX-NYA ---
                     scrollbarPadding: false, 
                     heightAuto: false,       
-                    // ------------------------------------------
-
                     customClass: {
                         popup: 'rounded-xl',
                         confirmButton: 'px-5 py-2.5 text-white font-medium rounded-md shadow-sm'
@@ -346,7 +419,8 @@ function previewAvatar(input) {
                 });
             });
         }
-    }
+
+    });
 </script>
 
 @endsection

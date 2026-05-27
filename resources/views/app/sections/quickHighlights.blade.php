@@ -18,28 +18,28 @@
             $highlights = [
                 [
                     'title' => 'Fasilitas Modern',
-                    'desc' => 'Ruang kelas ber-AC, kolam mandi bola, dan taman bermain yang aman.',
+                    'desc' => 'Ruang kelas ber-AC, kolam mandi bola, dan tempat bermain yang aman.',
                     'icon' => 'school',
                     'color' => 'primary',
                     'gradient' => 'from-blue-500 to-blue-600'
                 ],
                 [
                     'title' => 'Prestasi Gemilang',
-                    'desc' => 'Siswa berprestasi di berbagai lomba tingkat kota dan provinsi.',
+                    'desc' => 'Siswa berprestasi di berbagai lomba tingkat kota.',
                     'icon' => 'trophy',
                     'color' => 'yellow',
                     'gradient' => 'from-amber-500 to-orange-500'
                 ],
                 [
                     'title' => 'Program Unggulan',
-                    'desc' => 'Kurikulum berbasis Al-Quran dengan metode pembelajaran modern.',
+                    'desc' => 'Kurikulum Merdeka yang dikolaborasikan dengan kurikulum berbasis Al-Quran dengan metode pembelajaran modern.',
                     'icon' => 'book-open',
                     'color' => 'secondary',
                     'gradient' => 'from-emerald-500 to-green-600'
                 ],
                 [
                     'title' => 'Lingkungan Kondusif',
-                    'desc' => 'Lingkungan sekolah yang nyaman, hijau, aman, dan Islami.',
+                    'desc' => 'Lingkungan sekolah yang nyaman, aman, dan Islami.',
                     'icon' => 'trees',
                     'color' => 'teal',
                     'gradient' => 'from-teal-500 to-cyan-600'

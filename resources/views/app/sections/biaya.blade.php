@@ -26,32 +26,32 @@
         $fees = [
             [
                 'title' => 'Biaya Pendaftaran',
-                'amount' => 'Rp 500.000',
-                'desc' => 'Biaya registrasi awal pendaftaran',
-                'badge' => 'Sekali Bayar',
+                'amount' => 'GRATIS',
+                'desc' => 'Gratis registrasi awal pendaftaran',
+                'badge' => '',
                 'icon' => 'file-text',
-                'highlight' => false
-            ],
-            [
-                'title' => 'Biaya Masuk',
-                'amount' => 'Rp 15.000.000',
-                'desc' => 'Termasuk seragam, buku, dan perlengkapan',
-                'badge' => 'Sekali Bayar',
-                'icon' => 'package',
                 'highlight' => true
             ],
             [
+                'title' => 'Biaya Masuk',
+                'amount' => 'Rp 850.000',
+                'desc' => 'Termasuk seragam, buku pendukung, dan perlengkapan alat tulis sekolah',
+                'badge' => 'Sekali Bayar',
+                'icon' => 'package',
+                'highlight' => false
+            ],
+            [
                 'title' => 'SPP Bulanan',
-                'amount' => 'Rp 2.500.000',
-                'desc' => 'Termasuk makan siang dan kegiatan',
+                'amount' => 'Rp 110.000',
+                'desc' => 'Termasuk kegiatan pembelajaran',
                 'badge' => 'Per Bulan',
                 'icon' => 'calendar',
                 'highlight' => false
             ],
             [
                 'title' => 'Biaya Tahunan',
-                'amount' => 'Rp 3.000.000',
-                'desc' => 'Study tour, wisuda, dan kegiatan tahunan',
+                'amount' => '-',
+                'desc' => 'Field trip, manasik haji, dan kegiatan tahunan',
                 'badge' => 'Per Tahun',
                 'icon' => 'gift',
                 'highlight' => false
@@ -96,11 +96,10 @@
         @php
         $includes = [
             ['item' => 'Seragam lengkap (3 set)', 'icon' => 'shirt'],
-            ['item' => 'Buku paket & alat tulis', 'icon' => 'book'],
-            ['item' => 'Makan siang harian', 'icon' => 'utensils'],
-            ['item' => 'Kegiatan ekstrakurikuler', 'icon' => 'palette'],
-            ['item' => 'Asuransi kecelakaan', 'icon' => 'shield'],
-            ['item' => 'Raport semester', 'icon' => 'file-check'],
+            ['item' => 'Buku pendukung', 'icon' => 'book'],
+            ['item' => 'Alat tulis sekolah', 'icon' => 'pencil'],
+            ['item' => 'Kegiatan pembelajaran', 'icon' => 'school'],
+            ['item' => 'Kegiatan hari besar Islam', 'icon' => 'gift'],
         ];
         @endphp
 

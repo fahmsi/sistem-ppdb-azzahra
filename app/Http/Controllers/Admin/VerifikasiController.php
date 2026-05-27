@@ -2,14 +2,17 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Exports\VerifikasiExport;
 use App\Http\Controllers\Controller;
+use App\Models\Pembayaran;
 use App\Models\Pendaftaran;
 use App\Models\PendaftaranDetail;
-use App\Models\Pembayaran;
+use App\Notifications\StatusPendaftaranNotification;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
-use App\Notifications\StatusPendaftaranNotification;
+use Maatwebsite\Excel\Facades\Excel;
 
 class VerifikasiController extends Controller
 {
@@ -19,6 +22,18 @@ class VerifikasiController extends Controller
     public function index(Request $request): View
     {
         $query = PendaftaranDetail::with(['siswa.user', 'pendaftaran']);
+
+        // Search by siswa name or related user name / no pendaftaran
+        if ($request->filled('search')) {
+            $search = $request->input('search');
+            $query->where(function ($q) use ($search) {
+                $q->whereHas('siswa', function ($sq) use ($search) {
+                    $sq->where('nama', 'like', "%{$search}%")
+                        ->orWhere('nisn', 'like', "%{$search}%");
+                })
+                ->orWhere('no_pendaftaran', 'like', "%{$search}%");
+            });
+        }
 
         // Filter by pendaftaran period
         if ($request->filled('pendaftaran_id')) {
@@ -160,7 +175,8 @@ class VerifikasiController extends Controller
         ]);
 
         $statusText = $validated['status'] === 'lunas' ? 'Lunas / Diterima' : 'Ditolak';
-        return back()->with('success', 'Status pembayaran berhasil diperbarui menjadi: ' . $statusText);
+
+        return back()->with('success', 'Status pembayaran berhasil diperbarui menjadi: '.$statusText);
     }
 
     /**
@@ -170,11 +186,34 @@ class VerifikasiController extends Controller
     {
         // Optionally delete associated payment proof files here if needed
         if ($detail->pembayaran && $detail->pembayaran->bukti_bayar) {
-            \Illuminate\Support\Facades\Storage::disk('local')->delete($detail->pembayaran->bukti_bayar);
+            Storage::disk('local')->delete($detail->pembayaran->bukti_bayar);
         }
 
         $detail->delete();
 
         return back()->with('success', 'Data pendaftaran berhasil dihapus secara permanen.');
+    }
+
+    public function export(Request $request)
+    {
+        $type = $request->query('type', 'xlsx');
+        $filenameBase = 'data_verifikasi_azzahra';
+
+        if ($type === 'csv') {
+            return Excel::download(new VerifikasiExport, $filenameBase . '.csv', \Maatwebsite\Excel\Excel::CSV);
+        }
+
+        if ($type === 'pdf') {
+            if (class_exists(\Barryvdh\DomPDF\Facade::class) || app()->bound('dompdf')) {
+                $items = PendaftaranDetail::with(['siswa.user', 'pendaftaran'])->get();
+                $pdf = app('dompdf.wrapper');
+                $pdf->loadView('admin.verifikasi.export_pdf', compact('items'));
+                return $pdf->download($filenameBase . '.pdf');
+            }
+
+            return back()->with('error', 'PDF export requires barryvdh/laravel-dompdf. Run: composer require barryvdh/laravel-dompdf');
+        }
+
+        return Excel::download(new VerifikasiExport, $filenameBase . '.xlsx');
     }
 }

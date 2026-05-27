@@ -70,7 +70,7 @@
                     ],
                     [
                         'title' => 'Email',
-                        'content' => 'info@azzahra.sch.id',
+                        'content' => 'nanirahmani72@gmail.com',
                         'icon' => 'mail',
                         'color' => 'primary'
                     ],

@@ -6,11 +6,14 @@
 @section('content')
 <div class="bg-white dark:bg-[#2b2c40] rounded-lg shadow-sneat dark:shadow-sneat-dark border border-[#d9dee3] dark:border-[#434463] p-6">
     <div class="flex flex-col sm:flex-row justify-between items-center gap-4 mb-6">
+        
         <h2 class="text-xl font-heading font-bold text-[#566a7f] dark:text-[#d5d5e2]">Semua Data Siswa</h2>
+        
         <div class="relative w-full sm:w-auto">
-            <input type="text" id="liveSearch" placeholder="Cari Nama / Orang Tua / No HP..." autocomplete="off"
-                   class="sneat-input w-full sm:w-96 pl-10 pr-10">
+            <input type="text" id="liveSearch" placeholder="Cari Nama / Orang Tua / No HP..." autocomplete="off" class="sneat-input w-full sm:w-96 !pl-10 !pr-10">
+            
             <i data-lucide="search" class="w-5 h-5 text-[#a1b0cb] absolute left-3 top-1/2 -translate-y-1/2"></i>
+            
             <div id="searchSpinner" class="hidden absolute right-3 top-1/2 -translate-y-1/2">
                 <svg class="animate-spin h-4 w-4 text-[#696cff]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                     <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
@@ -18,6 +21,22 @@
                 </svg>
             </div>
         </div>
+        <div class="relative inline-block text-left">
+            <button id="exportDropdownBtn" type="button" class="inline-flex items-center gap-2 px-3 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-medium rounded-md transition-colors" aria-expanded="false">
+                <i data-lucide="download" class="w-4 h-4"></i>
+                Export
+                <i data-lucide="chevron-down" class="w-4 h-4"></i>
+            </button>
+
+            <div id="exportDropdownMenu" class="hidden origin-top-right absolute right-0 mt-2 w-40 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-50">
+                <div class="py-1">
+                    <a href="{{ route('admin.siswa.export', ['type' => 'xlsx']) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Excel (.xlsx)</a>
+                    <a href="{{ route('admin.siswa.export', ['type' => 'csv']) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">CSV (.csv)</a>
+                    <a href="{{ route('admin.siswa.export', ['type' => 'pdf']) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">PDF (.pdf)</a>
+                </div>
+            </div>
+        </div>
+
     </div>
 
     <div class="overflow-x-auto">
@@ -132,6 +151,19 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }, 350);
     });
+    // Export dropdown toggle
+    var exportBtn = document.getElementById('exportDropdownBtn');
+    var exportMenu = document.getElementById('exportDropdownMenu');
+    if (exportBtn) {
+        exportBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            exportMenu.classList.toggle('hidden');
+        });
+
+        document.addEventListener('click', function() {
+            if (!exportMenu.classList.contains('hidden')) exportMenu.classList.add('hidden');
+        });
+    }
 });
 </script>
 @endsection

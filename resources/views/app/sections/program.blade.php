@@ -25,12 +25,6 @@
         @php
         $programs = [
             [
-                'title' => 'Belajar Al-Quran',
-                'desc' => 'Metode KIBAR membaca Al-Quran yang mudah dan menyenangkan',
-                'icon' => 'book-open',
-                'gradient' => 'from-emerald-500 to-green-600'
-            ],
-            [
                 'title' => 'Pendidikan Karakter',
                 'desc' => 'Membentuk akhlak mulia dan karakter islami sejak dini',
                 'icon' => 'heart',
@@ -38,20 +32,20 @@
             ],
             [
                 'title' => 'Kegiatan Islami',
-                'desc' => 'Sholat berjamaah, doa harian, dan hafalan surat pendek',
+                'desc' => 'Membaca Al-Quran, sholat berjamaah, doa harian, hafalan asmaul husna, hafalan surat pendek dan hadist',
                 'icon' => 'moon',
                 'gradient' => 'from-blue-500 to-indigo-600'
             ],
             [
-                'title' => 'Ekstrakurikuler',
-                'desc' => 'Renang, mewarnai, menari, dan kegiatan kreatif lainnya',
-                'icon' => 'palette',
-                'gradient' => 'from-amber-500 to-orange-600'
+                'title' => 'Program Literasi Dini',
+                'desc' => 'Mengembangkan kemampuan membaca, menulis, dan berhitung sejak dini',
+                'icon' => 'book-a',
+                'gradient' => 'from-purple-500 to-violet-600'
             ],
         ];
         @endphp
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-24 stagger-children">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-24 stagger-children">
             @foreach ($programs as $p)
                 <div class="hover-card bg-white p-7 border border-gray-100 rounded-2xl shadow-sm group relative overflow-hidden">
                     {{-- Gradient bar --}}
