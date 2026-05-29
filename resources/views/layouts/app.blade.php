@@ -7,9 +7,9 @@
     <title>@yield('title', 'Sistem PPDB PAUD Az-Zahra')</title>
 
     <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=poppins:400,500,600,700|public-sans:400,500,600,700"
-        rel="stylesheet" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 
     <!-- Tailwind CSS -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -61,9 +61,7 @@
         </button>
 
         <div class="px-6 py-5 flex items-center gap-3 overflow-hidden whitespace-nowrap h-[76px]">
-            <div class="w-9 h-9 rounded-md bg-[#696cff] flex items-center justify-center shadow-lg flex-shrink-0">
-                <i data-lucide="book-open" class="w-5 h-5 text-white"></i>
-            </div>
+            <img src="{{ asset('images/azzahra_logo.png') }}" alt="Logo PAUD Az-Zahra" class="w-9 h-9 object-contain flex-shrink-0">
             <span
                 class="menu-text text-xl font-heading font-bold text-[#566a7f] dark:text-[#d5d5e2] tracking-tight transition-opacity duration-300">Az-Zahra</span>
         </div>
@@ -313,18 +311,20 @@
         <!-- ============================================
              MAIN CONTENT SCROLLABLE AREA
              ============================================ -->
-        <main id="mainScrollArea" class="h-full overflow-x-hidden overflow-y-auto p-4 sm:p-6 pt-24 sm:pt-24 pb-16">
+        <main id="mainScrollArea" class="h-full flex flex-col overflow-x-hidden overflow-y-auto p-4 sm:p-6 pt-24 sm:pt-24 pb-16">
 
             @yield('content')
 
-        </main>
+            <!-- ============================================
+                 FOOTER
+                 ============================================ -->
+            <div class="mt-auto pt-8">
+                <footer class="py-4 px-6 text-center text-sm text-[#a1b0cb] border-t border-[#d9dee3] dark:border-[#434463]">
+                    &copy; {{ date('Y') }} PAUD Al Qur'an Az-Zahra. Hak Cipta Dilindungi.
+                </footer>
+            </div>
 
-        <!-- ============================================
-             FOOTER
-             ============================================ -->
-        <footer class="py-4 px-6 text-center text-sm text-[#a1b0cb]">
-            &copy; {{ date('Y') }} PAUD Al Qur'an Az-Zahra. Hak Cipta Dilindungi.
-        </footer>
+        </main>
 
         <!-- Search Modal -->
         <div id="searchModal" class="fixed inset-0 z-[9999] hidden">

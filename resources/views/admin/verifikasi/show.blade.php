@@ -242,15 +242,15 @@
                             </div>
 
                             <div class="flex flex-col gap-3 pt-2">
-                                <button type="button" onclick="openModal('modalTerima')" class="w-full flex justify-center items-center gap-2 py-3 px-4 bg-secondary-600 hover:bg-secondary-700 text-white font-semibold rounded-lg shadow-sm transition-colors">
+                                <button type="button" onclick="handleTerima()" class="w-full flex justify-center items-center gap-2 py-3 px-4 bg-secondary-600 hover:bg-secondary-700 text-white font-semibold rounded-lg shadow-sm transition-colors">
                                     <i data-lucide="check" class="w-5 h-5"></i> Setujui Pendaftaran
                                 </button>
                                 
-                                <button type="button" onclick="openModal('modalRevisi')" class="w-full flex justify-center items-center gap-2 py-3 px-4 bg-white hover:bg-orange-50 text-orange-600 border border-orange-200 font-semibold rounded-lg transition-colors">
+                                <button type="button" onclick="handleRevisi()" class="w-full flex justify-center items-center gap-2 py-3 px-4 bg-white hover:bg-orange-50 text-orange-600 border border-orange-200 font-semibold rounded-lg transition-colors">
                                     <i data-lucide="edit-3" class="w-5 h-5"></i> Minta Revisi Dokumen
                                 </button>
 
-                                <button type="button" onclick="openModal('modalTolak')" class="w-full flex justify-center items-center gap-2 py-3 px-4 bg-white hover:bg-red-50 text-red-600 border border-red-200 font-semibold rounded-lg transition-colors">
+                                <button type="button" onclick="handleTolak()" class="w-full flex justify-center items-center gap-2 py-3 px-4 bg-white hover:bg-red-50 text-red-600 border border-red-200 font-semibold rounded-lg transition-colors">
                                     <i data-lucide="x" class="w-5 h-5"></i> Tolak Pendaftaran
                                 </button>
                             </div>
@@ -263,135 +263,103 @@
     </div>
 </div>
 
-<!-- Modal Terima -->
-<div id="modalTerima" class="fixed inset-0 z-50 hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-    <div class="fixed inset-0 bg-black/60 transition-opacity"></div>
-    <div class="fixed inset-0 z-10 overflow-y-auto">
-        <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
-            <div class="relative transform overflow-hidden rounded-lg bg-white dark:bg-[#2b2c40] text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg border border-[#d9dee3] dark:border-[#434463]">
-                <div class="bg-white dark:bg-[#2b2c40] px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
-                    <div class="sm:flex sm:items-start">
-                        <div class="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-secondary-100 sm:mx-0 sm:h-10 sm:w-10">
-                            <i data-lucide="check-circle" class="h-6 w-6 text-secondary-600"></i>
-                        </div>
-                        <div class="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
-                            <h3 class="text-lg font-semibold leading-6 text-[#566a7f] dark:text-[#d5d5e2]" id="modal-title">Konfirmasi Persetujuan</h3>
-                            <div class="mt-2">
-                                <p class="text-sm text-[#697a8d] dark:text-[#a1b0cb]">Apakah Anda yakin dokumen pendaftar atas nama <b class="text-[#566a7f] dark:text-[#d5d5e2]">{{ $detail->siswa->nama }}</b> sudah valid dan lengkap? Tindakan ini akan mengubah status menjadi <span class="font-bold text-emerald-600">DITERIMA</span>.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="bg-[#f5f5f9] dark:bg-[#232333] px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
-                    <form action="{{ route('admin.verifikasi.terima', $detail->id) }}" method="POST" id="formTerima">
-                        @csrf
-                        @method('PATCH')
-                        <input type="hidden" name="notifikasi" id="hiddenNotifikasiTerima">
-                        <button type="submit" class="inline-flex w-full justify-center rounded-lg bg-secondary-600 px-4 py-2 font-semibold text-white shadow-sm hover:bg-secondary-500 sm:ml-3 sm:w-auto">Ya, Setujui Pendaftar</button>
-                    </form>
-                    <button type="button" onclick="closeModal('modalTerima')" class="mt-3 inline-flex w-full justify-center rounded-lg bg-white dark:bg-[#2b2c40] px-4 py-2 font-semibold text-[#697a8d] dark:text-[#a1b0cb] shadow-sm ring-1 ring-inset ring-[#d9dee3] dark:ring-[#434463] hover:bg-[#f5f5f9] dark:hover:bg-[#232333] sm:mt-0 sm:w-auto">Batal</button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+<!-- Hidden Forms -->
+<form id="formTerima" action="{{ route('admin.verifikasi.terima', $detail->id) }}" method="POST" style="display: none;">
+    @csrf
+    @method('PATCH')
+    <input type="hidden" id="hiddenNotifikasiTerima" name="notifikasi" value="">
+</form>
 
-<!-- Modal Tolak -->
-<div id="modalTolak" class="fixed inset-0 z-50 hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-    <div class="fixed inset-0 bg-black/60 transition-opacity"></div>
-    <div class="fixed inset-0 z-10 overflow-y-auto">
-        <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
-            <div class="relative transform overflow-hidden rounded-lg bg-white dark:bg-[#2b2c40] text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg border border-[#d9dee3] dark:border-[#434463]">
-                <div class="bg-white dark:bg-[#2b2c40] px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
-                    <div class="sm:flex sm:items-start">
-                        <div class="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
-                            <i data-lucide="alert-triangle" class="h-6 w-6 text-red-600"></i>
-                        </div>
-                        <div class="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
-                            <h3 class="text-lg font-semibold leading-6 text-[#566a7f] dark:text-[#d5d5e2]" id="modal-title">Konfirmasi Penolakan</h3>
-                            <div class="mt-2">
-                                <p class="text-sm text-[#697a8d] dark:text-[#a1b0cb]">Anda akan menolak pendaftar ini secara permanen. Pastikan Anda telah mengisi "Catatan Tambahan" agar wali murid tahu alasannya.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="bg-[#f5f5f9] dark:bg-[#232333] px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
-                    <form action="{{ route('admin.verifikasi.tolak', $detail->id) }}" method="POST" id="formTolak">
-                        @csrf
-                        @method('PATCH')
-                        <input type="hidden" name="notifikasi" id="hiddenNotifikasiTolak">
-                        <button type="submit" class="inline-flex w-full justify-center rounded-lg bg-red-600 px-4 py-2 font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto">Ya, Tolak Pendaftaran</button>
-                    </form>
-                    <button type="button" onclick="closeModal('modalTolak')" class="mt-3 inline-flex w-full justify-center rounded-lg bg-white dark:bg-[#2b2c40] px-4 py-2 font-semibold text-[#697a8d] dark:text-[#a1b0cb] shadow-sm ring-1 ring-inset ring-[#d9dee3] dark:ring-[#434463] hover:bg-[#f5f5f9] dark:hover:bg-[#232333] sm:mt-0 sm:w-auto">Batal</button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+<form id="formTolak" action="{{ route('admin.verifikasi.tolak', $detail->id) }}" method="POST" style="display: none;">
+    @csrf
+    @method('PATCH')
+    <input type="hidden" id="hiddenNotifikasiTolak" name="notifikasi" value="">
+</form>
 
-<!-- Modal Revisi -->
-<div id="modalRevisi" class="fixed inset-0 z-50 hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-    <div class="fixed inset-0 bg-black/60 transition-opacity"></div>
-    <div class="fixed inset-0 z-10 overflow-y-auto">
-        <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
-            <div class="relative transform overflow-hidden rounded-lg bg-white dark:bg-[#2b2c40] text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg border border-[#d9dee3] dark:border-[#434463]">
-                <div class="bg-white dark:bg-[#2b2c40] px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
-                    <div class="sm:flex sm:items-start">
-                        <div class="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-orange-100 sm:mx-0 sm:h-10 sm:w-10">
-                            <i data-lucide="edit-3" class="h-6 w-6 text-orange-600"></i>
-                        </div>
-                        <div class="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
-                            <h3 class="text-lg font-semibold leading-6 text-[#566a7f] dark:text-[#d5d5e2]" id="modal-title">Konfirmasi Permintaan Revisi</h3>
-                            <div class="mt-2">
-                                <p class="text-sm text-[#697a8d] dark:text-[#a1b0cb]">Anda akan meminta revisi untuk pendaftar ini. Pastikan Anda telah mengisi "Catatan Tambahan" secara detail (contoh: berkas KK kurang jelas) agar wali murid dapat memperbaikinya.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="bg-[#f5f5f9] dark:bg-[#232333] px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
-                    <form action="{{ route('admin.verifikasi.revisi', $detail->id) }}" method="POST" id="formRevisi">
-                        @csrf
-                        @method('PATCH')
-                        <input type="hidden" name="notifikasi" id="hiddenNotifikasiRevisi">
-                        <button type="submit" class="inline-flex w-full justify-center rounded-lg bg-orange-600 px-4 py-2 font-semibold text-white shadow-sm hover:bg-orange-500 sm:ml-3 sm:w-auto">Ya, Minta Revisi</button>
-                    </form>
-                    <button type="button" onclick="closeModal('modalRevisi')" class="mt-3 inline-flex w-full justify-center rounded-lg bg-white dark:bg-[#2b2c40] px-4 py-2 font-semibold text-[#697a8d] dark:text-[#a1b0cb] shadow-sm ring-1 ring-inset ring-[#d9dee3] dark:ring-[#434463] hover:bg-[#f5f5f9] dark:hover:bg-[#232333] sm:mt-0 sm:w-auto">Batal</button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+<form id="formRevisi" action="{{ route('admin.verifikasi.revisi', $detail->id) }}" method="POST" style="display: none;">
+    @csrf
+    @method('PATCH')
+    <input type="hidden" id="hiddenNotifikasiRevisi" name="notifikasi" value="">
+</form>
 
 <script>
-    function openModal(modalId) {
-        const modal = document.getElementById(modalId);
-        const notifikasiText = document.getElementById('notifikasi').value;
+    async function handleTerima() {
+        const notifikasi = document.getElementById('notifikasi').value;
         
-        // Pass textarea value to hidden inputs in modals
-        if(modalId === 'modalTerima') {
-            document.getElementById('hiddenNotifikasiTerima').value = notifikasiText;
-        } else if (modalId === 'modalTolak') {
-            if(!notifikasiText.trim()) {
-                alert("Harap isi Catatan/Alasan Tolak terlebih dahulu!");
-                document.getElementById('notifikasi').focus();
-                return;
-            }
-            document.getElementById('hiddenNotifikasiTolak').value = notifikasiText;
-        } else if (modalId === 'modalRevisi') {
-            if(!notifikasiText.trim()) {
-                alert("Harap isi Catatan/Alasan Revisi terlebih dahulu!");
-                document.getElementById('notifikasi').focus();
-                return;
-            }
-            document.getElementById('hiddenNotifikasiRevisi').value = notifikasiText;
+        const result = await Swal.fire({
+            title: 'Konfirmasi Persetujuan',
+            html: `Apakah Anda yakin dokumen pendaftar atas nama <b>{{ $detail->siswa->nama }}</b> sudah valid dan lengkap? Tindakan ini akan mengubah status menjadi <span class="font-bold text-emerald-600">DITERIMA</span>.`,
+            icon: 'success',
+            showCancelButton: true,
+            confirmButtonText: 'Ya, Setujui Pendaftar',
+            cancelButtonText: 'Batal',
+            confirmButtonColor: '#2dce89',
+        });
+        
+        if (result.isConfirmed) {
+            document.getElementById('hiddenNotifikasiTerima').value = notifikasi;
+            document.getElementById('formTerima').submit();
         }
-        
-        modal.classList.remove('hidden');
     }
 
-    function closeModal(modalId) {
-        const modal = document.getElementById(modalId);
-        modal.classList.add('hidden');
+    async function handleTolak() {
+        const notifikasi = document.getElementById('notifikasi').value;
+        
+        if (!notifikasi.trim()) {
+            Swal.fire({
+                title: 'Catatan Diperlukan',
+                text: 'Harap isi "Catatan Tambahan / Alasan" sebelum menolak pendaftaran.',
+                icon: 'warning',
+                confirmButtonColor: '#696cff',
+            });
+            document.getElementById('notifikasi').focus();
+            return;
+        }
+        
+        const result = await Swal.fire({
+            title: 'Konfirmasi Penolakan',
+            text: 'Anda akan menolak pendaftar ini secara permanen. Pastikan alasan sudah jelas di catatan.',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Ya, Tolak Pendaftaran',
+            cancelButtonText: 'Batal',
+            confirmButtonColor: '#dc2626',
+        });
+        
+        if (result.isConfirmed) {
+            document.getElementById('hiddenNotifikasiTolak').value = notifikasi;
+            document.getElementById('formTolak').submit();
+        }
+    }
+
+    async function handleRevisi() {
+        const notifikasi = document.getElementById('notifikasi').value;
+        
+        if (!notifikasi.trim()) {
+            Swal.fire({
+                title: 'Catatan Diperlukan',
+                text: 'Harap isi "Catatan Tambahan / Alasan" dengan detail (contoh: berkas KK kurang jelas) sebelum meminta revisi.',
+                icon: 'warning',
+                confirmButtonColor: '#696cff',
+            });
+            document.getElementById('notifikasi').focus();
+            return;
+        }
+        
+        const result = await Swal.fire({
+            title: 'Konfirmasi Permintaan Revisi',
+            text: 'Anda akan meminta revisi untuk pendaftar ini. Wali murid akan menerima catatan dan dapat memperbaikinya.',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Ya, Minta Revisi',
+            cancelButtonText: 'Batal',
+            confirmButtonColor: '#f97316',
+        });
+        
+        if (result.isConfirmed) {
+            document.getElementById('hiddenNotifikasiRevisi').value = notifikasi;
+            document.getElementById('formRevisi').submit();
+        }
     }
 </script>
 

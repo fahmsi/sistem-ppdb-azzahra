@@ -56,9 +56,9 @@ export default {
                 },
             },
             fontFamily: {
-                heading: ['Poppins', ...defaultTheme.fontFamily.sans],
-                body: ['Public Sans', 'Lato', ...defaultTheme.fontFamily.sans],
-                sans: ['Public Sans', 'Lato', ...defaultTheme.fontFamily.sans],
+                heading: ['Jakarta Sans', ...defaultTheme.fontFamily.sans],
+                body: ['Jakarta Sans', ...defaultTheme.fontFamily.sans],
+                sans: ['Jakarta Sans', ...defaultTheme.fontFamily.sans],
             },
             animation: {
                 'fade-up': 'fadeUp 0.7s ease forwards',

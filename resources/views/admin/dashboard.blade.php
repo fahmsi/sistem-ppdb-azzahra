@@ -7,14 +7,14 @@
 <div class="max-w-7xl mx-auto space-y-6">
 
     <!-- Header Section -->
-    <div class="flex items-center justify-between animate-fade-in">
+    <div class="bg-white dark:bg-[#2b2c40] rounded-lg shadow-sneat dark:shadow-sneat-dark border border-[#d9dee3] dark:border-[#434463] p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 animate-fade-in">
         <div>
             <h2 class="text-2xl font-heading font-bold text-[#566a7f] dark:text-[#d5d5e2]">Ringkasan PPDB</h2>
             <p class="text-[#697a8d] dark:text-[#a1b0cb] text-sm mt-1">Pantau statistik pendaftaran dan aktivitas terbaru hari ini.</p>
         </div>
-        <div class="hidden sm:block">
-            <span class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-white dark:bg-[#2b2c40] border border-[#d9dee3] dark:border-[#434463] text-sm font-medium text-[#697a8d] dark:text-[#a1b0cb] shadow-sneat dark:shadow-sneat-dark">
-                <i data-lucide="calendar" class="w-4 h-4"></i> {{ date('d F Y') }}
+        <div class="hidden sm:flex">
+            <span class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[#f5f5f9] dark:bg-[#232333] border border-[#d9dee3] dark:border-[#434463] text-sm font-medium text-[#697a8d] dark:text-[#a1b0cb] shadow-sm transition-colors">
+                <i data-lucide="calendar" class="w-4 h-4 text-[#696cff]"></i> {{ date('d F Y') }}
             </span>
         </div>
     </div>

@@ -14,7 +14,7 @@
                 @php
                     $socials = [
                         ['name' => 'Facebook',  'icon' => 'facebook',  'hover' => 'hover:bg-blue-600',  'url' => $settings['social_facebook'] ?? '#'],
-                        ['name' => 'Instagram', 'icon' => 'instagram', 'hover' => 'hover:bg-pink-500',  'url' => $settings['social_instagram'] ?? 'https://www.instagram.com/azzahra_dpk/'],
+                        ['name' => 'Instagram', 'icon' => 'instagram', 'hover' => 'hover:bg-pink-500',  'url' => $settings['social_instagram'] ?? '#'],
                         ['name' => 'Youtube',   'icon' => 'youtube',   'hover' => 'hover:bg-red-600',   'url' => $settings['social_youtube'] ?? '#'],
                         ['name' => 'TikTok',    'icon' => 'tiktok',    'hover' => 'hover:bg-gray-700',  'url' => $settings['social_tiktok'] ?? '#'],
                     ];

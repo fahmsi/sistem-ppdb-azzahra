@@ -21,7 +21,7 @@
                     </h2>
                     <p class="text-primary-100 text-sm mt-2 ml-1">Perbarui data atau dokumen resmi yang diperlukan.</p>
                 </div>
-                <a href="{{ route('parent.dashboard') }}" class="inline-flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 text-white text-sm font-medium rounded-lg transition-colors border border-white/20">
+                <a href="{{ route('parent.siswa.show', $siswa->id) }}" class="inline-flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 text-white text-sm font-medium rounded-lg transition-colors border border-white/20">
                     <i data-lucide="arrow-left" class="w-4 h-4"></i> Kembali
                 </a>
             </div>

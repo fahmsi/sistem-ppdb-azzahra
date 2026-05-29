@@ -563,6 +563,69 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
     
+    
+    // =============================================
+    // 7. Confirm delete siswa dengan SweetAlert2
+    // =============================================
+    document.querySelectorAll('.child-delete-form').forEach((form) => {
+        form.addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            const childName = this.dataset.childName || '';
+
+            Swal.fire({
+                title: 'Hapus Data Anak?',
+                html: `Untuk melanjutkan, ketik nama lengkap anak: <strong>${childName}</strong>`,
+                icon: 'warning',
+                input: 'text',
+                inputPlaceholder: 'Nama lengkap anak',
+                inputAutoTrim: true,
+                showCancelButton: true,
+                confirmButtonText: 'Hapus Sekarang',
+                cancelButtonText: 'Batal',
+                confirmButtonColor: '#ef4444',
+                cancelButtonColor: '#697a8d',
+                allowOutsideClick: false,
+                inputValidator: (value) => {
+                    if (!value) {
+                        return 'Nama lengkap anak harus diisi.';
+                    }
+                    if (value.trim() !== childName) {
+                        return 'Nama tidak cocok. Ketik persis nama lengkap anak.';
+                    }
+                    return null;
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    this.submit();
+                }
+            });
+        });
+    });
+
+    document.querySelectorAll('.registration-confirm-form').forEach((form) => {
+        form.addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            const gelombang = this.dataset.gelombang || 'gelombang ini';
+
+            Swal.fire({
+                title: 'Konfirmasi Pendaftaran',
+                text: `Apakah Anda yakin ingin mendaftar di ${gelombang}?`,
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Ya, Daftar',
+                cancelButtonText: 'Batal',
+                confirmButtonColor: '#2563eb',
+                cancelButtonColor: '#6b7280',
+                allowOutsideClick: false,
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    this.submit();
+                }
+            });
+        });
+    });
 
 });
 

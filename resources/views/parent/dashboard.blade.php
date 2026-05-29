@@ -154,7 +154,7 @@
                             <i data-lucide="edit-3" class="w-3 h-3"></i> Edit
                         </a>
                         @if(!$latestRegistration || $latestRegistration->status === 'ditolak')
-                        <form action="{{ route('parent.siswa.destroy', $siswa->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus data anak? Tindakan ini tidak dapat dibatalkan.');">
+                        <form action="{{ route('parent.siswa.destroy', $siswa->id) }}" method="POST" class="child-delete-form" data-child-name="{{ $siswa->nama }}">
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-red-500 bg-red-50 dark:bg-red-500/10 hover:bg-red-100 dark:hover:bg-red-500/20 rounded-md transition-colors w-full">
@@ -249,12 +249,12 @@
             </div>
 
             <!-- Help / Contact Card -->
-            <div class="bg-[#2b2c40] rounded-lg shadow-sneat-dark p-6 text-white text-center">
-                <div class="w-12 h-12 rounded-full bg-[#696cff]/20 mx-auto flex items-center justify-center mb-4">
+            <div class="bg-white dark:bg-[#2b2c40] rounded-lg shadow-sneat dark:shadow-sneat-dark p-6 text-slate-700 dark:text-white text-center">
+                <div class="w-12 h-12 rounded-full bg-[#696cff]/10 dark:bg-[#696cff]/20 mx-auto flex items-center justify-center mb-4">
                     <i data-lucide="help-circle" class="w-6 h-6 text-[#696cff]"></i>
                 </div>
-                <h3 class="font-semibold mb-2 text-[#d5d5e2]">Butuh Bantuan?</h3>
-                <p class="text-sm text-[#a1b0cb] mb-4">Jika Anda mengalami kendala saat mendaftar, silakan hubungi admin kami.</p>
+                <h3 class="font-semibold mb-2 text-slate-900 dark:text-[#d5d5e2]">Butuh Bantuan?</h3>
+                <p class="text-sm text-slate-500 dark:text-[#a1b0cb] mb-4">Jika Anda mengalami kendala saat mendaftar, silakan hubungi admin kami.</p>
                 <a href="https://wa.me/{{ env('WHATSAPP_ADMIN_NUMBER', '6281310408525') }}?text={{ urlencode('Assalamu\'alaikum Admin Az Zahra, saya butuh bantuan terkait pendaftaran anak saya.') }}" target="_blank" class="inline-flex items-center justify-center gap-2 w-full py-2.5 bg-emerald-500 hover:bg-emerald-600 text-white rounded-md transition-colors text-sm font-medium">
                     <i data-lucide="message-circle" class="w-4 h-4"></i> Hubungi WhatsApp
                 </a>

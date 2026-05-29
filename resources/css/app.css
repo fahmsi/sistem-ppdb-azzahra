@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&family=Public+Sans:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap');
 @import "remixicon/fonts/remixicon.css";
 
 @tailwind base;
@@ -9,13 +9,13 @@
    Base Styles — Sneat Theme
    =========================== */
 body {
-    font-family: 'Public Sans', 'Lato', sans-serif;
+    font-family: 'Jakarta Sans', sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
 
 h1, h2, h3, h4, h5, h6 {
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Jakarta Sans', sans-serif;
 }
 
 /* ===========================
@@ -530,7 +530,7 @@ html {
    Sidebar Collapse Toggle Button
    =========================== */
 .sidebar-toggle-btn {
-    @apply absolute -right-3 top-20 w-8 h-8 bg-[#696cff] rounded-full flex items-center justify-center cursor-pointer shadow-lg z-50 text-white;
+    @apply absolute -right-4 top-20 w-8 h-8 bg-[#696cff] rounded-full flex items-center justify-center cursor-pointer shadow-lg z-50 text-white;
     border: 5px solid #f5f5f9;
     transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
 }
@@ -545,12 +545,18 @@ html {
 .sidebar-toggle-btn::before {
     content: '';
     position: absolute;
-    inset: 1px;
+    top: -5px;
+    bottom: -5px;
+    left: -5px;
+    right: -5px;
     border-radius: 50%;
-    border: 2px solid rgba(255, 255, 255, 0.5);
+    border: 1px solid #d9dee3; /* Warna border sidebar light mode */
     clip-path: polygon(0 0, 50% 0, 50% 100%, 0 100%);
     pointer-events: none;
-    z-index: 1;
+    z-index: 0;
+}
+.dark .sidebar-toggle-btn::before {
+    border-color: #434463; /* Warna border sidebar dark mode */
 }
 
 /* Ensure the icon sits above the divider */

@@ -11,9 +11,18 @@
         <a href="{{ route('parent.dashboard') }}" class="inline-flex items-center gap-2 text-sm font-medium text-gray-500 hover:text-primary-600 transition-colors">
             <i data-lucide="arrow-left" class="w-4 h-4"></i> Kembali ke Dashboard
         </a>
-        <a href="{{ route('parent.siswa.edit', $siswa->id) }}" class="inline-flex items-center justify-center gap-2 px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white text-sm font-medium rounded-lg transition-colors shadow-sm">
-            <i data-lucide="edit-3" class="w-4 h-4"></i> Perbarui Data Anak
-        </a>
+        <div class="flex flex-col sm:flex-row items-center gap-3">
+            <form action="{{ route('parent.siswa.destroy', $siswa->id) }}" method="POST" class="child-delete-form" data-child-name="{{ $siswa->nama }}">
+                @csrf
+                @method('DELETE')
+                <button type="submit" class="inline-flex items-center justify-center gap-2 px-4 py-2 border border-red-200 bg-red-50 text-red-600 text-sm font-medium rounded-lg hover:bg-red-100 transition-colors">
+                    <i data-lucide="trash-2" class="w-4 h-4"></i> Hapus Data Anak
+                </button>
+            </form>
+            <a href="{{ route('parent.siswa.edit', $siswa->id) }}" class="inline-flex items-center justify-center gap-2 px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white text-sm font-medium rounded-lg transition-colors shadow-sm">
+                <i data-lucide="edit-3" class="w-4 h-4"></i> Perbarui Data Anak
+            </a>
+        </div>
     </div>
 
     <!-- Main Profile Card -->

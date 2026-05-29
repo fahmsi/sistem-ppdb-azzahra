@@ -4,8 +4,19 @@
 @section('content')
 <div class="max-w-7xl mx-auto space-y-6">
     <div class="bg-white dark:bg-[#2b2c40] rounded-lg shadow-sneat dark:shadow-sneat-dark border border-[#d9dee3] dark:border-[#434463] p-6 sm:p-8">
-        <h2 class="text-2xl font-heading font-bold text-[#566a7f] dark:text-[#d5d5e2] mb-2">Gelombang Pendaftaran Tersedia</h2>
-        <p class="text-[#a1b0cb] text-sm max-w-3xl">Pilih salah satu gelombang di bawah ini untuk mendaftarkan anak Anda. Pastikan data profil anak sudah lengkap sebelum memilih gelombang.</p>
+        <h2 class="text-2xl font-heading font-bold text-[#566a7f] dark:text-[#d5d5e2] mb-4">Gelombang Pendaftaran Tersedia</h2>
+        
+        @if($hasActiveRegistration)
+        <div class="p-4 rounded-lg bg-yellow-50 dark:bg-yellow-500/10 border border-yellow-200 dark:border-yellow-500/20 flex items-center gap-3">
+            <i data-lucide="alert-circle" class="w-5 h-5 text-yellow-500 flex-shrink-0"></i>
+            <p class="text-yellow-800 dark:text-yellow-300 text-sm">
+                Anda sudah terdaftar pada salah satu gelombang. Silakan pantau status pendaftaran anak Anda di dashboard.
+            </p>
+        </div>
+        @else
+            <p class="text-[#a1b0cb] text-sm max-w-3xl">Pilih salah satu gelombang di bawah ini untuk mendaftarkan anak Anda. Pastikan data profil anak sudah lengkap sebelum memilih gelombang.</p>
+        @endif
+        
         @if(!auth()->user()->siswa)
         <div class="mt-4 p-4 rounded-lg bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/20 flex items-start gap-3">
             <i data-lucide="alert-triangle" class="w-5 h-5 text-amber-500 mt-0.5 flex-shrink-0"></i>
@@ -37,29 +48,29 @@
                 <h3 class="text-xl font-heading font-bold text-[#566a7f] dark:text-[#d5d5e2] mb-2">{{ $p->gelombang }}</h3>
                 <div class="space-y-2 mb-6">
                     <div class="flex items-center gap-2 text-sm text-[#697a8d] dark:text-[#a1b0cb]">
-                        <i data-lucide="calendar-range" class="w-4 h-4 text-[#696cff]"></i>
+                        <i data-lucide="calendar-range" class="w-4 h-4 text-[#696cff] flex-shrink-0"></i>
                         {{ \Carbon\Carbon::parse($p->tanggal_mulai)->format('d M') }} - {{ \Carbon\Carbon::parse($p->tanggal_selesai)->format('d M Y') }}
                     </div>
                     <div class="flex items-center gap-2 text-sm text-[#697a8d] dark:text-[#a1b0cb]">
-                        <i data-lucide="users" class="w-4 h-4 text-[#696cff]"></i>
+                        <i data-lucide="users" class="w-4 h-4 text-[#696cff] flex-shrink-0"></i>
                         Kuota: {{ $p->kuota }} Siswa
                     </div>
                 </div>
-                <div class="mt-auto">
+                <div class="mt-auto pt-4">
                     @if($p->status === 'buka')
                         @if(!$siswa)
-                            <button disabled class="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-[#f5f5f9] dark:bg-[#232333] text-[#a1b0cb] font-semibold rounded-md cursor-not-allowed">Lengkapi Data Dahulu</button>
+                            <button disabled class="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-[#f5f5f9] dark:bg-[#232333] text-[#a1b0cb] font-semibold rounded-md cursor-not-allowed text-sm">Lengkapi Data Dahulu</button>
                         @elseif($isAccepted)
-                            <button disabled class="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-[#f5f5f9] dark:bg-[#232333] text-[#a1b0cb] font-semibold rounded-md cursor-not-allowed"><i data-lucide="check" class="w-4 h-4"></i> Anak Sudah Diterima</button>
+                            <button disabled class="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-[#f5f5f9] dark:bg-[#232333] text-[#a1b0cb] font-semibold rounded-md cursor-not-allowed text-sm"><i data-lucide="check" class="w-4 h-4 flex-shrink-0"></i> Anak Sudah Diterima</button>
                         @elseif($hasActiveRegistration)
-                            <button disabled class="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-amber-50 dark:bg-amber-500/10 text-amber-600 dark:text-amber-400 font-semibold rounded-md cursor-not-allowed"><i data-lucide="lock" class="w-4 h-4"></i> Sudah Terdaftar di Gelombang Lain</button>
+                            <button disabled class="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-amber-50 dark:bg-amber-500/10 text-amber-600 dark:text-amber-400 font-semibold rounded-md cursor-not-allowed text-sm"><i data-lucide="lock" class="w-4 h-4 flex-shrink-0"></i> Sudah Terdaftar di Gelombang Lain</button>
                         @else
-                            <form action="{{ route('parent.pendaftaran.daftar', $p->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin mendaftar di gelombang ini?')">@csrf
-                                <button type="submit" class="w-full sneat-btn-primary justify-center py-2.5 font-semibold">Daftar Sekarang <i data-lucide="arrow-right" class="w-4 h-4"></i></button>
+                            <form action="{{ route('parent.pendaftaran.daftar', $p->id) }}" method="POST" class="registration-confirm-form" data-gelombang="{{ $p->gelombang }}">@csrf
+                                <button type="submit" class="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-[#696cff] hover:bg-[#5a5de6] text-white font-semibold rounded-md transition-colors text-sm">Daftar Sekarang <i data-lucide="arrow-right" class="w-4 h-4 flex-shrink-0"></i></button>
                             </form>
                         @endif
                     @else
-                        <button disabled class="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-[#f5f5f9] dark:bg-[#232333] text-[#a1b0cb] font-semibold rounded-md cursor-not-allowed border border-[#d9dee3] dark:border-[#434463]">Pendaftaran Ditutup</button>
+                        <button disabled class="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-[#f5f5f9] dark:bg-[#232333] text-[#a1b0cb] font-semibold rounded-md cursor-not-allowed border border-[#d9dee3] dark:border-[#434463] text-sm">Pendaftaran Ditutup</button>
                     @endif
                 </div>
             </div>
