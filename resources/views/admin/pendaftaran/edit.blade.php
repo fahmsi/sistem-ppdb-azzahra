@@ -2,7 +2,7 @@
 @section('title', 'Edit Gelombang Pendaftaran')
 @section('header_title', 'Edit Gelombang Pendaftaran')
 @section('content')
-<div class="max-w-3xl mx-auto">
+<div class="">
     <div class="bg-white dark:bg-[#2b2c40] rounded-lg shadow-sneat dark:shadow-sneat-dark border border-[#d9dee3] dark:border-[#434463] overflow-hidden">
         <div class="bg-[#e7e7ff] dark:bg-[#696cff]/20 border-b border-[#d9dee3] dark:border-[#434463] px-6 py-6 flex items-center justify-between">
             <div>

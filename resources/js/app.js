@@ -384,16 +384,28 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // =============================================
-    // 3. User Dropdown Toggle
+    // 3. User Dropdown & Notification Dropdown Toggle
     // =============================================
     const userMenuBtn = document.getElementById('userMenuBtn');
     const userMenu = document.getElementById('userMenu');
+    const notifToggleBtn = document.getElementById('notifToggleBtn');
+    const notifDropdown = document.getElementById('notifDropdown');
 
     if (userMenuBtn && userMenu) {
         userMenuBtn.addEventListener('click', (e) => {
             e.stopPropagation();
             userMenu.classList.toggle('show');
             if (themeDropdown) themeDropdown.classList.remove('show');
+            if (notifDropdown) notifDropdown.classList.add('hidden');
+        });
+    }
+
+    if (notifToggleBtn && notifDropdown) {
+        notifToggleBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            notifDropdown.classList.toggle('hidden');
+            if (themeDropdown) themeDropdown.classList.remove('show');
+            if (userMenu) userMenu.classList.remove('show');
         });
     }
 
@@ -404,6 +416,12 @@ document.addEventListener('DOMContentLoaded', function () {
         if (userMenu && userMenuBtn) {
             if (!userMenu.contains(e.target) && !userMenuBtn.contains(e.target)) {
                 userMenu.classList.remove('show');
+            }
+        }
+        
+        if (notifDropdown && notifToggleBtn) {
+            if (!notifDropdown.contains(e.target) && !notifToggleBtn.contains(e.target)) {
+                notifDropdown.classList.add('hidden');
             }
         }
 

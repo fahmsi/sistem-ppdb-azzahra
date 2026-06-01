@@ -4,7 +4,7 @@
 @section('header_title', 'Status Pendaftaran Anak')
 
 @section('content')
-<div class="max-w-7xl mx-auto space-y-6">
+<div class="space-y-6">
 
     <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden animate-fade-up">
         

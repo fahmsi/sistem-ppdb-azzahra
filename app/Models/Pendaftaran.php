@@ -87,4 +87,50 @@ class Pendaftaran extends Model
     {
         return $this->pendaftaranDetails()->count() >= $this->kuota;
     }
+
+    /**
+     * Accessor: Sisa Kuota
+     * Mengembalikan sisa kuota. Jika kuota null/0, anggap tidak terbatas.
+     */
+    public function getSisaKuotaAttribute(): int
+    {
+        if (!$this->kuota || $this->kuota <= 0) {
+            return 999999; // unlimited
+        }
+        $sisa = $this->kuota - $this->pendaftaranDetails()->count();
+        return $sisa > 0 ? $sisa : 0;
+    }
+
+    /**
+     * Accessor: Is Penuh
+     * Mengembalikan true jika sisa kuota <= 0 dan kuota tidak 0/null
+     */
+    public function getIsPenuhAttribute(): bool
+    {
+        if (!$this->kuota || $this->kuota <= 0) {
+            return false; // unlimited, never full
+        }
+        return $this->sisa_kuota <= 0;
+    }
+
+    /**
+     * Accessor: Is Expired
+     * Mereturn boolean true jika tanggal saat ini sudah melewati tanggal_selesai
+     */
+    public function getIsExpiredAttribute(): bool
+    {
+        if (!$this->tanggal_selesai) {
+            return false;
+        }
+        return now()->startOfDay()->greaterThan($this->tanggal_selesai->endOfDay());
+    }
+
+    /**
+     * Accessor: Is Bisa Dipilih
+     * Mereturn boolean true jika status gelombang aktif, is_penuh adalah false, dan is_expired adalah false.
+     */
+    public function getIsBisaDipilihAttribute(): bool
+    {
+        return $this->isOpen() && !$this->is_penuh && !$this->is_expired;
+    }
 }

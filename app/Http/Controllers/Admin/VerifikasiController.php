@@ -10,6 +10,7 @@ use App\Models\PendaftaranDetail;
 use App\Notifications\StatusPendaftaranNotification;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 use Maatwebsite\Excel\Facades\Excel;
@@ -95,6 +96,11 @@ class VerifikasiController extends Controller
         // Send Notification
         $detail->siswa->user->notify(new StatusPendaftaranNotification($detail->notifikasi, 'diterima'));
 
+        // Ambil nomor WA (prioritaskan nomor di tabel siswa, jika kosong ambil dari tabel user)
+        $phone = $detail->siswa->no_telpon ?? $detail->siswa->user->no_telpon ?? null;
+        $waMessage = "Assalamu'alaikum. Ada update status pendaftaran di PAUD Az-Zahra.\n\nStatus: " . strtoupper($detail->status) . "\nCatatan: " . $detail->notifikasi;
+        $this->sendWhatsAppNotification($phone, $waMessage);
+
         return back()->with('success', 'Pendaftaran diterima. Notifikasi dikirim ke wali murid.');
     }
 
@@ -115,6 +121,11 @@ class VerifikasiController extends Controller
         // Send Notification
         $detail->siswa->user->notify(new StatusPendaftaranNotification($detail->notifikasi, 'ditolak'));
 
+        // Ambil nomor WA (prioritaskan nomor di tabel siswa, jika kosong ambil dari tabel user)
+        $phone = $detail->siswa->no_telpon ?? $detail->siswa->user->no_telpon ?? null;
+        $waMessage = "Assalamu'alaikum. Ada update status pendaftaran di PAUD Az-Zahra.\n\nStatus: " . strtoupper($detail->status) . "\nCatatan: " . $detail->notifikasi;
+        $this->sendWhatsAppNotification($phone, $waMessage);
+
         return back()->with('success', 'Pendaftaran ditolak. Notifikasi dikirim ke wali murid.');
     }
 
@@ -134,6 +145,11 @@ class VerifikasiController extends Controller
 
         // Send Notification
         $detail->siswa->user->notify(new StatusPendaftaranNotification($detail->notifikasi, 'perlu_revisi'));
+
+        // Ambil nomor WA (prioritaskan nomor di tabel siswa, jika kosong ambil dari tabel user)
+        $phone = $detail->siswa->no_telpon ?? $detail->siswa->user->no_telpon ?? null;
+        $waMessage = "Assalamu'alaikum. Ada update status pendaftaran di PAUD Az-Zahra.\n\nStatus: " . strtoupper($detail->status) . "\nCatatan: " . $detail->notifikasi;
+        $this->sendWhatsAppNotification($phone, $waMessage);
 
         return back()->with('success', 'Status diubah menjadi Perlu Revisi. Notifikasi dikirim ke wali murid.');
     }
@@ -215,5 +231,29 @@ class VerifikasiController extends Controller
         }
 
         return Excel::download(new VerifikasiExport, $filenameBase . '.xlsx');
+    }
+
+    private function sendWhatsAppNotification($phone, $message)
+    {
+        $token = env('FONNTE_TOKEN');
+        if (!$token || empty($phone)) return;
+
+        // Bersihkan dan format nomor ke standar internasional (62)
+        $phone = preg_replace('/[^0-9]/', '', $phone);
+        if (substr($phone, 0, 1) == '0') {
+            $phone = '62' . substr($phone, 1);
+        }
+
+        try {
+            Http::withHeaders([
+                'Authorization' => $token,
+            ])->post('https://api.fonnte.com/send', [
+                'target' => $phone,
+                'message' => $message,
+                'countryCode' => '62',
+            ]);
+        } catch (\Exception $e) {
+            // Fail silently agar error API WA tidak merusak/menggagalkan proses verifikasi admin
+        }
     }
 }

@@ -6,6 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Sistem PPDB PAUD Az-Zahra')</title>
 
+    <!-- Favicon -->
+    <link rel="icon" href="{{ asset('images/azzahra_logo.png') }}" type="image/png">
+
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -61,9 +64,9 @@
         </button>
 
         <div class="px-6 py-5 flex items-center gap-3 overflow-hidden whitespace-nowrap h-[76px]">
-            <img src="{{ asset('images/azzahra_logo.png') }}" alt="Logo PAUD Az-Zahra" class="w-9 h-9 object-contain flex-shrink-0">
+            <img src="{{ asset('images/azzahra_logo.png') }}" alt="Logo PAUD Az-Zahra" class="h-8 w-auto object-contain flex-shrink-0">
             <span
-                class="menu-text text-xl font-heading font-bold text-[#566a7f] dark:text-[#d5d5e2] tracking-tight transition-opacity duration-300">Az-Zahra</span>
+                class="menu-text text-xl font-heading font-bold text-[#566a7f] dark:text-[#d5d5e2] tracking-tight transition-opacity duration-300">PPDB Az-Zahra</span>
         </div>
 
         <nav class="flex-1 py-4 overflow-y-auto overflow-x-hidden" id="sidebarNav">

@@ -53,7 +53,7 @@
                     </div>
                     <div class="flex items-center gap-2 text-sm text-[#697a8d] dark:text-[#a1b0cb]">
                         <i data-lucide="users" class="w-4 h-4 text-[#696cff] flex-shrink-0"></i>
-                        Kuota: {{ $p->kuota }} Siswa
+                        Kuota: {{ $p->kuota }} Siswa (Sisa Kuota: {{ $p->sisa_kuota }} - Ditutup {{ \Carbon\Carbon::parse($p->tanggal_selesai)->translatedFormat('d F Y') }})
                     </div>
                 </div>
                 <div class="mt-auto pt-4">

@@ -28,7 +28,7 @@ class StatusPendaftaranNotification extends Notification implements ShouldQueue
      */
     public function via(object $notifiable): array
     {
-        return ['mail']; // Can add 'database' or custom channels like 'wa'
+        return ['mail', 'database'];
     }
 
     /**
@@ -46,5 +46,13 @@ class StatusPendaftaranNotification extends Notification implements ShouldQueue
             ->line('**Pesan:** ' . $this->message)
             ->action('Cek Dashboard', url('/login'))
             ->line('Terima kasih telah mempercayakan pendidikan anak Anda kepada kami.');
+    }
+
+    public function toArray(object $notifiable): array
+    {
+        return [
+            'status' => $this->status,
+            'message' => $this->message,
+        ];
     }
 }

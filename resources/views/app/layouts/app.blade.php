@@ -8,6 +8,9 @@
 
     <title>PSB PAUD Al Qur'an Az-Zahra — Pendaftaran Siswa Baru</title>
 
+    <!-- Favicon -->
+    <link rel="icon" href="{{ asset('images/azzahra_logo.png') }}" type="image/png">
+
     {{-- Google Fonts: Plus Jakarta Sans --}}
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

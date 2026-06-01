@@ -45,9 +45,7 @@
                 </div>
                 <div class="p-6">
                     <div class="flex flex-col sm:flex-row gap-6 mb-6">
-                        <a href="{{ $detail->siswa->foto ? Storage::url($detail->siswa->foto) : asset('images/default-avatar.png') }}" data-fancybox="gallery" data-caption="Pas Foto Siswa">
-                            <img src="{{ $detail->siswa->foto ? Storage::url($detail->siswa->foto) : asset('images/default-avatar.png') }}" class="w-24 h-32 object-cover rounded-lg border border-[#d9dee3] dark:border-[#434463] shadow-sm hover:opacity-90 transition-opacity" alt="Foto Siswa">
-                        </a>
+                        <img src="{{ $detail->siswa->foto ? Storage::url($detail->siswa->foto) : asset('images/default-avatar.png') }}" class="w-24 h-32 object-cover rounded-lg border border-[#d9dee3] dark:border-[#434463] shadow-sm cursor-pointer hover:opacity-80 hover:shadow-lg transition-all duration-300" alt="Foto Siswa" onclick="openLightbox(this.src)">
                         <div class="flex-1 space-y-2">
                             <div>
                                 <p class="text-xs text-[#a1b0cb] uppercase tracking-wider">Nama Lengkap</p>
@@ -96,7 +94,7 @@
                         <i data-lucide="file-text" class="w-12 h-12 text-[#a1b0cb] mb-3"></i>
                         <h4 class="font-medium text-[#566a7f] dark:text-[#d5d5e2] mb-1">Kartu Keluarga (KK)</h4>
                         <p class="text-xs text-[#a1b0cb] mb-4">No: {{ $detail->siswa->no_kk ?? '-' }}</p>
-                        <a href="{{ $detail->siswa->foto_kk ? route('dokumen.show', ['path' => $detail->siswa->foto_kk]) : '#' }}" data-fancybox="gallery" data-caption="Kartu Keluarga (KK)" class="w-full inline-flex justify-center items-center gap-2 px-3 py-2 text-sm font-medium text-[#696cff] bg-[#e7e7ff] dark:bg-[#696cff]/20 hover:bg-[#d4d5ff] dark:hover:bg-[#696cff]/30 rounded-md transition-colors">
+                        <a href="{{ $detail->siswa->foto_kk ? route('dokumen.show', ['path' => $detail->siswa->foto_kk]) : '#' }}" onclick="openLightbox(this.href); event.preventDefault();" class="w-full inline-flex justify-center items-center gap-2 px-3 py-2 text-sm font-medium text-[#696cff] bg-[#e7e7ff] dark:bg-[#696cff]/20 hover:bg-[#d4d5ff] dark:hover:bg-[#696cff]/30 rounded-md transition-all duration-300 cursor-pointer hover:shadow-lg">
                             <i data-lucide="zoom-in" class="w-4 h-4"></i> Perbesar Dokumen
                         </a>
                     </div>
@@ -106,7 +104,7 @@
                         <i data-lucide="file-badge-2" class="w-12 h-12 text-[#a1b0cb] mb-3"></i>
                         <h4 class="font-medium text-[#566a7f] dark:text-[#d5d5e2] mb-1">Akta Kelahiran</h4>
                         <p class="text-xs text-[#a1b0cb] mb-4">Pastikan terbaca jelas</p>
-                        <a href="{{ $detail->siswa->foto_akta ? route('dokumen.show', ['path' => $detail->siswa->foto_akta]) : '#' }}" data-fancybox="gallery" data-caption="Akta Kelahiran" class="w-full inline-flex justify-center items-center gap-2 px-3 py-2 text-sm font-medium text-[#696cff] bg-[#e7e7ff] dark:bg-[#696cff]/20 hover:bg-[#d4d5ff] dark:hover:bg-[#696cff]/30 rounded-md transition-colors">
+                        <a href="{{ $detail->siswa->foto_akta ? route('dokumen.show', ['path' => $detail->siswa->foto_akta]) : '#' }}" onclick="openLightbox(this.href); event.preventDefault();" class="w-full inline-flex justify-center items-center gap-2 px-3 py-2 text-sm font-medium text-[#696cff] bg-[#e7e7ff] dark:bg-[#696cff]/20 hover:bg-[#d4d5ff] dark:hover:bg-[#696cff]/30 rounded-md transition-all duration-300 cursor-pointer hover:shadow-lg">
                             <i data-lucide="zoom-in" class="w-4 h-4"></i> Perbesar Dokumen
                         </a>
                     </div>
@@ -135,7 +133,7 @@
                         <p class="text-sm text-[#a1b0cb] mb-1">Nominal Ditransfer</p>
                         <p class="text-2xl font-bold text-[#566a7f] dark:text-[#d5d5e2] mb-4">Rp {{ number_format($detail->pembayaran->jumlah, 0, ',', '.') }}</p>
                         
-                        <a href="{{ route('dokumen.show', ['path' => $detail->pembayaran->bukti_bayar]) }}" data-fancybox="gallery" data-caption="Bukti Daftar Ulang (Pembayaran)" class="inline-flex items-center justify-center w-full gap-2 px-4 py-2 bg-[#f5f5f9] dark:bg-[#232333] hover:bg-[#e7e7ff] dark:hover:bg-[#696cff]/10 text-[#566a7f] dark:text-[#d5d5e2] text-sm font-medium rounded-lg transition-colors border border-[#d9dee3] dark:border-[#434463]">
+                        <a href="{{ route('dokumen.show', ['path' => $detail->pembayaran->bukti_bayar]) }}" onclick="openLightbox(this.href); event.preventDefault();" class="inline-flex items-center justify-center w-full gap-2 px-4 py-2 bg-[#f5f5f9] dark:bg-[#232333] hover:bg-[#e7e7ff] dark:hover:bg-[#696cff]/10 text-[#566a7f] dark:text-[#d5d5e2] text-sm font-medium rounded-lg transition-all duration-300 border border-[#d9dee3] dark:border-[#434463] cursor-pointer hover:shadow-lg">
                             <i data-lucide="zoom-in" class="w-4 h-4"></i> Perbesar Foto Bukti
                         </a>
                         
@@ -166,9 +164,15 @@
                                 <textarea name="catatan_admin" rows="3" class="sneat-input" placeholder="Contoh: Bukti buram, nominal tidak sesuai...">{{ $detail->pembayaran->catatan_admin }}</textarea>
                             </div>
 
-                            <button type="submit" class="w-full sneat-btn-primary justify-center py-2.5">
-                                <i data-lucide="save" class="w-4 h-4"></i> Simpan Verifikasi Bayar
-                            </button>
+                            @if($detail->pembayaran->status === 'lunas')
+                                <button type="button" disabled class="w-full inline-flex items-center gap-2 justify-center py-2.5 px-4 rounded-md text-sm font-medium transition-all bg-gray-100 dark:bg-[#434463] text-gray-400 dark:text-gray-500 cursor-not-allowed">
+                                    <i data-lucide="check-circle" class="w-4 h-4"></i> Pembayaran Sudah Disetujui
+                                </button>
+                            @else
+                                <button type="submit" class="w-full sneat-btn-primary justify-center py-2.5">
+                                    <i data-lucide="save" class="w-4 h-4"></i> Simpan Verifikasi Bayar
+                                </button>
+                            @endif
                         </form>
                     </div>
                 </div>
@@ -373,6 +377,58 @@
 <script>
     Fancybox.bind("[data-fancybox]", {
         // Custom options
+    });
+</script>
+<!-- Lightbox Modal -->
+<div id="lightboxModal" class="fixed inset-0 z-[9999] bg-black/90 hidden flex items-center justify-center transition-opacity duration-300 opacity-0 backdrop-blur-sm">
+    <button onclick="closeLightbox()" class="absolute top-5 right-5 text-white text-4xl cursor-pointer hover:text-gray-300 z-50 p-2 leading-none">&times;</button>
+    <img id="lightboxImage" src="" class="max-w-full max-h-[90vh] object-contain p-4 transform scale-95 transition-transform duration-300 shadow-2xl rounded-lg">
+</div>
+
+<script>
+    function openLightbox(imageSrc) {
+        if (imageSrc === '#' || !imageSrc) return;
+        const modal = document.getElementById('lightboxModal');
+        const lightboxImage = document.getElementById('lightboxImage');
+        
+        lightboxImage.src = imageSrc;
+        modal.classList.remove('hidden');
+        
+        // Trigger animasi smooth open
+        setTimeout(() => {
+            modal.classList.remove('opacity-0');
+            lightboxImage.classList.remove('scale-95');
+            lightboxImage.classList.add('scale-100');
+        }, 10);
+    }
+
+    function closeLightbox() {
+        const modal = document.getElementById('lightboxModal');
+        const lightboxImage = document.getElementById('lightboxImage');
+        
+        // Trigger animasi smooth close
+        modal.classList.add('opacity-0');
+        lightboxImage.classList.remove('scale-100');
+        lightboxImage.classList.add('scale-95');
+        
+        setTimeout(() => {
+            modal.classList.add('hidden');
+            lightboxImage.src = '';
+        }, 300);
+    }
+
+    // Tutup lightbox jika user mengklik area gelap di luar gambar
+    document.getElementById('lightboxModal').addEventListener('click', function(e) {
+        if (e.target === this) {
+            closeLightbox();
+        }
+    });
+    
+    // Tutup lightbox jika user menekan tombol ESC di keyboard
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && !document.getElementById('lightboxModal').classList.contains('hidden')) {
+            closeLightbox();
+        }
     });
 </script>
 

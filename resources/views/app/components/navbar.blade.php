@@ -8,7 +8,7 @@
 
             {{-- Logo --}}
             <a href="#home" class="flex items-center gap-3 group">
-                <img src="{{ asset('images/azzahra_logo.png') }}" alt="Logo PAUD Az-Zahra" class="w-12 h-12 object-contain group-hover:scale-105 transition-transform duration-300">
+                <img src="{{ asset('images/azzahra_logo.png') }}" alt="Logo PAUD Az-Zahra" class="h-10 w-auto object-contain">
                 
                 <div>
                     <span class="hidden sm:block text-[10px] text-gray-500 -mt-1 font-medium tracking-wider uppercase">PAUD Al Qur'an</span>

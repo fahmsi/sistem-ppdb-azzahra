@@ -236,18 +236,15 @@
         Chart.defaults.color = textColor;
         Chart.defaults.font.family = "'Jakarta Sans', sans-serif";
 
-        // Data from Controller
-        const genderData = @json($chartGender ?? []);
-        const statusData = @json($chartStatus ?? []);
-        const gelombangData = @json($chartGelombang ?? []);
+        // Data arrays will be injected directly into the charts below
 
         // 1. Gender Chart (Doughnut)
         new Chart(document.getElementById('genderChart'), {
             type: 'doughnut',
             data: {
-                labels: Object.keys(genderData),
+                labels: {!! json_encode($chartGender['labels'] ?? []) !!},
                 datasets: [{
-                    data: Object.values(genderData),
+                    data: {!! json_encode($chartGender['values'] ?? []) !!},
                     backgroundColor: ['#696cff', '#ff3e1d'],
                     borderWidth: 0,
                     hoverOffset: 4
@@ -266,9 +263,9 @@
         new Chart(document.getElementById('statusChart'), {
             type: 'doughnut',
             data: {
-                labels: Object.keys(statusData),
+                labels: {!! json_encode($chartStatus['labels'] ?? []) !!},
                 datasets: [{
-                    data: Object.values(statusData),
+                    data: {!! json_encode($chartStatus['values'] ?? []) !!},
                     backgroundColor: [
                         '#697a8d', // Pending (Gray)
                         '#ffab00', // Menunggu (Warning)
@@ -293,10 +290,10 @@
         new Chart(document.getElementById('gelombangChart'), {
             type: 'bar',
             data: {
-                labels: Object.keys(gelombangData),
+                labels: {!! json_encode($chartGelombang['labels'] ?? []) !!},
                 datasets: [{
                     label: 'Jumlah Pendaftar',
-                    data: Object.values(gelombangData),
+                    data: {!! json_encode($chartGelombang['values'] ?? []) !!},
                     backgroundColor: '#696cff',
                     borderRadius: 4
                 }]

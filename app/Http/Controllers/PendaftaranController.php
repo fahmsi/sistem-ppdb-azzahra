@@ -18,9 +18,11 @@ class PendaftaranController extends Controller
      */
     public function index(): View
     {
-        $pendaftarans = Pendaftaran::open()
-            ->orderBy('tanggal_mulai', 'desc')
-            ->get();
+        $pendaftarans = Pendaftaran::orderBy('tanggal_mulai', 'desc')
+            ->get()
+            ->filter(function ($pendaftaran) {
+                return $pendaftaran->is_bisa_dipilih;
+            });
 
         /** @var User $user */
         $user = Auth::user();
@@ -84,7 +86,12 @@ class PendaftaranController extends Controller
 
         // Check quota
         if ($pendaftaran->isQuotaFull()) {
-            return back()->with('error', 'Kuota pendaftaran sudah penuh.');
+            return back()->with('error', 'Mohon maaf, kuota untuk gelombang ini sudah penuh.');
+        }
+
+        // Check expired
+        if ($pendaftaran->is_expired) {
+            return back()->with('error', 'Mohon maaf, masa pendaftaran untuk gelombang ini telah ditutup karena sudah melewati batas tanggal.');
         }
 
         // LIMIT: Only 1 active gelombang at a time

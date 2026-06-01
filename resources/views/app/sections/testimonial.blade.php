@@ -145,8 +145,7 @@ Section: Testimoni Dinamis (Google Reviews Style)
                             <div class="flex gap-6" aria-hidden="true">
                                 @foreach($testimonials as $testimonial)
                                     <article class="w-[350px] flex-shrink-0 group">
-                                        <div
-                                            class="bg-white dark:bg-[#2b2c40] rounded-2xl border border-gray-100 dark:border-gray-700 hover:border-primary-200 transition-all duration-300 p-6 h-full flex flex-col">
+                                        <div class="bg-white dark:bg-[#2b2c40] rounded-2xl border border-gray-200 dark:border-gray-700 hover:border-primary-200 transition-all duration-300 p-6 h-full flex flex-col">
                                             <div class="flex items-start gap-4 mb-4">
                                                 <img src="https://ui-avatars.com/api/?name={{ urlencode($testimonial->name) }}&background=random&color=fff&size=48&font-size=0.4&bold=true&rounded=true"
                                                     alt="{{ $testimonial->name }}"
