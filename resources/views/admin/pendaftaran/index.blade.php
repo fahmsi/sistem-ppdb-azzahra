@@ -4,14 +4,13 @@
 @section('header_title', 'Gelombang Pendaftaran')
 
 @section('content')
-<div class="max-w-7xl mx-auto space-y-6">
+<div class="space-y-6">
 
-    <!-- Header & Action -->
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 animate-fade-in">
-        <div>
-            <h2 class="text-2xl font-heading font-bold text-[#566a7f] dark:text-[#d5d5e2]">Daftar Gelombang PPDB</h2>
-            <p class="text-[#a1b0cb] text-sm mt-1">Buat, edit, dan kelola status pembukaan gelombang pendaftaran.</p>
-        </div>
+    <!-- Header Card -->
+    <div class="bg-white dark:bg-[#2b2c40] rounded-lg shadow-sneat dark:shadow-sneat-dark border border-[#d9dee3] dark:border-[#434463] p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <h2 class="text-xl font-bold text-[#566a7f] dark:text-[#d5d5e2] flex items-center gap-2 m-0">
+            Gelombang Pendaftaran
+        </h2>
         <a href="{{ route('admin.pendaftaran.create') }}" class="sneat-btn-primary">
             <i data-lucide="plus-circle" class="w-4 h-4"></i> Buat Gelombang Baru
         </a>

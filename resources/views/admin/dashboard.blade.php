@@ -67,6 +67,33 @@
         </div>
     </div>
 
+    <!-- Analytics Charts -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 animate-fade-up" style="animation-delay: 0.1s;">
+        <!-- Gender Chart -->
+        <div class="bg-white dark:bg-[#2b2c40] rounded-lg shadow-sneat dark:shadow-sneat-dark border border-[#d9dee3] dark:border-[#434463] p-5">
+            <h4 class="text-sm font-semibold text-[#566a7f] dark:text-[#d5d5e2] mb-4">Statistik Gender</h4>
+            <div class="relative h-64 w-full">
+                <canvas id="genderChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Status Chart -->
+        <div class="bg-white dark:bg-[#2b2c40] rounded-lg shadow-sneat dark:shadow-sneat-dark border border-[#d9dee3] dark:border-[#434463] p-5">
+            <h4 class="text-sm font-semibold text-[#566a7f] dark:text-[#d5d5e2] mb-4">Status Pendaftaran</h4>
+            <div class="relative h-64 w-full">
+                <canvas id="statusChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Gelombang Chart -->
+        <div class="bg-white dark:bg-[#2b2c40] rounded-lg shadow-sneat dark:shadow-sneat-dark border border-[#d9dee3] dark:border-[#434463] p-5">
+            <h4 class="text-sm font-semibold text-[#566a7f] dark:text-[#d5d5e2] mb-4">Pendaftar per Gelombang</h4>
+            <div class="relative h-64 w-full">
+                <canvas id="gelombangChart"></canvas>
+            </div>
+        </div>
+    </div>
+
     <!-- Recent Activity Table -->
     <div class="bg-white dark:bg-[#2b2c40] rounded-lg shadow-sneat dark:shadow-sneat-dark border border-[#d9dee3] dark:border-[#434463] overflow-hidden animate-fade-up" style="animation-delay: 0.2s;">
         
@@ -78,7 +105,7 @@
             </div>
             <a href="{{ route('admin.verifikasi.index') }}" class="inline-flex items-center gap-2 text-sm font-medium text-[#696cff] hover:text-[#5a5de6] transition-colors">
                 Lihat Semua <i data-lucide="arrow-right" class="w-4 h-4"></i>
-            </a>
+            </a> 
         </div>
 
         <!-- Table -->
@@ -197,4 +224,102 @@
     @endif
 
 </div>
+
+<!-- Chart.js and Initialization -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const isDark = document.documentElement.classList.contains('dark');
+        const textColor = isDark ? '#d5d5e2' : '#566a7f';
+        const gridColor = isDark ? '#434463' : '#d9dee3';
+
+        Chart.defaults.color = textColor;
+        Chart.defaults.font.family = "'Jakarta Sans', sans-serif";
+
+        // Data from Controller
+        const genderData = @json($chartGender ?? []);
+        const statusData = @json($chartStatus ?? []);
+        const gelombangData = @json($chartGelombang ?? []);
+
+        // 1. Gender Chart (Doughnut)
+        new Chart(document.getElementById('genderChart'), {
+            type: 'doughnut',
+            data: {
+                labels: Object.keys(genderData),
+                datasets: [{
+                    data: Object.values(genderData),
+                    backgroundColor: ['#696cff', '#ff3e1d'],
+                    borderWidth: 0,
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'bottom' }
+                }
+            }
+        });
+
+        // 2. Status Chart (Doughnut)
+        new Chart(document.getElementById('statusChart'), {
+            type: 'doughnut',
+            data: {
+                labels: Object.keys(statusData),
+                datasets: [{
+                    data: Object.values(statusData),
+                    backgroundColor: [
+                        '#697a8d', // Pending (Gray)
+                        '#ffab00', // Menunggu (Warning)
+                        '#71dd37', // Diterima (Success)
+                        '#ff3e1d', // Ditolak (Danger)
+                        '#fd7e14'  // Revisi (Orange)
+                    ],
+                    borderWidth: 0,
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'bottom' }
+                }
+            }
+        });
+
+        // 3. Gelombang Chart (Bar)
+        new Chart(document.getElementById('gelombangChart'), {
+            type: 'bar',
+            data: {
+                labels: Object.keys(gelombangData),
+                datasets: [{
+                    label: 'Jumlah Pendaftar',
+                    data: Object.values(gelombangData),
+                    backgroundColor: '#696cff',
+                    borderRadius: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: { stepSize: 1 },
+                        grid: { color: gridColor, drawBorder: false }
+                    },
+                    x: {
+                        grid: { display: false, drawBorder: false }
+                    }
+                }
+            }
+        });
+    });
+</script>
+
 @endsection

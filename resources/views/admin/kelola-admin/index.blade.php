@@ -2,17 +2,18 @@
 @section('title', 'Kelola Admin')
 @section('header_title', 'Kelola Admin')
 @section('content')
-<div class="max-w-7xl mx-auto space-y-6">
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-            <h2 class="text-2xl font-heading font-bold text-[#566a7f] dark:text-[#d5d5e2]">Daftar Admin</h2>
-            <p class="text-[#a1b0cb] text-sm mt-1">Kelola akun administrator sistem PPDB.</p>
-        </div>
+<div class="space-y-6">
+
+    <!-- Header Card -->
+    <div class="bg-white dark:bg-[#2b2c40] rounded-lg shadow-sneat dark:shadow-sneat-dark border border-[#d9dee3] dark:border-[#434463] p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <h2 class="text-xl font-bold text-[#566a7f] dark:text-[#d5d5e2] flex items-center gap-2 m-0">
+            Kelola Admin
+        </h2>
         <a href="{{ route('admin.kelola-admin.create') }}" class="sneat-btn-primary"><i data-lucide="user-plus" class="w-4 h-4"></i> Tambah Admin</a>
     </div>
     <div class="bg-white dark:bg-[#2b2c40] rounded-lg shadow-sneat dark:shadow-sneat-dark border border-[#d9dee3] dark:border-[#434463] overflow-hidden">
-        <div class="overflow-x-auto">
-            <table class="sneat-table">
+        <div class="w-full overflow-x-auto">
+            <table class="sneat-table w-full table-auto whitespace-nowrap">
                 <thead><tr><th>#</th><th>Nama</th><th>Email</th><th>Role</th><th>Dibuat</th><th class="text-right">Aksi</th></tr></thead>
                 <tbody>
                     @forelse($admins as $i => $admin)

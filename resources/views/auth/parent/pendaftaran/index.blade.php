@@ -1,0 +1,105 @@
+@extends('layouts.app')
+@section('title', 'Daftar Gelombang PPDB')
+@section('header_title', 'Pilih Gelombang Pendaftaran')
+@section('content')
+<div class="max-w-7xl mx-auto space-y-6">
+    <!-- Breadcrumb -->
+    <nav class="text-sm text-[#a1b0cb] dark:text-[#7e8ba1] font-medium tracking-wide mb-6">
+        Dashboard <span class="mx-1">&gt;</span> Orang Tua <span class="mx-1">&gt;</span> <span class="text-[#697a8d] dark:text-[#b4bdc6] font-semibold">Pilih Gelombang</span>
+    </nav>
+
+    <!-- Header Card -->
+    <div class="bg-white dark:bg-[#2b2c40] rounded-lg shadow-sneat dark:shadow-sneat-dark border border-[#d9dee3] dark:border-[#434463] p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <h2 class="text-xl font-bold text-[#566a7f] dark:text-[#d5d5e2] flex items-center gap-2 m-0">
+            Gelombang Pendaftaran Tersedia
+        </h2>
+    </div>
+
+    <!-- Info Card -->
+    <div class="bg-white dark:bg-[#2b2c40] rounded-lg shadow-sneat dark:shadow-sneat-dark border border-[#d9dee3] dark:border-[#434463] p-6">
+        
+        @if($hasActiveRegistration)
+        <div class="p-4 rounded-lg bg-yellow-50 dark:bg-yellow-500/10 border border-yellow-200 dark:border-yellow-500/20 flex items-center gap-3">
+            <i data-lucide="alert-circle" class="w-5 h-5 text-yellow-500 flex-shrink-0"></i>
+            <p class="text-yellow-800 dark:text-yellow-300 text-sm">
+                Anda sudah terdaftar pada salah satu gelombang. Silakan pantau status pendaftaran anak Anda di dashboard.
+            </p>
+        </div>
+        @else
+            <p class="text-[#a1b0cb] text-sm max-w-3xl">Pilih salah satu gelombang di bawah ini untuk mendaftarkan anak Anda. Pastikan data profil anak sudah lengkap sebelum memilih gelombang.</p>
+        @endif
+        
+        @if(!auth()->user()->siswa)
+        <div class="mt-4 p-4 rounded-lg bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/20 flex items-start gap-3">
+            <i data-lucide="alert-triangle" class="w-5 h-5 text-amber-500 mt-0.5 flex-shrink-0"></i>
+            <div>
+                <h4 class="font-medium text-amber-800 dark:text-amber-400 text-sm">Perhatian</h4>
+                <p class="text-sm text-amber-700 dark:text-amber-300/80 mt-1">Anda belum melengkapi data profil anak. Anda tidak dapat melakukan pendaftaran sebelum profil dilengkapi.</p>
+                <a href="{{ route('parent.siswa.create') }}" class="inline-block mt-2 text-sm font-semibold text-amber-800 dark:text-amber-400 hover:underline">Lengkapi Data Anak Sekarang &rarr;</a>
+            </div>
+        </div>
+        @endif
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        @forelse($pendaftarans as $p)
+        <div class="bg-white dark:bg-[#2b2c40] rounded-lg shadow-sneat dark:shadow-sneat-dark border border-[#d9dee3] dark:border-[#434463] overflow-hidden flex flex-col hover:shadow-sneat-lg dark:hover:shadow-sneat-dark-lg transition-shadow">
+            @if($p->gambar)
+                <img src="{{ Storage::url($p->gambar) }}" class="w-full h-40 object-cover" alt="Banner Gelombang">
+            @else
+                <div class="w-full h-40 bg-gradient-to-br from-[#696cff] to-[#7b7dff] flex items-center justify-center p-6 text-center">
+                    <i data-lucide="calendar" class="w-12 h-12 text-white/50"></i>
+                </div>
+            @endif
+            <div class="p-6 flex-1 flex flex-col">
+                <div class="flex items-center justify-between mb-3">
+                    <span class="sneat-badge {{ $p->isOpen() ? 'bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400' : 'bg-red-50 dark:bg-red-500/10 text-red-600 dark:text-red-400' }}">
+                        {{ $p->isOpen() ? 'Pendaftaran Dibuka' : 'Ditutup / Penuh' }}
+                    </span>
+                    <span class="text-sm font-medium text-[#a1b0cb]">T.A. {{ $p->tahun_ajaran }}</span>
+                </div>
+                <h3 class="text-xl font-heading font-bold text-[#566a7f] dark:text-[#d5d5e2] mb-2">{{ $p->gelombang }}</h3>
+                <div class="space-y-2 mb-6">
+                    <div class="flex items-center gap-2 text-sm text-[#697a8d] dark:text-[#a1b0cb]">
+                        <i data-lucide="calendar-range" class="w-4 h-4 text-[#696cff] flex-shrink-0"></i>
+                        {{ \Carbon\Carbon::parse($p->tanggal_mulai)->format('d M') }} - {{ \Carbon\Carbon::parse($p->tanggal_selesai)->format('d M Y') }}
+                    </div>
+                    <div class="flex flex-col gap-1.5">
+                        <div class="flex items-center gap-2 text-sm text-[#697a8d] dark:text-[#a1b0cb]">
+                            <i data-lucide="users" class="w-4 h-4 text-[#696cff] flex-shrink-0"></i>
+                            Kuota: {{ $p->kuota }} Siswa
+                        </div>
+                        <div class="flex items-center gap-2 text-sm font-medium {{ ($p->kuota - $p->pendaftaranDetails()->count()) <= 5 ? 'text-red-500' : 'text-emerald-600 dark:text-emerald-400' }}">
+                            <i data-lucide="pie-chart" class="w-4 h-4 flex-shrink-0"></i>
+                            Sisa Kuota: {{ max(0, $p->kuota - $p->pendaftaranDetails()->count()) }}
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-auto pt-4">
+                    @if($p->isOpen())
+                        @if(!$siswa)
+                            <button disabled class="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-[#f5f5f9] dark:bg-[#232333] text-[#a1b0cb] font-semibold rounded-md cursor-not-allowed text-sm">Lengkapi Data Dahulu</button>
+                        @elseif($isAccepted)
+                            <button disabled class="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-[#f5f5f9] dark:bg-[#232333] text-[#a1b0cb] font-semibold rounded-md cursor-not-allowed text-sm"><i data-lucide="check" class="w-4 h-4 flex-shrink-0"></i> Anak Sudah Diterima</button>
+                        @elseif($hasActiveRegistration)
+                            <button disabled class="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-amber-50 dark:bg-amber-500/10 text-amber-600 dark:text-amber-400 font-semibold rounded-md cursor-not-allowed text-sm"><i data-lucide="lock" class="w-4 h-4 flex-shrink-0"></i> Sudah Terdaftar di Gelombang Lain</button>
+                        @else
+                            <form action="{{ route('parent.pendaftaran.daftar', $p->id) }}" method="POST" class="registration-confirm-form" data-gelombang="{{ $p->gelombang }}">@csrf
+                                <button type="submit" class="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-[#696cff] hover:bg-[#5a5de6] text-white font-semibold rounded-md transition-colors text-sm">Daftar Sekarang <i data-lucide="arrow-right" class="w-4 h-4 flex-shrink-0"></i></button>
+                            </form>
+                        @endif
+                    @else
+                        <button disabled class="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-[#f5f5f9] dark:bg-[#232333] text-[#a1b0cb] font-semibold rounded-md cursor-not-allowed border border-[#d9dee3] dark:border-[#434463] text-sm">Pendaftaran Ditutup</button>
+                    @endif
+                </div>
+            </div>
+        </div>
+        @empty
+        <div class="col-span-full py-12 flex flex-col items-center justify-center text-center bg-white dark:bg-[#2b2c40] rounded-lg shadow-sneat dark:shadow-sneat-dark border border-[#d9dee3] dark:border-[#434463]">
+            <div class="w-16 h-16 bg-[#f5f5f9] dark:bg-[#232333] rounded-full flex items-center justify-center mb-4"><i data-lucide="calendar-x" class="w-8 h-8 text-[#a1b0cb]"></i></div>
+            <h3 class="text-lg font-heading font-semibold text-[#566a7f] dark:text-[#d5d5e2]">Tidak Ada Pendaftaran</h3>
+            <p class="text-[#a1b0cb] mt-1 max-w-md">Saat ini belum ada gelombang pendaftaran yang dibuka oleh pihak sekolah.</p>
+        </div>
+        @endforelse
+    </div>
+</div>
+@endsection

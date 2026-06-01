@@ -43,6 +43,37 @@ class DashboardController extends Controller
                 ->get();
         }
 
-        return view('admin.dashboard', compact('stats', 'recentRegistrations', 'recentLogs'));
+        // Data for Charts
+        $chartGender = [
+            'Laki-laki' => Siswa::where('jenis_kelamin', 'L')->count(),
+            'Perempuan' => Siswa::where('jenis_kelamin', 'P')->count(),
+        ];
+
+        $rawStatuses = PendaftaranDetail::selectRaw('status, count(*) as count')
+            ->groupBy('status')
+            ->pluck('count', 'status')
+            ->toArray();
+
+        $chartStatus = [
+            'Pending' => $rawStatuses['pending'] ?? 0,
+            'Menunggu' => $rawStatuses['menunggu_verifikasi'] ?? 0,
+            'Diterima' => $rawStatuses['diterima'] ?? 0,
+            'Ditolak' => $rawStatuses['ditolak'] ?? 0,
+            'Revisi' => $rawStatuses['perlu_revisi'] ?? 0,
+        ];
+
+        $chartGelombang = Pendaftaran::withCount('pendaftaranDetails')
+            ->get()
+            ->pluck('pendaftaran_details_count', 'gelombang')
+            ->toArray();
+
+        return view('admin.dashboard', compact(
+            'stats', 
+            'recentRegistrations', 
+            'recentLogs', 
+            'chartGender', 
+            'chartStatus', 
+            'chartGelombang'
+        ));
     }
 }

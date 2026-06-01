@@ -2,7 +2,7 @@
 @section('title', 'Daftar Gelombang PPDB')
 @section('header_title', 'Pilih Gelombang Pendaftaran')
 @section('content')
-<div class="max-w-7xl mx-auto space-y-6">
+<div class="space-y-6">
     <div class="bg-white dark:bg-[#2b2c40] rounded-lg shadow-sneat dark:shadow-sneat-dark border border-[#d9dee3] dark:border-[#434463] p-6 sm:p-8">
         <h2 class="text-2xl font-heading font-bold text-[#566a7f] dark:text-[#d5d5e2] mb-4">Gelombang Pendaftaran Tersedia</h2>
         

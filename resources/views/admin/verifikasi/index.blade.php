@@ -4,10 +4,12 @@
 @section('header_title', 'Verifikasi Pendaftar')
 
 @section('content')
-<div class="max-w-7xl mx-auto space-y-6">
+<div class="space-y-6">
 
+    
     <!-- Filters & Search -->
-    <div class="bg-white dark:bg-[#2b2c40] rounded-lg shadow-sneat dark:shadow-sneat-dark border border-[#d9dee3] dark:border-[#434463] p-5">
+    <div class="bg-white dark:bg-[#2b2c40] rounded-lg shadow-sneat dark:shadow-sneat-dark border border-[#d9dee3] dark:border-[#434463] p-5  ">
+        
         <form action="{{ route('admin.verifikasi.index') }}" method="GET" class="flex flex-col sm:flex-row gap-4">
             
             <!-- Search -->
@@ -22,8 +24,8 @@
             </div>
 
             <!-- Filter Gelombang -->
-            <div class="sm:w-48">
-                <select name="pendaftaran_id" class="sneat-input">
+            <div class="flex-0">
+                <select name="pendaftaran_id" class="sneat-input !pr-8">
                     <option value="">Semua Gelombang</option>
                     @foreach($pendaftarans as $p)
                         <option value="{{ $p->id }}" {{ request('pendaftaran_id') == $p->id ? 'selected' : '' }}>{{ $p->gelombang }} ({{ $p->tahun_ajaran }})</option>
@@ -70,8 +72,8 @@
 
     <!-- Data Table -->
     <div class="bg-white dark:bg-[#2b2c40] rounded-lg shadow-sneat dark:shadow-sneat-dark border border-[#d9dee3] dark:border-[#434463] overflow-hidden">
-        <div class="overflow-x-auto">
-            <table class="sneat-table whitespace-nowrap">
+        <div class="w-full overflow-x-auto">
+            <table class="sneat-table w-full table-auto whitespace-nowrap">
                 <thead>
                     <tr>
                         <th>Tgl Daftar</th>
@@ -128,7 +130,7 @@
                                 </a>
                                 
                                 <!-- Hapus / Delete Button -->
-                                <form action="{{ route('admin.verifikasi.destroy', $reg->id) }}" method="POST" class="inline-block" onsubmit="return confirm('Yakin ingin menghapus data pendaftaran ini secara permanen?');">
+                                <form action="{{ route('admin.verifikasi.destroy', $reg->id) }}" method="POST" class="inline-block form-delete">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="inline-flex items-center justify-center w-8 h-8 rounded-md bg-red-50 dark:bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white transition-colors" title="Hapus Data">
@@ -159,7 +161,6 @@
         </div>
         @endif
     </div>
-</div>
 @endsection
     <script>
     document.addEventListener('DOMContentLoaded', function() {

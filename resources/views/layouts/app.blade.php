@@ -54,7 +54,7 @@
     <aside id="sidebar"
         class="bg-white dark:bg-[#2b2c40] w-[260px] hidden md:flex flex-col h-full transition-[width] duration-300 fixed inset-y-0 left-0 z-50 border-r border-[#d9dee3] dark:border-[#434463] group">
 
-        <button id="sidebarToggleBtn" class="sidebar-toggle-btn focus:outline-none transition-all duration-300">
+        <button id="sidebarToggleBtn" class="sidebar-toggle-btn focus:outline-none transition-all duration-300 shadow-none" style="box-shadow: none !important;">
             <span id="iconWrapper" class="transition-transform duration-300 transform relative z-10">
                 <i data-lucide="chevron-left" class="w-4 h-4 -translate-x-[1px]"></i>
             </span>
@@ -99,6 +99,12 @@
                     class="sidebar-menu-link flex items-center px-6 py-2.5 mx-3 rounded-lg overflow-hidden whitespace-nowrap {{ request()->routeIs('admin.pembayaran.*') ? 'active bg-[#696cff] text-white' : 'text-[#697a8d] hover:bg-gray-100 dark:hover:bg-[#232333]' }}">
                     <i data-lucide="credit-card" class="w-5 h-5 flex-shrink-0"></i>
                     <span class="menu-text ml-3 transition-opacity duration-300">Rekap Pembayaran</span>
+                </a>
+
+                <a href="{{ route('admin.testimonials.index') }}"
+                    class="sidebar-menu-link flex items-center px-6 py-2.5 mx-3 rounded-lg overflow-hidden whitespace-nowrap {{ request()->routeIs('admin.testimonials.*') ? 'active bg-[#696cff] text-white' : 'text-[#697a8d] hover:bg-gray-100 dark:hover:bg-[#232333]' }}">
+                    <i data-lucide="message-circle" class="w-5 h-5 flex-shrink-0"></i>
+                    <span class="menu-text ml-3 transition-opacity duration-300">Kelola Testimoni</span>
                 </a>
 
                 <a href="{{ route('admin.settings.index') }}"
@@ -241,6 +247,63 @@
                         </div>
                     </div>
                 </div>
+
+                @if(auth()->check() && auth()->user()->isParent())
+                <!-- Notification Bell -->
+                <div class="relative" id="notifContainer">
+                    <button id="notifToggleBtn"
+                        class="w-9 h-9 rounded-full flex items-center justify-center text-[#697a8d] dark:text-[#a1b0cb] hover:bg-[#f5f5f9] dark:hover:bg-[#232333] transition-colors relative"
+                        title="Notifikasi">
+                        <i data-lucide="bell" class="w-5 h-5"></i>
+                        @if(auth()->user()->unreadNotifications->count() > 0)
+                            <span class="absolute -top-0.5 -right-0.5 w-5 h-5 bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center shadow-sm animate-pulse">
+                                {{ auth()->user()->unreadNotifications->count() > 9 ? '9+' : auth()->user()->unreadNotifications->count() }}
+                            </span>
+                        @endif
+                    </button>
+
+                    <!-- Notification Dropdown -->
+                    <div id="notifDropdown" class="absolute right-0 mt-2 w-80 sm:w-96 bg-white dark:bg-[#2b2c40] rounded-lg shadow-xl border border-[#d9dee3] dark:border-[#434463] z-50 hidden overflow-hidden">
+                        <div class="px-4 py-3 border-b border-[#d9dee3] dark:border-[#434463] flex items-center justify-between">
+                            <h4 class="text-sm font-semibold text-[#566a7f] dark:text-[#d5d5e2] flex items-center gap-2">
+                                <i data-lucide="bell" class="w-4 h-4 text-[#696cff]"></i> Notifikasi
+                            </h4>
+                            @if(auth()->user()->unreadNotifications->count() > 0)
+                                <form action="{{ route('notifications.markAllRead') }}" method="POST">
+                                    @csrf
+                                    <button type="submit" class="text-xs text-[#696cff] hover:underline font-medium">Tandai Semua Dibaca</button>
+                                </form>
+                            @endif
+                        </div>
+                        <div class="max-h-80 overflow-y-auto divide-y divide-[#d9dee3] dark:divide-[#434463]">
+                            @forelse(auth()->user()->notifications->take(10) as $notif)
+                                <div class="px-4 py-3 flex items-start gap-3 {{ $notif->read_at ? 'opacity-60' : 'bg-[#f5f5f9] dark:bg-[#232333]' }} hover:bg-[#e7e7ff]/30 dark:hover:bg-[#696cff]/5 transition-colors">
+                                    <div class="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0
+                                        {{ ($notif->data['status'] ?? '') === 'diterima' ? 'bg-emerald-100 dark:bg-emerald-500/20 text-emerald-600' : '' }}
+                                        {{ ($notif->data['status'] ?? '') === 'ditolak' ? 'bg-red-100 dark:bg-red-500/20 text-red-600' : '' }}
+                                        {{ ($notif->data['status'] ?? '') === 'perlu_revisi' ? 'bg-orange-100 dark:bg-orange-500/20 text-orange-600' : '' }}
+                                        {{ !in_array($notif->data['status'] ?? '', ['diterima', 'ditolak', 'perlu_revisi']) ? 'bg-blue-100 dark:bg-blue-500/20 text-blue-600' : '' }}
+                                    ">
+                                        <i data-lucide="{{ $notif->data['icon'] ?? 'info' }}" class="w-4 h-4"></i>
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                        <p class="text-sm text-[#566a7f] dark:text-[#d5d5e2] leading-snug">{{ $notif->data['message'] ?? 'Notifikasi baru.' }}</p>
+                                        <p class="text-xs text-[#a1b0cb] mt-1">{{ $notif->created_at->diffForHumans() }}</p>
+                                    </div>
+                                    @if(!$notif->read_at)
+                                        <span class="w-2 h-2 bg-[#696cff] rounded-full flex-shrink-0 mt-2"></span>
+                                    @endif
+                                </div>
+                            @empty
+                                <div class="px-4 py-8 text-center">
+                                    <i data-lucide="bell-off" class="w-8 h-8 text-[#a1b0cb] mx-auto mb-2"></i>
+                                    <p class="text-sm text-[#a1b0cb]">Belum ada notifikasi.</p>
+                                </div>
+                            @endforelse
+                        </div>
+                    </div>
+                </div>
+                @endif
                 
 
                 <!-- Divider -->
@@ -371,6 +434,9 @@
                                         <li><a href="{{ route('admin.pembayaran.index') }}"
                                                 class="flex items-center gap-2 text-sm text-[#566a7f] dark:text-[#d5d5e2] hover:text-[#696cff] transition-colors"><i
                                                     data-lucide="credit-card" class="w-4 h-4"></i> Rekap Pembayaran</a></li>
+                                        <li><a href="{{ route('admin.testimonials.index') }}"
+                                                class="flex items-center gap-2 text-sm text-[#566a7f] dark:text-[#d5d5e2] hover:text-[#696cff] transition-colors"><i
+                                                    data-lucide="message-circle" class="w-4 h-4"></i> Kelola Testimoni</a></li>
                                         <li><a href="{{ route('admin.settings.index') }}"
                                                 class="flex items-center gap-2 text-sm text-[#566a7f] dark:text-[#d5d5e2] hover:text-[#696cff] transition-colors"><i
                                                     data-lucide="settings" class="w-4 h-4"></i> Pengaturan Situs</a></li>
@@ -427,51 +493,9 @@
     </div>
 
     <!-- ============================================
-         SCRIPTS — SweetAlert2 (interactions moved to resources/js/app.js)
+         SCRIPTS — SweetAlert2
          ============================================ -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            // =============================================
-            // SweetAlert2 — Global Flash Messages
-            // =============================================
-
-            @if(session('success'))
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Berhasil!',
-                    text: @json(session('success')),
-                    showConfirmButton: true,
-                    timer: 4000,
-                    timerProgressBar: true,
-                    showCloseButton: true
-                });
-            @endif
-
-            @if(session('error'))
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Gagal!',
-                    text: @json(session('error')),
-                    showConfirmButton: true,
-                    timer: 5000,
-                    timerProgressBar: true,
-                    showCloseButton: true
-                });
-            @endif
-
-            @if(session('warning'))
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Perhatian!',
-                    text: @json(session('warning')),
-                    showConfirmButton: true,
-                    timer: 5000,
-                    timerProgressBar: true,
-                    showCloseButton: true
-                });
-            @endif
-        });
-    </script>
+    @include('components.sweetalert')
 </body>
 
 </html>

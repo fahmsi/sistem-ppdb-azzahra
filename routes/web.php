@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\PembayaranController;
 use App\Http\Controllers\Admin\PendaftaranManageController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\VerifikasiController;
+use App\Http\Controllers\Admin\TestimonialController;
 use App\Http\Controllers\Auth\ConfirmablePasswordController;
 use App\Http\Controllers\Auth\EmailVerificationNotificationController;
 use App\Http\Controllers\Auth\EmailVerificationPromptController;
@@ -18,6 +19,7 @@ use App\Http\Controllers\PendaftaranController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SiswaController;
 use App\Models\Setting;
+use App\Models\Testimonial;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -28,8 +30,9 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     $settings = Setting::pluck('value', 'key')->toArray();
+    $testimonials = Testimonial::latest()->get();
 
-    return view('welcome', compact('settings'));
+    return view('welcome', compact('settings', 'testimonials'));
 })->name('home');
 
 /*
@@ -152,6 +155,13 @@ Route::middleware('auth')->group(function () {
         // Settings (admin & super_admin)
         Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
         Route::put('/settings', [SettingController::class, 'update'])->name('settings.update');
+
+        // Jika Anda menggunakan Route Resource:
+        Route::resource('testimonials', TestimonialController::class);
+
+        // ATAU jika Anda mendefinisikan rutenya satu per satu:
+        Route::get('/testimonials', [TestimonialController::class, 'index'])->name('testimonials.index');
+        // ... rute create, store, dll ...
 
         /*
         |------------------------------------------------------------------
