@@ -97,7 +97,7 @@ html {
    Sneat Floating Navbar
    =========================== */
 .sneat-navbar {
-    @apply bg-white/95 backdrop-blur-md rounded-xl mx-4 mt-4 py-3 px-6;
+    @apply bg-white/95 backdrop-blur-md rounded-xl mx-4 mt-3 py-3 px-6;
     box-shadow: 0 2px 6px 0 rgba(67, 89, 113, 0.12);
 }
 .dark .sneat-navbar {
@@ -421,10 +421,10 @@ html {
 .section-heading::after {
     content: '';
     position: absolute;
-    bottom: -8px;
+    bottom: -20px;
     left: 50%;
     transform: translateX(-50%);
-    width: 60px;
+    width: 64px;
     height: 4px;
     background: linear-gradient(90deg, #696cff, #059669);
     border-radius: 2px;

@@ -285,8 +285,7 @@
                                         {{ ($notif->data['status'] ?? '') === 'diterima' ? 'bg-emerald-100 dark:bg-emerald-500/20 text-emerald-600' : '' }}
                                         {{ ($notif->data['status'] ?? '') === 'ditolak' ? 'bg-red-100 dark:bg-red-500/20 text-red-600' : '' }}
                                         {{ ($notif->data['status'] ?? '') === 'perlu_revisi' ? 'bg-orange-100 dark:bg-orange-500/20 text-orange-600' : '' }}
-                                        {{ !in_array($notif->data['status'] ?? '', ['diterima', 'ditolak', 'perlu_revisi']) ? 'bg-blue-100 dark:bg-blue-500/20 text-blue-600' : '' }}
-                                    ">
+                                        {{ !in_array($notif->data['status'] ?? '', ['diterima', 'ditolak', 'perlu_revisi']) ? 'bg-blue-100 dark:bg-blue-500/20 text-blue-600' : '' }}">
                                         <i data-lucide="{{ $notif->data['icon'] ?? 'info' }}" class="w-4 h-4"></i>
                                     </div>
                                     <div class="flex-1 min-w-0">

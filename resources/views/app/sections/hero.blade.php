@@ -19,12 +19,11 @@
                     {{ $settings['hero_badge_text'] ?? 'Pendaftaran Dibuka 2026/2027' }}
                 </div>
 
-                <h1 class="font-heading text-4xl lg:text-5xl xl:text-6xl font-bold mb-6 leading-tight">
+                <h1 class="font-heading text-4xl lg:text-5xl xl:text-4xl font-bold mb-6 leading-tight">
                     <span class="gradient-text">Wujudkan Masa Depan</span>
                     <br>
                     <span class="gradient-text">Cemerlang</span>
                     <span class="text-gray-900"> Sejak</span>
-                    <br>
                     <span class="text-gray-900">Usia Dini</span>
                 </h1>
 

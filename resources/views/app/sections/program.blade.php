@@ -11,7 +11,7 @@
         <div class="text-center mb-14 fade-up">
             <span class="inline-flex items-center gap-2 bg-primary-50 text-primary-700 px-4 py-1.5 rounded-full text-sm font-medium mb-4">
                 <i data-lucide="rocket" class="w-4 h-4"></i>
-                Program Unggulan
+                
             </span>
             <h2 class="font-heading text-3xl lg:text-4xl font-bold text-gray-900 mb-4 section-heading">
                 Program Unggulan Kami
@@ -67,7 +67,7 @@
             <div class="text-center mb-12">
                 <span class="inline-flex items-center gap-2 bg-amber-50 text-amber-700 px-4 py-1.5 rounded-full text-sm font-medium mb-4">
                     <i data-lucide="award" class="w-4 h-4"></i>
-                    Prestasi
+                    
                 </span>
                 <h3 class="font-heading text-2xl lg:text-3xl font-bold text-gray-900 section-heading">
                     Prestasi Siswa

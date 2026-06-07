@@ -7,7 +7,7 @@
         <div class="text-center mb-14 fade-up">
             <span class="inline-flex items-center gap-2 bg-primary-50 text-primary-700 px-4 py-1.5 rounded-full text-sm font-medium mb-4">
                 <i data-lucide="building" class="w-4 h-4"></i>
-                Fasilitas
+                
             </span>
             <h2 class="font-heading text-3xl lg:text-4xl font-bold text-gray-900 section-heading">
                 Fasilitas Sekolah

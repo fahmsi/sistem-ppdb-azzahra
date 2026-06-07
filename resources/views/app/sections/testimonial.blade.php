@@ -37,7 +37,7 @@ Section: Testimoni Dinamis (Google Reviews Style)
             <span
                 class="inline-flex items-center gap-2 bg-secondary-50 text-secondary-700 px-4 py-1.5 rounded-full text-sm font-medium mb-4">
                 <i data-lucide="message-circle" class="w-4 h-4"></i>
-                Testimoni
+                
             </span>
             <h2 class="font-heading text-3xl lg:text-4xl font-bold text-gray-900 section-heading">
                 Apa Kata Mereka?
@@ -91,14 +91,14 @@ Section: Testimoni Dinamis (Google Reviews Style)
                             <div class="flex gap-6">
                                 @foreach($testimonials as $testimonial)
                                     <article class="w-[350px] flex-shrink-0 group">
-                                        <div class="bg-white dark:bg-[#2b2c40] rounded-2xl border border-gray-200 dark:border-gray-700 hover:border-primary-200 transition-all duration-300 p-6 h-full flex flex-col">
+                                        <div class="bg-white text-gray-800 border border-gray-200 rounded-2xl hover:border-primary-200 transition-all duration-300 p-6 h-full flex flex-col">
                                             <div class="flex items-start gap-4 mb-4">
                                                 <img src="https://ui-avatars.com/api/?name={{ urlencode($testimonial->name) }}&background=random&color=fff&size=48&font-size=0.4&bold=true&rounded=true"
                                                     alt="{{ $testimonial->name }}"
                                                     class="w-12 h-12 rounded-full flex-shrink-0 ring-2 ring-gray-100 group-hover:ring-primary-100 transition-all duration-300">
 
                                                 <div class="flex-1 min-w-0">
-                                                    <p class="font-heading font-bold text-gray-900 dark:text-gray-100 truncate">
+                                                    <p class="font-heading font-bold text-gray-900 truncate">
                                                         {{ $testimonial->name }}</p>
                                                     <p class="text-xs text-gray-400 mt-0.5">
                                                         {{ $testimonial->created_at->diffForHumans() }}</p>
@@ -133,7 +133,7 @@ Section: Testimoni Dinamis (Google Reviews Style)
                                                 @endfor
                                             </div>
 
-                                            <p class="text-gray-700 dark:text-gray-300 leading-relaxed text-sm flex-1">
+                                            <p class="text-gray-700 leading-relaxed text-sm flex-1">
                                                 {{ $testimonial->content }}
                                             </p>
                                         </div>
@@ -145,14 +145,14 @@ Section: Testimoni Dinamis (Google Reviews Style)
                             <div class="flex gap-6" aria-hidden="true">
                                 @foreach($testimonials as $testimonial)
                                     <article class="w-[350px] flex-shrink-0 group">
-                                        <div class="bg-white dark:bg-[#2b2c40] rounded-2xl border border-gray-200 dark:border-gray-700 hover:border-primary-200 transition-all duration-300 p-6 h-full flex flex-col">
+                                        <div class="bg-white text-gray-800 border border-gray-200 rounded-2xl hover:border-primary-200 transition-all duration-300 p-6 h-full flex flex-col">
                                             <div class="flex items-start gap-4 mb-4">
                                                 <img src="https://ui-avatars.com/api/?name={{ urlencode($testimonial->name) }}&background=random&color=fff&size=48&font-size=0.4&bold=true&rounded=true"
                                                     alt="{{ $testimonial->name }}"
                                                     class="w-12 h-12 rounded-full flex-shrink-0 ring-2 ring-gray-100 group-hover:ring-primary-100 transition-all duration-300">
 
                                                 <div class="flex-1 min-w-0">
-                                                    <p class="font-heading font-bold text-gray-900 dark:text-gray-100 truncate">
+                                                    <p class="font-heading font-bold text-gray-900 truncate">
                                                         {{ $testimonial->name }}</p>
                                                     <p class="text-xs text-gray-400 mt-0.5">
                                                         {{ $testimonial->created_at->diffForHumans() }}</p>
@@ -187,7 +187,7 @@ Section: Testimoni Dinamis (Google Reviews Style)
                                                 @endfor
                                             </div>
 
-                                            <p class="text-gray-700 dark:text-gray-300 leading-relaxed text-sm flex-1">
+                                            <p class="text-gray-700 leading-relaxed text-sm flex-1">
                                                 {{ $testimonial->content }}
                                             </p>
                                         </div>
