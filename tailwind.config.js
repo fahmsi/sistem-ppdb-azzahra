@@ -56,9 +56,9 @@ export default {
                 },
             },
             fontFamily: {
-                heading: ['Jakarta Sans', ...defaultTheme.fontFamily.sans],
-                body: ['Jakarta Sans', ...defaultTheme.fontFamily.sans],
-                sans: ['Jakarta Sans', ...defaultTheme.fontFamily.sans],
+                heading: ['Plus Jakarta Sans', ...defaultTheme.fontFamily.sans],
+                body: ['Plus Jakarta Sans', ...defaultTheme.fontFamily.sans],
+                sans: ['Plus Jakarta Sans', ...defaultTheme.fontFamily.sans],
             },
             animation: {
                 'fade-up': 'fadeUp 0.7s ease forwards',

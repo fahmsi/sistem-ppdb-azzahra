@@ -5,12 +5,8 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         <div class="text-center mb-14 fade-up">
-            <span class="inline-flex items-center gap-2 bg-secondary-50 text-secondary-700 px-4 py-1.5 rounded-full text-sm font-medium mb-4">
-                <i data-lucide="star" class="w-4 h-4"></i>
-            </span>               
-
-            <h2 class="font-heading text-3xl lg:text-4xl font-bold text-gray-900 section-heading">
-                Mengapa Memilih Az-Zahra?
+            <h2 class="section-heading font-heading text-3xl text-gray-900 lg:text-4xl">
+                <span>Mengapa <span class="gradient-text">Memilih Azzahra?</span></span>
             </h2>
         </div>
 

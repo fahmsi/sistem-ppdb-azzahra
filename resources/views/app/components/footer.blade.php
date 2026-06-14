@@ -22,6 +22,7 @@
                 @foreach($socials as $social)
                     <a href="{{ $social['url'] }}"
                         target="_blank"
+                        rel="noopener noreferrer"
                         aria-label="{{ $social['name'] }}"
                         class="group w-11 h-11 rounded-xl bg-gray-800 flex items-center justify-center {{ $social['hover'] }} transition-all duration-300 hover:-translate-y-1 hover:shadow-lg flex-shrink-0">
                         <i class="{{ 'ri-' . $social['icon'] . '-fill' }} text-xl text-gray-300 group-hover:text-white transition-colors"></i>
@@ -31,7 +32,7 @@
 
             {{-- Copyright --}}
             <p class="text-sm text-center">
-                &copy; {{ date('Y') }} <span class="text-gray-200 font-semibold tracking-wide">PAUD AL QUR'AN AZ-ZAHRA</span>. All rights reserved.
+                &copy; {{ date('Y') }} <span class="text-gray-200 font-semibold tracking-wide">PAUD AL QUR'AN AZZAHRA</span>. All rights reserved.
             </p>
 
             {{-- Creator Credit & Campus Identity --}}
@@ -42,14 +43,14 @@
                     and 
                     <i data-lucide="coffee" class="w-4 h-4 text-[#8b5a2b] inline-block"></i> 
                     by 
-                    <a href="https://github.com/fahmsi" target="_blank" class="font-semibold text-gray-200 hover:text-primary-400 transition-colors">
+                    <a href="https://www.linkedin.com/in/fahmimuhammadalhafizh/" target="_blank" class="font-semibold text-gray-200 hover:text-primary-400 transition-colors">
                         Fahmi M. Al Hafizh
                     </a>
                 </span>
                 
                 <span class="hidden sm:inline text-gray-600">|</span>
                 
-                <a href="https://nurulfikri.ac.id/" target="_blank" class="font-medium text-primary-500 hover:text-primary-400 hover:underline tracking-wide transition-colors text-center">
+                <a href="https://nurulfikri.ac.id/" target="_blank" rel="noopener noreferrer" class="font-medium text-primary-500 hover:text-primary-400 hover:underline tracking-wide transition-colors text-center">
                     Student of Nurul Fikri College of Integrated Technology
                 </a>
             </div>

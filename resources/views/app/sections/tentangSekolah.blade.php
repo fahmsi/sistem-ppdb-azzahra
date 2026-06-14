@@ -1,7 +1,7 @@
 {{-- ============================================
     Section 3: Tentang Sekolah + Tujuan
     ============================================ --}}
-<section class="py-20 lg:py-28 bg-white relative overflow-hidden">
+<section id="tentang" class="py-20 lg:py-28 bg-white relative overflow-hidden">
     {{-- Decorative --}}
     <div class="absolute top-0 right-0 w-64 h-64 bg-primary-50 rounded-full -translate-y-1/2 translate-x-1/2"></div>
     <div class="absolute bottom-0 left-0 w-48 h-48 bg-secondary-50 rounded-full translate-y-1/2 -translate-x-1/2"></div>
@@ -11,12 +11,8 @@
         {{-- Tentang Sekolah --}}
         <div class="mb-20">
             <div class="text-center mb-14 fade-up">
-                <span class="inline-flex items-center gap-2 bg-primary-50 text-primary-700 px-4 py-1.5 rounded-full text-sm font-medium mb-4">
-                    <i data-lucide="info" class="w-4 h-4"></i>
-                    
-                </span>
-                <h2 class="font-heading text-3xl lg:text-4xl font-bold text-gray-900 mb-4 section-heading">
-                    Tentang Sekolah
+                <h2 class="section-heading font-heading mb-4 text-3xl text-gray-900 lg:text-4xl">
+                    <span>Tentang <span class="gradient-text">Sekolah</span></span>
                 </h2>
                 <p class="text-gray-600 mt-8 max-w-2xl mx-auto">
                     Lembaga pendidikan anak usia dini yang mengedepankan nilai-nilai islami dan perkembangan holistik
@@ -63,7 +59,7 @@
                 <div class="fade-right">
                     <div class="relative">
                         <img
-                            src="https://images.unsplash.com/photo-1643216710579-a7500b9f2407?w=800&auto=format&fit=crop"
+                            src="{{ asset('images/foto_wisuda.jpg') }}"
                             class="w-full h-[420px] object-cover rounded-3xl shadow-2xl"
                             alt="Lingkungan PAUD Az-Zahra"
                             loading="lazy">
@@ -83,19 +79,22 @@
                     'icon' => 'heart',
                     'title' => "Generasi Qur'ani",
                     'desc' => "Menyiapkan generasi Qur'ani untuk menyongsong masa depan gemilang.",
-                    'color' => 'primary'
+                    'iconWrap' => 'bg-primary-50 group-hover:bg-primary-100',
+                    'iconColor' => 'text-primary-600',
                 ],
                 [
                     'icon' => 'sparkles',
                     'title' => "Aqidah & Cinta Allah",
                     'desc' => "Menanamkan aqidah agar anak mencintai Allah SWT dan Rasul-Nya.",
-                    'color' => 'secondary'
+                    'iconWrap' => 'bg-secondary-50 group-hover:bg-secondary-100',
+                    'iconColor' => 'text-secondary-600',
                 ],
                 [
                     'icon' => 'brain',
                     'title' => "Akhlak & Potensi",
                     'desc' => "Mengembangkan anak berakhlakul karimah, sehat, cerdas, dan kreatif.",
-                    'color' => 'primary'
+                    'iconWrap' => 'bg-primary-50 group-hover:bg-primary-100',
+                    'iconColor' => 'text-primary-600',
                 ],
             ];
         @endphp
@@ -103,7 +102,7 @@
         <div class="fade-up">
             <div class="text-center mb-12">
                 <h3 class="font-heading text-2xl lg:text-3xl font-bold text-gray-900 section-heading">
-                    Tujuan Sekolah
+                    <span>Tujuan <span class="gradient-text"> Sekolah</span></span>
                 </h3>
             </div>
 
@@ -112,8 +111,8 @@
                     <div class="hover-card bg-white border border-gray-100 rounded-2xl p-8 text-center shadow-sm group">
                         {{-- Icon --}}
                         <div class="mb-5 flex justify-center">
-                            <div class="w-16 h-16 rounded-2xl bg-{{ $g['color'] }}-50 flex items-center justify-center group-hover:bg-{{ $g['color'] }}-100 transition-colors duration-300 group-hover:scale-110 transform transition-transform">
-                                <i data-lucide="{{ $g['icon'] }}" class="w-8 h-8 text-{{ $g['color'] }}-600"></i>
+                            <div class="w-16 h-16 rounded-2xl {{ $g['iconWrap'] }} flex items-center justify-center duration-300 group-hover:scale-110 transform transition-all">
+                                <i data-lucide="{{ $g['icon'] }}" class="w-8 h-8 {{ $g['iconColor'] }}"></i>
                             </div>
                         </div>
 

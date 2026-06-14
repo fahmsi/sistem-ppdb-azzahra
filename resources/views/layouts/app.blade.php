@@ -66,7 +66,7 @@
         <div class="px-6 py-5 flex items-center gap-3 overflow-hidden whitespace-nowrap h-[76px]">
             <img src="{{ asset('images/azzahra_logo.png') }}" alt="Logo PAUD Az-Zahra" class="h-8 w-auto object-contain flex-shrink-0">
             <span
-                class="menu-text text-xl font-heading font-bold text-[#566a7f] dark:text-[#d5d5e2] tracking-tight transition-opacity duration-300">PPDB Az-Zahra</span>
+                class="menu-text text-xl font-heading font-bold text-[#566a7f] dark:text-[#d5d5e2] tracking-tight transition-opacity duration-300">PPDB Azzahra</span>
         </div>
 
         <nav class="flex-1 py-4 overflow-y-auto overflow-x-hidden" id="sidebarNav">
@@ -108,6 +108,12 @@
                     class="sidebar-menu-link flex items-center px-6 py-2.5 mx-3 rounded-lg overflow-hidden whitespace-nowrap {{ request()->routeIs('admin.testimonials.*') ? 'active bg-[#696cff] text-white' : 'text-[#697a8d] hover:bg-gray-100 dark:hover:bg-[#232333]' }}">
                     <i data-lucide="message-circle" class="w-5 h-5 flex-shrink-0"></i>
                     <span class="menu-text ml-3 transition-opacity duration-300">Kelola Testimoni</span>
+                </a>
+
+                <a href="{{ route('admin.gallery.index') }}"
+                    class="sidebar-menu-link flex items-center px-6 py-2.5 mx-3 rounded-lg overflow-hidden whitespace-nowrap {{ request()->routeIs('admin.gallery.*') ? 'active bg-[#696cff] text-white' : 'text-[#697a8d] hover:bg-gray-100 dark:hover:bg-[#232333]' }}">
+                    <i data-lucide="images" class="w-5 h-5 flex-shrink-0"></i>
+                    <span class="menu-text ml-3 transition-opacity duration-300">Kelola Gallery</span>
                 </a>
 
                 <a href="{{ route('admin.settings.index') }}"
@@ -439,6 +445,9 @@
                                         <li><a href="{{ route('admin.testimonials.index') }}"
                                                 class="flex items-center gap-2 text-sm text-[#566a7f] dark:text-[#d5d5e2] hover:text-[#696cff] transition-colors"><i
                                                     data-lucide="message-circle" class="w-4 h-4"></i> Kelola Testimoni</a></li>
+                                        <li><a href="{{ route('admin.gallery.index') }}"
+                                                class="flex items-center gap-2 text-sm text-[#566a7f] dark:text-[#d5d5e2] hover:text-[#696cff] transition-colors"><i
+                                                    data-lucide="images" class="w-4 h-4"></i> Kelola Gallery</a></li>
                                         <li><a href="{{ route('admin.settings.index') }}"
                                                 class="flex items-center gap-2 text-sm text-[#566a7f] dark:text-[#d5d5e2] hover:text-[#696cff] transition-colors"><i
                                                     data-lucide="settings" class="w-4 h-4"></i> Pengaturan Situs</a></li>

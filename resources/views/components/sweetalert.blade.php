@@ -12,6 +12,17 @@
             }
         });
 
+        @if(session('swal'))
+            Swal.fire({
+                icon: @json(session('swal.icon', 'success')),
+                title: @json(session('swal.title', 'Berhasil!')),
+                text: @json(session('swal.text')),
+                confirmButtonColor: @json(session('swal.confirmButtonColor', '#696cff')),
+                confirmButtonText: @json(session('swal.confirmButtonText', 'Selesai')),
+                allowOutsideClick: false
+            });
+        @endif
+
         // Flash Messages to Modal Alert
         @if(session('success'))
             Alert.fire({
@@ -50,17 +61,25 @@
             form.addEventListener('submit', function (e) {
                 e.preventDefault();
                 Swal.fire({
-                    title: 'Apakah Anda yakin ingin menghapus data ini?',
-                    text: 'Data yang dihapus tidak dapat dikembalikan.',
+                    title: form.dataset.confirmTitle || 'Hapus data ini?',
+                    text: form.dataset.confirmText || 'Data yang dihapus tidak dapat dikembalikan.',
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#ef4444',
                     cancelButtonColor: '#697a8d',
-                    confirmButtonText: 'Ya, Hapus!',
+                    confirmButtonText: form.dataset.confirmButton || 'Ya, Hapus!',
                     cancelButtonText: 'Batal',
-                    reverseButtons: true
+                    reverseButtons: true,
+                    focusCancel: true
                 }).then((result) => {
                     if (result.isConfirmed) {
+                        Swal.fire({
+                            title: 'Memproses...',
+                            text: 'Mohon tunggu sebentar.',
+                            allowOutsideClick: false,
+                            showConfirmButton: false,
+                            didOpen: () => Swal.showLoading()
+                        });
                         form.submit();
                     }
                 });

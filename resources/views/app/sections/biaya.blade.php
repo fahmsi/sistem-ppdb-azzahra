@@ -9,12 +9,8 @@
 
         {{-- Title --}}
         <div class="text-center mb-14 fade-up">
-            <span class="inline-flex items-center gap-2 bg-primary-50 text-primary-700 px-4 py-1.5 rounded-full text-sm font-medium mb-4">
-                <i data-lucide="wallet" class="w-4 h-4"></i>
-                
-            </span>
-            <h2 class="font-heading text-3xl lg:text-4xl font-bold text-gray-900 mb-4 section-heading">
-                Informasi Biaya Pendidikan
+            <h2 class="section-heading font-heading mb-4 text-3xl text-gray-900 lg:text-4xl">
+                <span>Informasi <span class="gradient-text">Biaya Pendidikan</span></span>
             </h2>
             <p class="text-gray-600 max-w-2xl mx-auto mt-6">
                 Investasi terbaik untuk masa depan anak Anda dengan biaya yang transparan
@@ -50,7 +46,7 @@
             ],
             [
                 'title' => 'Biaya Tahunan',
-                'amount' => '-',
+                'amount' => 'Sesuai kegiatan',
                 'desc' => 'Field trip, manasik haji, dan kegiatan tahunan',
                 'badge' => 'Per Tahun',
                 'icon' => 'gift',
@@ -72,10 +68,17 @@
                 @endif
 
                 {{-- Badge --}}
-                <span class="inline-flex items-center gap-1.5 text-xs bg-primary-50 text-primary-700 px-3 py-1.5 rounded-full font-semibold mb-4">
-                    <i data-lucide="{{ $item['icon'] }}" class="w-3 h-3"></i>
-                    {{ $item['badge'] }}
-                </span>
+                @if($item['badge'])
+                    <span class="inline-flex items-center gap-1.5 text-xs bg-primary-50 text-primary-700 px-3 py-1.5 rounded-full font-semibold mb-4">
+                        <i data-lucide="{{ $item['icon'] }}" class="w-3 h-3"></i>
+                        {{ $item['badge'] }}
+                    </span>
+                @else
+                    <span class="inline-flex items-center gap-1.5 text-xs bg-secondary-50 text-secondary-700 px-3 py-1.5 rounded-full font-semibold mb-4">
+                        <i data-lucide="{{ $item['icon'] }}" class="w-3 h-3"></i>
+                        Tanpa biaya
+                    </span>
+                @endif
 
                 <h3 class="font-heading font-semibold text-gray-900 text-lg mb-3">
                     {{ $item['title'] }}
@@ -124,16 +127,18 @@
         {{-- FAQ --}}
         @php
         $faqs = [
+            ['q' => 'Bagaimana PAUD Azzahra menilai perkembangan anak?', 'a' => 'Di PAUD Azzahra, perkembangan anak dipantau melalui observasi harian, portofolio karya anak, dan checklist perkembangan sesuai tahap usianya.'],
             ['q' => 'Apakah tersedia cicilan pembayaran?', 'a' => 'Ya, tersedia cicilan sebelum tahun ajaran dimulai. Anda dapat menghubungi Admin PPDB untuk informasi lebih lanjut.'],
             ['q' => 'Apa saja yang termasuk dalam biaya tahunan?', 'a' => 'Biaya tahunan mencakup study tour/fieldtrip, kegiatan hari besar Islam dan manasik haji bersama Ayah dan Bunda.'],
             ['q' => 'Bagaimana metode pembayaran yang tersedia?', 'a' => 'Pembayaran dapat dilakukan hanya melalui transfer bank.'],
+            ['q' => 'Berapa total biaya yang harus dibayar?', 'a' => 'Total biaya yang harus dibayar adalah Rp 850.000'],
         ];
         @endphp
 
         <div class="max-w-3xl mx-auto fade-up">
             <div class="text-center mb-10">
                 <h3 class="font-heading text-2xl lg:text-3xl font-bold text-gray-900 section-heading">
-                    Pertanyaan Umum (FAQ)
+                    Pertanyaan Umum <span class="gradient-text">(FAQ)</span>
                 </h3>
             </div>
 

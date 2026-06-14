@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Achievement;
 use App\Models\ActivityLog;
 use App\Models\Setting;
 use Illuminate\Http\RedirectResponse;
@@ -17,8 +18,9 @@ class SettingController extends Controller
     public function index(): View
     {
         $settings = Setting::orderBy('group')->orderBy('id')->get()->groupBy('group');
+        $achievements = Achievement::orderBy('sort_order')->orderByDesc('achievement_year')->get();
 
-        return view('admin.settings.index', compact('settings'));
+        return view('admin.settings.index', compact('settings', 'achievements'));
     }
 
     /**
@@ -34,6 +36,11 @@ class SettingController extends Controller
 
         ActivityLog::log('updated', null, 'Memperbarui pengaturan situs');
 
-        return back()->with('success', 'Pengaturan berhasil disimpan.');
+        return back()->with('swal', [
+            'icon' => 'success',
+            'title' => 'Pengaturan Tersimpan',
+            'text' => 'Perubahan pengaturan situs berhasil disimpan.',
+            'confirmButtonText' => 'Selesai',
+        ]);
     }
 }

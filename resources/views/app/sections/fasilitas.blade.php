@@ -1,16 +1,12 @@
 {{-- ============================================
     Section 9: Fasilitas Sekolah
     ============================================ --}}
-<section class="py-20 lg:py-28 bg-gradient-to-b from-gray-50 to-white relative overflow-hidden">
+<section id="fasilitas" class="py-20 lg:py-28 bg-gradient-to-b from-gray-50 to-white relative overflow-hidden">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         <div class="text-center mb-14 fade-up">
-            <span class="inline-flex items-center gap-2 bg-primary-50 text-primary-700 px-4 py-1.5 rounded-full text-sm font-medium mb-4">
-                <i data-lucide="building" class="w-4 h-4"></i>
-                
-            </span>
-            <h2 class="font-heading text-3xl lg:text-4xl font-bold text-gray-900 section-heading">
-                Fasilitas Sekolah
+            <h2 class="section-heading font-heading text-3xl text-gray-900 lg:text-4xl">
+                <span>Fasilitas <span class="gradient-text">Sekolah</span></span>
             </h2>
             <p class="text-gray-600 max-w-2xl mx-auto mt-6">
                 Fasilitas lengkap dan modern untuk mendukung proses belajar yang optimal

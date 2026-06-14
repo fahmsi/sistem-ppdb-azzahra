@@ -9,12 +9,8 @@
 
         {{-- Header --}}
         <div class="text-center mb-14 fade-up">
-            <span class="inline-flex items-center gap-2 bg-secondary-50 text-secondary-700 px-4 py-1.5 rounded-full text-sm font-medium mb-4">
-                <i data-lucide="clipboard-list" class="w-4 h-4"></i>
-                
-            </span>
-            <h2 class="font-heading text-3xl lg:text-4xl font-bold text-gray-900 mb-4 section-heading">
-                Persyaratan Administrasi
+            <h2 class="section-heading font-heading mb-4 text-3xl text-gray-900 lg:text-4xl">
+                <span>Persyaratan <span class="gradient-text">Administrasi</span></span>
             </h2>
             <p class="text-gray-600 max-w-2xl mx-auto mt-6">
                 Pastikan semua dokumen sudah lengkap sebelum mendaftar
@@ -29,7 +25,7 @@
                     "Dokumen Kartu Keluarga (KK)",
                     "Dokumen Akta Kelahiran",
                     "Dokumen KTP Orang Tua/Wali",
-                    "Pas Foto",
+                    "Pas Foto Anak",
                     "Mengisi formulir pendaftaran online di Aplikasi PPDB",
                     "Membayar biaya pendaftaran",
                 ];

@@ -2,23 +2,24 @@
 
 @section('content')
 
-{{-- 1. ATTENTION (Menarik Perhatian) --}}
+{{-- 1. THE HOOK (Kesan Pertama & Nilai Jual Cepat) --}}
 @include('app.sections.hero')
 @include('app.sections.quickHighlights') 
 
-{{-- 2. INTEREST (Membangun Ketertarikan & Narasi) --}}
-@include('app.sections.tentangSekolah')
-
-{{-- 3. DESIRE (Menawarkan Nilai & Bukti Nyata) --}}
+{{-- 2. VALUE & TRUST (Apa yang ditawarkan & Validasi) --}}
 @include('app.sections.program')
+@include('app.sections.testimonial') {{-- Dipindah ke atas agar kepercayaan cepat terbangun --}}
+
+{{-- 3. THE DETAILS (Penjelasan Mendalam bagi yang butuh detail) --}}
+@include('app.sections.tentangSekolah')
 @include('app.sections.kurikulum')
 @include('app.sections.fasilitas')
-@include('app.sections.testimonial')
+@include('app.sections.gallery')
 
-{{-- 4. ACTION (Mendorong Tindakan & Urgensi) --}}
+{{-- 4. CONVERSION (Logika Praktis & Tindakan) --}}
+@include('app.sections.biaya') {{-- Biaya ditaruh pertama di sesi ini karena paling sering dicari --}}
 @include('app.sections.agenda')
 @include('app.sections.persyaratan')
-@include('app.sections.biaya')
 @include('app.sections.kontak')
 
 @endsection

@@ -9,12 +9,8 @@
 
         {{-- Title --}}
         <div class="text-center mb-16 fade-up">
-            <span class="inline-flex items-center gap-2 bg-primary-50 text-primary-700 px-4 py-1.5 rounded-full text-sm font-medium mb-4">
-                <i data-lucide="calendar-days" class="w-4 h-4"></i>
-                
-            </span>
-            <h2 class="font-heading text-3xl lg:text-4xl font-bold text-gray-900 mb-4 section-heading">
-                Agenda PSB 2026/2027
+            <h2 class="section-heading font-heading mb-4 text-3xl text-gray-900 lg:text-4xl">
+                <span>Agenda <span class="gradient-text">PSB 2026/2027</span></span>
             </h2>
             <p class="text-gray-600 max-w-2xl mx-auto mt-6">
                 Catat tanggal-tanggal penting berikut agar tidak melewatkan tahapan pendaftaran
@@ -35,28 +31,28 @@
                 ],
                 [
                     'title' => 'Observasi & Wawancara',
-                    'date' => '5 — 10 Juli 2026',
+                    'date' => '5 Juli 2026',
                     'desc' => 'Observasi perkembangan anak dan wawancara orang tua/wali.',
                     'icon' => 'clipboard-check',
                     'status' => 'upcoming'
                 ],
                 [
                     'title' => 'Pengumuman Hasil',
-                    'date' => '15 Juli 2026',
+                    'date' => '5-7 Juli 2026',
                     'desc' => 'Pengumuman hasil seleksi melalui website dan WhatsApp.',
                     'icon' => 'megaphone',
                     'status' => 'upcoming'
                 ],
                 [
                     'title' => 'Daftar Ulang',
-                    'date' => '20 — 30 Juli 2026',
+                    'date' => '5-8 Juli 2026',
                     'desc' => 'Peserta yang diterima wajib melakukan daftar ulang dan pelunasan biaya.',
                     'icon' => 'file-signature',
                     'status' => 'upcoming'
                 ],
                 [
-                    'title' => 'Masa Orientasi (MOS)',
-                    'date' => '1 — 5 Agustus 2026',
+                    'title' => 'Masa Pengenalan Lingkungan Sekolah (MPLS)',
+                    'date' => '13 Juli 2026',
                     'desc' => 'Pengenalan lingkungan sekolah dan adaptasi siswa baru.',
                     'icon' => 'users',
                     'status' => 'upcoming'
@@ -112,11 +108,11 @@
         @php
         $important = [
             ['event' => 'Batas Akhir Pendaftaran', 'date' => '30 Juni 2026', 'gradient' => 'from-red-500 to-rose-600', 'icon' => 'clock'],
-            ['event' => 'Pengumpulan Berkas', 'date' => '1 Juli 2026', 'gradient' => 'from-orange-500 to-amber-600', 'icon' => 'folder'],
-            ['event' => 'Tes Kesehatan', 'date' => '11 Juli 2026', 'gradient' => 'from-emerald-500 to-green-600', 'icon' => 'stethoscope'],
-            ['event' => 'Wawancara', 'date' => '12-13 Juli', 'gradient' => 'from-blue-500 to-indigo-600', 'icon' => 'message-circle'],
-            ['event' => 'MOS', 'date' => '1-5 Agustus', 'gradient' => 'from-violet-500 to-purple-600', 'icon' => 'flag'],
-            ['event' => 'Masuk Sekolah', 'date' => '8 Agustus', 'gradient' => 'from-primary-500 to-primary-600', 'icon' => 'graduation-cap'],
+            ['event' => 'Pengumpulan Berkas', 'date' => '5 Juli 2026', 'gradient' => 'from-orange-500 to-amber-600', 'icon' => 'folder'],
+            ['event' => 'Wawancara', 'date' => '5 Juli', 'gradient' => 'from-blue-500 to-indigo-600', 'icon' => 'message-circle'],
+            ['event' => 'MPLS', 'date' => '13 Juli', 'gradient' => 'from-violet-500 to-purple-600', 'icon' => 'flag'],
+            ['event' => 'Masuk Sekolah', 'date' => '13 Juli', 'gradient' => 'from-primary-500 to-primary-600', 'icon' => 'graduation-cap'],
+            ['event' => 'Tes Kesehatan', 'date' => '13 Juli 2026', 'gradient' => 'from-emerald-500 to-green-600', 'icon' => 'stethoscope'],
         ];
         @endphp
 

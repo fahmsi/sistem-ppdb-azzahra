@@ -9,12 +9,8 @@
 
         {{-- Title --}}
         <div class="text-center mb-14 fade-up">
-            <span class="inline-flex items-center gap-2 bg-primary-50 text-primary-700 px-4 py-1.5 rounded-full text-sm font-medium mb-4">
-                <i data-lucide="phone" class="w-4 h-4"></i>
-                
-            </span>
-            <h2 class="font-heading text-3xl lg:text-4xl font-bold text-gray-900 mb-4 section-heading">
-                Hubungi Kami
+            <h2 class="section-heading font-heading mb-4 text-3xl text-gray-900 lg:text-4xl">
+                <span>Hubungi <span class="gradient-text">Kami</span></span>
             </h2>
             <p class="text-gray-600 max-w-2xl mx-auto mt-6">
                 Ada pertanyaan? Silakan hubungi kami, kami siap membantu Anda
@@ -60,25 +56,29 @@
                         'title' => 'Alamat',
                         'content' => 'Jl. Serimpi V No.338, RT.04/RW.10, Mekar Jaya, Kec. Sukmajaya, Kota Depok, Jawa Barat 16411',
                         'icon' => 'map-pin',
-                        'color' => 'primary'
+                        'iconWrap' => 'bg-primary-50 group-hover:bg-primary-100',
+                        'iconColor' => 'text-primary-600',
                     ],
                     [
                         'title' => 'Telepon / WhatsApp',
                         'content' => '0813-1040-8525',
                         'icon' => 'phone',
-                        'color' => 'secondary'
+                        'iconWrap' => 'bg-secondary-50 group-hover:bg-secondary-100',
+                        'iconColor' => 'text-secondary-600',
                     ],
                     [
                         'title' => 'Email',
                         'content' => 'nanirahmani72@gmail.com',
                         'icon' => 'mail',
-                        'color' => 'primary'
+                        'iconWrap' => 'bg-primary-50 group-hover:bg-primary-100',
+                        'iconColor' => 'text-primary-600',
                     ],
                     [
                         'title' => 'Jam Operasional',
                         'content' => "Senin - Jumat: 08.00 - 11.00\nSabtu - Minggu: Tutup",
                         'icon' => 'clock',
-                        'color' => 'secondary'
+                        'iconWrap' => 'bg-secondary-50 group-hover:bg-secondary-100',
+                        'iconColor' => 'text-secondary-600',
                     ],
                 ];
                 @endphp
@@ -86,8 +86,8 @@
                 @foreach($contacts as $item)
                 <div class="hover-card bg-white rounded-2xl p-5 border border-gray-100 shadow-sm group">
                     <div class="flex items-start gap-4">
-                        <div class="w-11 h-11 rounded-xl bg-{{ $item['color'] }}-50 flex items-center justify-center flex-shrink-0 group-hover:bg-{{ $item['color'] }}-100 transition-colors">
-                            <i data-lucide="{{ $item['icon'] }}" class="w-5 h-5 text-{{ $item['color'] }}-600"></i>
+                        <div class="w-11 h-11 rounded-xl {{ $item['iconWrap'] }} flex items-center justify-center flex-shrink-0 transition-colors">
+                            <i data-lucide="{{ $item['icon'] }}" class="w-5 h-5 {{ $item['iconColor'] }}"></i>
                         </div>
                         <div>
                             <h4 class="font-heading font-semibold text-gray-900 text-sm">

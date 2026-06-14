@@ -1,7 +1,9 @@
 <?php
 
 use App\Http\Controllers\Admin\AdminManageController;
+use App\Http\Controllers\Admin\AchievementController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
+use App\Http\Controllers\Admin\GalleryController;
 use App\Http\Controllers\Admin\PembayaranController;
 use App\Http\Controllers\Admin\PendaftaranManageController;
 use App\Http\Controllers\Admin\SettingController;
@@ -14,11 +16,15 @@ use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\VerifyEmailController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\AchievementImageController;
+use App\Http\Controllers\GalleryImageController;
 use App\Http\Controllers\DokumenController;
 use App\Http\Controllers\PendaftaranController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SiswaController;
 use App\Models\Setting;
+use App\Models\Achievement;
+use App\Models\Gallery;
 use App\Models\Testimonial;
 use Illuminate\Support\Facades\Route;
 
@@ -31,9 +37,23 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     $settings = Setting::pluck('value', 'key')->toArray();
     $testimonials = Testimonial::latest()->get();
+    $achievements = Achievement::where('is_active', true)
+        ->orderBy('sort_order')
+        ->orderByDesc('achievement_year')
+        ->get();
+    $galleries = Gallery::where('is_active', true)
+        ->orderBy('sort_order')
+        ->latest()
+        ->get();
 
-    return view('welcome', compact('settings', 'testimonials'));
+    return view('welcome', compact('settings', 'testimonials', 'achievements', 'galleries'));
 })->name('home');
+
+Route::get('/prestasi/{achievement}/gambar', AchievementImageController::class)
+    ->name('achievements.image');
+
+Route::get('/gallery/{gallery}/gambar', GalleryImageController::class)
+    ->name('galleries.image');
 
 /*
 |--------------------------------------------------------------------------
@@ -161,12 +181,18 @@ Route::middleware('auth')->group(function () {
         // Settings (admin & super_admin)
         Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
         Route::put('/settings', [SettingController::class, 'update'])->name('settings.update');
+        Route::post('/settings/achievements', [AchievementController::class, 'store'])->name('settings.achievements.store');
+        Route::put('/settings/achievements/{achievement}', [AchievementController::class, 'update'])->name('settings.achievements.update');
+        Route::delete('/settings/achievements/{achievement}', [AchievementController::class, 'destroy'])->name('settings.achievements.destroy');
 
         // Jika Anda menggunakan Route Resource:
         Route::resource('testimonials', TestimonialController::class);
 
         // ATAU jika Anda mendefinisikan rutenya satu per satu:
         Route::get('/testimonials', [TestimonialController::class, 'index'])->name('testimonials.index');
+
+        // Gallery CRUD
+        Route::resource('gallery', GalleryController::class);
         // ... rute create, store, dll ...
 
         /*

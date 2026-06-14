@@ -29,118 +29,68 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 // ===========================
-// Navbar Mobile Toggle
-// ===========================
-window.toggleMenu = function () {
-    const menu = document.getElementById('mobileMenu');
-    const icon = document.getElementById('menuIcon');
-    if (menu) {
-        menu.classList.toggle('hidden');
-        if (icon) {
-            const isOpen = !menu.classList.contains('hidden');
-            icon.setAttribute('data-lucide', isOpen ? 'x' : 'menu');
-            createIcons({ icons });
-        }
-    }
-};
-
-// Close mobile menu on link click
-document.addEventListener('DOMContentLoaded', function () {
-    document.querySelectorAll('#mobileMenu a').forEach((link) => {
-        link.addEventListener('click', () => {
-            const menu = document.getElementById('mobileMenu');
-            if (menu) menu.classList.add('hidden');
-        });
-    });
-});
-
-// ===========================
-// Navbar scroll effect
-// ===========================
-window.addEventListener('scroll', function () {
-    const nav = document.getElementById('mainNav');
-    if (nav) {
-        if (window.scrollY > 50) {
-            nav.classList.add('shadow-lg');
-            nav.classList.remove('shadow-none');
-        } else {
-            nav.classList.remove('shadow-lg');
-            nav.classList.add('shadow-none');
-        }
-    }
-
-    // For dashboardNav, it's inside the h-full layout where mainScrollArea scrolls
-    const mainScrollArea = document.getElementById('mainScrollArea');
-    const dNav = document.getElementById('dashboardNav');
-    if (mainScrollArea && dNav) {
-        mainScrollArea.addEventListener('scroll', function() {
-            if (mainScrollArea.scrollTop > 10) {
-                dNav.classList.add('shadow-sm');
-                dNav.classList.remove('shadow-none');
-            } else {
-                dNav.classList.remove('shadow-sm');
-                dNav.classList.add('shadow-none');
-            }
-        });
-    }
-});
-
-// ===========================
-// Active Nav Link Highlight
-// ===========================
-document.addEventListener('DOMContentLoaded', function () {
-    const sections = document.querySelectorAll('section[id]');
-    const navLinks = document.querySelectorAll('.nav-link');
-
-    window.addEventListener('scroll', function () {
-        let current = '';
-        sections.forEach((section) => {
-            const sectionTop = section.offsetTop - 100;
-            if (window.scrollY >= sectionTop) {
-                current = section.getAttribute('id');
-            }
-        });
-
-        navLinks.forEach((link) => {
-            link.classList.remove('text-primary-600', 'font-semibold');
-            link.classList.add('text-slate-600');
-            if (link.getAttribute('href') === '#' + current) {
-                link.classList.add('text-primary-600', 'font-semibold');
-                link.classList.remove('text-slate-600');
-            }
-        });
-    });
-});
-
-// ===========================
 // Curriculum Tabs
 // ===========================
 window.openTab = function (tab, el) {
-    // Hide all tab content
-    document.querySelectorAll('.tab-content').forEach((e) => {
-        e.classList.add('hidden');
+    const section = el?.closest('#kurikulum');
+    if (!section) return;
+
+    const isLearningJourney = el.hasAttribute('data-curriculum-tab');
+    const buttons = [...section.querySelectorAll(isLearningJourney ? '[data-curriculum-tab]' : '.tab-btn')];
+    const panels = [...section.querySelectorAll(isLearningJourney ? '.curriculum-tab-panel' : '.tab-content')];
+    const targetTab = section.querySelector('#tab-' + tab);
+
+    panels.forEach((panel) => {
+        panel.classList.add('hidden');
+        if (isLearningJourney) panel.classList.remove('is-active');
+        panel.setAttribute('aria-hidden', 'true');
     });
 
-    // Show target tab
-    const targetTab = document.getElementById('tab-' + tab);
     if (targetTab) {
         targetTab.classList.remove('hidden');
+        targetTab.setAttribute('aria-hidden', 'false');
+        if (isLearningJourney) {
+            window.requestAnimationFrame(() => targetTab.classList.add('is-active'));
+        }
     }
 
-    // Update button states
-    document.querySelectorAll('.tab-btn').forEach((btn) => {
-        btn.classList.remove('active');
+    buttons.forEach((button) => {
+        const isActive = button === el;
+        button.classList.toggle('active', isActive);
+        button.setAttribute('aria-selected', String(isActive));
+        button.tabIndex = isActive ? 0 : -1;
     });
-    el.classList.add('active');
 
-    // Re-initialize icons in newly visible tab
     createIcons({ icons });
 };
 
-// Initialize first tab
 document.addEventListener('DOMContentLoaded', function () {
-    const firstBtn = document.getElementById('btn-umum');
-    if (firstBtn) openTab('umum', firstBtn);
+    const tabs = [...document.querySelectorAll('[data-curriculum-tab]')];
+    if (tabs.length === 0) {
+        const legacyFirstTab = document.getElementById('btn-umum');
+        if (legacyFirstTab) openTab('umum', legacyFirstTab);
+        return;
+    }
+
+    tabs.forEach((tab, index) => {
+        tab.addEventListener('click', () => openTab(tab.dataset.curriculumTab, tab));
+        tab.addEventListener('keydown', (event) => {
+            let nextIndex = null;
+
+            if (event.key === 'ArrowRight') nextIndex = (index + 1) % tabs.length;
+            if (event.key === 'ArrowLeft') nextIndex = (index - 1 + tabs.length) % tabs.length;
+            if (event.key === 'Home') nextIndex = 0;
+            if (event.key === 'End') nextIndex = tabs.length - 1;
+
+            if (nextIndex !== null) {
+                event.preventDefault();
+                tabs[nextIndex].focus();
+                openTab(tabs[nextIndex].dataset.curriculumTab, tabs[nextIndex]);
+            }
+        });
+    });
+
+    openTab(tabs[0].dataset.curriculumTab, tabs[0]);
 });
 
 // ===========================
@@ -252,7 +202,7 @@ document.addEventListener('DOMContentLoaded', function () {
     setTimeout(() => createIcons({ icons }), 100);
 });
 
-console.log('✅ PSB Az-Zahra Landing Page loaded successfully.');
+console.log('PSB Az-Zahra Landing Page loaded successfully.');
 
 // ===========================
 // PSB Dashboard Layout Scripts
@@ -706,3 +656,320 @@ document.addEventListener('DOMContentLoaded', function () {
         resetTimer();
     }
 });
+
+// =============================================
+// 8. Testimonial Infinite Carousel Logic
+// =============================================
+document.addEventListener('DOMContentLoaded', function () {
+    const carousel = document.getElementById('testiCarousel');
+    if (!carousel) return;
+
+    const track = document.getElementById('testiTrack');
+    const dots = document.querySelectorAll('#testiDots .testi-dot');
+    const total = parseInt(carousel.dataset.total, 10);
+    const interval = parseInt(carousel.dataset.interval, 10) || 4000;
+
+    if (total <= 1) return;
+
+    // Clone first slide and append to the end for infinite loop
+    const firstSlideClone = track.children[0].cloneNode(true);
+    firstSlideClone.setAttribute('aria-hidden', 'true');
+    track.appendChild(firstSlideClone);
+
+    let current = 0;
+    let timer = null;
+    let isTransitioning = false;
+    const transitionCSS = 'transform 0.7s cubic-bezier(0.4, 0, 0.2, 1)';
+
+    // Set initial track state
+    track.style.transition = transitionCSS;
+
+    function updateDots() {
+        dots.forEach(function (dot, i) {
+            dot.classList.toggle('active', i === (current % total));
+        });
+    }
+
+    function goToSlide(index, animate = true) {
+        if (isTransitioning && animate) return;
+        
+        current = index;
+        if (animate) {
+            track.style.transition = transitionCSS;
+            isTransitioning = true;
+        } else {
+            track.style.transition = 'none';
+        }
+        
+        track.style.transform = 'translateX(-' + (current * 100) + '%)';
+        updateDots();
+    }
+
+    // Handle end of transition for infinite loop
+    track.addEventListener('transitionend', function () {
+        isTransitioning = false;
+        if (current === total) {
+            // Reached the clone at the end, instantly snap back to real first slide
+            goToSlide(0, false);
+        }
+    });
+
+    function nextSlide() {
+        if (isTransitioning) return;
+        goToSlide(current + 1);
+    }
+
+    function prevSlide() {
+        if (isTransitioning) return;
+        if (current === 0) {
+            // Snap to clone first, then transition to actual previous
+            goToSlide(total, false);
+            // Force reflow to apply the snap instantly
+            void track.offsetWidth;
+            goToSlide(total - 1, true);
+        } else {
+            goToSlide(current - 1);
+        }
+    }
+
+    function startAutoPlay() {
+        stopAutoPlay();
+        timer = setInterval(nextSlide, interval);
+    }
+
+    function stopAutoPlay() {
+        if (timer) {
+            clearInterval(timer);
+            timer = null;
+        }
+    }
+
+    // Dot click
+    dots.forEach(function (dot) {
+        dot.addEventListener('click', function () {
+            if (isTransitioning) return;
+            const target = parseInt(this.dataset.slide, 10);
+            goToSlide(target);
+            startAutoPlay(); // reset timer
+        });
+    });
+
+    // Pause on hover
+    carousel.addEventListener('mouseenter', stopAutoPlay);
+    carousel.addEventListener('mouseleave', startAutoPlay);
+
+    // Touch/swipe support
+    let touchStartX = 0;
+    let touchEndX = 0;
+
+    carousel.addEventListener('touchstart', function (e) {
+        touchStartX = e.changedTouches[0].screenX;
+        stopAutoPlay();
+    }, { passive: true });
+
+    carousel.addEventListener('touchend', function (e) {
+        touchEndX = e.changedTouches[0].screenX;
+        const diff = touchStartX - touchEndX;
+        if (Math.abs(diff) > 50) {
+            if (diff > 0) {
+                // Swipe left → next
+                nextSlide();
+            } else {
+                // Swipe right → prev
+                prevSlide();
+            }
+        }
+        startAutoPlay();
+    }, { passive: true });
+
+    // Start
+    startAutoPlay();
+});
+
+// =============================================
+// 9. Gallery Carousel + Lightbox
+// =============================================
+(function () {
+    var track = document.getElementById('galleryTrack');
+    if (!track) return;
+
+    var slides = track.querySelectorAll('.gallery-carousel-slide');
+    var progressBar = document.getElementById('galleryProgressBar');
+    var totalSlides = slides.length;
+    var currentPos = 0;
+    var autoTimer = null;
+    var isDragging = false;
+    var startX = 0;
+    var scrollLeft = 0;
+
+    function getVisibleCount() {
+        var w = window.innerWidth;
+        if (w >= 1024) return 4;
+        if (w >= 640) return 3;
+        return 2;
+    }
+
+    function getMaxPos() {
+        return Math.max(0, totalSlides - getVisibleCount());
+    }
+
+    function updateCarousel() {
+        var visible = getVisibleCount();
+        var gap = 16;
+        var slideWidth = (track.parentElement.offsetWidth - gap * (visible - 1)) / visible;
+        var offset = currentPos * (slideWidth + gap);
+        track.style.transform = 'translateX(-' + offset + 'px)';
+
+        // Update progress
+        var maxPos = getMaxPos();
+        if (progressBar) {
+            var progress = maxPos > 0 ? ((currentPos / maxPos) * 100) : 100;
+            progressBar.style.width = progress + '%';
+        }
+    }
+
+    window.galleryCarousel = {
+        next: function () {
+            currentPos = currentPos >= getMaxPos() ? 0 : currentPos + 1;
+            updateCarousel();
+            resetAuto();
+        },
+        prev: function () {
+            currentPos = currentPos <= 0 ? getMaxPos() : currentPos - 1;
+            updateCarousel();
+            resetAuto();
+        }
+    };
+
+    // Autoplay
+    function startAuto() {
+        autoTimer = setInterval(function () {
+            currentPos = currentPos >= getMaxPos() ? 0 : currentPos + 1;
+            updateCarousel();
+        }, 4000);
+    }
+
+    function resetAuto() {
+        clearInterval(autoTimer);
+        startAuto();
+    }
+
+    // Drag / Swipe support
+    track.addEventListener('mousedown', function (e) {
+        isDragging = true;
+        startX = e.pageX;
+        track.classList.add('dragging');
+    });
+
+    track.addEventListener('mousemove', function (e) {
+        if (!isDragging) return;
+        e.preventDefault();
+    });
+
+    track.addEventListener('mouseup', function (e) {
+        if (!isDragging) return;
+        isDragging = false;
+        track.classList.remove('dragging');
+        var diff = e.pageX - startX;
+        if (diff < -40) galleryCarousel.next();
+        else if (diff > 40) galleryCarousel.prev();
+    });
+
+    track.addEventListener('mouseleave', function () {
+        if (isDragging) {
+            isDragging = false;
+            track.classList.remove('dragging');
+        }
+    });
+
+    // Touch support
+    track.addEventListener('touchstart', function (e) {
+        startX = e.touches[0].clientX;
+    }, { passive: true });
+
+    track.addEventListener('touchend', function (e) {
+        var diff = e.changedTouches[0].clientX - startX;
+        if (diff < -40) galleryCarousel.next();
+        else if (diff > 40) galleryCarousel.prev();
+    });
+
+    // Pause on hover
+    var wrapper = track.closest('.gallery-carousel-wrapper');
+    if (wrapper) {
+        wrapper.addEventListener('mouseenter', function () { clearInterval(autoTimer); });
+        wrapper.addEventListener('mouseleave', function () { startAuto(); });
+    }
+
+    // Resize handler
+    window.addEventListener('resize', function () {
+        if (currentPos > getMaxPos()) currentPos = getMaxPos();
+        updateCarousel();
+    });
+
+    // Init
+    updateCarousel();
+    startAuto();
+
+    // ---- Lightbox ----
+    var currentGalleryIndex = 0;
+
+    window.openGalleryLightbox = function (index) {
+        if (typeof galleryData === 'undefined' || !galleryData.length) return;
+
+        currentGalleryIndex = index;
+        updateLightboxContent();
+
+        var lightbox = document.getElementById('galleryLightbox');
+        if (lightbox) {
+            lightbox.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        if (typeof lucide !== 'undefined') {
+            setTimeout(function () { lucide.createIcons(); }, 50);
+        }
+    };
+
+    window.closeGalleryLightbox = function (event) {
+        if (event) event.stopPropagation();
+        var lightbox = document.getElementById('galleryLightbox');
+        if (lightbox) {
+            lightbox.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+    };
+
+    window.navigateGallery = function (direction, event) {
+        if (event) event.stopPropagation();
+        if (typeof galleryData === 'undefined' || !galleryData.length) return;
+        currentGalleryIndex = (currentGalleryIndex + direction + galleryData.length) % galleryData.length;
+        updateLightboxContent();
+    };
+
+    function updateLightboxContent() {
+        if (typeof galleryData === 'undefined' || !galleryData.length) return;
+        var item = galleryData[currentGalleryIndex];
+        var img = document.getElementById('lightboxImage');
+        var title = document.getElementById('lightboxTitle');
+        var desc = document.getElementById('lightboxDesc');
+        var counter = document.getElementById('lightboxCounter');
+
+        if (img) { img.src = item.url; img.alt = item.title; }
+        if (title) title.textContent = item.title;
+        if (desc) {
+            desc.textContent = item.desc;
+            desc.style.display = item.desc ? '' : 'none';
+        }
+        if (counter) counter.textContent = (currentGalleryIndex + 1) + ' / ' + galleryData.length;
+    }
+
+    document.addEventListener('keydown', function (e) {
+        var lightbox = document.getElementById('galleryLightbox');
+        if (!lightbox || !lightbox.classList.contains('active')) return;
+        if (e.key === 'Escape') closeGalleryLightbox();
+        if (e.key === 'ArrowRight') navigateGallery(1);
+        if (e.key === 'ArrowLeft') navigateGallery(-1);
+    });
+})();
+
+
