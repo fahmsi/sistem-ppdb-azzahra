@@ -24,7 +24,7 @@ return new class extends Migration
                 ->onDelete('cascade');
 
             // Status pendaftaran
-            $table->enum('status', ['pending', 'diterima', 'ditolak'])
+            $table->enum('status', ['pending', 'menunggu_verifikasi', 'diterima', 'ditolak', 'perlu_revisi'])
                 ->default('pending');
 
             // Notifikasi / catatan

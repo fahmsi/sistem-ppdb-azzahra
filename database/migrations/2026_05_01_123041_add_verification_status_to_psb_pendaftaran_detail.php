@@ -14,7 +14,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        DB::statement("ALTER TABLE `psb_pendaftaran_detail` MODIFY COLUMN `status` ENUM('pending', 'menunggu_verifikasi', 'diterima', 'ditolak') NOT NULL DEFAULT 'pending'");
+        // Only run ALTER TABLE on MySQL; SQLite doesn't support MODIFY COLUMN with ENUM
+        if (DB::getDriverName() === 'mysql') {
+            DB::statement("ALTER TABLE `psb_pendaftaran_detail` MODIFY COLUMN `status` ENUM('pending', 'menunggu_verifikasi', 'diterima', 'ditolak') NOT NULL DEFAULT 'pending'");
+        }
     }
 
     /**
@@ -27,6 +30,8 @@ return new class extends Migration
             ->where('status', 'menunggu_verifikasi')
             ->update(['status' => 'pending']);
 
-        DB::statement("ALTER TABLE `psb_pendaftaran_detail` MODIFY COLUMN `status` ENUM('pending', 'diterima', 'ditolak') NOT NULL DEFAULT 'pending'");
+        if (DB::getDriverName() === 'mysql') {
+            DB::statement("ALTER TABLE `psb_pendaftaran_detail` MODIFY COLUMN `status` ENUM('pending', 'diterima', 'ditolak') NOT NULL DEFAULT 'pending'");
+        }
     }
 };

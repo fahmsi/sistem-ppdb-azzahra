@@ -13,14 +13,19 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // Step 1: Temporarily expand the enum to include both old and new values
-        DB::statement("ALTER TABLE `users` MODIFY COLUMN `role` ENUM('admin', 'siswa', 'parent') NOT NULL DEFAULT 'siswa'");
+        // Only run ALTER TABLE on MySQL; SQLite doesn't support MODIFY COLUMN with ENUM
+        if (DB::getDriverName() === 'mysql') {
+            // Step 1: Temporarily expand the enum to include both old and new values
+            DB::statement("ALTER TABLE `users` MODIFY COLUMN `role` ENUM('admin', 'siswa', 'parent') NOT NULL DEFAULT 'siswa'");
+        }
 
         // Step 2: Convert existing 'siswa' rows to 'parent'
         DB::table('users')->where('role', 'siswa')->update(['role' => 'parent']);
 
-        // Step 3: Now safely narrow the enum to the final values
-        DB::statement("ALTER TABLE `users` MODIFY COLUMN `role` ENUM('admin', 'parent') NOT NULL DEFAULT 'parent'");
+        // Step 3: Now safely narrow the enum to the final values (only for MySQL)
+        if (DB::getDriverName() === 'mysql') {
+            DB::statement("ALTER TABLE `users` MODIFY COLUMN `role` ENUM('admin', 'parent') NOT NULL DEFAULT 'parent'");
+        }
     }
 
     /**
@@ -28,8 +33,12 @@ return new class extends Migration
      */
     public function down(): void
     {
-        DB::statement("ALTER TABLE `users` MODIFY COLUMN `role` ENUM('admin', 'siswa', 'parent') NOT NULL DEFAULT 'parent'");
+        if (DB::getDriverName() === 'mysql') {
+            DB::statement("ALTER TABLE `users` MODIFY COLUMN `role` ENUM('admin', 'siswa', 'parent') NOT NULL DEFAULT 'parent'");
+        }
         DB::table('users')->where('role', 'parent')->update(['role' => 'siswa']);
-        DB::statement("ALTER TABLE `users` MODIFY COLUMN `role` ENUM('admin', 'siswa') NOT NULL DEFAULT 'siswa'");
+        if (DB::getDriverName() === 'mysql') {
+            DB::statement("ALTER TABLE `users` MODIFY COLUMN `role` ENUM('admin', 'siswa') NOT NULL DEFAULT 'siswa'");
+        }
     }
 };
