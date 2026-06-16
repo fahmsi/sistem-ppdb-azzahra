@@ -30,8 +30,8 @@
                     <td>{{ $s->nama }}</td>
                     <td>{{ $s->nama_panggilan ?? '-' }}</td>
                     <td>{{ $s->jenis_kelamin === 'L' ? 'Laki-laki' : 'Perempuan' }}</td>
-                    <td>{{ $s->user->name ?? '-' }}</td>
-                    <td>{{ $s->no_telpon ?? $s->user->no_telpon ?? '-' }}</td>
+                    <td>{{ $s->user?->name ?? '-' }}</td>
+                    <td>{{ $s->no_telpon ?? $s->user?->no_telpon ?? '-' }}</td>
                 </tr>
             @endforeach
         </tbody>

@@ -42,6 +42,14 @@
             <button onclick="window.print()" class="inline-flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 hover:bg-gray-200 border border-gray-200 rounded-lg text-sm font-medium transition-colors">
                 <i data-lucide="printer" class="w-4 h-4"></i> Cetak PDF
             </button>
+            <form action="{{ route('admin.siswa.destroy', $siswa->id) }}" method="POST" class="admin-soft-delete-form" data-student-name="{{ $siswa->nama }}" data-has-history="{{ $siswa->pendaftaranDetails->isNotEmpty() ? '1' : '0' }}">
+                @csrf
+                @method('DELETE')
+                <input type="hidden" name="deleted_reason" value="">
+                <button type="submit" class="inline-flex items-center gap-2 px-4 py-2 bg-red-50 text-red-700 hover:bg-red-100 border border-red-200 rounded-lg text-sm font-medium transition-colors">
+                    <i data-lucide="trash-2" class="w-4 h-4"></i> Hapus Sementara
+                </button>
+            </form>
         </div>
     </div>
 
@@ -65,7 +73,21 @@
                         @endif
                         <span class="flex items-center gap-1.5"><i data-lucide="calendar" class="w-4 h-4 text-primary-500"></i> {{ $siswa->jenis_kelamin == 'L' ? 'Laki-laki' : 'Perempuan' }}</span>
                         <span class="flex items-center gap-1.5"><i data-lucide="map-pin" class="w-4 h-4 text-primary-500"></i> {{ $siswa->kota }}</span>
+                        @if($siswa->input_source === \App\Models\Siswa::INPUT_SOURCE_MANUAL_ADMIN)
+                            <span class="inline-flex items-center gap-1.5 rounded-md bg-amber-100 px-2 py-1 text-xs font-medium text-amber-700">
+                                <i data-lucide="clipboard-edit" class="w-3.5 h-3.5"></i> Manual Admin
+                            </span>
+                        @else
+                            <span class="inline-flex items-center gap-1.5 rounded-md bg-blue-100 px-2 py-1 text-xs font-medium text-blue-700">
+                                <i data-lucide="globe" class="w-3.5 h-3.5"></i> Online
+                            </span>
+                        @endif
                     </div>
+                    @if($siswa->input_source === \App\Models\Siswa::INPUT_SOURCE_MANUAL_ADMIN && $siswa->createdByAdmin)
+                        <p class="mt-3 text-sm text-gray-500">
+                            Dibuat manual oleh <span class="font-medium text-gray-700">{{ $siswa->createdByAdmin->name }}</span>.
+                        </p>
+                    @endif
                 </div>
             </div>
 
@@ -214,4 +236,59 @@
         </div>
     </div>
 </div>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    function escapeHtml(value) {
+        return String(value || '-')
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
+    }
+
+    document.querySelectorAll('.admin-soft-delete-form').forEach(function(form) {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            var name = form.dataset.studentName || 'data siswa ini';
+            var hasHistory = form.dataset.hasHistory === '1';
+            var historyWarning = hasHistory
+                ? '<div class="mt-3 rounded-md bg-orange-50 p-3 text-left text-sm text-orange-700">Data siswa ini memiliki riwayat pendaftaran. Data akan disembunyikan, bukan dihapus permanen.</div>'
+                : '';
+
+            Swal.fire({
+                title: 'Hapus sementara data siswa?',
+                html: '<p class="text-sm text-gray-600">Masukkan alasan penghapusan untuk <strong>' + escapeHtml(name) + '</strong>.</p>' + historyWarning,
+                input: 'textarea',
+                inputPlaceholder: 'Tulis alasan penghapusan...',
+                inputAttributes: {
+                    'aria-label': 'Alasan penghapusan'
+                },
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#ef4444',
+                cancelButtonColor: '#697a8d',
+                confirmButtonText: 'Hapus Sementara',
+                cancelButtonText: 'Batal',
+                reverseButtons: true,
+                preConfirm: function(value) {
+                    var reason = (value || '').trim();
+                    if (!reason) {
+                        Swal.showValidationMessage('Alasan penghapusan wajib diisi.');
+                        return false;
+                    }
+
+                    return reason;
+                }
+            }).then(function(result) {
+                if (result.isConfirmed) {
+                    form.querySelector('input[name="deleted_reason"]').value = result.value;
+                    HTMLFormElement.prototype.submit.call(form);
+                }
+            });
+        });
+    });
+});
+</script>
 @endsection

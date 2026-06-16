@@ -38,6 +38,7 @@ class SiswaController extends Controller
 
         // Link to authenticated user
         $validated['user_id'] = Auth::id();
+        $validated['input_source'] = Siswa::INPUT_SOURCE_ONLINE;
 
         Siswa::create($validated);
 
@@ -134,7 +135,7 @@ class SiswaController extends Controller
 
         // Delete all rejected registrations
         $siswa->pendaftaranDetails()->delete();
-        $siswa->delete();
+        $siswa->forceDelete();
 
         ActivityLog::log('deleted', null, "Orang tua menghapus data anak: {$nama}");
 

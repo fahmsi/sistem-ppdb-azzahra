@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bukti Pembayaran - {{ $detail->siswa->nama }}</title>
+    <title>Bukti Pembayaran - {{ $detail->siswa?->nama ?? '-' }}</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f3f4f6; color: #1f2937; }
@@ -55,15 +55,15 @@
                 </tr>
                 <tr>
                     <th>Nama Anak</th>
-                    <td>{{ $detail->siswa->nama }}</td>
+                    <td>{{ $detail->siswa?->nama ?? '-' }}</td>
                 </tr>
                 <tr>
                     <th>Gelombang</th>
-                    <td>{{ $detail->pendaftaran->gelombang }} — {{ $detail->pendaftaran->tahun_ajaran }}</td>
+                    <td>{{ $detail->pendaftaran?->gelombang ?? '-' }} - {{ $detail->pendaftaran?->tahun_ajaran ?? '-' }}</td>
                 </tr>
                 <tr>
                     <th>Nama Orang Tua</th>
-                    <td>{{ $detail->siswa->user->name }}</td>
+                    <td>{{ $detail->siswa?->user?->name ?? '-' }}</td>
                 </tr>
                 <tr>
                     <th>Tanggal Bayar</th>

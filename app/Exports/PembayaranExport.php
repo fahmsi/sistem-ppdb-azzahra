@@ -57,16 +57,16 @@ class PembayaranExport implements FromCollection, WithHeadings, WithMapping
                         : '-';
 
         // Ambil nama dari relasi pendaftaranDetail -> siswa -> user
-        $namaPembayar = $pembayaran->pendaftaranDetail->siswa->user->name ?? '-';
+        $namaPembayar = $pembayaran->pendaftaranDetail?->siswa?->user?->name ?? '-';
 
-        $gelombang = $pembayaran->pendaftaranDetail->pendaftaran->gelombang ?? '-';
+        $gelombang = $pembayaran->pendaftaranDetail?->pendaftaran?->gelombang ?? '-';
 
         // Metode pembayaran tidak disimpan di tabel pada skema saat ini; tampilkan '-' jika tidak ada
         $metode = $pembayaran->metode ?? '-';
 
         return [
             $no,
-            $pembayaran->pendaftaranDetail->nomor_pendaftaran ?? '-',
+            $pembayaran->pendaftaranDetail?->nomor_pendaftaran ?? '-',
             $namaPembayar,
             $gelombang,
             strtoupper($metode),
