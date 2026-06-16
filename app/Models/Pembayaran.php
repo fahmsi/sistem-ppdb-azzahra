@@ -14,7 +14,11 @@ class Pembayaran extends Model
 
     public const STATUS_LUNAS = 'lunas';
 
+    public const STATUS_TERVERIFIKASI = 'lunas';
+
     public const STATUS_DITOLAK = 'ditolak';
+
+    public const STATUS_PERLU_REVISI = 'ditolak';
 
     protected $fillable = [
         'pendaftaran_detail_id',

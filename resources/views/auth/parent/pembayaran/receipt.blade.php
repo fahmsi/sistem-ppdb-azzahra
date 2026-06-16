@@ -59,7 +59,7 @@
                 </tr>
                 <tr>
                     <th>Nama Orang Tua</th>
-                    <td>{{ $detail->siswa->user->name }}</td>
+                    <td>{{ $detail->siswa?->user?->name ?? '-' }}</td>
                 </tr>
                 <tr>
                     <th>Tanggal Bayar</th>

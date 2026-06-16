@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ActivityLog;
 use App\Models\PendaftaranDetail;
 use App\Models\Pembayaran;
 use Illuminate\Http\RedirectResponse;
@@ -17,7 +18,7 @@ class PembayaranController extends Controller
     {
         $detail->loadMissing('siswa', 'pembayaran');
 
-        if ($detail->siswa->user_id !== auth()->id() || $detail->status !== PendaftaranDetail::STATUS_DITERIMA) {
+        if ($detail->siswa?->user_id !== auth()->id() || $detail->status !== PendaftaranDetail::STATUS_DITERIMA) {
             abort(403, 'Akses ditolak.');
         }
 
@@ -34,6 +35,8 @@ class PembayaranController extends Controller
         $request->validate([
             'bukti_bayar' => ['required', 'file', 'mimes:jpg,jpeg,png,pdf', 'max:2048'],
         ]);
+
+        $isReupload = (bool) $detail->pembayaran;
 
         // Delete old proof if it exists
         if ($detail->pembayaran && $detail->pembayaran->bukti_bayar) {
@@ -52,6 +55,14 @@ class PembayaranController extends Controller
             ]
         );
 
+        ActivityLog::log(
+            $isReupload ? 'payment_reuploaded' : 'payment_uploaded',
+            $detail,
+            $isReupload
+                ? "Wali murid mengunggah ulang bukti pembayaran daftar ulang: {$detail->nomor_pendaftaran}"
+                : "Wali murid mengunggah bukti pembayaran daftar ulang: {$detail->nomor_pendaftaran}"
+        );
+
         return back()->with('success', 'Bukti pembayaran berhasil diunggah. Silakan hubungi admin untuk konfirmasi pembayaran agar proses daftar ulang dapat segera diverifikasi.');
     }
 
@@ -60,12 +71,12 @@ class PembayaranController extends Controller
      */
     public function receipt(PendaftaranDetail $detail)
     {
+        $detail->load(['siswa', 'pendaftaran', 'pembayaran']);
+
         // Authorization
-        if ($detail->siswa->user_id !== auth()->id()) {
+        if ($detail->siswa?->user_id !== auth()->id()) {
             abort(403, 'Akses ditolak.');
         }
-
-        $detail->load(['siswa', 'pendaftaran', 'pembayaran']);
 
         if (!$detail->pembayaran || ! $detail->pembayaran->isLunas()) {
             abort(403, 'Bukti bayar belum diverifikasi.');

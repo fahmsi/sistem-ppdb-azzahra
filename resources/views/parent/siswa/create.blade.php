@@ -1,7 +1,18 @@
 @extends('layouts.app')
 
-@section('title', 'Lengkapi Data Anak')
-@section('header_title', 'Formulir Data Anak')
+@php
+    $pageTitle = $pageTitle ?? 'Lengkapi Data Anak';
+    $headerTitle = $headerTitle ?? 'Formulir Data Anak';
+    $formHeading = $formHeading ?? 'Lengkapi Biodata Anak';
+    $formDescription = $formDescription ?? 'Harap isi data dengan sebenar-benarnya sesuai dengan dokumen resmi (Kartu Keluarga & Akta Kelahiran).';
+    $formAction = $formAction ?? route('parent.siswa.store');
+    $cancelUrl = $cancelUrl ?? route('parent.dashboard');
+    $cancelText = $cancelText ?? 'Batal';
+    $submitText = $submitText ?? 'Simpan Data Anak';
+@endphp
+
+@section('title', $pageTitle)
+@section('header_title', $headerTitle)
 
 @section('content')
 <div class="">
@@ -17,14 +28,14 @@
                     <div class="p-2 bg-primary-700/50 rounded-lg backdrop-blur-sm">
                         <i data-lucide="file-text" class="w-6 h-6 text-primary-100"></i>
                     </div>
-                    Lengkapi Biodata Anak
+                    {{ $formHeading }}
                 </h2>
-                <p class="text-primary-100 text-sm mt-2 ml-1">Harap isi data dengan sebenar-benarnya sesuai dengan dokumen resmi (Kartu Keluarga & Akta Kelahiran).</p>
+                <p class="text-primary-100 text-sm mt-2 ml-1">{{ $formDescription }}</p>
             </div>
         </div>
 
         <!-- Form dengan jarak (padding top) yang lebih lega -->
-        <form action="{{ route('parent.siswa.store') }}" method="POST" enctype="multipart/form-data" class="p-6 sm:p-10 pt-8">
+        <form action="{{ $formAction }}" method="POST" enctype="multipart/form-data" class="p-6 sm:p-10 pt-8">
             @csrf
 
             <!-- Section 1: Data Pribadi Anak -->
@@ -417,9 +428,9 @@
 
             <!-- Submit -->
             <div class="pt-6 mt-4 border-t border-gray-200 flex items-center justify-end gap-4 bg-gray-50 -mx-6 -mb-6 sm:-mx-10 sm:-mb-10 p-6 sm:p-8 rounded-b-2xl">
-                <a href="{{ route('parent.dashboard') }}" class="px-5 py-2.5 text-sm font-medium text-gray-700 hover:text-gray-900 bg-white border border-gray-300 rounded-lg shadow-sm hover:bg-gray-50 transition-colors">Batal</a>
+                <a href="{{ $cancelUrl }}" class="px-5 py-2.5 text-sm font-medium text-gray-700 hover:text-gray-900 bg-white border border-gray-300 rounded-lg shadow-sm hover:bg-gray-50 transition-colors">{{ $cancelText }}</a>
                 <button type="submit" class="px-6 py-2.5 flex items-center gap-2 text-sm font-medium text-white bg-primary-600 border border-transparent rounded-lg shadow-sm hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors">
-                    <i data-lucide="save" class="w-4 h-4"></i> Simpan Data Anak
+                    <i data-lucide="save" class="w-4 h-4"></i> {{ $submitText }}
                 </button>
             </div>
         </form>

@@ -99,8 +99,8 @@
                                 <div class="text-xs text-[#a1b0cb] mt-0.5">{{ $reg->siswa->jenis_kelamin == 'L' ? 'Laki-laki' : 'Perempuan' }}</div>
                             </td>
                             <td>
-                                <div class="text-[#566a7f] dark:text-[#d5d5e2]">{{ $reg->siswa->user->name ?? '-' }}</div>
-                                <div class="text-xs text-[#a1b0cb] mt-0.5">{{ $reg->siswa->no_telpon ?? '-' }}</div>
+                                <div class="text-[#566a7f] dark:text-[#d5d5e2]">{{ $reg->siswa?->user?->name ?? '-' }}</div>
+                                <div class="text-xs text-[#a1b0cb] mt-0.5">{{ $reg->siswa?->no_telpon ?? $reg->siswa?->user?->no_telpon ?? '-' }}</div>
                             </td>
                             <td>
                                 {{ $reg->pendaftaran->gelombang ?? '-' }}

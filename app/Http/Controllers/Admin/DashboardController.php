@@ -29,7 +29,7 @@ class DashboardController extends Controller
             'gelombang_aktif' => Pendaftaran::open()->count(),
         ];
 
-        $recentRegistrations = PendaftaranDetail::with(['siswa', 'pendaftaran'])
+        $recentRegistrations = PendaftaranDetail::with(['siswa.user', 'pendaftaran'])
             ->latest()
             ->limit(10)
             ->get();

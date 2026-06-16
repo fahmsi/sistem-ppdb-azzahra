@@ -31,6 +31,7 @@ class SiswaExport implements FromCollection, WithHeadings, WithMapping
             'Jenis Kelamin',
             'Tempat, Tgl Lahir',
             'Nama Orang Tua / Wali',
+            'Sumber Data',
             'No. HP Wali',
             'Tanggal Didaftarkan',
         ];
@@ -50,8 +51,9 @@ class SiswaExport implements FromCollection, WithHeadings, WithMapping
             $siswa->nisn ?? '-',
             $siswa->jenis_kelamin,
             $siswa->tempat_lahir.', '.($siswa->tanggal_lahir ? Carbon::parse($siswa->tanggal_lahir)->format('d-m-Y') : '-'),
-            $siswa->user->name ?? '-',
-            $siswa->user->no_telpon ?? '-',
+            $siswa->user?->name ?? '-',
+            $siswa->input_source === Siswa::INPUT_SOURCE_MANUAL_ADMIN ? 'Manual Admin' : 'Online',
+            $siswa->user?->no_telpon ?? $siswa->no_telpon ?? '-',
             $siswa->created_at->format('d-m-Y H:i'),
         ];
     }

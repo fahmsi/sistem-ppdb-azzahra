@@ -168,7 +168,11 @@ Route::middleware('auth')->group(function () {
         Route::patch('/pembayaran/{pembayaran}/verify', [VerifikasiController::class, 'verifyPembayaran'])->name('pembayaran.verify');
 
         // Route Export Siswa (Letakkan sebelum resource siswa)
+        Route::get('/siswa/create', [App\Http\Controllers\Admin\SiswaController::class, 'create'])->name('siswa.create');
+        Route::post('/siswa', [App\Http\Controllers\Admin\SiswaController::class, 'store'])->name('siswa.store');
+        Route::get('/siswa/trash', [App\Http\Controllers\Admin\SiswaController::class, 'trash'])->name('siswa.trash');
         Route::get('/siswa/export', [App\Http\Controllers\Admin\SiswaController::class, 'export'])->name('siswa.export');
+        Route::delete('/siswa/{siswa}', [App\Http\Controllers\Admin\SiswaController::class, 'destroy'])->name('siswa.destroy');
         Route::resource('/siswa', App\Http\Controllers\Admin\SiswaController::class)->only(['index', 'show']);
 
         // Route Export Pembayaran
@@ -204,6 +208,9 @@ Route::middleware('auth')->group(function () {
 
             // Activity Logs
             Route::get('/activity-log', [AdminManageController::class, 'activityLogs'])->name('activity-log.index');
+
+            Route::patch('/siswa/{id}/restore', [App\Http\Controllers\Admin\SiswaController::class, 'restore'])->name('siswa.restore');
+            Route::delete('/siswa/{id}/force', [App\Http\Controllers\Admin\SiswaController::class, 'forceDelete'])->name('siswa.force-delete');
         });
     });
 });

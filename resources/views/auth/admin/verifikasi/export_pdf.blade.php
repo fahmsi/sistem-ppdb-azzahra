@@ -27,7 +27,7 @@
                 <tr>
                     <td>{{ $i + 1 }}</td>
                     <td>{{ $it->siswa->nama ?? '-' }}</td>
-                    <td>{{ $it->siswa->user->name ?? '-' }}</td>
+                    <td>{{ $it->siswa?->user?->name ?? '-' }}</td>
                     <td>{{ $it->pendaftaran->gelombang ?? '-' }}</td>
                     <td>{{ $it->status }}</td>
                 </tr>

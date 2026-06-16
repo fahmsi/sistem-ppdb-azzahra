@@ -20,6 +20,7 @@
                 <th>Nama Panggilan</th>
                 <th>Jenis Kelamin</th>
                 <th>Orang Tua</th>
+                <th>Sumber Data</th>
                 <th>No. Telp</th>
             </tr>
         </thead>
@@ -30,8 +31,9 @@
                     <td>{{ $s->nama }}</td>
                     <td>{{ $s->nama_panggilan ?? '-' }}</td>
                     <td>{{ $s->jenis_kelamin === 'L' ? 'Laki-laki' : 'Perempuan' }}</td>
-                    <td>{{ $s->user->name ?? '-' }}</td>
-                    <td>{{ $s->no_telpon ?? $s->user->no_telpon ?? '-' }}</td>
+                    <td>{{ $s->user?->name ?? '-' }}</td>
+                    <td>{{ $s->input_source === \App\Models\Siswa::INPUT_SOURCE_MANUAL_ADMIN ? 'Manual Admin' : 'Online' }}</td>
+                    <td>{{ $s->no_telpon ?? $s->user?->no_telpon ?? '-' }}</td>
                 </tr>
             @endforeach
         </tbody>

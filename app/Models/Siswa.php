@@ -7,12 +7,17 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Siswa extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $table = 'psb_siswa';
+
+    public const INPUT_SOURCE_ONLINE = 'online';
+
+    public const INPUT_SOURCE_MANUAL_ADMIN = 'manual_admin';
 
     /**
      * The attributes that are mass assignable.
@@ -59,6 +64,10 @@ class Siswa extends Model
         'foto',
         'foto_kk',
         'foto_akta',
+        'created_by_admin_id',
+        'input_source',
+        'deleted_by',
+        'deleted_reason',
     ];
 
     /**
@@ -67,6 +76,22 @@ class Siswa extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Admin who manually created this student data, if any.
+     */
+    public function createdByAdmin(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'created_by_admin_id');
+    }
+
+    /**
+     * Admin who soft-deleted this student data, if any.
+     */
+    public function deletedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'deleted_by');
     }
 
     /**

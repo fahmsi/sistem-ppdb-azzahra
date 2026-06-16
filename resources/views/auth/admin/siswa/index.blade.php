@@ -66,7 +66,7 @@
                         <td class="font-medium text-[#566a7f] dark:text-[#d5d5e2]">{{ $siswa->nama }}</td>
                         <td>{{ $siswa->nama_panggilan ?? '-' }}</td>
                         <td>{{ $siswa->jenis_kelamin === 'L' ? 'Laki-laki' : 'Perempuan' }}</td>
-                        <td>{{ $siswa->user->name }}</td>
+                        <td>{{ $siswa->user?->name ?? '-' }}</td>
                         <td class="text-center">
                             <div class="flex items-center justify-center gap-2">
                                 <a href="{{ route('admin.siswa.show', $siswa->id) }}" class="inline-flex items-center gap-1 px-3 py-1.5 bg-[#e7e7ff] dark:bg-[#696cff]/20 text-[#696cff] hover:bg-[#696cff] hover:text-white rounded-md text-xs font-medium transition-colors">

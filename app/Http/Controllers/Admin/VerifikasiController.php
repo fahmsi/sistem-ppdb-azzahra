@@ -12,6 +12,7 @@ use App\Notifications\StatusPendaftaranNotification;
 use App\Services\WhatsAppNotificationService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 use Maatwebsite\Excel\Facades\Excel;
@@ -34,8 +35,11 @@ class VerifikasiController extends Controller
             $search = $request->input('search');
             $query->where(function ($q) use ($search) {
                 $q->whereHas('siswa', function ($sq) use ($search) {
-                    $sq->where('nama', 'like', "%{$search}%")
-                        ->orWhere('nisn', 'like', "%{$search}%");
+                    $sq->where('nama', 'like', "%{$search}%");
+
+                    if (Schema::hasColumn('psb_siswa', 'nisn')) {
+                        $sq->orWhere('nisn', 'like', "%{$search}%");
+                    }
                 })
                 ->orWhere('no_pendaftaran', 'like', "%{$search}%");
             });
@@ -100,11 +104,12 @@ class VerifikasiController extends Controller
 
         ActivityLog::log('accepted', $detail, "Pendaftaran {$detail->nomor_pendaftaran} diterima.");
 
-        // Send Notification
-        $detail->siswa->user->notify(new StatusPendaftaranNotification($detail->notifikasi, 'diterima'));
+        // Send Notification if this siswa is linked to a parent account.
+        $detail->loadMissing('siswa.user');
+        $detail->siswa?->user?->notify(new StatusPendaftaranNotification($detail->notifikasi, 'diterima'));
 
         // Ambil nomor WA (prioritaskan nomor di tabel siswa, jika kosong ambil dari tabel user)
-        $phone = $detail->siswa->no_telpon ?? $detail->siswa->user->no_telpon ?? null;
+        $phone = $detail->siswa?->no_telpon ?? $detail->siswa?->user?->no_telpon ?? null;
         $waMessage = "Assalamu'alaikum. Ada update status pendaftaran di PAUD Az-Zahra.\n\nStatus: " . strtoupper($detail->status) . "\nCatatan: " . $detail->notifikasi;
         $this->whatsApp->send($phone, $waMessage);
 
@@ -127,11 +132,12 @@ class VerifikasiController extends Controller
 
         ActivityLog::log('rejected', $detail, "Pendaftaran {$detail->nomor_pendaftaran} ditolak.");
 
-        // Send Notification
-        $detail->siswa->user->notify(new StatusPendaftaranNotification($detail->notifikasi, 'ditolak'));
+        // Send Notification if this siswa is linked to a parent account.
+        $detail->loadMissing('siswa.user');
+        $detail->siswa?->user?->notify(new StatusPendaftaranNotification($detail->notifikasi, 'ditolak'));
 
         // Ambil nomor WA (prioritaskan nomor di tabel siswa, jika kosong ambil dari tabel user)
-        $phone = $detail->siswa->no_telpon ?? $detail->siswa->user->no_telpon ?? null;
+        $phone = $detail->siswa?->no_telpon ?? $detail->siswa?->user?->no_telpon ?? null;
         $waMessage = "Assalamu'alaikum. Ada update status pendaftaran di PAUD Az-Zahra.\n\nStatus: " . strtoupper($detail->status) . "\nCatatan: " . $detail->notifikasi;
         $this->whatsApp->send($phone, $waMessage);
 
@@ -154,11 +160,12 @@ class VerifikasiController extends Controller
 
         ActivityLog::log('revision', $detail, "Pendaftaran {$detail->nomor_pendaftaran} diminta revisi.");
 
-        // Send Notification
-        $detail->siswa->user->notify(new StatusPendaftaranNotification($detail->notifikasi, 'perlu_revisi'));
+        // Send Notification if this siswa is linked to a parent account.
+        $detail->loadMissing('siswa.user');
+        $detail->siswa?->user?->notify(new StatusPendaftaranNotification($detail->notifikasi, 'perlu_revisi'));
 
         // Ambil nomor WA (prioritaskan nomor di tabel siswa, jika kosong ambil dari tabel user)
-        $phone = $detail->siswa->no_telpon ?? $detail->siswa->user->no_telpon ?? null;
+        $phone = $detail->siswa?->no_telpon ?? $detail->siswa?->user?->no_telpon ?? null;
         $waMessage = "Assalamu'alaikum. Ada update status pendaftaran di PAUD Az-Zahra.\n\nStatus: " . strtoupper($detail->status) . "\nCatatan: " . $detail->notifikasi;
         $this->whatsApp->send($phone, $waMessage);
 

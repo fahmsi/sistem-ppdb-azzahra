@@ -23,8 +23,7 @@ class SiswaFactory extends Factory
         return [
             'user_id' => User::factory(),
             'nama' => fake()->name(),
-            'nisn' => fake()->optional()->numerify('##########'),
-            'nis' => fake()->optional()->numerify('########'),
+            'nama_panggilan' => fake()->firstName(),
             'jenis_kelamin' => fake()->randomElement(['L', 'P']),
             'tempat_lahir' => fake()->city(),
             'tanggal_lahir' => fake()->dateTimeBetween('-7 years', '-4 years')->format('Y-m-d'),
@@ -59,6 +58,7 @@ class SiswaFactory extends Factory
             'foto' => 'siswa/foto/placeholder.jpg',
             'foto_kk' => 'siswa/kk/placeholder.jpg',
             'foto_akta' => 'siswa/akta/placeholder.jpg',
+            'input_source' => Siswa::INPUT_SOURCE_ONLINE,
         ];
     }
 }

@@ -51,7 +51,7 @@ class VerifikasiExport implements FromCollection, WithHeadings, WithMapping
             $no,
             $detail->nomor_pendaftaran,
             $detail->siswa->nama ?? '-',
-            $detail->siswa->user->name ?? '-',
+            $detail->siswa?->user?->name ?? '-',
             $detail->pendaftaran->gelombang ?? '-',
             $detail->pendaftaran->tahun_ajaran ?? '-',
             $statusFormatted,

@@ -128,7 +128,7 @@
                             </td>
                             <td>
                                 <div class="font-medium text-[#566a7f] dark:text-[#d5d5e2]">{{ $reg->siswa->nama ?? '-' }}</div>
-                                <div class="text-xs text-[#a1b0cb] mt-0.5">{{ $reg->siswa->user->name ?? '-' }} (Wali)</div>
+                                <div class="text-xs text-[#a1b0cb] mt-0.5">{{ $reg->siswa?->user?->name ?? '-' }} (Wali)</div>
                             </td>
                             <td>
                                 {{ $reg->pendaftaran->gelombang ?? '-' }}

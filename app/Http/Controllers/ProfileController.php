@@ -93,8 +93,10 @@ class ProfileController extends Controller
 
         Auth::logout();
 
-        if ($user->siswa) {
-            $user->siswa->delete();
+        $siswa = $user->siswa()->withTrashed()->first();
+
+        if ($siswa) {
+            $siswa->forceDelete();
         }
         
         // Delete avatar file
