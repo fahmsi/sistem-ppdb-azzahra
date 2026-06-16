@@ -96,7 +96,7 @@
                         <i data-lucide="file-text" class="w-12 h-12 text-[#a1b0cb] mb-3"></i>
                         <h4 class="font-medium text-[#566a7f] dark:text-[#d5d5e2] mb-1">Kartu Keluarga (KK)</h4>
                         <p class="text-xs text-[#a1b0cb] mb-4">No: {{ $detail->siswa->no_kk ?? '-' }}</p>
-                        <a href="{{ $detail->siswa->foto_kk ? route('dokumen.show', ['path' => $detail->siswa->foto_kk]) : '#' }}" data-fancybox="gallery" data-caption="Kartu Keluarga (KK)" class="w-full inline-flex justify-center items-center gap-2 px-3 py-2 text-sm font-medium text-[#696cff] bg-[#e7e7ff] dark:bg-[#696cff]/20 hover:bg-[#d4d5ff] dark:hover:bg-[#696cff]/30 rounded-md transition-colors">
+                        <a href="{{ $detail->siswa->foto_kk ? route('dokumen.show', ['siswa' => $detail->siswa, 'field' => 'foto_kk']) : '#' }}" data-fancybox="gallery" data-caption="Kartu Keluarga (KK)" class="w-full inline-flex justify-center items-center gap-2 px-3 py-2 text-sm font-medium text-[#696cff] bg-[#e7e7ff] dark:bg-[#696cff]/20 hover:bg-[#d4d5ff] dark:hover:bg-[#696cff]/30 rounded-md transition-colors">
                             <i data-lucide="zoom-in" class="w-4 h-4"></i> Perbesar Dokumen
                         </a>
                     </div>
@@ -106,7 +106,7 @@
                         <i data-lucide="file-badge-2" class="w-12 h-12 text-[#a1b0cb] mb-3"></i>
                         <h4 class="font-medium text-[#566a7f] dark:text-[#d5d5e2] mb-1">Akta Kelahiran</h4>
                         <p class="text-xs text-[#a1b0cb] mb-4">Pastikan terbaca jelas</p>
-                        <a href="{{ $detail->siswa->foto_akta ? route('dokumen.show', ['path' => $detail->siswa->foto_akta]) : '#' }}" data-fancybox="gallery" data-caption="Akta Kelahiran" class="w-full inline-flex justify-center items-center gap-2 px-3 py-2 text-sm font-medium text-[#696cff] bg-[#e7e7ff] dark:bg-[#696cff]/20 hover:bg-[#d4d5ff] dark:hover:bg-[#696cff]/30 rounded-md transition-colors">
+                        <a href="{{ $detail->siswa->foto_akta ? route('dokumen.show', ['siswa' => $detail->siswa, 'field' => 'foto_akta']) : '#' }}" data-fancybox="gallery" data-caption="Akta Kelahiran" class="w-full inline-flex justify-center items-center gap-2 px-3 py-2 text-sm font-medium text-[#696cff] bg-[#e7e7ff] dark:bg-[#696cff]/20 hover:bg-[#d4d5ff] dark:hover:bg-[#696cff]/30 rounded-md transition-colors">
                             <i data-lucide="zoom-in" class="w-4 h-4"></i> Perbesar Dokumen
                         </a>
                     </div>
@@ -135,7 +135,7 @@
                         <p class="text-sm text-[#a1b0cb] mb-1">Nominal Ditransfer</p>
                         <p class="text-2xl font-bold text-[#566a7f] dark:text-[#d5d5e2] mb-4">Rp {{ number_format($detail->pembayaran->jumlah, 0, ',', '.') }}</p>
                         
-                        <a href="{{ route('dokumen.show', ['path' => $detail->pembayaran->bukti_bayar]) }}" data-fancybox="gallery" data-caption="Bukti Daftar Ulang (Pembayaran)" class="inline-flex items-center justify-center w-full gap-2 px-4 py-2 bg-[#f5f5f9] dark:bg-[#232333] hover:bg-[#e7e7ff] dark:hover:bg-[#696cff]/10 text-[#566a7f] dark:text-[#d5d5e2] text-sm font-medium rounded-lg transition-colors border border-[#d9dee3] dark:border-[#434463]">
+                        <a href="{{ route('dokumen.show', ['siswa' => $detail->siswa, 'field' => 'bukti_bayar', 'pembayaran' => $detail->pembayaran]) }}" data-fancybox="gallery" data-caption="Bukti Daftar Ulang (Pembayaran)" class="inline-flex items-center justify-center w-full gap-2 px-4 py-2 bg-[#f5f5f9] dark:bg-[#232333] hover:bg-[#e7e7ff] dark:hover:bg-[#696cff]/10 text-[#566a7f] dark:text-[#d5d5e2] text-sm font-medium rounded-lg transition-colors border border-[#d9dee3] dark:border-[#434463]">
                             <i data-lucide="zoom-in" class="w-4 h-4"></i> Perbesar Foto Bukti
                         </a>
                         

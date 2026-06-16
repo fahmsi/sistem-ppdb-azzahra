@@ -50,6 +50,10 @@
 
             <table class="info-table">
                 <tr>
+                    <th>No. Pendaftaran</th>
+                    <td>{{ $detail->nomor_pendaftaran }}</td>
+                </tr>
+                <tr>
                     <th>Nama Anak</th>
                     <td>{{ $detail->siswa->nama }}</td>
                 </tr>

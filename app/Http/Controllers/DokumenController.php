@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Models\Pembayaran;
+use App\Models\Siswa;
 use Illuminate\Support\Facades\Storage;
 
 class DokumenController extends Controller
@@ -10,25 +11,39 @@ class DokumenController extends Controller
     /**
      * Show private document.
      */
-    public function show(Request $request)
+    public function show(Siswa $siswa, string $field, ?Pembayaran $pembayaran = null)
     {
-        $path = $request->query('path');
-        
-        if (!$path || !Storage::disk('local')->exists($path)) {
-            abort(404, 'Dokumen tidak ditemukan.');
-        }
+        $user = auth()->user();
 
-        // Add rudimentary security: Only admins or authenticated users can view
-        // Better: ensure the user actually owns the file if they are a parent.
-        // For simplicity right now, just require auth.
-        if (!auth()->check()) {
+        if (! $user || (! $user->isAdmin() && $siswa->user_id !== $user->id)) {
             abort(403, 'Akses ditolak.');
         }
 
-        // Ideally, check if the current user ID matches the owner of the document
-        // We will simplify this to just checking if the path contains their ID
-        // or just let any logged-in user view it (since UUID/hashes are used for filenames).
+        $path = match ($field) {
+            'foto_kk', 'foto_akta' => $siswa->{$field},
+            'bukti_bayar' => $this->paymentProofPath($siswa, $pembayaran),
+            default => null,
+        };
+
+        if (! $path || ! Storage::disk('local')->exists($path)) {
+            abort(404, 'Dokumen tidak ditemukan.');
+        }
 
         return Storage::disk('local')->response($path);
+    }
+
+    private function paymentProofPath(Siswa $siswa, ?Pembayaran $pembayaran): ?string
+    {
+        if (! $pembayaran) {
+            return null;
+        }
+
+        $pembayaran->loadMissing('pendaftaranDetail');
+
+        if ($pembayaran->pendaftaranDetail?->siswa_id !== $siswa->id) {
+            abort(404, 'Dokumen tidak ditemukan.');
+        }
+
+        return $pembayaran->bukti_bayar;
     }
 }

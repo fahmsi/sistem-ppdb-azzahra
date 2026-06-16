@@ -22,8 +22,11 @@
 
     @php
         $siswa = auth()->user()->siswa;
-        $latestRegistration = $siswa ? $siswa->pendaftaranDetails()->with('pembayaran')->latest()->first() : null;
+        $latestRegistration = $siswa ? $siswa->pendaftaranDetails()->with(['pendaftaran', 'pembayaran'])->latest()->first() : null;
         $isAccepted = $latestRegistration && $latestRegistration->status === 'diterima';
+        $adminWhatsapp = preg_replace('/[^0-9]/', '', (string) config('ppdb.admin_whatsapp', ''));
+        $helpWaMessage = "Assalamu'alaikum Admin Az Zahra, saya butuh bantuan terkait pendaftaran anak saya.";
+        $helpWaUrl = $adminWhatsapp ? 'https://wa.me/'.$adminWhatsapp.'?text='.urlencode($helpWaMessage) : '#';
     @endphp
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -255,7 +258,7 @@
                 </div>
                 <h3 class="font-semibold mb-2 text-slate-900 dark:text-[#d5d5e2]">Butuh Bantuan?</h3>
                 <p class="text-sm text-slate-500 dark:text-[#a1b0cb] mb-4">Jika Anda mengalami kendala saat mendaftar, silakan hubungi admin kami.</p>
-                <a href="https://wa.me/{{ env('WHATSAPP_ADMIN_NUMBER', '6281310408525') }}?text={{ urlencode('Assalamu\'alaikum Admin Az Zahra, saya butuh bantuan terkait pendaftaran anak saya.') }}" target="_blank" class="inline-flex items-center justify-center gap-2 w-full py-2.5 bg-emerald-500 hover:bg-emerald-600 text-white rounded-md transition-colors text-sm font-medium">
+                <a href="{{ $helpWaUrl }}" target="_blank" class="inline-flex items-center justify-center gap-2 w-full py-2.5 bg-emerald-500 hover:bg-emerald-600 text-white rounded-md transition-colors text-sm font-medium">
                     <i data-lucide="message-circle" class="w-4 h-4"></i> Hubungi WhatsApp
                 </a>
             </div>

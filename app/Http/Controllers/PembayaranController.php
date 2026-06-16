@@ -6,7 +6,6 @@ use App\Models\PendaftaranDetail;
 use App\Models\Pembayaran;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Storage;
 
 class PembayaranController extends Controller
@@ -16,14 +15,24 @@ class PembayaranController extends Controller
      */
     public function store(Request $request, PendaftaranDetail $detail): RedirectResponse
     {
-        // Ensure the registration belongs to the parent and is accepted
-        if ($detail->siswa->user_id !== auth()->id() || $detail->status !== 'diterima') {
+        $detail->loadMissing('siswa', 'pembayaran');
+
+        if ($detail->siswa->user_id !== auth()->id() || $detail->status !== PendaftaranDetail::STATUS_DITERIMA) {
             abort(403, 'Akses ditolak.');
         }
 
+        if ($detail->pembayaran?->isLunas()) {
+            return back()->with('error', 'Pembayaran daftar ulang sudah diverifikasi dan tidak dapat diunggah ulang.');
+        }
+
+        $jumlah = (int) config('ppdb.daftar_ulang_amount', 0);
+
+        if ($jumlah <= 0) {
+            return back()->with('error', 'Nominal daftar ulang belum dikonfigurasi. Silakan hubungi admin.');
+        }
+
         $request->validate([
-            'jumlah' => 'required|numeric|min:0',
-            'bukti_bayar' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+            'bukti_bayar' => ['required', 'file', 'mimes:jpg,jpeg,png,pdf', 'max:2048'],
         ]);
 
         // Delete old proof if it exists
@@ -36,14 +45,14 @@ class PembayaranController extends Controller
         Pembayaran::updateOrCreate(
             ['pendaftaran_detail_id' => $detail->id],
             [
-                'jumlah' => $request->jumlah,
+                'jumlah' => $jumlah,
                 'bukti_bayar' => $buktiBayarPath,
-                'status' => 'pending',
+                'status' => Pembayaran::STATUS_MENUNGGU_VERIFIKASI,
                 'catatan_admin' => null, // reset notes on re-upload
             ]
         );
 
-        return back()->with('success', 'Bukti pembayaran berhasil diunggah dan sedang menunggu verifikasi admin.');
+        return back()->with('success', 'Bukti pembayaran berhasil diunggah. Silakan hubungi admin untuk konfirmasi pembayaran agar proses daftar ulang dapat segera diverifikasi.');
     }
 
     /**
@@ -58,7 +67,7 @@ class PembayaranController extends Controller
 
         $detail->load(['siswa', 'pendaftaran', 'pembayaran']);
 
-        if (!$detail->pembayaran || $detail->pembayaran->status !== 'lunas') {
+        if (!$detail->pembayaran || ! $detail->pembayaran->isLunas()) {
             abort(403, 'Bukti bayar belum diverifikasi.');
         }
 

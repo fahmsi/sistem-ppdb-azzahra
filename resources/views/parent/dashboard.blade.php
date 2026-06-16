@@ -22,8 +22,20 @@
 
     @php
         $siswa = auth()->user()->siswa;
-        $latestRegistration = $siswa ? $siswa->pendaftaranDetails()->with('pembayaran')->latest()->first() : null;
+        $latestRegistration = $siswa ? $siswa->pendaftaranDetails()->with(['pendaftaran', 'pembayaran'])->latest()->first() : null;
         $isAccepted = $latestRegistration && $latestRegistration->status === 'diterima';
+        $payment = $latestRegistration?->pembayaran;
+        $paymentStatus = $payment?->status;
+        $isPaymentWaiting = $payment && in_array($paymentStatus, ['pending', 'menunggu_verifikasi'], true);
+        $isPaymentLunas = $paymentStatus === 'lunas';
+        $isPaymentRejected = $paymentStatus === 'ditolak';
+        $bankName = config('ppdb.bank_name', '-');
+        $bankAccountNumber = config('ppdb.bank_account_number', '-');
+        $bankAccountHolder = config('ppdb.bank_account_holder', '-');
+        $daftarUlangAmount = (int) config('ppdb.daftar_ulang_amount', 0);
+        $adminWhatsapp = preg_replace('/[^0-9]/', '', (string) config('ppdb.admin_whatsapp', ''));
+        $helpWaMessage = "Assalamu'alaikum Admin Az Zahra, saya butuh bantuan terkait pendaftaran anak saya.";
+        $helpWaUrl = $adminWhatsapp ? 'https://wa.me/'.$adminWhatsapp.'?text='.urlencode($helpWaMessage) : '#';
     @endphp
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -106,6 +118,41 @@
                                 <p class="text-[#697a8d] dark:text-[#a1b0cb]">{{ $latestRegistration->notifikasi }}</p>
                             </div>
                         @endif
+
+                        @if($isAccepted)
+                            <div class="mt-4 p-4 rounded-lg bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/20">
+                                @if(!$payment)
+                                    <h4 class="font-semibold text-emerald-800 dark:text-emerald-400">Selamat, pendaftaran anak Anda telah diterima.</h4>
+                                    <p class="text-sm text-[#697a8d] dark:text-[#a1b0cb] mt-2">Silakan melakukan daftar ulang dengan pembayaran ke rekening berikut:</p>
+                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-3 text-sm">
+                                        <div>
+                                            <span class="text-[#a1b0cb]">Bank:</span>
+                                            <span class="font-semibold text-[#566a7f] dark:text-[#d5d5e2]">{{ $bankName }}</span>
+                                        </div>
+                                        <div>
+                                            <span class="text-[#a1b0cb]">No. Rekening:</span>
+                                            <span class="font-semibold text-[#566a7f] dark:text-[#d5d5e2]">{{ $bankAccountNumber }}</span>
+                                        </div>
+                                        <div>
+                                            <span class="text-[#a1b0cb]">Atas Nama:</span>
+                                            <span class="font-semibold text-[#566a7f] dark:text-[#d5d5e2]">{{ $bankAccountHolder }}</span>
+                                        </div>
+                                        <div>
+                                            <span class="text-[#a1b0cb]">Nominal:</span>
+                                            <span class="font-semibold text-[#566a7f] dark:text-[#d5d5e2]">{{ $daftarUlangAmount > 0 ? 'Rp '.number_format($daftarUlangAmount, 0, ',', '.') : '-' }}</span>
+                                        </div>
+                                    </div>
+                                    <p class="text-sm text-[#697a8d] dark:text-[#a1b0cb] mt-3">Setelah melakukan pembayaran, silakan upload bukti pembayaran melalui tombol di bawah ini.</p>
+                                @elseif($isPaymentWaiting)
+                                    <h4 class="font-semibold text-amber-700 dark:text-amber-400">Bukti pembayaran Anda sedang menunggu verifikasi admin.</h4>
+                                    <p class="text-sm text-[#697a8d] dark:text-[#a1b0cb] mt-1">Silakan hubungi admin untuk konfirmasi.</p>
+                                @elseif($isPaymentLunas)
+                                    <h4 class="font-semibold text-emerald-800 dark:text-emerald-400">Pembayaran daftar ulang telah diverifikasi. Proses daftar ulang selesai.</h4>
+                                @elseif($isPaymentRejected)
+                                    <h4 class="font-semibold text-red-700 dark:text-red-400">Bukti pembayaran perlu diperbaiki. Silakan upload ulang bukti pembayaran.</h4>
+                                @endif
+                            </div>
+                        @endif
                         
                         <!-- Actions if Accepted -->
                         @if($isAccepted)
@@ -113,13 +160,17 @@
                                 <a href="{{ route('parent.siswa.kartu') }}" target="_blank" class="inline-flex items-center gap-2 px-4 py-2 bg-emerald-500 hover:bg-emerald-600 text-white text-sm font-medium rounded-md transition-colors">
                                     <i data-lucide="printer" class="w-4 h-4"></i> Cetak Bukti Lulus
                                 </a>
-                                @if($latestRegistration->pembayaran && $latestRegistration->pembayaran->status === 'lunas')
+                                @if($isPaymentLunas)
                                     <a href="{{ route('parent.pembayaran.receipt', $latestRegistration->id) }}" target="_blank" class="inline-flex items-center gap-2 px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium rounded-md transition-colors">
                                         <i data-lucide="file-down" class="w-4 h-4"></i> Cetak Bukti Bayar
                                     </a>
+                                @elseif($isPaymentWaiting)
+                                    <a href="{{ route('parent.pendaftaran.status') }}" class="sneat-btn-secondary">
+                                        <i data-lucide="clock" class="w-4 h-4"></i> Lihat Status Pembayaran
+                                    </a>
                                 @else
                                     <a href="{{ route('parent.pendaftaran.status') }}" class="sneat-btn-secondary">
-                                        <i data-lucide="upload" class="w-4 h-4"></i> Upload Bukti Bayar
+                                        <i data-lucide="upload" class="w-4 h-4"></i> Upload Bukti Pembayaran
                                     </a>
                                 @endif
                             </div>
@@ -255,7 +306,7 @@
                 </div>
                 <h3 class="font-semibold mb-2 text-slate-900 dark:text-[#d5d5e2]">Butuh Bantuan?</h3>
                 <p class="text-sm text-slate-500 dark:text-[#a1b0cb] mb-4">Jika Anda mengalami kendala saat mendaftar, silakan hubungi admin kami.</p>
-                <a href="https://wa.me/{{ env('WHATSAPP_ADMIN_NUMBER', '6281310408525') }}?text={{ urlencode('Assalamu\'alaikum Admin Az Zahra, saya butuh bantuan terkait pendaftaran anak saya.') }}" target="_blank" class="inline-flex items-center justify-center gap-2 w-full py-2.5 bg-emerald-500 hover:bg-emerald-600 text-white rounded-md transition-colors text-sm font-medium">
+                <a href="{{ $helpWaUrl }}" target="_blank" class="inline-flex items-center justify-center gap-2 w-full py-2.5 bg-emerald-500 hover:bg-emerald-600 text-white rounded-md transition-colors text-sm font-medium">
                     <i data-lucide="message-circle" class="w-4 h-4"></i> Hubungi WhatsApp
                 </a>
             </div>

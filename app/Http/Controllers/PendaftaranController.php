@@ -9,7 +9,9 @@ use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
+use RuntimeException;
 
 class PendaftaranController extends Controller
 {
@@ -79,55 +81,70 @@ class PendaftaranController extends Controller
                 ->with('warning', 'Silakan lengkapi data anak terlebih dahulu sebelum mendaftar.');
         }
 
-        // Check if the registration period is open
-        if (! $pendaftaran->isOpen()) {
-            return back()->with('error', 'Pendaftaran sudah ditutup.');
+        try {
+            DB::transaction(function () use ($pendaftaran, $siswa): void {
+                /** @var Pendaftaran $lockedPendaftaran */
+                $lockedPendaftaran = Pendaftaran::query()
+                    ->whereKey($pendaftaran->id)
+                    ->lockForUpdate()
+                    ->firstOrFail();
+
+                if (! $lockedPendaftaran->isOpen()) {
+                    throw new RuntimeException('Pendaftaran sudah ditutup.');
+                }
+
+                if ($lockedPendaftaran->is_expired) {
+                    throw new RuntimeException('Mohon maaf, masa pendaftaran untuk gelombang ini telah ditutup karena sudah melewati batas tanggal.');
+                }
+
+                if ($lockedPendaftaran->kuota > 0 && $lockedPendaftaran->pendaftaranDetails()->count() >= $lockedPendaftaran->kuota) {
+                    throw new RuntimeException('Mohon maaf, kuota untuk gelombang ini sudah penuh.');
+                }
+
+                $isAccepted = PendaftaranDetail::query()
+                    ->where('siswa_id', $siswa->id)
+                    ->where('status', PendaftaranDetail::STATUS_DITERIMA)
+                    ->lockForUpdate()
+                    ->first();
+
+                if ($isAccepted) {
+                    throw new RuntimeException('Anak Anda sudah diterima. Tidak perlu mendaftar lagi.');
+                }
+
+                $hasActiveRegistration = PendaftaranDetail::query()
+                    ->where('siswa_id', $siswa->id)
+                    ->whereNotIn('status', [PendaftaranDetail::STATUS_DITOLAK])
+                    ->lockForUpdate()
+                    ->first();
+
+                if ($hasActiveRegistration) {
+                    throw new RuntimeException('Anak Anda sudah terdaftar di gelombang lain. Perpindahan gelombang hanya dapat dilakukan oleh Admin.');
+                }
+
+                $alreadyRegistered = PendaftaranDetail::query()
+                    ->where('siswa_id', $siswa->id)
+                    ->where('pendaftaran_id', $lockedPendaftaran->id)
+                    ->lockForUpdate()
+                    ->first();
+
+                if ($alreadyRegistered) {
+                    throw new RuntimeException('Anak Anda sudah terdaftar di gelombang ini.');
+                }
+
+                $detail = PendaftaranDetail::create([
+                    'siswa_id' => $siswa->id,
+                    'pendaftaran_id' => $lockedPendaftaran->id,
+                    'status' => PendaftaranDetail::STATUS_PENDING,
+                    'notifikasi' => null,
+                ]);
+
+                $detail->update([
+                    'no_pendaftaran' => $this->generateNoPendaftaran($detail),
+                ]);
+            });
+        } catch (RuntimeException $exception) {
+            return back()->with('error', $exception->getMessage());
         }
-
-        // Check quota
-        if ($pendaftaran->isQuotaFull()) {
-            return back()->with('error', 'Mohon maaf, kuota untuk gelombang ini sudah penuh.');
-        }
-
-        // Check expired
-        if ($pendaftaran->is_expired) {
-            return back()->with('error', 'Mohon maaf, masa pendaftaran untuk gelombang ini telah ditutup karena sudah melewati batas tanggal.');
-        }
-
-        // LIMIT: Only 1 active gelombang at a time
-        $hasActiveRegistration = $siswa->pendaftaranDetails()
-            ->whereNotIn('status', [PendaftaranDetail::STATUS_DITOLAK])
-            ->exists();
-
-        if ($hasActiveRegistration) {
-            return back()->with('error', 'Anak Anda sudah terdaftar di gelombang lain. Perpindahan gelombang hanya dapat dilakukan oleh Admin.');
-        }
-
-        // Check if child is already accepted
-        $isAccepted = $siswa->pendaftaranDetails()
-            ->where('status', PendaftaranDetail::STATUS_DITERIMA)
-            ->exists();
-
-        if ($isAccepted) {
-            return back()->with('error', 'Anak Anda sudah diterima. Tidak perlu mendaftar lagi.');
-        }
-
-        // Check if already registered for this period
-        $alreadyRegistered = PendaftaranDetail::where('siswa_id', $siswa->id)
-            ->where('pendaftaran_id', $pendaftaran->id)
-            ->exists();
-
-        if ($alreadyRegistered) {
-            return back()->with('error', 'Anak Anda sudah terdaftar di gelombang ini.');
-        }
-
-        // Create the registration detail
-        PendaftaranDetail::create([
-            'siswa_id' => $siswa->id,
-            'pendaftaran_id' => $pendaftaran->id,
-            'status' => PendaftaranDetail::STATUS_PENDING,
-            'notifikasi' => null,
-        ]);
 
         return back()->with('success', 'Pendaftaran berhasil! Status: menunggu verifikasi.');
     }
@@ -143,12 +160,17 @@ class PendaftaranController extends Controller
 
         $registrations = collect();
         if ($siswa) {
-            $registrations = PendaftaranDetail::with(['pendaftaran', 'pembayaran'])
+            $registrations = PendaftaranDetail::with(['siswa', 'pendaftaran', 'pembayaran'])
                 ->where('siswa_id', $siswa->id)
                 ->latest()
                 ->get();
         }
 
         return view('parent.pendaftaran.status', compact('registrations'));
+    }
+
+    private function generateNoPendaftaran(PendaftaranDetail $detail): string
+    {
+        return sprintf('PPDB-%s-%04d', now()->year, $detail->id);
     }
 }

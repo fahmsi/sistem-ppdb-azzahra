@@ -41,6 +41,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('pendaftaran_details');
+        Schema::dropIfExists('psb_pendaftaran_detail');
     }
 };

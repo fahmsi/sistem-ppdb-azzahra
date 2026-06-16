@@ -77,7 +77,7 @@
                             <tr class="border-b border-gray-100">
                                 <th class="py-3 px-2 text-sm font-semibold text-gray-500 w-1/3">No. Pendaftaran</th>
                                 <td class="py-3 px-2 font-bold text-gray-900 text-lg">
-                                    REG-{{ $registration->created_at->format('Y') }}-{{ str_pad($registration->id, 4, '0', STR_PAD_LEFT) }}
+                                    {{ $registration->nomor_pendaftaran }}
                                 </td>
                             </tr>
                             <tr class="border-b border-gray-100">

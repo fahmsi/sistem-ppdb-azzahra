@@ -29,6 +29,7 @@ class PembayaranExport implements FromCollection, WithHeadings, WithMapping
     {
         return [
             'No',
+            'No. Pendaftaran',
             'Nama Orang Tua / Pembayar',
             'Gelombang Pendaftaran',
             'Metode Pembayaran',
@@ -65,6 +66,7 @@ class PembayaranExport implements FromCollection, WithHeadings, WithMapping
 
         return [
             $no,
+            $pembayaran->pendaftaranDetail->nomor_pendaftaran ?? '-',
             $namaPembayar,
             $gelombang,
             strtoupper($metode),

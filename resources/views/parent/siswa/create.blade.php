@@ -4,7 +4,7 @@
 @section('header_title', 'Formulir Data Anak')
 
 @section('content')
-<div class="max-w-5xl mx-auto mb-10">
+<div class="">
     <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
         
         <!-- Header Form yang Dirapikan -->

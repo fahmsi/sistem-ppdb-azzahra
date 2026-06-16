@@ -4,6 +4,12 @@
 @section('header_title', 'Status Pendaftaran Anak')
 
 @section('content')
+@php
+    $bankName = config('ppdb.bank_name', '-');
+    $bankAccountNumber = config('ppdb.bank_account_number', '-');
+    $bankAccountHolder = config('ppdb.bank_account_holder', '-');
+    $daftarUlangAmount = (int) config('ppdb.daftar_ulang_amount', 0);
+@endphp
 <div class="max-w-7xl mx-auto space-y-6">
 
     <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden animate-fade-up">
@@ -196,22 +202,17 @@
                                                 @csrf
                                                 <div class="px-6 py-6 space-y-5">
                                                     <div class="bg-blue-50 border border-blue-100 rounded-lg p-3 text-sm text-blue-800">
-                                                        Silakan transfer biaya pendaftaran/daftar ulang ke rekening:<br>
-                                                        <strong>BSI 1234567890 a.n. PAUD AZ-ZAHRA</strong>
-                                                    </div>
-
-                                                    <div>
-                                                        <label class="block text-sm font-medium text-gray-700 mb-1">Jumlah Nominal <span class="text-red-500">*</span></label>
-                                                        <div class="relative">
-                                                            <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-500">Rp</span>
-                                                            <input type="number" name="jumlah" required class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500 text-sm">
-                                                        </div>
+                                                        <p class="font-semibold mb-2">Silakan transfer biaya daftar ulang ke rekening berikut:</p>
+                                                        <p>Bank: <strong>{{ $bankName }}</strong></p>
+                                                        <p>No. Rekening: <strong>{{ $bankAccountNumber }}</strong></p>
+                                                        <p>Atas Nama: <strong>{{ $bankAccountHolder }}</strong></p>
+                                                        <p>Nominal: <strong>{{ $daftarUlangAmount > 0 ? 'Rp '.number_format($daftarUlangAmount, 0, ',', '.') : '-' }}</strong></p>
                                                     </div>
 
                                                     <div>
                                                         <label class="block text-sm font-medium text-gray-700 mb-1">Bukti Transfer <span class="text-red-500">*</span></label>
-                                                        <input type="file" name="bukti_bayar" accept="image/jpeg,image/png,image/jpg" required class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-primary-50 file:text-primary-700 hover:file:bg-primary-100 border border-gray-300 rounded-lg">
-                                                        <p class="text-xs text-gray-500 mt-1">Format JPG/PNG max 2MB.</p>
+                                                        <input type="file" name="bukti_bayar" accept="image/jpeg,image/png,image/jpg,application/pdf" required class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-primary-50 file:text-primary-700 hover:file:bg-primary-100 border border-gray-300 rounded-lg">
+                                                        <p class="text-xs text-gray-500 mt-1">Format JPG, PNG, atau PDF max 2MB.</p>
                                                     </div>
                                                 </div>
 

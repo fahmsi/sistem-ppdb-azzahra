@@ -14,7 +14,7 @@
         </h2>
         <div class="flex flex-col sm:flex-row items-center gap-2 w-full sm:w-auto">
             <a href="{{ route('admin.pembayaran.index') }}" class="px-3 py-2 text-sm font-medium rounded-md {{ !request('status') ? 'bg-[#e7e7ff] dark:bg-[#696cff]/20 text-[#696cff]' : 'text-[#697a8d] dark:text-[#a1b0cb] hover:bg-[#f5f5f9] dark:hover:bg-[#232333]' }} transition-colors">Semua</a>
-            <a href="{{ route('admin.pembayaran.index', ['status' => 'pending']) }}" class="px-3 py-2 text-sm font-medium rounded-md {{ request('status') === 'pending' ? 'bg-amber-50 dark:bg-amber-500/10 text-amber-600 dark:text-amber-400' : 'text-[#697a8d] dark:text-[#a1b0cb] hover:bg-[#f5f5f9] dark:hover:bg-[#232333]' }} transition-colors">Pending</a>
+            <a href="{{ route('admin.pembayaran.index', ['status' => 'menunggu_verifikasi']) }}" class="px-3 py-2 text-sm font-medium rounded-md {{ request('status') === 'menunggu_verifikasi' ? 'bg-amber-50 dark:bg-amber-500/10 text-amber-600 dark:text-amber-400' : 'text-[#697a8d] dark:text-[#a1b0cb] hover:bg-[#f5f5f9] dark:hover:bg-[#232333]' }} transition-colors">Menunggu Verifikasi</a>
             <a href="{{ route('admin.pembayaran.index', ['status' => 'lunas']) }}" class="px-3 py-2 text-sm font-medium rounded-md {{ request('status') === 'lunas' ? 'bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400' : 'text-[#697a8d] dark:text-[#a1b0cb] hover:bg-[#f5f5f9] dark:hover:bg-[#232333]' }} transition-colors">Lunas</a>
             <a href="{{ route('admin.pembayaran.index', ['status' => 'ditolak']) }}" class="px-3 py-2 text-sm font-medium rounded-md {{ request('status') === 'ditolak' ? 'bg-red-50 dark:bg-red-500/10 text-red-600 dark:text-red-400' : 'text-[#697a8d] dark:text-[#a1b0cb] hover:bg-[#f5f5f9] dark:hover:bg-[#232333]' }} transition-colors">Ditolak</a>
             <div class="relative inline-block text-left ml-0 sm:ml-2 mt-2 sm:mt-0 w-full sm:w-auto">
@@ -42,6 +42,7 @@
                 <thead>
                     <tr>
                         <th>Tanggal</th>
+                        <th>No. Pendaftaran</th>
                         <th>Nama Siswa</th>
                         <th>Gelombang</th>
                         <th>Jumlah (Rp)</th>
@@ -53,12 +54,13 @@
                     @forelse($pembayarans as $pembayaran)
                     <tr>
                         <td>{{ $pembayaran->created_at->format('d M Y') }}</td>
+                        <td class="font-semibold text-[#566a7f] dark:text-[#d5d5e2]">{{ $pembayaran->pendaftaranDetail->nomor_pendaftaran ?? '-' }}</td>
                         <td class="font-medium text-[#566a7f] dark:text-[#d5d5e2]">{{ $pembayaran->pendaftaranDetail->siswa->nama ?? '-' }}</td>
                         <td>{{ $pembayaran->pendaftaranDetail->pendaftaran->gelombang ?? '-' }}</td>
                         <td class="font-semibold text-[#566a7f] dark:text-[#d5d5e2]">{{ number_format($pembayaran->jumlah, 0, ',', '.') }}</td>
                         <td>
-                            @if($pembayaran->status === 'pending')
-                                <span class="sneat-badge bg-amber-50 dark:bg-amber-500/10 text-amber-600 dark:text-amber-400">Pending</span>
+                            @if(in_array($pembayaran->status, ['pending', 'menunggu_verifikasi'], true))
+                                <span class="sneat-badge bg-amber-50 dark:bg-amber-500/10 text-amber-600 dark:text-amber-400">Menunggu Verifikasi</span>
                             @elseif($pembayaran->status === 'lunas')
                                 <span class="sneat-badge bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">Lunas</span>
                             @else
@@ -73,7 +75,7 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="6" class="px-4 py-8 text-center text-[#a1b0cb]">
+                        <td colspan="7" class="px-4 py-8 text-center text-[#a1b0cb]">
                             Tidak ada data pembayaran.
                         </td>
                     </tr>

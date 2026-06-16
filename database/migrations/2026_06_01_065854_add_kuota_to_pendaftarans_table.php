@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('pendaftarans', function (Blueprint $table) {
+        Schema::table('psb_pendaftaran', function (Blueprint $table) {
             //
         });
     }
@@ -21,7 +21,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('pendaftarans', function (Blueprint $table) {
+        Schema::table('psb_pendaftaran', function (Blueprint $table) {
             //
         });
     }

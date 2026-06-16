@@ -77,6 +77,7 @@
                 <thead>
                     <tr>
                         <th>Tgl Daftar</th>
+                        <th>No. Pendaftaran</th>
                         <th>Nama Anak</th>
                         <th>Wali Murid</th>
                         <th>Gelombang</th>
@@ -89,6 +90,9 @@
                         <tr>
                             <td>
                                 {{ $reg->created_at->format('d/m/Y H:i') }}
+                            </td>
+                            <td class="font-semibold text-[#566a7f] dark:text-[#d5d5e2]">
+                                {{ $reg->nomor_pendaftaran }}
                             </td>
                             <td>
                                 <div class="font-medium text-[#566a7f] dark:text-[#d5d5e2]">{{ $reg->siswa->nama ?? '-' }}</div>
@@ -141,7 +145,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6" class="px-6 py-12 text-center">
+                            <td colspan="7" class="px-6 py-12 text-center">
                                 <div class="w-16 h-16 bg-[#f5f5f9] dark:bg-[#232333] rounded-full flex items-center justify-center mx-auto mb-3">
                                     <i data-lucide="search-X" class="w-8 h-8 text-[#a1b0cb]"></i>
                                 </div>

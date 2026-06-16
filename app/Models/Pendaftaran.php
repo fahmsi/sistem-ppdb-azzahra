@@ -61,7 +61,7 @@ class Pendaftaran extends Model
             'psb_pendaftaran_detail',
             'pendaftaran_id',
             'siswa_id'
-        )->withPivot('status', 'notifikasi')->withTimestamps();
+        )->withPivot('no_pendaftaran', 'status', 'notifikasi')->withTimestamps();
     }
 
     /**

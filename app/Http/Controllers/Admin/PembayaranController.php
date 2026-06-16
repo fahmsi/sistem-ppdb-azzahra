@@ -20,7 +20,9 @@ class PembayaranController extends Controller
 
         $query = Pembayaran::with(['pendaftaranDetail.siswa.user', 'pendaftaranDetail.pendaftaran'])->latest();
 
-        if ($status) {
+        if ($status === Pembayaran::STATUS_MENUNGGU_VERIFIKASI) {
+            $query->whereIn('status', [Pembayaran::STATUS_PENDING, Pembayaran::STATUS_MENUNGGU_VERIFIKASI]);
+        } elseif ($status) {
             $query->where('status', $status);
         }
 

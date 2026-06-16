@@ -63,10 +63,10 @@ Route::get('/gallery/{gallery}/gambar', GalleryImageController::class)
 
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
-    Route::post('/login', [AuthController::class, 'login']);
+    Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:5,1');
 
     Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
-    Route::post('/register', [AuthController::class, 'register']);
+    Route::post('/register', [AuthController::class, 'register'])->middleware('throttle:5,1');
 
     Route::get('forgot-password', [PasswordResetLinkController::class, 'create'])->name('password.request');
     Route::post('forgot-password', [PasswordResetLinkController::class, 'store'])->name('password.email');
@@ -100,8 +100,14 @@ Route::middleware('auth')->group(function () {
     Route::get('confirm-password', [ConfirmablePasswordController::class, 'show'])->name('password.confirm');
     Route::post('confirm-password', [ConfirmablePasswordController::class, 'store']);
 
+    Route::get('/dashboard', function () {
+        $user = auth()->user();
+
+        return redirect()->route($user->isAdmin() ? 'admin.dashboard' : 'parent.dashboard');
+    })->name('dashboard');
+
     // Secure Document Viewer
-    Route::get('/dokumen', [DokumenController::class, 'show'])->name('dokumen.show');
+    Route::get('/siswa/{siswa}/dokumen/{field}/{pembayaran?}', [DokumenController::class, 'show'])->name('dokumen.show');
 
     /*
     |----------------------------------------------------------------------
@@ -163,19 +169,10 @@ Route::middleware('auth')->group(function () {
 
         // Route Export Siswa (Letakkan sebelum resource siswa)
         Route::get('/siswa/export', [App\Http\Controllers\Admin\SiswaController::class, 'export'])->name('siswa.export');
-        Route::resource('/siswa', App\Http\Controllers\Admin\SiswaController::class);
-        // Route Export Verifikasi (defined above before parameter routes)
-        Route::resource('/verifikasi', VerifikasiController::class);
+        Route::resource('/siswa', App\Http\Controllers\Admin\SiswaController::class)->only(['index', 'show']);
 
         // Route Export Pembayaran
         Route::get('/pembayaran/export', [PembayaranController::class, 'export'])->name('pembayaran.export');
-        Route::resource('pembayaran', PembayaranController::class);
-
-        // Data Siswa (All Students)
-        Route::get('/siswa', [App\Http\Controllers\Admin\SiswaController::class, 'index'])->name('siswa.index');
-        Route::get('/siswa/{siswa}', [App\Http\Controllers\Admin\SiswaController::class, 'show'])->name('siswa.show');
-
-        // Rekap Pembayaran
         Route::get('/pembayaran', [PembayaranController::class, 'index'])->name('pembayaran.index');
 
         // Settings (admin & super_admin)
@@ -185,11 +182,7 @@ Route::middleware('auth')->group(function () {
         Route::put('/settings/achievements/{achievement}', [AchievementController::class, 'update'])->name('settings.achievements.update');
         Route::delete('/settings/achievements/{achievement}', [AchievementController::class, 'destroy'])->name('settings.achievements.destroy');
 
-        // Jika Anda menggunakan Route Resource:
         Route::resource('testimonials', TestimonialController::class);
-
-        // ATAU jika Anda mendefinisikan rutenya satu per satu:
-        Route::get('/testimonials', [TestimonialController::class, 'index'])->name('testimonials.index');
 
         // Gallery CRUD
         Route::resource('gallery', GalleryController::class);

@@ -193,14 +193,14 @@
                         </h3>
                         <div class="flex gap-4">
                             @if($siswa->foto_kk)
-                            <a href="{{ route('dokumen.show', ['path' => $siswa->foto_kk]) }}" target="_blank" class="flex-1 flex flex-col items-center justify-center p-4 rounded-xl border border-gray-200 bg-white hover:bg-gray-50 hover:border-primary-300 transition-colors group">
+                            <a href="{{ route('dokumen.show', ['siswa' => $siswa, 'field' => 'foto_kk']) }}" target="_blank" class="flex-1 flex flex-col items-center justify-center p-4 rounded-xl border border-gray-200 bg-white hover:bg-gray-50 hover:border-primary-300 transition-colors group">
                                 <i data-lucide="file-text" class="w-8 h-8 text-gray-400 group-hover:text-primary-600 mb-2 transition-colors"></i>
                                 <span class="text-sm font-medium text-gray-700 group-hover:text-primary-700">Kartu Keluarga</span>
                             </a>
                             @endif
 
                             @if($siswa->foto_akta)
-                            <a href="{{ route('dokumen.show', ['path' => $siswa->foto_akta]) }}" target="_blank" class="flex-1 flex flex-col items-center justify-center p-4 rounded-xl border border-gray-200 bg-white hover:bg-gray-50 hover:border-primary-300 transition-colors group">
+                            <a href="{{ route('dokumen.show', ['siswa' => $siswa, 'field' => 'foto_akta']) }}" target="_blank" class="flex-1 flex flex-col items-center justify-center p-4 rounded-xl border border-gray-200 bg-white hover:bg-gray-50 hover:border-primary-300 transition-colors group">
                                 <i data-lucide="file-badge-2" class="w-8 h-8 text-gray-400 group-hover:text-primary-600 mb-2 transition-colors"></i>
                                 <span class="text-sm font-medium text-gray-700 group-hover:text-primary-700">Akta Kelahiran</span>
                             </a>

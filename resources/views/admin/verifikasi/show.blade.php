@@ -7,6 +7,14 @@
 <!-- Fancybox CSS -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.css" />
 
+@php
+    $payment = $detail->pembayaran;
+    $paymentStatus = $payment?->status;
+    $isPaymentWaiting = $payment && in_array($paymentStatus, ['pending', 'menunggu_verifikasi'], true);
+    $isPaymentLunas = $paymentStatus === 'lunas';
+    $isPaymentRejected = $paymentStatus === 'ditolak';
+@endphp
+
 <div class="max-w-7xl mx-auto">
     
     <!-- Back Button & Header -->
@@ -51,6 +59,10 @@
                                 <p class="text-xs text-[#a1b0cb] uppercase tracking-wider">Nama Lengkap</p>
                                 <p class="font-bold text-[#566a7f] dark:text-[#d5d5e2] text-lg">{{ $detail->siswa->nama ?? '-' }}</p>
                             </div>
+                            <div>
+                                <p class="text-xs text-[#a1b0cb] uppercase tracking-wider">No. Pendaftaran</p>
+                                <p class="font-semibold text-[#566a7f] dark:text-[#d5d5e2]">{{ $detail->nomor_pendaftaran }}</p>
+                            </div>
                             <div class="grid grid-cols-2 gap-4">
                                 <div>
                                     <p class="text-xs text-[#a1b0cb] uppercase">Jenis Kelamin</p>
@@ -94,7 +106,7 @@
                         <i data-lucide="file-text" class="w-12 h-12 text-[#a1b0cb] mb-3"></i>
                         <h4 class="font-medium text-[#566a7f] dark:text-[#d5d5e2] mb-1">Kartu Keluarga (KK)</h4>
                         <p class="text-xs text-[#a1b0cb] mb-4">No: {{ $detail->siswa->no_kk ?? '-' }}</p>
-                        <a href="{{ $detail->siswa->foto_kk ? route('dokumen.show', ['path' => $detail->siswa->foto_kk]) : '#' }}" onclick="openLightbox(this.href); event.preventDefault();" class="w-full inline-flex justify-center items-center gap-2 px-3 py-2 text-sm font-medium text-[#696cff] bg-[#e7e7ff] dark:bg-[#696cff]/20 hover:bg-[#d4d5ff] dark:hover:bg-[#696cff]/30 rounded-md transition-all duration-300 cursor-pointer hover:shadow-lg">
+                        <a href="{{ $detail->siswa->foto_kk ? route('dokumen.show', ['siswa' => $detail->siswa, 'field' => 'foto_kk']) : '#' }}" onclick="openLightbox(this.href); event.preventDefault();" class="w-full inline-flex justify-center items-center gap-2 px-3 py-2 text-sm font-medium text-[#696cff] bg-[#e7e7ff] dark:bg-[#696cff]/20 hover:bg-[#d4d5ff] dark:hover:bg-[#696cff]/30 rounded-md transition-all duration-300 cursor-pointer hover:shadow-lg">
                             <i data-lucide="zoom-in" class="w-4 h-4"></i> Perbesar Dokumen
                         </a>
                     </div>
@@ -104,7 +116,7 @@
                         <i data-lucide="file-badge-2" class="w-12 h-12 text-[#a1b0cb] mb-3"></i>
                         <h4 class="font-medium text-[#566a7f] dark:text-[#d5d5e2] mb-1">Akta Kelahiran</h4>
                         <p class="text-xs text-[#a1b0cb] mb-4">Pastikan terbaca jelas</p>
-                        <a href="{{ $detail->siswa->foto_akta ? route('dokumen.show', ['path' => $detail->siswa->foto_akta]) : '#' }}" onclick="openLightbox(this.href); event.preventDefault();" class="w-full inline-flex justify-center items-center gap-2 px-3 py-2 text-sm font-medium text-[#696cff] bg-[#e7e7ff] dark:bg-[#696cff]/20 hover:bg-[#d4d5ff] dark:hover:bg-[#696cff]/30 rounded-md transition-all duration-300 cursor-pointer hover:shadow-lg">
+                        <a href="{{ $detail->siswa->foto_akta ? route('dokumen.show', ['siswa' => $detail->siswa, 'field' => 'foto_akta']) : '#' }}" onclick="openLightbox(this.href); event.preventDefault();" class="w-full inline-flex justify-center items-center gap-2 px-3 py-2 text-sm font-medium text-[#696cff] bg-[#e7e7ff] dark:bg-[#696cff]/20 hover:bg-[#d4d5ff] dark:hover:bg-[#696cff]/30 rounded-md transition-all duration-300 cursor-pointer hover:shadow-lg">
                             <i data-lucide="zoom-in" class="w-4 h-4"></i> Perbesar Dokumen
                         </a>
                     </div>
@@ -112,16 +124,16 @@
             </div>
 
             <!-- Pembayaran / Daftar Ulang -->
-            @if($detail->pembayaran)
+            @if($payment)
             <div class="bg-white dark:bg-[#2b2c40] rounded-lg shadow-sneat dark:shadow-sneat-dark border border-[#d9dee3] dark:border-[#434463] overflow-hidden mt-6">
                 <div class="bg-blue-50 dark:bg-blue-500/10 px-6 py-4 border-b border-blue-100 dark:border-blue-500/20 flex items-center justify-between">
                     <div class="flex items-center gap-2">
                         <i data-lucide="credit-card" class="w-5 h-5 text-blue-600 dark:text-blue-400"></i>
                         <h3 class="font-heading font-semibold text-blue-900 dark:text-blue-300">Bukti Daftar Ulang (Pembayaran)</h3>
                     </div>
-                    @if($detail->pembayaran->status === 'lunas')
+                    @if($isPaymentLunas)
                         <span class="px-3 py-1 bg-secondary-100 text-secondary-800 text-xs font-bold rounded-full">LUNAS</span>
-                    @elseif($detail->pembayaran->status === 'ditolak')
+                    @elseif($isPaymentRejected)
                         <span class="px-3 py-1 bg-red-100 text-red-800 text-xs font-bold rounded-full">DITOLAK</span>
                     @else
                         <span class="px-3 py-1 bg-yellow-100 text-yellow-800 text-xs font-bold rounded-full">PERLU VERIFIKASI</span>
@@ -131,22 +143,22 @@
                 <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                         <p class="text-sm text-[#a1b0cb] mb-1">Nominal Ditransfer</p>
-                        <p class="text-2xl font-bold text-[#566a7f] dark:text-[#d5d5e2] mb-4">Rp {{ number_format($detail->pembayaran->jumlah, 0, ',', '.') }}</p>
+                        <p class="text-2xl font-bold text-[#566a7f] dark:text-[#d5d5e2] mb-4">Rp {{ number_format($payment->jumlah, 0, ',', '.') }}</p>
                         
-                        <a href="{{ route('dokumen.show', ['path' => $detail->pembayaran->bukti_bayar]) }}" onclick="openLightbox(this.href); event.preventDefault();" class="inline-flex items-center justify-center w-full gap-2 px-4 py-2 bg-[#f5f5f9] dark:bg-[#232333] hover:bg-[#e7e7ff] dark:hover:bg-[#696cff]/10 text-[#566a7f] dark:text-[#d5d5e2] text-sm font-medium rounded-lg transition-all duration-300 border border-[#d9dee3] dark:border-[#434463] cursor-pointer hover:shadow-lg">
-                            <i data-lucide="zoom-in" class="w-4 h-4"></i> Perbesar Foto Bukti
+                        <a href="{{ route('dokumen.show', ['siswa' => $detail->siswa, 'field' => 'bukti_bayar', 'pembayaran' => $payment]) }}" target="_blank" class="inline-flex items-center justify-center w-full gap-2 px-4 py-2 bg-[#f5f5f9] dark:bg-[#232333] hover:bg-[#e7e7ff] dark:hover:bg-[#696cff]/10 text-[#566a7f] dark:text-[#d5d5e2] text-sm font-medium rounded-lg transition-all duration-300 border border-[#d9dee3] dark:border-[#434463] cursor-pointer hover:shadow-lg">
+                            <i data-lucide="file-search" class="w-4 h-4"></i> Lihat Bukti Pembayaran
                         </a>
                         
-                        @if($detail->pembayaran->catatan_admin)
+                        @if($payment->catatan_admin)
                         <div class="mt-4 p-3 bg-red-50 border border-red-100 rounded-lg">
                             <p class="text-xs text-red-800 font-semibold mb-1">Catatan Admin Sebelumnya:</p>
-                            <p class="text-sm text-red-700">{{ $detail->pembayaran->catatan_admin }}</p>
+                            <p class="text-sm text-red-700">{{ $payment->catatan_admin }}</p>
                         </div>
                         @endif
                     </div>
                     
                     <div class="border-l border-[#d9dee3] dark:border-[#434463] pl-0 md:pl-6">
-                        <form action="{{ route('admin.pembayaran.verify', $detail->pembayaran->id) }}" method="POST" class="space-y-4">
+                        <form action="{{ route('admin.pembayaran.verify', $payment->id) }}" method="POST" class="space-y-4">
                             @csrf
                             @method('PATCH')
                             
@@ -154,17 +166,17 @@
                                 <label class="block text-sm font-medium text-[#566a7f] dark:text-[#d5d5e2] mb-1">Tindakan</label>
                                 <select name="status" id="paymentStatusSelect" class="sneat-input" onchange="togglePaymentNote()">
                                     <option value="">-- Pilih Keputusan --</option>
-                                    <option value="lunas" {{ $detail->pembayaran->status === 'lunas' ? 'selected' : '' }}>Terima (Lunas)</option>
-                                    <option value="ditolak" {{ $detail->pembayaran->status === 'ditolak' ? 'selected' : '' }}>Tolak (Revisi)</option>
+                                    <option value="lunas" {{ $isPaymentLunas ? 'selected' : '' }}>Terima (Lunas)</option>
+                                    <option value="ditolak" {{ $isPaymentRejected ? 'selected' : '' }}>Tolak (Perlu Revisi)</option>
                                 </select>
                             </div>
 
-                            <div id="paymentNoteContainer" class="{{ $detail->pembayaran->status === 'ditolak' ? 'block' : 'hidden' }}">
+                            <div id="paymentNoteContainer" class="{{ $isPaymentRejected ? 'block' : 'hidden' }}">
                                 <label class="block text-sm font-medium text-[#566a7f] dark:text-[#d5d5e2] mb-1">Catatan Penolakan</label>
-                                <textarea name="catatan_admin" rows="3" class="sneat-input" placeholder="Contoh: Bukti buram, nominal tidak sesuai...">{{ $detail->pembayaran->catatan_admin }}</textarea>
+                                <textarea name="catatan_admin" rows="3" class="sneat-input" placeholder="Contoh: Bukti buram, nominal tidak sesuai...">{{ $payment->catatan_admin }}</textarea>
                             </div>
 
-                            @if($detail->pembayaran->status === 'lunas')
+                            @if($isPaymentLunas)
                                 <button type="button" disabled class="w-full inline-flex items-center gap-2 justify-center py-2.5 px-4 rounded-md text-sm font-medium transition-all bg-gray-100 dark:bg-[#434463] text-gray-400 dark:text-gray-500 cursor-not-allowed">
                                     <i data-lucide="check-circle" class="w-4 h-4"></i> Pembayaran Sudah Disetujui
                                 </button>
@@ -221,7 +233,7 @@
                         </div>
 
                         {{-- Also hide payment verification if already lunas --}}
-                        @if($detail->pembayaran && $detail->pembayaran->status === 'lunas')
+                        @if($payment && $isPaymentLunas)
                             <div class="mt-4 pt-4 border-t border-[#d9dee3] dark:border-[#434463] text-center">
                                 <span class="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-bold bg-secondary-100 text-secondary-700">
                                     <i data-lucide="check" class="w-4 h-4"></i> Pembayaran Lunas

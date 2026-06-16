@@ -22,6 +22,7 @@ class Siswa extends Model
     protected $fillable = [
         'user_id',
         'nama',
+        'nama_panggilan',
         'nisn',
         'nis',
         'jenis_kelamin',
@@ -86,6 +87,6 @@ class Siswa extends Model
             'psb_pendaftaran_detail',
             'siswa_id',
             'pendaftaran_id'
-        )->withPivot('status', 'notifikasi')->withTimestamps();
+        )->withPivot('no_pendaftaran', 'status', 'notifikasi')->withTimestamps();
     }
 }

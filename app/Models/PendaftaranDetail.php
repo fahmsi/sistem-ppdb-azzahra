@@ -31,6 +31,7 @@ class PendaftaranDetail extends Model
     protected $fillable = [
         'siswa_id',
         'pendaftaran_id',
+        'no_pendaftaran',
         'status',
         'notifikasi',
     ];
@@ -57,6 +58,11 @@ class PendaftaranDetail extends Model
     public function pembayaran(): HasOne
     {
         return $this->hasOne(Pembayaran::class, 'pendaftaran_detail_id');
+    }
+
+    public function getNomorPendaftaranAttribute(): string
+    {
+        return $this->no_pendaftaran ?: sprintf('PPDB-%s-%04d', $this->created_at?->format('Y') ?? now()->year, $this->id);
     }
 
     public function isPending(): bool
