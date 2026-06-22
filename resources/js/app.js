@@ -202,10 +202,10 @@ document.addEventListener('DOMContentLoaded', function () {
     setTimeout(() => createIcons({ icons }), 100);
 });
 
-console.log('PSB Az-Zahra Landing Page loaded successfully.');
+console.log('SPMB Az-Zahra Landing Page loaded successfully.');
 
 // ===========================
-// PSB Dashboard Layout Scripts
+// SPMB Dashboard Layout Scripts
 // (Moved from resources/views/layouts/app.blade.php except SweetAlert2)
 // ===========================
 
@@ -263,7 +263,7 @@ document.addEventListener('DOMContentLoaded', function () {
         else if (mode === 'dark' && themeOptDark) themeOptDark.classList.add('active');
         else if (themeOptSystem) themeOptSystem.classList.add('active');
 
-        localStorage.setItem('ppdb_theme', mode);
+        localStorage.setItem('spmb_theme', mode);
 
         // Re-create Lucide icons to apply dark mode colors
         setTimeout(() => {
@@ -292,12 +292,12 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // Initialize theme
-    const savedTheme = localStorage.getItem('ppdb_theme') || 'light';
+    const savedTheme = localStorage.getItem('spmb_theme') || 'light';
     applyTheme(savedTheme);
 
     // Listen for system theme changes
     window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
-        if (localStorage.getItem('ppdb_theme') === 'system') {
+        if (localStorage.getItem('spmb_theme') === 'system') {
             applyTheme('system');
         }
     });
@@ -306,30 +306,48 @@ document.addEventListener('DOMContentLoaded', function () {
     // 2. Mobile Sidebar Toggle
     // =============================================
     const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const mobileSidebarCloseBtn = document.getElementById('mobileSidebarCloseBtn');
     const sidebar = document.getElementById('sidebar');
     const sidebarOverlay = document.getElementById('sidebarOverlay');
 
     if (mobileMenuBtn && sidebar && sidebarOverlay) {
-        mobileMenuBtn.addEventListener('click', () => {
-            sidebar.classList.toggle('hidden');
-            sidebar.classList.toggle('absolute');
-            sidebar.classList.toggle('z-30');
+        let mobileSidebarOpen = false;
 
-            sidebarOverlay.classList.toggle('hidden');
-            setTimeout(() => {
-                sidebarOverlay.classList.toggle('opacity-0');
-            }, 10);
+        const setMobileSidebar = (open) => {
+            mobileSidebarOpen = open && window.innerWidth < 768;
+            sidebar.classList.toggle('mobile-open', mobileSidebarOpen);
+            sidebarOverlay.classList.toggle('hidden', !mobileSidebarOpen);
+            document.body.classList.toggle('sidebar-mobile-open', mobileSidebarOpen);
+            mobileMenuBtn.setAttribute('aria-expanded', String(mobileSidebarOpen));
+            mobileMenuBtn.setAttribute('aria-label', mobileSidebarOpen ? 'Tutup menu navigasi' : 'Buka menu navigasi');
+
+            window.requestAnimationFrame(() => {
+                sidebarOverlay.classList.toggle('opacity-0', !mobileSidebarOpen);
+            });
+        };
+
+        mobileMenuBtn.addEventListener('click', () => setMobileSidebar(!mobileSidebarOpen));
+        mobileSidebarCloseBtn?.addEventListener('click', () => {
+            setMobileSidebar(false);
+            mobileMenuBtn.focus({ preventScroll: true });
+        });
+        sidebarOverlay.addEventListener('click', () => setMobileSidebar(false));
+
+        sidebar.querySelectorAll('.sidebar-menu-link').forEach((link) => {
+            link.addEventListener('click', () => setMobileSidebar(false));
         });
 
-        sidebarOverlay.addEventListener('click', () => {
-            sidebar.classList.add('hidden');
-            sidebar.classList.remove('absolute');
-            sidebar.classList.remove('z-30');
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape' && mobileSidebarOpen) {
+                setMobileSidebar(false);
+                mobileMenuBtn.focus({ preventScroll: true });
+            }
+        });
 
-            sidebarOverlay.classList.add('opacity-0');
-            setTimeout(() => {
-                sidebarOverlay.classList.add('hidden');
-            }, 300);
+        window.addEventListener('resize', () => {
+            if (window.innerWidth >= 768 && mobileSidebarOpen) {
+                setMobileSidebar(false);
+            }
         });
     }
 
@@ -971,5 +989,3 @@ document.addEventListener('DOMContentLoaded', function () {
         if (e.key === 'ArrowLeft') navigateGallery(-1);
     });
 })();
-
-

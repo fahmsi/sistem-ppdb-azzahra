@@ -37,7 +37,7 @@ class VerifikasiController extends Controller
                 $q->whereHas('siswa', function ($sq) use ($search) {
                     $sq->where('nama', 'like', "%{$search}%");
 
-                    if (Schema::hasColumn('psb_siswa', 'nisn')) {
+                    if (Schema::hasColumn('spmb_siswa', 'nisn')) {
                         $sq->orWhere('nisn', 'like', "%{$search}%");
                     }
                 })
@@ -179,7 +179,7 @@ class VerifikasiController extends Controller
     {
         $validated = $request->validate([
             'detail_ids' => ['required', 'array', 'min:1'],
-            'detail_ids.*' => ['required', 'integer', 'exists:psb_pendaftaran_detail,id'],
+            'detail_ids.*' => ['required', 'integer', 'exists:spmb_pendaftaran_detail,id'],
             'status' => ['required', 'in:menunggu_verifikasi,diterima,ditolak,perlu_revisi'],
             'notifikasi' => ['nullable', 'string', 'max:1000'],
         ]);

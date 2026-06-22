@@ -7,7 +7,7 @@
         <a href="{{ route('admin.kelola-admin.index') }}" class="text-[#697a8d] dark:text-[#a1b0cb] hover:text-[#696cff] transition-colors"><i data-lucide="arrow-left" class="w-5 h-5"></i></a>
         <div>
             <h2 class="text-2xl font-heading font-bold text-[#566a7f] dark:text-[#d5d5e2]">Tambah Admin</h2>
-            <p class="text-[#a1b0cb] text-sm mt-0.5">Buat akun admin baru untuk mengelola sistem PPDB.</p>
+            <p class="text-[#a1b0cb] text-sm mt-0.5">Buat akun admin baru untuk mengelola sistem SPMB.</p>
         </div>
     </div>
     <div class="bg-white dark:bg-[#2b2c40] rounded-lg shadow-sneat dark:shadow-sneat-dark border border-[#d9dee3] dark:border-[#434463] p-6 sm:p-8">

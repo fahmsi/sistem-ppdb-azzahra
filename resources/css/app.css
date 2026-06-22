@@ -629,8 +629,294 @@ html {
 /* ===========================
    Sneat Table Styles
    =========================== */
+.internal-table-card {
+    border: 1px solid #d9dee3;
+    border-radius: 0.75rem;
+    background: #ffffff;
+    box-shadow: 0 0.125rem 0.5rem rgba(67, 89, 113, 0.08);
+    overflow: hidden;
+}
+.dark .internal-table-card {
+    border-color: #434463;
+    background: #2b2c40;
+    box-shadow: 0 0.125rem 0.5rem rgba(0, 0, 0, 0.18);
+}
+.internal-table-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid rgba(67, 89, 113, 0.12);
+}
+.dark .internal-table-header {
+    border-bottom-color: #434463;
+}
+.internal-table-title {
+    margin: 0;
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: #566a7f;
+}
+.dark .internal-table-title {
+    color: #d5d5e2;
+}
+.internal-table-subtitle {
+    margin: 0.25rem 0 0;
+    font-size: 0.8125rem;
+    color: #a1b0cb;
+}
+.internal-table-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+.internal-table-toolbar {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid rgba(67, 89, 113, 0.12);
+}
+.dark .internal-table-toolbar {
+    border-bottom-color: #434463;
+}
+.internal-table-card .table {
+    width: 100%;
+    text-align: left;
+    font-size: 0.875rem;
+    border-collapse: collapse;
+}
 .sneat-table {
     @apply w-full text-left text-sm;
+}
+.internal-table-card .table thead th {
+    padding: 0.875rem 1.25rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: #697a8d;
+    background-color: #f5f5f9;
+    border-bottom: 1px solid rgba(67, 89, 113, 0.12);
+    white-space: nowrap;
+}
+.dark .internal-table-card .table thead th {
+    color: #a1b0cb;
+    background-color: #232333;
+    border-bottom-color: #434463;
+}
+.internal-table-card .table tbody td {
+    padding: 0.875rem 1.25rem;
+    vertical-align: middle;
+    color: #566a7f;
+    border-bottom: 1px solid rgba(67, 89, 113, 0.12);
+}
+.dark .internal-table-card .table tbody td {
+    color: #a1b0cb;
+    border-bottom-color: #434463;
+}
+.internal-table-card .table tbody tr {
+    transition: background-color 0.2s ease;
+}
+.internal-table-card .table-hover tbody tr:hover {
+    background-color: rgba(105, 108, 255, 0.04);
+}
+.dark .internal-table-card .table-hover tbody tr:hover {
+    background-color: rgba(105, 108, 255, 0.08);
+}
+.internal-table-card .table tbody tr:last-child td {
+    border-bottom: 0;
+}
+.internal-table-card .table-responsive {
+    width: 100%;
+    overflow-x: auto;
+}
+.internal-table-card .text-nowrap {
+    white-space: nowrap;
+}
+.internal-table-card .align-middle th,
+.internal-table-card .align-middle td {
+    vertical-align: middle;
+}
+.internal-table-action-btn {
+    min-height: 2.25rem;
+    white-space: nowrap;
+}
+@media (max-width: 768px) {
+    .internal-table-header,
+    .internal-table-actions {
+        align-items: stretch;
+    }
+
+    .internal-table-actions,
+    .internal-table-actions > * {
+        width: 100%;
+    }
+}
+
+.admin-table-card {
+    border: 1px solid rgba(67, 89, 113, 0.12);
+    border-radius: 0.75rem;
+    background: #ffffff;
+    box-shadow: 0 0.125rem 0.5rem rgba(67, 89, 113, 0.08);
+    overflow: visible;
+}
+.dark .admin-table-card {
+    border-color: #434463;
+    background: #2b2c40;
+    box-shadow: 0 0.125rem 0.5rem rgba(0, 0, 0, 0.18);
+}
+.admin-table-header {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1.25rem 1.5rem 0.75rem;
+    border-bottom: 1px solid rgba(67, 89, 113, 0.12);
+}
+.dark .admin-table-header {
+    border-bottom-color: #434463;
+}
+.admin-table-title {
+    margin: 0;
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: #566a7f;
+}
+.dark .admin-table-title {
+    color: #d5d5e2;
+}
+.admin-table-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+.admin-table-search {
+    flex: 1 1 250px;
+    min-width: 240px;
+    max-width: none;
+}
+.admin-table-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    flex: 0 0 auto;
+    flex-wrap: wrap;
+}
+.admin-table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: visible;
+}
+.admin-table {
+    width: 100%;
+    margin-bottom: 0;
+    border-collapse: separate;
+    border-spacing: 0;
+    color: #566a7f;
+}
+.admin-table thead th {
+    height: 3rem;
+    padding: 0.875rem 1rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #697a8d;
+    background-color: #f5f5f9;
+    border-bottom: 1px solid rgba(67, 89, 113, 0.12);
+    white-space: nowrap;
+    vertical-align: middle;
+}
+.dark .admin-table thead th {
+    color: #a1b0cb;
+    background-color: #232333;
+    border-bottom-color: #434463;
+}
+.admin-table tbody::before {
+    display: table-row;
+    height: 0.5rem;
+    content: '';
+}
+.admin-table tbody tr {
+    transition: background-color 160ms ease;
+}
+.admin-table tbody td {
+    min-height: 3.5rem;
+    padding: 1rem;
+    font-size: 0.875rem;
+    line-height: 1.35rem;
+    color: #566a7f;
+    background-color: #ffffff;
+    border-bottom: 0px solid rgba(67, 89, 113, 0.12);
+    vertical-align: middle;
+}
+.dark .admin-table tbody td {
+    color: #a1b0cb;
+    background-color: #2b2c40;
+    border-bottom-color: #434463;
+}
+.admin-table tbody tr:last-child td {
+    border-bottom: 0;
+}
+.admin-table.table-hover tbody tr:hover {
+    background-color: rgba(105, 108, 255, 0.04);
+}
+.admin-table.table-hover tbody tr:hover td {
+    background-color: rgba(105, 108, 255, 0.04);
+}
+.dark .admin-table.table-hover tbody tr:hover {
+    background-color: rgba(105, 108, 255, 0.08);
+}
+.dark .admin-table.table-hover tbody tr:hover td {
+    background-color: rgba(105, 108, 255, 0.08);
+}
+.admin-table .admin-table-actions-cell {
+    white-space: nowrap;
+    width: 1%;
+}
+.admin-table-footer {
+    display: flex;
+    min-height: 3rem;
+    align-items: center;
+    padding: 0.75rem 1.5rem;
+    border-top: 1px solid rgba(67, 89, 113, 0.12);
+}
+.dark .admin-table-footer {
+    border-top-color: #434463;
+}
+.admin-table-footer > * {
+    width: 100%;
+}
+.admin-table-action-btn {
+    min-height: 2.25rem;
+    white-space: nowrap;
+}
+#mainScrollArea {
+    padding-bottom: 1.5rem;
+}
+@media (max-width: 768px) {
+    .admin-table-header {
+        padding: 1rem;
+    }
+
+    .admin-table-toolbar,
+    .admin-table-actions {
+        width: 100%;
+        align-items: stretch;
+    }
+
+    .admin-table-search,
+    .admin-table-actions > * {
+        width: 100%;
+    }
+
+    .admin-table-toolbar > .admin-table-action-btn,
+    .admin-table-toolbar > .relative > .admin-table-action-btn {
+        width: 100%;
+    }
 }
 .sneat-table thead th {
     @apply px-5 py-3.5 text-xs font-semibold uppercase tracking-wider text-[#566a7f] bg-[#f5f5f9];
@@ -738,7 +1024,8 @@ aside.w-\[80px\] .sidebar-menu-link span.menu-text {
     display: none !important;
 }
 aside.w-\[80px\] .sneat-section-label {
-    display: none !important;
+    min-height: 1rem;
+    visibility: hidden !important;
 }
 aside.w-\[80px\] .sidebar-menu-link i {
     margin-right: 0 !important;
@@ -746,6 +1033,50 @@ aside.w-\[80px\] .sidebar-menu-link i {
 aside.w-\[80px\] #sidebarToggleBtn,
 aside.w-\[80px\] .sidebar-toggle-btn {
     right: -14px;
+}
+
+@media (max-width: 767px) {
+    #sidebar {
+        width: min(86vw, 18rem) !important;
+        max-width: 18rem;
+        box-shadow: 0 20px 50px rgba(15, 23, 42, 0.24);
+    }
+
+    #sidebar.mobile-open {
+        display: flex !important;
+    }
+
+    #sidebar.mobile-open .menu-text {
+        width: auto !important;
+        overflow: visible !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+    }
+
+    #sidebar.mobile-open .sidebar-menu-link {
+        min-height: 44px;
+        justify-content: flex-start !important;
+        margin-right: 0.75rem !important;
+        margin-left: 0.75rem !important;
+        padding-right: 1.5rem !important;
+        padding-left: 1.5rem !important;
+    }
+
+    #sidebar.mobile-open .sidebar-menu-link span.menu-text {
+        display: inline !important;
+    }
+
+    #sidebar.mobile-open .sneat-section-label {
+        visibility: visible !important;
+    }
+
+    #sidebarToggleBtn {
+        display: none !important;
+    }
+
+    body.sidebar-mobile-open {
+        overscroll-behavior: none;
+    }
 }
 
 /* ===========================
@@ -1214,3 +1545,107 @@ aside.w-\[80px\] .sidebar-toggle-btn {
     }
 }
 
+/* ===========================
+   Dashboard Readability
+   Higher-contrast typography for admin and parent dashboards only.
+   =========================== */
+.dashboard-readable {
+    --dashboard-heading: #3f5063;
+    --dashboard-text: #4f6072;
+    --dashboard-muted: #66788b;
+    color: var(--dashboard-text);
+}
+
+.dashboard-readable [class~="text-[#566a7f]"],
+.dashboard-readable .text-gray-900,
+.dashboard-readable .text-gray-800,
+.dashboard-readable .text-slate-900 {
+    color: var(--dashboard-heading);
+}
+
+.dashboard-readable [class~="text-[#697a8d]"],
+.dashboard-readable .text-gray-700,
+.dashboard-readable .text-gray-600,
+.dashboard-readable .text-slate-700,
+.dashboard-readable .text-slate-600 {
+    color: var(--dashboard-text);
+}
+
+.dashboard-readable [class~="text-[#a1b0cb]"],
+.dashboard-readable .text-gray-500,
+.dashboard-readable .text-gray-400,
+.dashboard-readable .text-gray-300,
+.dashboard-readable .text-slate-500,
+.dashboard-readable .text-slate-300,
+.dashboard-readable .sneat-section-label {
+    color: var(--dashboard-muted);
+}
+
+.dashboard-readable .sidebar-menu-link:not(.active),
+.dashboard-readable .theme-dropdown-item:not(.active),
+.dashboard-readable .user-dropdown-item,
+.dashboard-readable .sneat-btn-secondary,
+.dashboard-readable .sneat-table tbody td {
+    color: var(--dashboard-text);
+}
+
+.dashboard-readable .admin-table thead th {
+    color: var(--dashboard-text);
+}
+
+.dashboard-readable .admin-table tbody td,
+.dashboard-readable .sneat-table thead th {
+    color: var(--dashboard-heading);
+}
+
+.dashboard-readable input::placeholder,
+.dashboard-readable textarea::placeholder,
+.dashboard-readable select::placeholder {
+    color: var(--dashboard-muted);
+    opacity: 1;
+}
+
+html.dark .dashboard-readable {
+    --dashboard-heading: #f0f3f8;
+    --dashboard-text: #d5deea;
+    --dashboard-muted: #bbc7d7;
+    color: var(--dashboard-text);
+}
+
+html.dark .dashboard-readable [class~="text-[#566a7f]"],
+html.dark .dashboard-readable .text-gray-900,
+html.dark .dashboard-readable .text-gray-800,
+html.dark .dashboard-readable .text-gray-700,
+html.dark .dashboard-readable .text-slate-900,
+html.dark .dashboard-readable .text-slate-700,
+html.dark .dashboard-readable [class~="dark:text-[#d5d5e2]"] {
+    color: var(--dashboard-heading);
+}
+
+html.dark .dashboard-readable [class~="text-[#697a8d]"],
+html.dark .dashboard-readable .text-gray-600,
+html.dark .dashboard-readable .text-gray-500,
+html.dark .dashboard-readable .text-slate-600,
+html.dark .dashboard-readable .text-slate-500,
+html.dark .dashboard-readable [class~="dark:text-[#a1b0cb]"] {
+    color: var(--dashboard-text);
+}
+
+html.dark .dashboard-readable [class~="text-[#a1b0cb]"],
+html.dark .dashboard-readable .text-gray-400,
+html.dark .dashboard-readable .text-gray-300,
+html.dark .dashboard-readable .text-slate-300,
+html.dark .dashboard-readable .sneat-section-label {
+    color: var(--dashboard-muted);
+}
+
+html.dark .dashboard-readable .sidebar-menu-link:not(.active),
+html.dark .dashboard-readable .theme-dropdown-item:not(.active),
+html.dark .dashboard-readable .user-dropdown-item,
+html.dark .dashboard-readable .sneat-btn-secondary,
+html.dark .dashboard-readable .sneat-table tbody td,
+html.dark .dashboard-readable .admin-table thead th,
+html.dark .dashboard-readable .admin-table tbody td,
+html.dark .dashboard-readable .sneat-table thead th {
+    color: var(--dashboard-text);
+}

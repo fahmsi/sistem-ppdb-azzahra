@@ -124,7 +124,7 @@
         {{-- FAQ --}}
         @php
         $faqs = [
-            ['q' => 'Apakah tersedia cicilan pembayaran?', 'a' => 'Ya, tersedia cicilan sebelum tahun ajaran dimulai. Anda dapat menghubungi Admin PPDB untuk informasi lebih lanjut.'],
+            ['q' => 'Apakah tersedia cicilan pembayaran?', 'a' => 'Ya, tersedia cicilan sebelum tahun ajaran dimulai. Anda dapat menghubungi Admin SPMB untuk informasi lebih lanjut.'],
             ['q' => 'Apa saja yang termasuk dalam biaya tahunan?', 'a' => 'Biaya tahunan mencakup study tour/fieldtrip, kegiatan hari besar Islam dan manasik haji bersama Ayah dan Bunda.'],
             ['q' => 'Bagaimana metode pembayaran yang tersedia?', 'a' => 'Pembayaran dapat dilakukan hanya melalui transfer bank.'],
         ];

@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('psb_pendaftaran', function (Blueprint $table) {
+        Schema::create('spmb_pendaftaran', function (Blueprint $table) {
             $table->id();
 
             $table->string('tahun_ajaran');
@@ -31,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('psb_pendaftaran');
+        Schema::dropIfExists('spmb_pendaftaran');
     }
 };

@@ -69,7 +69,7 @@
                         </span>
                     </div>
                     <h3 class="section-heading font-heading text-3xl text-gray-900 sm:text-4xl lg:text-4xl">
-                        <span>Prestasi <span class="gradient-text">Siswa Azzahra</span></span>
+                        <span>Prestasi <span class="gradient-text">Murid Azzahra</span></span>
                     </h3>
                     <p class="mx-auto mt-5 max-w-2xl text-base leading-relaxed text-gray-600 sm:text-lg">
                         Setiap pencapaian adalah bagian dari perjalanan anak untuk tumbuh lebih percaya diri, tekun, dan berani mencoba.

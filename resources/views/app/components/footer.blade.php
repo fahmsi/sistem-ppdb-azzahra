@@ -32,7 +32,8 @@
 
             {{-- Copyright --}}
             <p class="text-sm text-center">
-                &copy; {{ date('Y') }} <span class="text-gray-200 font-semibold tracking-wide">PAUD AL QUR'AN AZZAHRA</span>. All rights reserved.
+                &copy; {{ date('Y') }} <span class="text-gray-200 font-semibold tracking-wide">PAUD AL QUR'AN AZZAHRA</span>. 
+                All rights reserved.
             </p>
 
             {{-- Creator Credit & Campus Identity --}}
@@ -42,17 +43,17 @@
                     <i data-lucide="heart" class="w-4 h-4 text-red-500 fill-red-500 inline-block animate-pulse"></i> 
                     and 
                     <i data-lucide="coffee" class="w-4 h-4 text-[#8b5a2b] inline-block"></i> 
-                    by 
+                    <!-- by 
                     <a href="https://www.linkedin.com/in/fahmimuhammadalhafizh/" target="_blank" class="font-semibold text-gray-200 hover:text-primary-400 transition-colors">
                         Fahmi M. Al Hafizh
-                    </a>
+                    </a> -->
                 </span>
                 
-                <span class="hidden sm:inline text-gray-600">|</span>
+                <!-- <span class="hidden sm:inline text-gray-600">|</span>
                 
                 <a href="https://nurulfikri.ac.id/" target="_blank" rel="noopener noreferrer" class="font-medium text-primary-500 hover:text-primary-400 hover:underline tracking-wide transition-colors text-center">
                     Student of Nurul Fikri College of Integrated Technology
-                </a>
+                </a> -->
             </div>
 
         </div>

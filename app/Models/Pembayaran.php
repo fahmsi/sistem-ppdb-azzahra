@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Pembayaran extends Model
 {
-    protected $table = 'psb_pembayaran';
+    protected $table = 'spmb_pembayaran';
 
     public const STATUS_PENDING = 'pending';
 

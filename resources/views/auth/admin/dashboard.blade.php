@@ -9,7 +9,7 @@
     <!-- Header Section -->
     <div class="bg-white dark:bg-[#2b2c40] rounded-lg shadow-sneat dark:shadow-sneat-dark border border-[#d9dee3] dark:border-[#434463] p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 animate-fade-in">
         <div>
-            <h2 class="text-2xl font-heading font-bold text-[#566a7f] dark:text-[#d5d5e2]">Ringkasan PPDB</h2>
+            <h2 class="text-2xl font-heading font-bold text-[#566a7f] dark:text-[#d5d5e2]">Ringkasan SPMB</h2>
             <p class="text-[#697a8d] dark:text-[#a1b0cb] text-sm mt-1">Pantau statistik pendaftaran dan aktivitas terbaru hari ini.</p>
         </div>
         <div class="hidden sm:flex">

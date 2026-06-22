@@ -280,6 +280,6 @@ class SiswaController extends Controller
     {
         static $columns = [];
 
-        return $columns[$column] ??= Schema::hasColumn('psb_siswa', $column);
+        return $columns[$column] ??= Schema::hasColumn('spmb_siswa', $column);
     }
 }

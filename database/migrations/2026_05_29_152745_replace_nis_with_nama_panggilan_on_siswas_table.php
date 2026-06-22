@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('psb_siswa', function (Blueprint $table) {
+        Schema::table('spmb_siswa', function (Blueprint $table) {
             $table->dropColumn(['nis', 'nisn']);
             $table->string('nama_panggilan', 50)->after('nama');
         });
@@ -22,7 +22,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('psb_siswa', function (Blueprint $table) {
+        Schema::table('spmb_siswa', function (Blueprint $table) {
             $table->string('nisn')->nullable();
             $table->string('nis')->nullable();
             $table->dropColumn('nama_panggilan');

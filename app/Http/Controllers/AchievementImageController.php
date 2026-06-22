@@ -10,6 +10,7 @@ class AchievementImageController extends Controller
 {
     public function __invoke(Achievement $achievement): StreamedResponse
     {
+        abort_unless($achievement->is_active, 404);
         abort_if(! $achievement->image || str_starts_with($achievement->image, 'http'), 404);
         abort_unless(Storage::disk('public')->exists($achievement->image), 404);
 

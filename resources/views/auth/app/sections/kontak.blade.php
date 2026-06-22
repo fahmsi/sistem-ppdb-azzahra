@@ -36,10 +36,10 @@
                         
                         <h3 class="text-3xl font-bold text-gray-900 mb-3 font-heading">Punya Pertanyaan?</h3>
                         <p class="text-gray-600 text-sm mb-8 px-4 sm:px-8 leading-relaxed">
-                            Jangan ragu untuk menghubungi kami! Admin kami yang ramah siap membantu menjawab semua pertanyaan Anda seputar PPDB, program sekolah, maupun rincian biaya secara langsung via WhatsApp.
+                            Jangan ragu untuk menghubungi kami! Admin kami yang ramah siap membantu menjawab semua pertanyaan Anda seputar SPMB, program sekolah, maupun rincian biaya secara langsung via WhatsApp.
                         </p>
                         
-                        <a href="https://wa.me/6281310408525?text=Halo%20Admin%20PAUD%20Az%20Zahra,%20saya%20ingin%20bertanya%20informasi%20mengenai%20PPDB..." target="_blank" class="animate-floating inline-flex items-center justify-center gap-3 bg-[#25D366] hover:bg-[#20bd5a] text-white font-bold py-3.5 px-8 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 w-full sm:w-auto">
+                        <a href="https://wa.me/6281310408525?text=Halo%20Admin%20PAUD%20Az%20Zahra,%20saya%20ingin%20bertanya%20informasi%20mengenai%20SPMB..." target="_blank" class="animate-floating inline-flex items-center justify-center gap-3 bg-[#25D366] hover:bg-[#20bd5a] text-white font-bold py-3.5 px-8 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 w-full sm:w-auto">
                             <i data-lucide="message-square" class="w-5 h-5"></i> 
                             <span>Chat Admin Sekarang</span>
                         </a>

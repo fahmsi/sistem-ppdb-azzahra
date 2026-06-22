@@ -11,16 +11,16 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('psb_pendaftaran_detail', function (Blueprint $table) {
+        Schema::create('spmb_pendaftaran_detail', function (Blueprint $table) {
             $table->id();
 
             // Relasi
             $table->foreignId('siswa_id')
-                ->constrained('psb_siswa')
+                ->constrained('spmb_siswa')
                 ->onDelete('cascade');
 
             $table->foreignId('pendaftaran_id')
-                ->constrained('psb_pendaftaran')
+                ->constrained('spmb_pendaftaran')
                 ->onDelete('cascade');
 
             // Status pendaftaran
@@ -41,6 +41,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('psb_pendaftaran_detail');
+        Schema::dropIfExists('spmb_pendaftaran_detail');
     }
 };

@@ -171,6 +171,6 @@ class PendaftaranController extends Controller
 
     private function generateNoPendaftaran(PendaftaranDetail $detail): string
     {
-        return sprintf('PPDB-%s-%04d', now()->year, $detail->id);
+        return sprintf('SPMB-%s-%04d', now()->year, $detail->id);
     }
 }
