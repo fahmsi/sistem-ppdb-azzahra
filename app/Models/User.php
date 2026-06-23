@@ -27,6 +27,9 @@ class User extends Authenticatable implements MustVerifyEmail
         'role',
         'avatar',
         'no_telpon',
+        'suspended_at',
+        'suspended_by',
+        'suspend_reason',
     ];
 
     /**
@@ -49,6 +52,7 @@ class User extends Authenticatable implements MustVerifyEmail
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'suspended_at' => 'datetime',
         ];
     }
 
@@ -68,10 +72,10 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasManyThrough(
             PendaftaranDetail::class,
             Siswa::class,
-            'user_id',        // FK on psb_siswa
-            'siswa_id',       // FK on psb_pendaftaran_detail
+            'user_id',        // FK on spmb_siswa
+            'siswa_id',       // FK on spmb_pendaftaran_detail
             'id',             // PK on users
-            'id'              // PK on psb_siswa
+            'id'              // PK on spmb_siswa
         );
     }
 
@@ -89,6 +93,14 @@ class User extends Authenticatable implements MustVerifyEmail
     public function isAdmin(): bool
     {
         return in_array($this->role, ['admin', 'super_admin']);
+    }
+
+    /**
+     * Check if the account is currently suspended.
+     */
+    public function isSuspended(): bool
+    {
+        return $this->suspended_at !== null;
     }
 
     /**

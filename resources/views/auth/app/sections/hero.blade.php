@@ -65,7 +65,7 @@
                             </span>
                             <span class="absolute left-0 w-full top-full flex items-center justify-center gap-2 transition-transform duration-500 group-hover:-translate-y-full">
                                 <i data-lucide="log-in" class="w-5 h-5"></i>
-                                Aplikasi PSB
+                                Aplikasi SPMB
                             </span>
                         </span>
                     </a>

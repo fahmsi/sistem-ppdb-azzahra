@@ -29,7 +29,11 @@ class DokumenController extends Controller
             abort(404, 'Dokumen tidak ditemukan.');
         }
 
-        return Storage::disk('local')->response($path);
+        return Storage::disk('local')->response($path, null, [
+            'Cache-Control' => 'private, no-store, max-age=0',
+            'Pragma' => 'no-cache',
+            'X-Content-Type-Options' => 'nosniff',
+        ]);
     }
 
     private function paymentProofPath(Siswa $siswa, ?Pembayaran $pembayaran): ?string

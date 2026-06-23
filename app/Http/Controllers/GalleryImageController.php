@@ -10,6 +10,7 @@ class GalleryImageController extends Controller
 {
     public function __invoke(Gallery $gallery): StreamedResponse
     {
+        abort_unless($gallery->is_active, 404);
         abort_if(! $gallery->image || str_starts_with($gallery->image, 'http'), 404);
         abort_unless(Storage::disk('public')->exists($gallery->image), 404);
 

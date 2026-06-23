@@ -26,7 +26,7 @@
                     "Dokumen Akta Kelahiran",
                     "Dokumen KTP Orang Tua/Wali",
                     "Pas Foto Anak",
-                    "Mengisi formulir pendaftaran online di Aplikasi PPDB",
+                    "Mengisi formulir pendaftaran online di Aplikasi SPMB",
                     "Membayar biaya pendaftaran",
                 ];
             @endphp

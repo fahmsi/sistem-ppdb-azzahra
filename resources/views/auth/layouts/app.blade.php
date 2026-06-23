@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'Sistem PPDB PAUD Az-Zahra')</title>
+    <title>@yield('title', 'Sistem Penerimaan Murid Baru (SPMB) PAUD Az-Zahra')</title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -23,7 +23,7 @@
     <!-- Prevent FOUC: Apply theme before render -->
     <script>
         (function () {
-            const saved = localStorage.getItem('ppdb_theme');
+            const saved = localStorage.getItem('spmb_theme');
             if (saved === 'dark') {
                 document.documentElement.classList.add('dark');
                 document.documentElement.classList.remove('light');
@@ -80,7 +80,7 @@
                 <a href="{{ route('admin.pendaftaran.index') }}"
                     class="sidebar-menu-link flex items-center px-6 py-2.5 mx-3 rounded-lg overflow-hidden whitespace-nowrap {{ request()->routeIs('admin.pendaftaran.*') ? 'active bg-[#696cff] text-white' : 'text-[#697a8d] hover:bg-gray-100 dark:hover:bg-[#232333]' }}">
                     <i data-lucide="calendar" class="w-5 h-5 flex-shrink-0"></i>
-                    <span class="menu-text ml-3 transition-opacity duration-300">Gelombang PPDB</span>
+                    <span class="menu-text ml-3 transition-opacity duration-300">Gelombang SPMB</span>
                 </a>
 
                 <a href="{{ route('admin.siswa.index') }}"

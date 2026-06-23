@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('psb_pembayaran', function (Blueprint $table) {
+        Schema::create('spmb_pembayaran', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('pendaftaran_detail_id')->constrained('psb_pendaftaran_detail')->onDelete('cascade');
+            $table->foreignId('pendaftaran_detail_id')->constrained('spmb_pendaftaran_detail')->onDelete('cascade');
             $table->decimal('jumlah', 15, 2)->default(0);
             $table->string('bukti_bayar')->nullable();
             $table->enum('status', ['pending', 'lunas', 'ditolak'])->default('pending');
@@ -27,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('psb_pembayaran');
+        Schema::dropIfExists('spmb_pembayaran');
     }
 };

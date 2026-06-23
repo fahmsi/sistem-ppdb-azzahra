@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class PendaftaranDetail extends Model
 {
-    protected $table = 'psb_pendaftaran_detail';
+    protected $table = 'spmb_pendaftaran_detail';
 
     /**
      * Registration status constants.
@@ -62,7 +62,7 @@ class PendaftaranDetail extends Model
 
     public function getNomorPendaftaranAttribute(): string
     {
-        return $this->no_pendaftaran ?: sprintf('PPDB-%s-%04d', $this->created_at?->format('Y') ?? now()->year, $this->id);
+        return $this->no_pendaftaran ?: sprintf('SPMB-%s-%04d', $this->created_at?->format('Y') ?? now()->year, $this->id);
     }
 
     public function isPending(): bool

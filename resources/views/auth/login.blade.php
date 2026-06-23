@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Sistem PPDB PAUD Az-Zahra</title>
+    <title>Login - Sistem Penerimaan Murid Baru (SPMB) PAUD Az-Zahra</title>
     
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -130,7 +130,7 @@
             </div>
             
             <h1 class="text-3xl font-heading font-bold mb-6 leading-tight">
-                Sistem PPDB<br>
+                Sistem Penerimaan Murid Baru (SPMB)<br>
                 <span class="text-secondary-300">PAUD Al Qur'an Az-Zahra</span>
             </h1>
             

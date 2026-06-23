@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Atur Ulang Password - Sistem PPDB PAUD Az-Zahra</title>
+    <title>Atur Ulang Password - Sistem Penerimaan Murid Baru (SPMB) PAUD Az-Zahra</title>
     
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">

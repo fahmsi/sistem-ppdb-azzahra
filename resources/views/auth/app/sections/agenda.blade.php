@@ -11,10 +11,10 @@
         <div class="text-center mb-16 fade-up">
             <span class="inline-flex items-center gap-2 bg-primary-50 text-primary-700 px-4 py-1.5 rounded-full text-sm font-medium mb-4">
                 <i data-lucide="calendar-days" class="w-4 h-4"></i>
-                Jadwal PSB
+                Jadwal SPMB
             </span>
             <h2 class="font-heading text-3xl lg:text-4xl font-bold text-gray-900 mb-4 section-heading">
-                Agenda PSB 2026/2027
+                Agenda SPMB 2026/2027
             </h2>
             <p class="text-gray-600 max-w-2xl mx-auto mt-6">
                 Catat tanggal-tanggal penting berikut agar tidak melewatkan tahapan pendaftaran

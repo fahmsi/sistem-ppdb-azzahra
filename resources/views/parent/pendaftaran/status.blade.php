@@ -5,11 +5,11 @@
 
 @section('content')
 @php
-    $bankName = config('ppdb.bank_name', '-');
-    $bankAccountNumber = config('ppdb.bank_account_number', '-');
-    $bankAccountHolder = config('ppdb.bank_account_holder', '-');
-    $daftarUlangAmount = (int) config('ppdb.daftar_ulang_amount', 0);
-    $adminWhatsapp = preg_replace('/[^0-9]/', '', (string) config('ppdb.admin_whatsapp', ''));
+    $bankName = config('spmb.bank_name', '-');
+    $bankAccountNumber = config('spmb.bank_account_number', '-');
+    $bankAccountHolder = config('spmb.bank_account_holder', '-');
+    $daftarUlangAmount = (int) config('spmb.daftar_ulang_amount', 0);
+    $adminWhatsapp = preg_replace('/[^0-9]/', '', (string) config('spmb.admin_whatsapp', ''));
 @endphp
 
 <div class="space-y-6">
@@ -42,7 +42,7 @@
                             $isPaymentWaiting = $payment && in_array($paymentStatus, ['pending', 'menunggu_verifikasi'], true);
                             $isPaymentLunas = $paymentStatus === 'lunas';
                             $isPaymentRejected = $paymentStatus === 'ditolak';
-                            $waMessage = "Assalamu'alaikum Admin, saya sudah mengunggah bukti pembayaran daftar ulang PPDB untuk nomor pendaftaran {$reg->nomor_pendaftaran}. Mohon konfirmasinya. Terima kasih.";
+                            $waMessage = "Assalamu'alaikum Admin, saya sudah mengunggah bukti pembayaran daftar ulang SPMB untuk nomor pendaftaran {$reg->nomor_pendaftaran}. Mohon konfirmasinya. Terima kasih.";
                             $waUrl = $adminWhatsapp ? 'https://wa.me/'.$adminWhatsapp.'?text='.urlencode($waMessage) : null;
                         @endphp
 

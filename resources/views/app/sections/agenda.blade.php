@@ -10,7 +10,7 @@
         {{-- Title --}}
         <div class="text-center mb-16 fade-up">
             <h2 class="section-heading font-heading mb-4 text-3xl text-gray-900 lg:text-4xl">
-                <span>Agenda <span class="gradient-text">PSB 2026/2027</span></span>
+                <span>Agenda <span class="gradient-text">SPMB 2026/2027</span></span>
             </h2>
             <p class="text-gray-600 max-w-2xl mx-auto mt-6">
                 Catat tanggal-tanggal penting berikut agar tidak melewatkan tahapan pendaftaran

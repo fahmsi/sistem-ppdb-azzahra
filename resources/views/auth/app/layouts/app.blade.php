@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="PSB PAUD Al Qur'an Az-Zahra - Pendaftaran Siswa Baru. Lembaga pendidikan anak usia dini berbasis Islam yang mengedepankan nilai-nilai Qur'ani dan perkembangan holistik.">
-    <meta name="keywords" content="PAUD, Az-Zahra, PSB, Pendaftaran Siswa Baru, Pendidikan Islam, Al-Quran, Depok">
+    <meta name="description" content="SPMB PAUD Al Qur'an Az-Zahra - Sistem Penerimaan Murid Baru. Lembaga pendidikan anak usia dini berbasis Islam yang mengedepankan nilai-nilai Qur'ani dan perkembangan holistik.">
+    <meta name="keywords" content="PAUD, Az-Zahra, SPMB, Sistem Penerimaan Murid Baru, Pendidikan Islam, Al-Quran, Depok">
 
-    <title>PSB PAUD Al Qur'an Az-Zahra — Pendaftaran Siswa Baru</title>
+    <title>SPMB PAUD Al Qur'an Az-Zahra — Sistem Penerimaan Murid Baru</title>
 
     {{-- Google Fonts: Plus Jakarta Sans --}}
     <link rel="preconnect" href="https://fonts.googleapis.com">

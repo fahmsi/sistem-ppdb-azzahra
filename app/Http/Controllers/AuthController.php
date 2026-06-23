@@ -69,6 +69,16 @@ class AuthController extends Controller
         /** @var User $user */
         $user = Auth::user();
 
+        if ($user->isSuspended()) {
+            Auth::logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+
+            return back()
+                ->withInput($request->only('email', 'remember'))
+                ->withErrors(['email' => 'Akun Anda sedang disuspend. Silakan hubungi super admin.']);
+        }
+
         // Log login activity
         ActivityLog::log('login', $user, "{$user->name} berhasil login.");
 

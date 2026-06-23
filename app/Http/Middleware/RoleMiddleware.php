@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -20,6 +21,16 @@ class RoleMiddleware
     {
         if (! auth()->check()) {
             abort(403, 'Akses ditolak');
+        }
+
+        if (auth()->user()->isSuspended()) {
+            Auth::logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+
+            return redirect()->route('login')->withErrors([
+                'email' => 'Akun Anda sedang disuspend. Silakan hubungi super admin.',
+            ]);
         }
 
         $userRole = auth()->user()->role;

@@ -5,10 +5,10 @@
 
 @section('content')
 @php
-    $bankName = config('ppdb.bank_name', '-');
-    $bankAccountNumber = config('ppdb.bank_account_number', '-');
-    $bankAccountHolder = config('ppdb.bank_account_holder', '-');
-    $daftarUlangAmount = (int) config('ppdb.daftar_ulang_amount', 0);
+    $bankName = config('spmb.bank_name', '-');
+    $bankAccountNumber = config('spmb.bank_account_number', '-');
+    $bankAccountHolder = config('spmb.bank_account_holder', '-');
+    $daftarUlangAmount = (int) config('spmb.daftar_ulang_amount', 0);
 @endphp
 <div class="max-w-7xl mx-auto space-y-6">
 

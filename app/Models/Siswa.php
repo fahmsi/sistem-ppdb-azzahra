@@ -13,7 +13,7 @@ class Siswa extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $table = 'psb_siswa';
+    protected $table = 'spmb_siswa';
 
     public const INPUT_SOURCE_ONLINE = 'online';
 
@@ -109,7 +109,7 @@ class Siswa extends Model
     {
         return $this->belongsToMany(
             Pendaftaran::class,
-            'psb_pendaftaran_detail',
+            'spmb_pendaftaran_detail',
             'siswa_id',
             'pendaftaran_id'
         )->withPivot('no_pendaftaran', 'status', 'notifikasi')->withTimestamps();

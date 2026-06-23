@@ -16,13 +16,43 @@ class AdminManageController extends Controller
     /**
      * Display admin users list.
      */
-    public function index(): View
+    public function index(Request $request): View
     {
-        $admins = User::whereIn('role', ['admin', 'super_admin'])
-            ->orderByDesc('created_at')
-            ->paginate(15);
+        $filters = $request->validate([
+            'search' => ['nullable', 'string', 'max:100'],
+            'role' => ['nullable', Rule::in(['admin', 'super_admin'])],
+            'status' => ['nullable', Rule::in(['active', 'suspended'])],
+        ]);
 
-        return view('admin.kelola-admin.index', compact('admins'));
+        $baseQuery = User::whereIn('role', ['admin', 'super_admin']);
+
+        $admins = (clone $baseQuery)
+            ->when($filters['search'] ?? null, function ($query, string $search) {
+                $query->where(function ($query) use ($search) {
+                    $query->where('name', 'like', "%{$search}%")
+                        ->orWhere('email', 'like', "%{$search}%")
+                        ->orWhere('no_telpon', 'like', "%{$search}%");
+                });
+            })
+            ->when($filters['role'] ?? null, fn ($query, string $role) => $query->where('role', $role))
+            ->when(($filters['status'] ?? null) === 'active', fn ($query) => $query->whereNull('suspended_at'))
+            ->when(($filters['status'] ?? null) === 'suspended', fn ($query) => $query->whereNotNull('suspended_at'))
+            ->orderByDesc('created_at')
+            ->paginate(15)
+            ->withQueryString();
+
+        $stats = [
+            'total' => (clone $baseQuery)->count(),
+            'active' => (clone $baseQuery)->whereNull('suspended_at')->count(),
+            'suspended' => (clone $baseQuery)->whereNotNull('suspended_at')->count(),
+            'super_admin' => (clone $baseQuery)->where('role', 'super_admin')->count(),
+        ];
+
+        $activeSuperAdminCount = User::where('role', 'super_admin')
+            ->whereNull('suspended_at')
+            ->count();
+
+        return view('admin.kelola-admin.index', compact('admins', 'stats', 'activeSuperAdminCount'));
     }
 
     /**
@@ -41,6 +71,7 @@ class AdminManageController extends Controller
         $validated = $request->validate([
             'name'     => ['required', 'string', 'min:3', 'max:255'],
             'email'    => ['required', 'email:rfc,dns', 'unique:users,email'],
+            'no_telpon' => ['nullable', 'string', 'max:20'],
             'password' => ['required', 'min:8', 'confirmed'],
             'role'     => ['required', Rule::in(['admin', 'super_admin'])],
         ]);
@@ -48,6 +79,7 @@ class AdminManageController extends Controller
         $user = User::create([
             'name'     => $validated['name'],
             'email'    => $validated['email'],
+            'no_telpon' => $validated['no_telpon'] ?? null,
             'password' => $validated['password'],
             'role'     => $validated['role'],
         ]);
@@ -78,12 +110,20 @@ class AdminManageController extends Controller
         $validated = $request->validate([
             'name'     => ['required', 'string', 'min:3', 'max:255'],
             'email'    => ['required', 'email:rfc,dns', Rule::unique('users')->ignore($user->id)],
+            'no_telpon' => ['nullable', 'string', 'max:20'],
             'password' => ['nullable', 'min:8', 'confirmed'],
             'role'     => ['required', Rule::in(['admin', 'super_admin'])],
         ]);
 
+        if ($user->role === 'super_admin' && $validated['role'] !== 'super_admin' && $this->activeSuperAdminCount() <= 1) {
+            return back()
+                ->withInput()
+                ->withErrors(['role' => 'Super admin terakhir tidak boleh diubah menjadi admin.']);
+        }
+
         $user->name  = $validated['name'];
         $user->email = $validated['email'];
+        $user->no_telpon = $validated['no_telpon'] ?? null;
         $user->role  = $validated['role'];
 
         if (!empty($validated['password'])) {
@@ -99,6 +139,60 @@ class AdminManageController extends Controller
     }
 
     /**
+     * Suspend an admin account.
+     */
+    public function suspend(Request $request, User $user): RedirectResponse
+    {
+        abort_if(!in_array($user->role, ['admin', 'super_admin']), 404);
+
+        if ($user->id === auth()->id()) {
+            return back()->with('error', 'Anda tidak dapat suspend akun sendiri.');
+        }
+
+        if ($user->role === 'super_admin' && $this->activeSuperAdminCount() <= 1 && ! $user->isSuspended()) {
+            return back()->with('error', 'Super admin terakhir tidak boleh disuspend.');
+        }
+
+        $validated = $request->validate([
+            'suspend_reason' => ['nullable', 'string', 'max:500'],
+        ]);
+
+        $user->forceFill([
+            'suspended_at' => now(),
+            'suspended_by' => auth()->id(),
+            'suspend_reason' => $validated['suspend_reason'] ?? null,
+        ])->save();
+
+        ActivityLog::log('updated', $user, "Suspend admin: {$user->name}");
+
+        return redirect()->route('admin.kelola-admin.index')
+            ->with('success', 'Admin berhasil disuspend.');
+    }
+
+    /**
+     * Restore a suspended admin account.
+     */
+    public function unsuspend(User $user): RedirectResponse
+    {
+        abort_if(!in_array($user->role, ['admin', 'super_admin']), 404);
+
+        if ($user->id === auth()->id()) {
+            return back()->with('error', 'Anda tidak dapat mengubah status akun sendiri.');
+        }
+
+        $user->forceFill([
+            'suspended_at' => null,
+            'suspended_by' => null,
+            'suspend_reason' => null,
+        ])->save();
+
+        ActivityLog::log('updated', $user, "Mengaktifkan kembali admin: {$user->name}");
+
+        return redirect()->route('admin.kelola-admin.index')
+            ->with('success', 'Admin berhasil diaktifkan kembali.');
+    }
+
+    /**
      * Remove the specified admin.
      */
     public function destroy(User $user): RedirectResponse
@@ -108,6 +202,10 @@ class AdminManageController extends Controller
         // Prevent deleting self
         if ($user->id === auth()->id()) {
             return back()->with('error', 'Anda tidak dapat menghapus akun sendiri.');
+        }
+
+        if ($user->role === 'super_admin' && $this->activeSuperAdminCount() <= 1 && ! $user->isSuspended()) {
+            return back()->with('error', 'Super admin terakhir tidak boleh dihapus.');
         }
 
         $name = $user->name;
@@ -129,5 +227,12 @@ class AdminManageController extends Controller
             ->paginate(20);
 
         return view('admin.activity-log.index', compact('logs'));
+    }
+
+    private function activeSuperAdminCount(): int
+    {
+        return User::where('role', 'super_admin')
+            ->whereNull('suspended_at')
+            ->count();
     }
 }

@@ -21,104 +21,173 @@
         @php
         $fees = [
             [
-                'title' => 'Biaya Pendaftaran',
-                'amount' => 'GRATIS',
-                'desc' => 'Gratis registrasi awal pendaftaran',
-                'badge' => '',
-                'icon' => 'file-text',
-                'highlight' => true
-            ],
-            [
                 'title' => 'Biaya Masuk',
                 'amount' => 'Rp 850.000',
-                'desc' => 'Termasuk seragam, buku pendukung, dan perlengkapan alat tulis sekolah',
-                'badge' => 'Sekali Bayar',
+                'desc' => 'Paket perlengkapan awal untuk menemani hari-hari pertama anak di sekolah.',
+                'badge' => 'Paket Awal Sekolah',
                 'icon' => 'package',
-                'highlight' => false
+                'period' => 'Dibayar satu kali saat daftar ulang',
+                'featured' => true,
+                'layout' => 'lg:col-span-5 lg:row-span-2',
+            ],
+            [
+                'title' => 'Biaya Pendaftaran',
+                'amount' => 'GRATIS',
+                'desc' => 'Registrasi awal tanpa biaya apa pun.',
+                'badge' => 'Tanpa Biaya',
+                'icon' => 'file-text',
+                'period' => 'Mulai daftar dengan lebih mudah',
+                'featured' => false,
+                'layout' => 'lg:col-span-3',
+                'accent' => 'from-emerald-400 to-secondary-600',
+                'icon_style' => 'bg-secondary-50 text-secondary-700 ring-secondary-100',
+                'badge_style' => 'bg-secondary-50 text-secondary-700 border-secondary-100',
             ],
             [
                 'title' => 'SPP Bulanan',
                 'amount' => 'Rp 110.000',
-                'desc' => 'Termasuk kegiatan pembelajaran',
+                'desc' => 'Mendukung kegiatan belajar dan pendampingan anak setiap bulan.',
                 'badge' => 'Per Bulan',
                 'icon' => 'calendar',
-                'highlight' => false
+                'period' => 'Dibayarkan setiap bulan',
+                'featured' => false,
+                'layout' => 'lg:col-span-4',
+                'accent' => 'from-primary-400 to-primary-600',
+                'icon_style' => 'bg-primary-50 text-primary-700 ring-primary-100',
+                'badge_style' => 'bg-primary-50 text-primary-700 border-primary-100',
             ],
             [
                 'title' => 'Biaya Tahunan',
                 'amount' => 'Sesuai kegiatan',
                 'desc' => 'Field trip, manasik haji, dan kegiatan tahunan',
                 'badge' => 'Per Tahun',
-                'icon' => 'gift',
-                'highlight' => false
+                'icon' => 'sparkles',
+                'period' => 'Transparan sesuai agenda kegiatan',
+                'featured' => false,
+                'layout' => 'lg:col-span-7',
+                'accent' => 'from-amber-400 to-orange-500',
+                'icon_style' => 'bg-amber-50 text-amber-700 ring-amber-100',
+                'badge_style' => 'bg-amber-50 text-amber-700 border-amber-100',
             ],
         ];
         @endphp
 
-        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16 stagger-children">
+        <div class="mb-16 grid gap-5 md:grid-cols-2 lg:auto-rows-fr lg:grid-cols-12 stagger-children">
             @foreach($fees as $item)
-            <div class="pricing-highlight hover-card bg-white rounded-2xl shadow-sm p-7 border {{ $item['highlight'] ? 'border-primary-200 ring-2 ring-primary-100' : 'border-gray-100' }} relative overflow-hidden group">
-                {{-- Popular badge --}}
-                @if($item['highlight'])
-                    <div class="absolute top-4 right-4">
-                        <span class="bg-gradient-to-r from-primary-600 to-primary-500 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider">
-                            Populer
-                        </span>
-                    </div>
-                @endif
+                @if($item['featured'])
+                    <article class="group relative flex min-h-[420px] overflow-hidden rounded-[2rem] bg-gradient-to-br from-primary-800 via-primary-600 to-secondary-700 p-7 text-white shadow-xl shadow-primary-900/15 transition-all duration-500 hover:-translate-y-1 hover:shadow-2xl hover:shadow-primary-900/20 sm:p-8 {{ $item['layout'] }}">
+                        <div class="absolute -right-16 -top-16 h-56 w-56 rounded-full border border-white/10 bg-white/10 transition-transform duration-700 group-hover:scale-110"></div>
+                        <div class="absolute -bottom-20 -left-12 h-52 w-52 rounded-full bg-secondary-300/20 blur-2xl"></div>
+                        <div class="absolute inset-0 opacity-[0.08] islamic-pattern"></div>
 
-                {{-- Badge --}}
-                @if($item['badge'])
-                    <span class="inline-flex items-center gap-1.5 text-xs bg-primary-50 text-primary-700 px-3 py-1.5 rounded-full font-semibold mb-4">
-                        <i data-lucide="{{ $item['icon'] }}" class="w-3 h-3"></i>
-                        {{ $item['badge'] }}
-                    </span>
+                        <div class="relative flex w-full flex-col">
+                            <div class="mb-10 flex items-start justify-between gap-4">
+                                <span class="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3.5 py-2 text-xs font-bold text-white backdrop-blur-sm">
+                                    <i data-lucide="sparkles" class="h-3.5 w-3.5" aria-hidden="true"></i>
+                                    {{ $item['badge'] }}
+                                </span>
+                                <span class="flex h-12 w-12 items-center justify-center rounded-2xl border border-white/20 bg-white/15 shadow-lg backdrop-blur-sm transition-transform duration-300 group-hover:-rotate-6 group-hover:scale-110">
+                                    <i data-lucide="{{ $item['icon'] }}" class="h-6 w-6" aria-hidden="true"></i>
+                                </span>
+                            </div>
+
+                            <p class="mb-2 text-sm font-semibold text-primary-100">{{ $item['title'] }}</p>
+                            <h3 class="font-heading text-4xl font-extrabold tracking-tight sm:text-5xl">
+                                {{ $item['amount'] }}
+                            </h3>
+                            <p class="mt-4 max-w-sm text-sm leading-6 text-white/75">
+                                {{ $item['desc'] }}
+                            </p>
+
+                            <div class="mt-8 border-t border-white/15 pt-6">
+                                <p class="mb-3 text-[11px] font-bold uppercase tracking-[0.18em] text-primary-100">Sudah termasuk</p>
+                                <div class="flex flex-wrap gap-2">
+                                    @foreach(['3 set seragam', 'Buku pendukung', 'Alat tulis'] as $included)
+                                        <span class="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1.5 text-xs font-semibold text-white backdrop-blur-sm">
+                                            <i data-lucide="check" class="h-3.5 w-3.5 text-secondary-200" aria-hidden="true"></i>
+                                            {{ $included }}
+                                        </span>
+                                    @endforeach
+                                </div>
+                            </div>
+
+                            <div class="mt-auto flex items-center gap-2 pt-8 text-xs font-semibold text-white/80">
+                                <i data-lucide="badge-check" class="h-4 w-4 text-secondary-200" aria-hidden="true"></i>
+                                {{ $item['period'] }}
+                            </div>
+                        </div>
+                    </article>
                 @else
-                    <span class="inline-flex items-center gap-1.5 text-xs bg-secondary-50 text-secondary-700 px-3 py-1.5 rounded-full font-semibold mb-4">
-                        <i data-lucide="{{ $item['icon'] }}" class="w-3 h-3"></i>
-                        Tanpa biaya
-                    </span>
+                    <article class="group relative flex min-h-[200px] overflow-hidden rounded-[1.75rem] border border-gray-200/80 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:border-primary-100 hover:shadow-xl hover:shadow-primary-900/10 sm:p-7 {{ $item['layout'] }}">
+                        <div class="absolute inset-x-0 top-0 h-1 bg-gradient-to-r {{ $item['accent'] }}"></div>
+                        <div class="absolute -right-12 -top-12 h-32 w-32 rounded-full bg-gray-50 transition-transform duration-500 group-hover:scale-125"></div>
+
+                        <div class="relative flex w-full flex-col">
+                            <div class="mb-6 flex items-start justify-between gap-3">
+                                <span class="flex h-11 w-11 items-center justify-center rounded-2xl ring-1 ring-inset transition-all duration-300 group-hover:-rotate-6 group-hover:scale-110 {{ $item['icon_style'] }}">
+                                    <i data-lucide="{{ $item['icon'] }}" class="h-5 w-5" aria-hidden="true"></i>
+                                </span>
+                                <span class="rounded-full border px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider {{ $item['badge_style'] }}">
+                                    {{ $item['badge'] }}
+                                </span>
+                            </div>
+
+                            <p class="text-sm font-semibold text-gray-500">{{ $item['title'] }}</p>
+                            <h3 class="mt-1.5 font-heading text-2xl font-extrabold tracking-tight text-gray-900 sm:text-3xl">
+                                {{ $item['amount'] }}
+                            </h3>
+                            <p class="mt-3 text-sm leading-6 text-gray-500">
+                                {{ $item['desc'] }}
+                            </p>
+
+                            <div class="mt-auto flex items-center gap-2 border-t border-gray-100 pt-5 text-xs font-semibold text-gray-500">
+                                <span class="h-1.5 w-1.5 rounded-full bg-secondary-500"></span>
+                                {{ $item['period'] }}
+                            </div>
+                        </div>
+                    </article>
                 @endif
-
-                <h3 class="font-heading font-semibold text-gray-900 text-lg mb-3">
-                    {{ $item['title'] }}
-                </h3>
-
-                <p class="text-2xl lg:text-3xl font-heading font-bold gradient-text mb-3">
-                    {{ $item['amount'] }}
-                </p>
-
-                <p class="text-sm text-gray-500 leading-relaxed">
-                    {{ $item['desc'] }}
-                </p>
-            </div>
             @endforeach
         </div>
 
-        {{-- Included --}}
+        {{-- Transparency note --}}
         @php
         $includes = [
-            ['item' => 'Seragam lengkap (3 set)', 'icon' => 'shirt'],
-            ['item' => 'Buku pendukung', 'icon' => 'book'],
-            ['item' => 'Alat tulis sekolah', 'icon' => 'pencil'],
-            ['item' => 'Kegiatan pembelajaran', 'icon' => 'school'],
-            ['item' => 'Kegiatan hari besar Islam', 'icon' => 'gift'],
+            ['item' => 'Seragam lengkap', 'meta' => '3 set', 'icon' => 'shirt'],
+            ['item' => 'Buku pendukung', 'meta' => 'Siap belajar', 'icon' => 'book-open'],
+            ['item' => 'Alat tulis sekolah', 'meta' => 'Perlengkapan awal', 'icon' => 'pencil'],
+            ['item' => 'Kegiatan pembelajaran', 'meta' => 'Termasuk SPP', 'icon' => 'school'],
         ];
         @endphp
 
-        <div class="bg-gradient-to-r from-primary-50 to-secondary-50 border border-primary-100 rounded-2xl p-8 mb-16 fade-up">
-            <h3 class="font-heading text-xl font-semibold text-gray-900 mb-6 flex items-center gap-2">
-                <i data-lucide="check-circle-2" class="w-5 h-5 text-secondary-600"></i>
-                Yang Sudah Termasuk
-            </h3>
-
-            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-                @foreach($includes as $inc)
-                <div class="flex items-center gap-3 bg-white/70 backdrop-blur-sm p-3 rounded-xl">
-                    <div class="w-8 h-8 rounded-lg bg-secondary-100 flex items-center justify-center flex-shrink-0">
-                        <i data-lucide="{{ $inc['icon'] }}" class="w-4 h-4 text-secondary-600"></i>
+        <div class="mb-16 overflow-hidden rounded-[1.75rem] border border-primary-100 bg-white shadow-sm fade-up">
+            <div class="relative flex flex-col gap-5 overflow-hidden bg-gradient-to-r from-primary-50 via-white to-secondary-50 p-6 sm:flex-row sm:items-center sm:justify-between sm:p-7">
+                <div class="absolute -right-8 -top-16 h-40 w-40 rounded-full bg-secondary-100/50 blur-2xl"></div>
+                <div class="relative flex items-start gap-4 sm:items-center">
+                    <span class="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-2xl bg-white text-primary-600 shadow-sm ring-1 ring-primary-100">
+                        <i data-lucide="shield-check" class="h-6 w-6" aria-hidden="true"></i>
+                    </span>
+                    <div>
+                        <h3 class="font-heading text-xl font-bold text-gray-900">Biaya jelas sejak awal</h3>
+                        <p class="mt-1 max-w-2xl text-sm leading-6 text-gray-600">Kebutuhan utama dirinci agar Ayah dan Bunda dapat mempersiapkan pendidikan anak dengan tenang.</p>
                     </div>
-                    <span class="text-gray-700 text-sm font-medium">{{ $inc['item'] }}</span>
+                </div>
+                <span class="relative inline-flex w-fit flex-shrink-0 items-center gap-2 rounded-full border border-secondary-200 bg-white/80 px-4 py-2 text-xs font-bold text-secondary-700 shadow-sm backdrop-blur-sm">
+                    <span class="h-2 w-2 rounded-full bg-secondary-500"></span>
+                    Transparan &amp; terencana
+                </span>
+            </div>
+
+            <div class="grid gap-px border-t border-gray-100 bg-gray-100 sm:grid-cols-2 lg:grid-cols-4">
+                @foreach($includes as $inc)
+                <div class="group flex items-center gap-3 bg-white p-5 transition-colors hover:bg-gray-50">
+                    <div class="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-secondary-50 text-secondary-600 ring-1 ring-inset ring-secondary-100 transition-transform duration-300 group-hover:scale-105">
+                        <i data-lucide="{{ $inc['icon'] }}" class="h-4 w-4" aria-hidden="true"></i>
+                    </div>
+                    <div class="min-w-0">
+                        <p class="text-sm font-bold leading-5 text-gray-800">{{ $inc['item'] }}</p>
+                        <p class="mt-0.5 text-xs text-gray-500">{{ $inc['meta'] }}</p>
+                    </div>
                 </div>
                 @endforeach
             </div>
@@ -128,7 +197,7 @@
         @php
         $faqs = [
             ['q' => 'Bagaimana PAUD Azzahra menilai perkembangan anak?', 'a' => 'Di PAUD Azzahra, perkembangan anak dipantau melalui observasi harian, portofolio karya anak, dan checklist perkembangan sesuai tahap usianya.'],
-            ['q' => 'Apakah tersedia cicilan pembayaran?', 'a' => 'Ya, tersedia cicilan sebelum tahun ajaran dimulai. Anda dapat menghubungi Admin PPDB untuk informasi lebih lanjut.'],
+            ['q' => 'Apakah tersedia cicilan pembayaran?', 'a' => 'Ya, tersedia cicilan sebelum tahun ajaran dimulai. Anda dapat menghubungi Admin SPMB untuk informasi lebih lanjut.'],
             ['q' => 'Apa saja yang termasuk dalam biaya tahunan?', 'a' => 'Biaya tahunan mencakup study tour/fieldtrip, kegiatan hari besar Islam dan manasik haji bersama Ayah dan Bunda.'],
             ['q' => 'Bagaimana metode pembayaran yang tersedia?', 'a' => 'Pembayaran dapat dilakukan hanya melalui transfer bank.'],
             ['q' => 'Berapa total biaya yang harus dibayar?', 'a' => 'Total biaya yang harus dibayar adalah Rp 850.000'],

@@ -15,7 +15,7 @@
         <div class="relative z-10">
             <h2 class="text-2xl sm:text-3xl font-heading font-bold mb-2">Assalamu'alaikum, {{ explode(' ', auth()->user()->name)[0] }}!</h2>
             <p class="text-white/80 max-w-2xl text-sm sm:text-base">
-                Selamat datang di panel wali murid. Di sini Anda dapat melengkapi data anak, mendaftar gelombang PPDB, dan memantau status seleksi penerimaan.
+                Selamat datang di panel wali murid. Di sini Anda dapat melengkapi data anak, mendaftar gelombang SPMB, dan memantau status seleksi penerimaan.
             </p>
         </div>
     </div>
@@ -24,7 +24,7 @@
         $siswa = auth()->user()->siswa;
         $latestRegistration = $siswa ? $siswa->pendaftaranDetails()->with(['pendaftaran', 'pembayaran'])->latest()->first() : null;
         $isAccepted = $latestRegistration && $latestRegistration->status === 'diterima';
-        $adminWhatsapp = preg_replace('/[^0-9]/', '', (string) config('ppdb.admin_whatsapp', ''));
+        $adminWhatsapp = preg_replace('/[^0-9]/', '', (string) config('spmb.admin_whatsapp', ''));
         $helpWaMessage = "Assalamu'alaikum Admin Az Zahra, saya butuh bantuan terkait pendaftaran anak saya.";
         $helpWaUrl = $adminWhatsapp ? 'https://wa.me/'.$adminWhatsapp.'?text='.urlencode($helpWaMessage) : '#';
     @endphp

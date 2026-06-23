@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Daftar Gelombang PPDB')
+@section('title', 'Daftar Gelombang SPMB')
 @section('header_title', 'Pilih Gelombang Pendaftaran')
 @section('content')
 <div class="max-w-7xl mx-auto space-y-6">

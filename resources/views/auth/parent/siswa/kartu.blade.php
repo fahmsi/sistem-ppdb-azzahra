@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cetak Kartu Bukti Pendaftaran - Sistem PPDB</title>
+    <title>Cetak Kartu Bukti Pendaftaran - Sistem Penerimaan Murid Baru (SPMB)</title>
     
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -51,7 +51,7 @@
                     <img src="{{ asset('images/azzahra_logo.png') }}" alt="Logo PAUD Az-Zahra" class="w-12 h-12 object-contain">
                 </div>
                 <div>
-                    <h1 class="text-2xl font-heading font-bold uppercase tracking-wider">Kartu Pendaftaran PPDB</h1>
+                    <h1 class="text-2xl font-heading font-bold uppercase tracking-wider">Kartu Pendaftaran SPMB</h1>
                     <p class="text-primary-100 text-sm">PAUD Al Qur'an Az-Zahra - Tahun Ajaran 2026/2027</p>
                 </div>
             </div>
@@ -116,7 +116,7 @@
             <div class="mt-10 pt-4 border-t-2 border-dashed border-gray-300">
                 <h4 class="font-bold text-gray-800 text-sm mb-2">Catatan Penting:</h4>
                 <ul class="list-disc list-inside text-xs text-gray-600 space-y-1">
-                    <li>Kartu ini adalah bukti sah pendaftaran PPDB PAUD Al Qur'an Az-Zahra.</li>
+                    <li>Kartu ini adalah bukti sah pendaftaran SPMB PAUD Al Qur'an Az-Zahra.</li>
                     <li>Harap dibawa saat proses daftar ulang dan pengukuran seragam.</li>
                     <li>Pastikan semua berkas fisik asli (KK, Akta Kelahiran) juga dibawa untuk verifikasi akhir.</li>
                 </ul>

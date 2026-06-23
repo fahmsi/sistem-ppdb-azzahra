@@ -4,23 +4,23 @@
 @section('header_title', 'Kelola Gallery')
 
 @section('content')
-<div class="space-y-6">
-
-    <!-- Header Card -->
-    <div class="bg-white dark:bg-[#2b2c40] rounded-lg shadow-sneat dark:shadow-sneat-dark border border-[#d9dee3] dark:border-[#434463] p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <h2 class="text-xl font-bold text-[#566a7f] dark:text-[#d5d5e2] flex items-center gap-2 m-0">
-            <i data-lucide="images" class="w-5 h-5 text-[#696cff]"></i>
-            Kelola Gallery
-        </h2>
-        <a href="{{ route('admin.gallery.create') }}" class="sneat-btn-primary">
-            <i data-lucide="plus-circle" class="w-4 h-4"></i> Tambah Foto
-        </a>
+<div class="admin-table-card">
+    <div class="admin-table-header">
+        <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <h2 class="admin-table-title flex items-center gap-2">
+                <i data-lucide="images" class="w-5 h-5 text-[#696cff]"></i>
+                Kelola Gallery
+            </h2>
+            <div class="admin-table-actions">
+                <a href="{{ route('admin.gallery.create') }}" class="sneat-btn-primary h-10 admin-table-action-btn">
+                    <i data-lucide="plus-circle" class="w-4 h-4"></i> Tambah Foto
+                </a>
+            </div>
+        </div>
     </div>
 
-    <!-- Gallery Table -->
-    <div class="bg-white dark:bg-[#2b2c40] rounded-lg shadow-sneat dark:shadow-sneat-dark border border-[#d9dee3] dark:border-[#434463] overflow-hidden">
-        <div class="w-full overflow-x-auto">
-            <table class="sneat-table w-full table-auto whitespace-nowrap">
+    <div class="admin-table-responsive text-nowrap">
+            <table class="table table-hover align-middle admin-table">
                 <thead>
                     <tr>
                         <th class="w-12">#</th>
@@ -63,7 +63,7 @@
                                     </span>
                                 @endif
                             </td>
-                            <td class="text-right whitespace-nowrap">
+                            <td class="text-right admin-table-actions-cell">
                                 <div class="flex items-center justify-end gap-2">
                                     <a href="{{ route('admin.gallery.edit', $gallery->id) }}"
                                        class="inline-flex items-center justify-center w-8 h-8 rounded-md bg-[#e7e7ff] dark:bg-[#696cff]/20 text-[#696cff] hover:bg-[#696cff] hover:text-white transition-colors"
@@ -86,22 +86,12 @@
                     @empty
                         <tr>
                             <td colspan="7" class="px-6 py-12 text-center">
-                                <div class="flex flex-col items-center justify-center gap-3">
-                                    <div class="w-16 h-16 bg-[#f5f5f9] dark:bg-[#232333] rounded-full flex items-center justify-center">
-                                        <i data-lucide="image" class="w-8 h-8 text-[#a1b0cb]"></i>
-                                    </div>
-                                    <h3 class="text-lg font-heading font-semibold text-[#566a7f] dark:text-[#d5d5e2]">Belum Ada Foto</h3>
-                                    <p class="text-[#a1b0cb] text-sm">Silakan tambahkan foto baru untuk ditampilkan di gallery landing page.</p>
-                                    <a href="{{ route('admin.gallery.create') }}" class="sneat-btn-primary mt-2">
-                                        <i data-lucide="plus" class="w-5 h-5"></i> Tambah Sekarang
-                                    </a>
-                                </div>
+                                Belum ada data.
                             </td>
                         </tr>
                     @endforelse
                 </tbody>
             </table>
-        </div>
     </div>
 </div>
 @endsection

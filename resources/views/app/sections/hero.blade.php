@@ -3,7 +3,6 @@
     {{-- Decorative background --}}
     <div class="pointer-events-none absolute -right-32 top-16 h-[28rem] w-[28rem] rounded-full bg-primary-200/30 blur-3xl"></div>
     <div class="pointer-events-none absolute -left-40 top-[32rem] h-[32rem] w-[32rem] rounded-full bg-secondary-200/25 blur-3xl"></div>
-    <div class="pointer-events-none absolute left-[46%] top-40 hidden h-24 w-24 rotate-12 rounded-[2rem] border border-primary-200/50 bg-white/30 backdrop-blur-sm lg:block"></div>
 
     <div class="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div class="grid min-h-[100svh] items-center gap-6 pb-8 pt-24 sm:gap-8 sm:pb-10 sm:pt-28 lg:grid-cols-12 lg:gap-10 lg:pb-8 lg:pt-24 xl:gap-14">
@@ -57,7 +56,7 @@
                         </span>
                         <span class="min-w-0 text-center leading-tight sm:text-left">
                             <span class="hidden text-[11px] font-medium text-gray-500 sm:block">Sudah punya akun?</span>
-                            <span class="block truncate">Dashboard PPDB</span>
+                            <span class="block truncate">Dashboard SPMB</span>
                         </span>
                     </a>
                 </div>
@@ -87,14 +86,14 @@
                     <div class="group relative h-[210px] overflow-hidden rounded-[1.5rem] border-4 border-white bg-gray-100 shadow-2xl shadow-primary-900/15 sm:h-[340px] sm:rounded-[2rem] lg:h-[min(62vh,520px)] lg:min-h-[400px]">
                         <img
                             src="{{ asset('images/banner.png') }}"
-                            alt="Ilustrasi siswa PAUD Al Qur'an Az-Zahra menyambut PPDB 2026/2027"
+                            alt="Ilustrasi siswa PAUD Al Qur'an Az-Zahra menyambut SPMB 2026/2027"
                             class="h-full w-full object-cover object-center transition-transform duration-700 group-hover:scale-105"
                             loading="eager">
                         <div class="absolute inset-0 bg-gradient-to-t from-primary-900/20 via-transparent to-white/5"></div>
                     </div>
 
                     {{-- Existing floating cards --}}
-                    <div class="glass-card animate-float absolute -left-1 bottom-3 hidden rounded-2xl border border-white/80 p-3 shadow-xl sm:flex sm:-left-5 sm:bottom-12 sm:p-4" style="animation-delay: 1s">
+                    <div class="glass-card animate-float absolute -left-1 bottom-3 hidden rounded-2xl border border-white/80 p-3 shadow-xl sm:flex sm:-left-4 sm:bottom-2 sm:p-4" style="animation-delay: 1s">
                         <div class="flex items-center gap-3">
                             <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-secondary-100">
                                 <i data-lucide="graduation-cap" class="h-5 w-5 text-secondary-600" aria-hidden="true"></i>

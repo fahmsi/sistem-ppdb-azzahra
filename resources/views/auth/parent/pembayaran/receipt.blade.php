@@ -39,7 +39,7 @@
     <div class="receipt-container">
         <div class="receipt-header">
             <h1>PAUD AL QUR'AN AZ-ZAHRA</h1>
-            <p>Penerimaan Siswa Baru (PSB)</p>
+            <p>Sistem Penerimaan Murid Baru (SPMB)</p>
         </div>
 
         <div class="receipt-body">
@@ -78,7 +78,7 @@
         </div>
 
         <div class="footer-note">
-            Dokumen ini dicetak secara otomatis oleh sistem PSB PAUD Al Qur'an Az-Zahra dan sah tanpa tanda tangan.
+            Dokumen ini dicetak secara otomatis oleh sistem SPMB PAUD Al Qur'an Az-Zahra dan sah tanpa tanda tangan.
         </div>
     </div>
 </body>

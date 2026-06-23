@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'Sistem PPDB PAUD Az-Zahra')</title>
+    <title>@yield('title', 'Sistem Penerimaan Murid Baru (SPMB) PAUD Az-Zahra')</title>
 
     <!-- Favicon -->
     <link rel="icon" href="{{ asset('images/azzahra_logo.png') }}" type="image/png">
@@ -26,7 +26,7 @@
     <!-- Prevent FOUC: Apply theme before render -->
     <script>
         (function () {
-            const saved = localStorage.getItem('ppdb_theme');
+            const saved = localStorage.getItem('spmb_theme');
             if (saved === 'dark') {
                 document.documentElement.classList.add('dark');
                 document.documentElement.classList.remove('light');
@@ -49,13 +49,13 @@
 </head>
 
 <body
-    class="bg-[#f5f5f9] dark:bg-[#232333] font-body text-[#697a8d] dark:text-[#a1b0cb] antialiased overflow-hidden h-screen transition-colors duration-300">
+    class="dashboard-readable bg-[#f5f5f9] dark:bg-[#232333] font-body text-[#697a8d] dark:text-[#a1b0cb] antialiased overflow-hidden h-screen transition-colors duration-300">
 
     <!-- ============================================
          SIDEBAR — Sneat Style
          ============================================ -->
     <aside id="sidebar"
-        class="bg-white dark:bg-[#2b2c40] w-[260px] hidden md:flex flex-col h-full transition-[width] duration-300 fixed inset-y-0 left-0 z-50 border-r border-[#d9dee3] dark:border-[#434463] group">
+        class="bg-white dark:bg-[#2b2c40] w-[260px] hidden md:flex flex-col h-full transition-[width] duration-300 fixed inset-y-0 left-0 z-[70] border-r border-[#d9dee3] dark:border-[#434463] group">
 
         <button id="sidebarToggleBtn" class="sidebar-toggle-btn focus:outline-none transition-all duration-300 shadow-none" style="box-shadow: none !important;">
             <span id="iconWrapper" class="transition-transform duration-300 transform relative z-10">
@@ -66,7 +66,12 @@
         <div class="px-6 py-5 flex items-center gap-3 overflow-hidden whitespace-nowrap h-[76px]">
             <img src="{{ asset('images/azzahra_logo.png') }}" alt="Logo PAUD Az-Zahra" class="h-8 w-auto object-contain flex-shrink-0">
             <span
-                class="menu-text text-xl font-heading font-bold text-[#566a7f] dark:text-[#d5d5e2] tracking-tight transition-opacity duration-300">PPDB Azzahra</span>
+                class="menu-text text-xl font-heading font-bold text-[#566a7f] dark:text-[#d5d5e2] tracking-tight transition-opacity duration-300">SPMB Azzahra</span>
+            <button id="mobileSidebarCloseBtn" type="button"
+                class="ml-auto inline-flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg text-[#697a8d] transition-colors hover:bg-[#f5f5f9] hover:text-red-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#696cff] dark:text-[#a1b0cb] dark:hover:bg-[#232333] md:hidden"
+                aria-label="Tutup menu navigasi">
+                <i data-lucide="x" class="h-5 w-5"></i>
+            </button>
         </div>
 
         <nav class="flex-1 py-4 overflow-y-auto overflow-x-hidden" id="sidebarNav">
@@ -83,7 +88,7 @@
                 <a href="{{ route('admin.pendaftaran.index') }}"
                     class="sidebar-menu-link flex items-center px-6 py-2.5 mx-3 rounded-lg overflow-hidden whitespace-nowrap {{ request()->routeIs('admin.pendaftaran.*') ? 'active bg-[#696cff] text-white' : 'text-[#697a8d] hover:bg-gray-100 dark:hover:bg-[#232333]' }}">
                     <i data-lucide="calendar" class="w-5 h-5 flex-shrink-0"></i>
-                    <span class="menu-text ml-3 transition-opacity duration-300">Gelombang PPDB</span>
+                    <span class="menu-text ml-3 transition-opacity duration-300">Gelombang SPMB</span>
                 </a>
 
                 <a href="{{ route('admin.siswa.index') }}"
@@ -192,7 +197,7 @@
     </aside>
 
     <!-- Mobile Sidebar Overlay -->
-    <div id="sidebarOverlay" class="fixed inset-0 bg-black/50 z-10 hidden md:hidden transition-opacity opacity-0"></div>
+    <div id="sidebarOverlay" class="fixed inset-0 z-[60] hidden bg-slate-950/50 opacity-0 backdrop-blur-[2px] transition-opacity duration-200 md:hidden"></div>
 
     <!-- ============================================
          MAIN CONTENT WRAPPER
@@ -207,12 +212,16 @@
                 class="pointer-events-none absolute inset-x-0 top-0 z-30 h-20 backdrop-blur-xl bg-white/10 dark:bg-[#232333]/10"></div>
 
             <header id="dashboardNav"
-                class="sneat-navbar absolute top-0 inset-x-0 z-40 flex items-center justify-between border border-[#d9dee3] dark:border-[#434463] !bg-white/80 dark:!bg-[#2b2c40]/80 !backdrop-blur-none transition-all duration-300">
+                class="sneat-navbar absolute top-0 inset-x-0 z-40 flex items-center justify-between border border-[#d9dee3] dark:border-[#434463] !mx-3 !px-3 sm:!mx-4 sm:!px-6 !bg-white/90 dark:!bg-[#2b2c40]/90 !backdrop-blur-none transition-all duration-300">
 
                 <div class="flex items-center gap-4">
                     <!-- Mobile Menu Toggle -->
                     <button id="mobileMenuBtn"
-                        class="md:hidden text-[#697a8d] dark:text-[#a1b0cb] hover:text-[#696cff] focus:outline-none">
+                        type="button"
+                        class="inline-flex h-10 w-10 items-center justify-center rounded-lg text-[#697a8d] transition-colors hover:bg-[#f5f5f9] hover:text-[#696cff] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#696cff] dark:text-[#a1b0cb] dark:hover:bg-[#232333] md:hidden"
+                        aria-label="Buka menu navigasi"
+                        aria-controls="sidebar"
+                        aria-expanded="false">
                         <i data-lucide="menu" class="w-6 h-6"></i>
                     </button>
 
@@ -272,7 +281,7 @@
                     </button>
 
                     <!-- Notification Dropdown -->
-                    <div id="notifDropdown" class="absolute right-0 mt-2 w-80 sm:w-96 bg-white dark:bg-[#2b2c40] rounded-lg shadow-xl border border-[#d9dee3] dark:border-[#434463] z-50 hidden overflow-hidden">
+                    <div id="notifDropdown" class="fixed inset-x-3 top-20 z-50 hidden overflow-hidden rounded-lg border border-[#d9dee3] bg-white shadow-xl dark:border-[#434463] dark:bg-[#2b2c40] sm:absolute sm:inset-x-auto sm:right-0 sm:top-auto sm:mt-2 sm:w-96">
                         <div class="px-4 py-3 border-b border-[#d9dee3] dark:border-[#434463] flex items-center justify-between">
                             <h4 class="text-sm font-semibold text-[#566a7f] dark:text-[#d5d5e2] flex items-center gap-2">
                                 <i data-lucide="bell" class="w-4 h-4 text-[#696cff]"></i> Notifikasi
@@ -315,7 +324,7 @@
                 
 
                 <!-- Divider -->
-                <div class="w-px h-6 bg-[#d9dee3] dark:bg-[#434463] mx-1"></div>
+                <div class="hidden h-6 w-px bg-[#d9dee3] dark:bg-[#434463] sm:block sm:mx-1"></div>
 
                 <!-- User Dropdown -->
                 <div class="relative">
@@ -382,7 +391,7 @@
         <!-- ============================================
              MAIN CONTENT SCROLLABLE AREA
              ============================================ -->
-        <main id="mainScrollArea" class="h-full flex flex-col overflow-x-hidden overflow-y-auto p-4 sm:p-6 pt-24 sm:pt-24 pb-16">
+        <main id="mainScrollArea" class="flex h-full flex-col overflow-x-hidden overflow-y-auto p-3 pb-12 pt-20 sm:p-6 sm:pb-16 sm:pt-24">
 
             @yield('content')
 
@@ -390,7 +399,7 @@
                  FOOTER
                  ============================================ -->
             <div class="mt-auto pt-8">
-                <footer class="py-4 px-6 text-center text-sm text-[#a1b0cb] border-t border-[#d9dee3] dark:border-[#434463]">
+                <footer class="border-t border-[#d9dee3] px-3 py-4 text-center text-xs text-[#a1b0cb] dark:border-[#434463] sm:px-6 sm:text-sm">
                     &copy; {{ date('Y') }} PAUD Al Qur'an Az-Zahra. Hak Cipta Dilindungi.
                 </footer>
             </div>

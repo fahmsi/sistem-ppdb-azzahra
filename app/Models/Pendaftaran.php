@@ -12,7 +12,7 @@ class Pendaftaran extends Model
 {
     use HasFactory;
 
-    protected $table = 'psb_pendaftaran';
+    protected $table = 'spmb_pendaftaran';
 
     /**
      * The attributes that are mass assignable.
@@ -58,7 +58,7 @@ class Pendaftaran extends Model
     {
         return $this->belongsToMany(
             Siswa::class,
-            'psb_pendaftaran_detail',
+            'spmb_pendaftaran_detail',
             'pendaftaran_id',
             'siswa_id'
         )->withPivot('no_pendaftaran', 'status', 'notifikasi')->withTimestamps();

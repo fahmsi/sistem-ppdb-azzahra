@@ -26,7 +26,7 @@ class PembayaranController extends Controller
             return back()->with('error', 'Pembayaran daftar ulang sudah diverifikasi dan tidak dapat diunggah ulang.');
         }
 
-        $jumlah = (int) config('ppdb.daftar_ulang_amount', 0);
+        $jumlah = (int) config('spmb.daftar_ulang_amount', 0);
 
         if ($jumlah <= 0) {
             return back()->with('error', 'Nominal daftar ulang belum dikonfigurasi. Silakan hubungi admin.');

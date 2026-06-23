@@ -107,7 +107,9 @@ Route::middleware('auth')->group(function () {
     })->name('dashboard');
 
     // Secure Document Viewer
-    Route::get('/siswa/{siswa}/dokumen/{field}/{pembayaran?}', [DokumenController::class, 'show'])->name('dokumen.show');
+    Route::get('/siswa/{siswa}/dokumen/{field}/{pembayaran?}', [DokumenController::class, 'show'])
+        ->middleware('role:parent,admin,super_admin')
+        ->name('dokumen.show');
 
     /*
     |----------------------------------------------------------------------
@@ -204,6 +206,8 @@ Route::middleware('auth')->group(function () {
             Route::post('/kelola-admin', [AdminManageController::class, 'store'])->name('kelola-admin.store');
             Route::get('/kelola-admin/{user}/edit', [AdminManageController::class, 'edit'])->name('kelola-admin.edit');
             Route::put('/kelola-admin/{user}', [AdminManageController::class, 'update'])->name('kelola-admin.update');
+            Route::patch('/kelola-admin/{user}/suspend', [AdminManageController::class, 'suspend'])->name('kelola-admin.suspend');
+            Route::patch('/kelola-admin/{user}/unsuspend', [AdminManageController::class, 'unsuspend'])->name('kelola-admin.unsuspend');
             Route::delete('/kelola-admin/{user}', [AdminManageController::class, 'destroy'])->name('kelola-admin.destroy');
 
             // Activity Logs

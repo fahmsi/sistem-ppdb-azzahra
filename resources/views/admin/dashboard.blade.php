@@ -4,91 +4,110 @@
 @section('header_title', 'Dashboard Administrator')
 
 @section('content')
-<div class="max-w-7xl mx-auto space-y-6">
+<div class="mx-auto max-w-7xl space-y-4 sm:space-y-6">
 
     <!-- Header Section -->
-    <div class="bg-white dark:bg-[#2b2c40] rounded-lg shadow-sneat dark:shadow-sneat-dark border border-[#d9dee3] dark:border-[#434463] p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 animate-fade-in">
-        <div>
-            <h2 class="text-2xl font-heading font-bold text-[#566a7f] dark:text-[#d5d5e2]">Ringkasan PPDB</h2>
-            <p class="text-[#697a8d] dark:text-[#a1b0cb] text-sm mt-1">Pantau statistik pendaftaran dan aktivitas terbaru hari ini.</p>
-        </div>
-        <div class="hidden sm:flex">
-            <span class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[#f5f5f9] dark:bg-[#232333] border border-[#d9dee3] dark:border-[#434463] text-sm font-medium text-[#697a8d] dark:text-[#a1b0cb] shadow-sm transition-colors">
-                <i data-lucide="calendar" class="w-4 h-4 text-[#696cff]"></i> {{ date('d F Y') }}
-            </span>
+    <div class="relative overflow-hidden rounded-xl border border-[#d9dee3] bg-white p-5 shadow-sneat animate-fade-in dark:border-[#434463] dark:bg-[#2b2c40] dark:shadow-sneat-dark sm:min-h-[168px] sm:p-7 lg:px-8">
+        <div class="pointer-events-none absolute inset-y-0 right-0 hidden w-64 bg-gradient-to-l from-[#e7e7ff]/80 via-[#f5f5f9]/60 to-transparent dark:from-[#696cff]/15 dark:via-[#232333]/30 sm:block"></div>
+        <div class="pointer-events-none absolute -right-10 -top-16 hidden h-52 w-52 rounded-full border border-[#696cff]/10 sm:block"></div>
+
+        <div class="relative z-10 flex h-full items-center justify-between gap-6">
+            <div class="max-w-2xl">
+                <span class="mb-3 inline-flex items-center gap-2 rounded-full bg-[#e7e7ff] px-3 py-1 text-xs font-bold text-[#696cff] dark:bg-[#696cff]/20 dark:text-[#b0b1ff]">
+                    <i data-lucide="layout-dashboard" class="h-3.5 w-3.5"></i>
+                    Dashboard Admin
+                </span>
+                <h2 class="font-heading text-2xl font-bold leading-tight text-[#566a7f] dark:text-[#d5d5e2] sm:text-3xl">Ringkasan SPMB</h2>
+                <p class="mt-1.5 text-sm leading-6 text-[#697a8d] dark:text-[#a1b0cb]">Pantau statistik pendaftaran dan aktivitas terbaru hari ini.</p>
+
+                <span class="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-lg border border-[#d9dee3] bg-[#f5f5f9] px-3.5 py-2 text-sm font-semibold text-[#697a8d] shadow-sm transition-colors dark:border-[#434463] dark:bg-[#232333] dark:text-[#a1b0cb] sm:w-auto sm:justify-start">
+                    <i data-lucide="calendar" class="h-4 w-4 text-[#696cff]"></i>
+                    {{ date('d F Y') }}
+                </span>
+            </div>
+
+            <div class="relative hidden h-36 w-48 flex-shrink-0 self-end sm:block lg:mr-3 lg:w-56">
+                <div class="absolute bottom-0 right-1 h-28 w-40 rounded-[50%] bg-white/60 blur-sm dark:bg-[#696cff]/10 lg:w-48"></div>
+                <img src="{{ asset('images/man-with-laptop.png') }}"
+                    alt="Ilustrasi administrator menggunakan laptop"
+                    width="216"
+                    height="216"
+                    class="absolute -bottom-7 right-0 h-44 w-44 object-contain drop-shadow-sm lg:h-48 lg:w-48"
+                    loading="eager">
+            </div>
         </div>
     </div>
 
     <!-- 4 Summary Cards -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 animate-fade-up">
+    <div class="grid grid-cols-2 gap-3 animate-fade-up sm:gap-6 lg:grid-cols-4">
         
         <!-- Total Pendaftar -->
-        <div class="bg-white dark:bg-[#2b2c40] rounded-lg shadow-sneat dark:shadow-sneat-dark border border-[#d9dee3] dark:border-[#434463] p-6 flex items-center gap-4 hover:shadow-sneat-lg dark:hover:shadow-sneat-dark-lg transition-shadow">
-            <div class="w-12 h-12 rounded-lg bg-[#e7e7ff] dark:bg-[#696cff]/20 flex items-center justify-center flex-shrink-0 text-[#696cff]">
+        <div class="flex min-w-0 flex-col items-start gap-3 rounded-lg border border-[#d9dee3] bg-white p-4 shadow-sneat transition-shadow hover:shadow-sneat-lg dark:border-[#434463] dark:bg-[#2b2c40] dark:shadow-sneat-dark dark:hover:shadow-sneat-dark-lg sm:flex-row sm:items-center sm:gap-4 sm:p-6">
+            <div class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-[#e7e7ff] text-[#696cff] dark:bg-[#696cff]/20 sm:h-12 sm:w-12">
                 <i data-lucide="users" class="w-6 h-6"></i>
             </div>
-            <div>
-                <p class="text-sm font-medium text-[#697a8d] dark:text-[#a1b0cb]">Total Pendaftar</p>
-                <h3 class="text-2xl font-bold text-[#566a7f] dark:text-[#d5d5e2]">{{ number_format($stats['total_pendaftar'] ?? 0) }}</h3>
+            <div class="min-w-0">
+                <p class="text-xs font-medium leading-4 text-[#697a8d] dark:text-[#a1b0cb] sm:text-sm">Total Pendaftar</p>
+                <h3 class="mt-1 text-xl font-bold text-[#566a7f] dark:text-[#d5d5e2] sm:text-2xl">{{ number_format($stats['total_pendaftar'] ?? 0) }}</h3>
             </div>
         </div>
 
         <!-- Menunggu Verifikasi -->
-        <div class="bg-white dark:bg-[#2b2c40] rounded-lg shadow-sneat dark:shadow-sneat-dark border border-[#d9dee3] dark:border-[#434463] p-6 flex items-center gap-4 hover:shadow-sneat-lg dark:hover:shadow-sneat-dark-lg transition-shadow">
-            <div class="w-12 h-12 rounded-lg bg-amber-50 dark:bg-amber-500/10 flex items-center justify-center flex-shrink-0 text-amber-500">
+        <div class="flex min-w-0 flex-col items-start gap-3 rounded-lg border border-[#d9dee3] bg-white p-4 shadow-sneat transition-shadow hover:shadow-sneat-lg dark:border-[#434463] dark:bg-[#2b2c40] dark:shadow-sneat-dark dark:hover:shadow-sneat-dark-lg sm:flex-row sm:items-center sm:gap-4 sm:p-6">
+            <div class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-amber-50 text-amber-500 dark:bg-amber-500/10 sm:h-12 sm:w-12">
                 <i data-lucide="clock" class="w-6 h-6"></i>
             </div>
-            <div>
-                <p class="text-sm font-medium text-[#697a8d] dark:text-[#a1b0cb]">Menunggu Verifikasi</p>
-                <h3 class="text-2xl font-bold text-[#566a7f] dark:text-[#d5d5e2]">{{ number_format($stats['menunggu_verifikasi'] ?? 0) }}</h3>
+            <div class="min-w-0">
+                <p class="text-xs font-medium leading-4 text-[#697a8d] dark:text-[#a1b0cb] sm:text-sm">Menunggu Verifikasi</p>
+                <h3 class="mt-1 text-xl font-bold text-[#566a7f] dark:text-[#d5d5e2] sm:text-2xl">{{ number_format($stats['menunggu_verifikasi'] ?? 0) }}</h3>
             </div>
         </div>
 
         <!-- Diterima -->
-        <div class="bg-white dark:bg-[#2b2c40] rounded-lg shadow-sneat dark:shadow-sneat-dark border border-[#d9dee3] dark:border-[#434463] p-6 flex items-center gap-4 hover:shadow-sneat-lg dark:hover:shadow-sneat-dark-lg transition-shadow">
-            <div class="w-12 h-12 rounded-lg bg-emerald-50 dark:bg-emerald-500/10 flex items-center justify-center flex-shrink-0 text-emerald-500">
+        <div class="flex min-w-0 flex-col items-start gap-3 rounded-lg border border-[#d9dee3] bg-white p-4 shadow-sneat transition-shadow hover:shadow-sneat-lg dark:border-[#434463] dark:bg-[#2b2c40] dark:shadow-sneat-dark dark:hover:shadow-sneat-dark-lg sm:flex-row sm:items-center sm:gap-4 sm:p-6">
+            <div class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-emerald-50 text-emerald-500 dark:bg-emerald-500/10 sm:h-12 sm:w-12">
                 <i data-lucide="check-circle" class="w-6 h-6"></i>
             </div>
-            <div>
-                <p class="text-sm font-medium text-[#697a8d] dark:text-[#a1b0cb]">Diterima</p>
-                <h3 class="text-2xl font-bold text-[#566a7f] dark:text-[#d5d5e2]">{{ number_format($stats['diterima'] ?? 0) }}</h3>
+            <div class="min-w-0">
+                <p class="text-xs font-medium leading-4 text-[#697a8d] dark:text-[#a1b0cb] sm:text-sm">Diterima</p>
+                <h3 class="mt-1 text-xl font-bold text-[#566a7f] dark:text-[#d5d5e2] sm:text-2xl">{{ number_format($stats['diterima'] ?? 0) }}</h3>
             </div>
         </div>
 
         <!-- Ditolak -->
-        <div class="bg-white dark:bg-[#2b2c40] rounded-lg shadow-sneat dark:shadow-sneat-dark border border-[#d9dee3] dark:border-[#434463] p-6 flex items-center gap-4 hover:shadow-sneat-lg dark:hover:shadow-sneat-dark-lg transition-shadow">
-            <div class="w-12 h-12 rounded-lg bg-red-50 dark:bg-red-500/10 flex items-center justify-center flex-shrink-0 text-red-500">
+        <div class="flex min-w-0 flex-col items-start gap-3 rounded-lg border border-[#d9dee3] bg-white p-4 shadow-sneat transition-shadow hover:shadow-sneat-lg dark:border-[#434463] dark:bg-[#2b2c40] dark:shadow-sneat-dark dark:hover:shadow-sneat-dark-lg sm:flex-row sm:items-center sm:gap-4 sm:p-6">
+            <div class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-red-50 text-red-500 dark:bg-red-500/10 sm:h-12 sm:w-12">
                 <i data-lucide="x-circle" class="w-6 h-6"></i>
             </div>
-            <div>
-                <p class="text-sm font-medium text-[#697a8d] dark:text-[#a1b0cb]">Ditolak</p>
-                <h3 class="text-2xl font-bold text-[#566a7f] dark:text-[#d5d5e2]">{{ number_format($stats['ditolak'] ?? 0) }}</h3>
+            <div class="min-w-0">
+                <p class="text-xs font-medium leading-4 text-[#697a8d] dark:text-[#a1b0cb] sm:text-sm">Ditolak</p>
+                <h3 class="mt-1 text-xl font-bold text-[#566a7f] dark:text-[#d5d5e2] sm:text-2xl">{{ number_format($stats['ditolak'] ?? 0) }}</h3>
             </div>
         </div>
     </div>
 
     <!-- Analytics Charts -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 animate-fade-up" style="animation-delay: 0.1s;">
+    <div class="grid grid-cols-1 gap-4 animate-fade-up sm:gap-6 lg:grid-cols-3" style="animation-delay: 0.1s;">
         <!-- Gender Chart -->
-        <div class="bg-white dark:bg-[#2b2c40] rounded-lg shadow-sneat dark:shadow-sneat-dark border border-[#d9dee3] dark:border-[#434463] p-5">
+        <div class="rounded-lg border border-[#d9dee3] bg-white p-4 shadow-sneat dark:border-[#434463] dark:bg-[#2b2c40] dark:shadow-sneat-dark sm:p-5">
             <h4 class="text-sm font-semibold text-[#566a7f] dark:text-[#d5d5e2] mb-4">Statistik Gender</h4>
-            <div class="relative h-64 w-full">
+            <div class="relative h-56 w-full sm:h-64">
                 <canvas id="genderChart"></canvas>
             </div>
         </div>
 
         <!-- Status Chart -->
-        <div class="bg-white dark:bg-[#2b2c40] rounded-lg shadow-sneat dark:shadow-sneat-dark border border-[#d9dee3] dark:border-[#434463] p-5">
+        <div class="rounded-lg border border-[#d9dee3] bg-white p-4 shadow-sneat dark:border-[#434463] dark:bg-[#2b2c40] dark:shadow-sneat-dark sm:p-5">
             <h4 class="text-sm font-semibold text-[#566a7f] dark:text-[#d5d5e2] mb-4">Status Pendaftaran</h4>
-            <div class="relative h-64 w-full">
+            <div class="relative h-56 w-full sm:h-64">
                 <canvas id="statusChart"></canvas>
             </div>
         </div>
 
         <!-- Gelombang Chart -->
-        <div class="bg-white dark:bg-[#2b2c40] rounded-lg shadow-sneat dark:shadow-sneat-dark border border-[#d9dee3] dark:border-[#434463] p-5">
+        <div class="rounded-lg border border-[#d9dee3] bg-white p-4 shadow-sneat dark:border-[#434463] dark:bg-[#2b2c40] dark:shadow-sneat-dark sm:p-5">
             <h4 class="text-sm font-semibold text-[#566a7f] dark:text-[#d5d5e2] mb-4">Pendaftar per Gelombang</h4>
-            <div class="relative h-64 w-full">
+            <div class="relative h-56 w-full sm:h-64">
                 <canvas id="gelombangChart"></canvas>
             </div>
         </div>
@@ -98,7 +117,7 @@
     <div class="bg-white dark:bg-[#2b2c40] rounded-lg shadow-sneat dark:shadow-sneat-dark border border-[#d9dee3] dark:border-[#434463] overflow-hidden animate-fade-up" style="animation-delay: 0.2s;">
         
         <!-- Table Header -->
-        <div class="px-6 py-5 border-b border-[#d9dee3] dark:border-[#434463] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div class="flex flex-col justify-between gap-3 border-b border-[#d9dee3] px-4 py-4 dark:border-[#434463] sm:flex-row sm:items-center sm:px-6 sm:py-5">
             <div>
                 <h3 class="text-lg font-heading font-semibold text-[#566a7f] dark:text-[#d5d5e2]">Pendaftar Terbaru</h3>
                 <p class="text-sm text-[#a1b0cb] mt-1">5 aktivitas pendaftaran terakhir yang masuk ke sistem.</p>
@@ -110,7 +129,7 @@
 
         <!-- Table -->
         <div class="overflow-x-auto">
-            <table class="sneat-table">
+            <table class="sneat-table min-w-[680px]">
                 <thead>
                     <tr>
                         <th>Tanggal</th>
@@ -171,7 +190,7 @@
     @if(auth()->user()->isSuperAdmin() && count($recentLogs) > 0)
     <div class="bg-white dark:bg-[#2b2c40] rounded-lg shadow-sneat dark:shadow-sneat-dark border border-[#d9dee3] dark:border-[#434463] overflow-hidden animate-fade-up" style="animation-delay: 0.4s;">
         
-        <div class="px-6 py-5 border-b border-[#d9dee3] dark:border-[#434463] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div class="flex flex-col justify-between gap-3 border-b border-[#d9dee3] px-4 py-4 dark:border-[#434463] sm:flex-row sm:items-center sm:px-6 sm:py-5">
             <div>
                 <h3 class="text-lg font-heading font-semibold text-[#566a7f] dark:text-[#d5d5e2] flex items-center gap-2">
                     <i data-lucide="scroll-text" class="w-5 h-5 text-amber-500"></i>
@@ -185,7 +204,7 @@
         </div>
 
         <div class="overflow-x-auto">
-            <table class="sneat-table">
+            <table class="sneat-table min-w-[720px]">
                 <thead>
                     <tr>
                         <th>Waktu</th>
@@ -242,9 +261,9 @@
         new Chart(document.getElementById('genderChart'), {
             type: 'doughnut',
             data: {
-                labels: {!! json_encode($chartGender['labels'] ?? []) !!},
+                labels: {{ Illuminate\Support\Js::from($chartGender['labels'] ?? []) }},
                 datasets: [{
-                    data: {!! json_encode($chartGender['values'] ?? []) !!},
+                    data: {{ Illuminate\Support\Js::from($chartGender['values'] ?? []) }},
                     backgroundColor: ['#696cff', '#ff3e1d'],
                     borderWidth: 0,
                     hoverOffset: 4
@@ -263,9 +282,9 @@
         new Chart(document.getElementById('statusChart'), {
             type: 'doughnut',
             data: {
-                labels: {!! json_encode($chartStatus['labels'] ?? []) !!},
+                labels: {{ Illuminate\Support\Js::from($chartStatus['labels'] ?? []) }},
                 datasets: [{
-                    data: {!! json_encode($chartStatus['values'] ?? []) !!},
+                    data: {{ Illuminate\Support\Js::from($chartStatus['values'] ?? []) }},
                     backgroundColor: [
                         '#697a8d', // Pending (Gray)
                         '#ffab00', // Menunggu (Warning)
@@ -290,10 +309,10 @@
         new Chart(document.getElementById('gelombangChart'), {
             type: 'bar',
             data: {
-                labels: {!! json_encode($chartGelombang['labels'] ?? []) !!},
+                labels: {{ Illuminate\Support\Js::from($chartGelombang['labels'] ?? []) }},
                 datasets: [{
                     label: 'Jumlah Pendaftar',
-                    data: {!! json_encode($chartGelombang['values'] ?? []) !!},
+                    data: {{ Illuminate\Support\Js::from($chartGelombang['values'] ?? []) }},
                     backgroundColor: '#696cff',
                     borderRadius: 4
                 }]

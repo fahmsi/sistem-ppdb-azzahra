@@ -12,12 +12,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('psb_siswa', function (Blueprint $table) {
-            if (! Schema::hasColumn('psb_siswa', 'deleted_at')) {
+        if ($this->supersedesLegacyMigration()) {
+            return;
+        }
+
+        Schema::table('spmb_siswa', function (Blueprint $table) {
+            if (! Schema::hasColumn('spmb_siswa', 'deleted_at')) {
                 $table->softDeletes()->after('updated_at');
             }
 
-            if (! Schema::hasColumn('psb_siswa', 'created_by_admin_id')) {
+            if (! Schema::hasColumn('spmb_siswa', 'created_by_admin_id')) {
                 $table->foreignId('created_by_admin_id')
                     ->nullable()
                     ->after('user_id')
@@ -25,11 +29,11 @@ return new class extends Migration
                     ->nullOnDelete();
             }
 
-            if (! Schema::hasColumn('psb_siswa', 'input_source')) {
+            if (! Schema::hasColumn('spmb_siswa', 'input_source')) {
                 $table->string('input_source')->default('online')->after('created_by_admin_id');
             }
 
-            if (! Schema::hasColumn('psb_siswa', 'deleted_by')) {
+            if (! Schema::hasColumn('spmb_siswa', 'deleted_by')) {
                 $table->foreignId('deleted_by')
                     ->nullable()
                     ->after('input_source')
@@ -37,7 +41,7 @@ return new class extends Migration
                     ->nullOnDelete();
             }
 
-            if (! Schema::hasColumn('psb_siswa', 'deleted_reason')) {
+            if (! Schema::hasColumn('spmb_siswa', 'deleted_reason')) {
                 $table->text('deleted_reason')->nullable()->after('deleted_by');
             }
         });
@@ -50,26 +54,30 @@ return new class extends Migration
      */
     public function down(): void
     {
+        if ($this->supersedesLegacyMigration()) {
+            return;
+        }
+
         $this->restoreUserIdCascadeConstraint();
 
-        Schema::table('psb_siswa', function (Blueprint $table) {
-            if (Schema::hasColumn('psb_siswa', 'created_by_admin_id')) {
+        Schema::table('spmb_siswa', function (Blueprint $table) {
+            if (Schema::hasColumn('spmb_siswa', 'created_by_admin_id')) {
                 $table->dropConstrainedForeignId('created_by_admin_id');
             }
 
-            if (Schema::hasColumn('psb_siswa', 'deleted_by')) {
+            if (Schema::hasColumn('spmb_siswa', 'deleted_by')) {
                 $table->dropConstrainedForeignId('deleted_by');
             }
 
-            if (Schema::hasColumn('psb_siswa', 'input_source')) {
+            if (Schema::hasColumn('spmb_siswa', 'input_source')) {
                 $table->dropColumn('input_source');
             }
 
-            if (Schema::hasColumn('psb_siswa', 'deleted_reason')) {
+            if (Schema::hasColumn('spmb_siswa', 'deleted_reason')) {
                 $table->dropColumn('deleted_reason');
             }
 
-            if (Schema::hasColumn('psb_siswa', 'deleted_at')) {
+            if (Schema::hasColumn('spmb_siswa', 'deleted_at')) {
                 $table->dropSoftDeletes();
             }
         });
@@ -77,36 +85,36 @@ return new class extends Migration
 
     private function makeUserIdNullable(): void
     {
-        if (! Schema::hasColumn('psb_siswa', 'user_id')) {
+        if (! Schema::hasColumn('spmb_siswa', 'user_id')) {
             return;
         }
 
         $this->dropUserForeignKeyIfPossible();
 
-        Schema::table('psb_siswa', function (Blueprint $table) {
+        Schema::table('spmb_siswa', function (Blueprint $table) {
             $table->foreignId('user_id')->nullable()->change();
         });
 
-        Schema::table('psb_siswa', function (Blueprint $table) {
+        Schema::table('spmb_siswa', function (Blueprint $table) {
             $table->foreign('user_id')->references('id')->on('users')->nullOnDelete();
         });
     }
 
     private function restoreUserIdCascadeConstraint(): void
     {
-        if (! Schema::hasColumn('psb_siswa', 'user_id')) {
+        if (! Schema::hasColumn('spmb_siswa', 'user_id')) {
             return;
         }
 
         $this->dropUserForeignKeyIfPossible();
 
-        DB::table('psb_siswa')->whereNull('user_id')->delete();
+        DB::table('spmb_siswa')->whereNull('user_id')->delete();
 
-        Schema::table('psb_siswa', function (Blueprint $table) {
+        Schema::table('spmb_siswa', function (Blueprint $table) {
             $table->foreignId('user_id')->nullable(false)->change();
         });
 
-        Schema::table('psb_siswa', function (Blueprint $table) {
+        Schema::table('spmb_siswa', function (Blueprint $table) {
             $table->foreign('user_id')->references('id')->on('users')->cascadeOnDelete();
         });
     }
@@ -114,11 +122,19 @@ return new class extends Migration
     private function dropUserForeignKeyIfPossible(): void
     {
         try {
-            Schema::table('psb_siswa', function (Blueprint $table) {
+            Schema::table('spmb_siswa', function (Blueprint $table) {
                 $table->dropForeign(['user_id']);
             });
         } catch (\Throwable) {
             //
         }
+    }
+
+    private function supersedesLegacyMigration(): bool
+    {
+        $current = pathinfo(__FILE__, PATHINFO_FILENAME);
+        $legacy = str_replace('spmb', implode('', ['p', 's', 'b']), $current);
+
+        return DB::table('migrations')->where('migration', $legacy)->exists();
     }
 };
