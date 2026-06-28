@@ -6,7 +6,7 @@
     <meta name="description" content="SPMB PAUD Al Qur'an Az-Zahra - Sistem Penerimaan Murid Baru. Lembaga pendidikan anak usia dini berbasis Islam yang mengedepankan nilai Qur'ani dan perkembangan holistik.">
     <meta name="keywords" content="PAUD, Az-Zahra, SPMB, Sistem Penerimaan Murid Baru, Pendidikan Islam, Al-Quran, Depok">
 
-    <title>PAUD Al Qur'an Az-Zahra Depok</title>
+    <title>@yield('title', "PAUD Al Qur'an Az-Zahra Depok")</title>
 
     <!-- Favicon -->
     <link rel="icon" href="{{ asset('images/azzahra_logo.png') }}" type="image/png">

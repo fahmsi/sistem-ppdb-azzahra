@@ -11,7 +11,7 @@ Section: Testimoni Dinamis (Google Reviews Style - Carousel)
 
         {{-- Section Header --}}
         <div class="text-center mb-16 fade-up">
-            <h2 class="section-heading font-heading text-3xl text-gray-900 lg:text-4xl">
+            <h2 class="section-heading font-heading text-gray-900">
                 <span>Apa <span class="gradient-text">Kata Mereka?</span></span>
             </h2>
             <p class="text-gray-600 max-w-2xl mx-auto mt-6">

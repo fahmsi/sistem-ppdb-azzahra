@@ -11,7 +11,7 @@
         {{-- Tentang Sekolah --}}
         <div class="mb-20">
             <div class="text-center mb-14 fade-up">
-                <h2 class="section-heading font-heading mb-4 text-3xl text-gray-900 lg:text-4xl">
+                <h2 class="section-heading font-heading mb-4 text-gray-900">
                     <span>Tentang <span class="gradient-text">Sekolah</span></span>
                 </h2>
                 <p class="text-gray-600 mt-8 max-w-2xl mx-auto">
@@ -101,7 +101,7 @@
 
         <div class="fade-up">
             <div class="text-center mb-12">
-                <h3 class="font-heading text-2xl lg:text-3xl font-bold text-gray-900 section-heading">
+                <h3 class="section-heading font-heading font-bold text-gray-900">
                     <span>Tujuan <span class="gradient-text"> Sekolah</span></span>
                 </h3>
             </div>
