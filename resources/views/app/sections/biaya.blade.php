@@ -9,7 +9,7 @@
 
         {{-- Title --}}
         <div class="text-center mb-14 fade-up">
-            <h2 class="section-heading font-heading mb-4 text-3xl text-gray-900 lg:text-4xl">
+            <h2 class="section-heading font-heading mb-4 text-gray-900">
                 <span>Informasi <span class="gradient-text">Biaya Pendidikan</span></span>
             </h2>
             <p class="text-gray-600 max-w-2xl mx-auto mt-6">
@@ -206,7 +206,7 @@
 
         <div class="max-w-3xl mx-auto fade-up">
             <div class="text-center mb-10">
-                <h3 class="font-heading text-2xl lg:text-3xl font-bold text-gray-900 section-heading">
+                <h3 class="section-heading font-heading font-bold text-gray-900">
                     Pertanyaan Umum <span class="gradient-text">(FAQ)</span>
                 </h3>
             </div>

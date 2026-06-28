@@ -9,7 +9,7 @@
 
         {{-- Title --}}
         <div class="text-center mb-16 fade-up">
-            <h2 class="section-heading font-heading mb-4 text-3xl text-gray-900 lg:text-4xl">
+            <h2 class="section-heading font-heading mb-4 text-gray-900">
                 <span>Agenda <span class="gradient-text">SPMB 2026/2027</span></span>
             </h2>
             <p class="text-gray-600 max-w-2xl mx-auto mt-6">
@@ -117,7 +117,7 @@
         @endphp
 
         <div class="fade-up">
-            <h3 class="font-heading text-2xl font-bold text-center text-gray-900 mb-8 section-heading">
+            <h3 class="section-heading font-heading font-bold text-center text-gray-900 mb-8">
                 Tanggal Penting
             </h3>
 

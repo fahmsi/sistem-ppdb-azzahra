@@ -9,8 +9,8 @@
             <span class="mb-5 inline-flex items-center gap-2 rounded-full border border-primary-200 bg-primary-50 px-4 py-2 text-sm font-semibold text-primary-700">
                 <i data-lucide="book-open-check" class="h-4 w-4" aria-hidden="true"></i>
                 Kurikulum Merdeka
-            </span>
-            <h2 class="section-heading font-heading text-3xl text-gray-900 sm:text-4xl lg:text-4xl">
+            </span><br>
+            <h2 class="section-heading font-heading text-gray-900">
                 <span>Setiap Hari Adalah <span class="gradient-text">Perjalanan Belajar</span></span>
             </h2>
             <p class="mx-auto mt-5 max-w-2xl text-base leading-relaxed text-gray-600 sm:text-lg">
