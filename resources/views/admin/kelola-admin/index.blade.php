@@ -49,6 +49,7 @@
 
     <div class="admin-table-card">
         <div class="admin-table-header">
+            <h2 class="admin-table-title">Daftar Admin</h2>
 
             <form method="GET" action="{{ route('admin.kelola-admin.index') }}" class="admin-table-toolbar">
                 <div class="admin-table-search relative">

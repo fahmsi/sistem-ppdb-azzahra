@@ -15,7 +15,7 @@
         <div class="relative z-10">
             <h2 class="mb-2 break-words font-heading text-xl font-bold leading-tight sm:text-3xl">Assalamu'alaikum, {{ explode(' ', auth()->user()->name)[0] }}!</h2>
             <p class="max-w-2xl text-sm leading-6 text-white/85 sm:text-base sm:leading-7">
-                Selamat datang di panel wali murid. Di sini Anda dapat melengkapi data anak, mendaftar gelombang SPMB, dan memantau status seleksi penerimaan.
+                Selamat datang di panel wali murid. Di sini Anda dapat melengkapi data anak, mendaftar gelombang SPMB, dan memantau status pendaftaran.
             </p>
         </div>
     </div>
@@ -34,7 +34,7 @@
         $bankAccountHolder = config('spmb.bank_account_holder', '-');
         $daftarUlangAmount = (int) config('spmb.daftar_ulang_amount', 0);
         $adminWhatsapp = preg_replace('/[^0-9]/', '', (string) config('spmb.admin_whatsapp', ''));
-        $helpWaMessage = "Assalamu'alaikum Admin Az Zahra, saya butuh bantuan terkait pendaftaran anak saya.";
+        $helpWaMessage = "Assalamu'alaikum Admin PAUD Al-Qur'an Azzahra, saya butuh bantuan terkait pendaftaran anak saya.";
         $helpWaUrl = $adminWhatsapp ? 'https://wa.me/'.$adminWhatsapp.'?text='.urlencode($helpWaMessage) : '#';
     @endphp
 
@@ -145,7 +145,7 @@
                             <p class="text-[10px] text-gray-500 mt-0.5 leading-normal">Pengecekan oleh panitia sekolah</p>
                         </div>
                         @if($step4Done)
-                            <span class="text-[10px] text-emerald-600 font-semibold mt-2.5 flex items-center gap-1"><i data-lucide="check" class="w-3 h-3"></i> Lulus</span>
+                            <span class="text-[10px] text-emerald-600 font-semibold mt-2.5 flex items-center gap-1"><i data-lucide="check" class="w-3 h-3"></i> Diterima</span>
                         @elseif($currentStep == 4)
                             <span class="text-[10px] text-blue-600 font-medium mt-2.5 flex items-center gap-1"><i data-lucide="loader" class="w-3 h-3 animate-spin"></i> Proses</span>
                         @else
@@ -287,7 +287,7 @@
                                         <div class="w-10 h-10 bg-emerald-500 text-white rounded-full flex items-center justify-center mx-auto mb-3 shadow-sm">
                                             <i data-lucide="party-popper" class="w-5 h-5"></i>
                                         </div>
-                                        <h4 class="font-semibold text-emerald-800 dark:text-emerald-400">Proses Daftar Ulang Selesai!</h4>
+                                        <h4 class="font-semibold text-emerald-800 dark:text-emerald-400">Daftar Ulang Selesai</h4>
                                         <p class="text-xs text-emerald-700 dark:text-[#a1b0cb] mt-1">Seluruh proses pendaftaran dan daftar ulang untuk <strong>{{ $siswa->nama }}</strong> telah selesai dan diverifikasi sepenuhnya.</p>
                                     </div>
                                 @elseif($isPaymentRejected)
@@ -300,7 +300,7 @@
                         @if($isAccepted)
                             <div class="mt-5 grid grid-cols-1 gap-3 sm:flex sm:flex-wrap sm:items-center">
                                 <a href="{{ route('parent.siswa.kartu') }}" target="_blank" class="inline-flex w-full items-center justify-center gap-2 rounded-md bg-emerald-500 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-emerald-600 sm:w-auto sm:py-2">
-                                    <i data-lucide="printer" class="w-4 h-4"></i> Cetak Bukti Lulus
+                                    <i data-lucide="printer" class="w-4 h-4"></i> Cetak Bukti Penerimaan
                                 </a>
                                 @if($isPaymentLunas)
                                     <a href="{{ route('parent.pembayaran.receipt', $latestRegistration->id) }}" target="_blank" class="inline-flex w-full items-center justify-center gap-2 rounded-md bg-blue-500 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-blue-600 sm:w-auto sm:py-2">

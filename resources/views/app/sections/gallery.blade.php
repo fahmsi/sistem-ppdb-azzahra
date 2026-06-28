@@ -11,7 +11,7 @@
         {{-- Header --}}
         <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between mb-10 fade-up">
             <div>
-                <h2 class="section-heading font-heading mb-2 text-gray-900">
+                <h2 class="section-heading font-heading mb-2 text-3xl text-gray-900 lg:text-4xl">
                     <span>Gallery <span class="gradient-text">Kegiatan</span></span>
                 </h2>
                 <p class="text-gray-600 max-w-xl mt-3">

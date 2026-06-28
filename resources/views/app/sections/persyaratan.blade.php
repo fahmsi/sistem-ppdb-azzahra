@@ -9,7 +9,7 @@
 
         {{-- Header --}}
         <div class="text-center mb-14 fade-up">
-            <h2 class="section-heading font-heading mb-4 text-gray-900">
+            <h2 class="section-heading font-heading mb-4 text-3xl text-gray-900 lg:text-4xl">
                 <span>Persyaratan <span class="gradient-text">Administrasi</span></span>
             </h2>
             <p class="text-gray-600 max-w-2xl mx-auto mt-6">

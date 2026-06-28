@@ -27,7 +27,7 @@
                     <span class="gradient-text block pb-1">Cemerlang Sejak Usia Dini</span>
                 </h1>
 
-                <div class="mt-4 max-w-xl border-l-2 border-primary-200 pl-4 text-sm leading-6 text-gray-600 text-justify sm:text-base sm:leading-7 lg:mt-5">
+                <div class="mt-4 max-w-xl border-l-2 border-primary-200 pl-4 text-sm leading-6 text-gray-600 sm:text-base sm:leading-7 lg:mt-5">
                     <p>
                         <strong class="font-bold text-gray-900">PAUD AL QUR'AN AZZAHRA DEPOK</strong>
                         menghadirkan pendidikan yang memadukan
@@ -129,7 +129,7 @@
                             <i data-lucide="circle-play" class="h-4 w-4" aria-hidden="true"></i>
                             Video Profil
                         </span>
-                        <h2 class="section-heading section-heading-left mt-3 font-heading text-gray-900">
+                        <h2 class="section-heading section-heading-left mt-3 font-heading text-3xl text-gray-900 lg:text-4xl">
                             <span>Profil <span class="gradient-text">Sekolah Kami</span></span>
                         </h2>
                         <p class="mt-4 leading-7 text-gray-600">Kenali lebih dekat lingkungan, kegiatan, dan pengalaman belajar di PAUD Al Qur'an Azzahra.</p>
@@ -154,9 +154,9 @@
     </div>
 
     {{-- Existing bottom wave --}}
-    <div class="landing-hero-wave pointer-events-none absolute inset-x-0 bottom-0">
+    <div class="pointer-events-none absolute inset-x-0 bottom-0">
         <svg viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-            <path d="M0 120L60 110C120 100 240 80 360 70C480 60 600 60 720 65C840 70 960 80 1080 85C1200 90 1320 90 1380 90L1440 90V120H1380C1320 120 1200 120 1080 120C960 120 840 120 720 120C600 120 480 120 360 120C240 120 120 120 60 120H0Z" fill="white" fill-opacity="0.5"/>
+            <path d="M0 120L60 110C120 100 240 80 360 70C480 60 600 60 720 65C840 70 960 80 1080 85C1200 90 1320 90 1380 90L1440 90V120H1380C1320 120 1200 120 1080 120C960 120 840 120 720 120C600 120 480 120 360 120C240 120 120 120 60 120H0Z" fill="white"/>
         </svg>
     </div>
 </section>

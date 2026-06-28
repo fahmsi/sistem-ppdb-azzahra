@@ -100,7 +100,7 @@
                                             $step2 = 'completed';
                                         }
                                         
-                                        // Step 3: Hasil Seleksi
+                                        // Step 3: Hasil Pendaftaran
                                         if (in_array($reg->status, ['pending', 'menunggu_verifikasi', 'perlu_revisi'])) {
                                             $step3 = 'upcoming';
                                         } elseif ($reg->status === 'ditolak') {
@@ -184,19 +184,19 @@
                                                 <div class="w-10 h-10 rounded-full flex items-center justify-center bg-emerald-500 text-white font-bold shadow-md">
                                                     <i data-lucide="check" class="w-5 h-5"></i>
                                                 </div>
-                                                <span class="text-xs font-bold text-gray-800 dark:text-[#d5d5e2] mt-3">Hasil Seleksi</span>
-                                                <span class="text-[10px] text-emerald-600 font-semibold mt-1">Lulus</span>
+                                                <span class="text-xs font-bold text-gray-800 dark:text-[#d5d5e2] mt-3">Hasil Pendaftaran</span>
+                                                <span class="text-[10px] text-emerald-600 font-semibold mt-1">Diterima</span>
                                             @elseif($step3 === 'failed')
                                                 <div class="w-10 h-10 rounded-full flex items-center justify-center bg-red-500 text-white font-bold shadow-md">
                                                     <i data-lucide="x" class="w-5 h-5"></i>
                                                 </div>
-                                                <span class="text-xs font-bold text-red-600 mt-3">Hasil Seleksi</span>
+                                                <span class="text-xs font-bold text-red-600 mt-3">Hasil Pendaftaran</span>
                                                 <span class="text-[10px] text-red-500 font-semibold mt-1">Ditolak</span>
                                             @elseif($step3 === 'upcoming')
                                                 <div class="w-10 h-10 rounded-full flex items-center justify-center bg-gray-200 dark:bg-[#434463] text-gray-400 dark:text-gray-500 font-bold">
                                                     <i data-lucide="award" class="w-5 h-5"></i>
                                                 </div>
-                                                <span class="text-xs font-medium text-gray-500 mt-3">Hasil Seleksi</span>
+                                                <span class="text-xs font-medium text-gray-500 mt-3">Hasil Pendaftaran</span>
                                                 <span class="text-[10px] text-gray-400 mt-1">Menunggu</span>
                                             @endif
                                         </div>
@@ -306,15 +306,15 @@
                                                     <i data-lucide="check" class="w-4 h-4"></i>
                                                 </div>
                                                 <div>
-                                                    <p class="text-xs font-bold text-gray-800 dark:text-[#d5d5e2]">Hasil Seleksi (Lulus)</p>
-                                                    <p class="text-[10px] text-emerald-600 font-semibold">Selamat! Anak Anda dinyatakan lulus</p>
+                                                    <p class="text-xs font-bold text-gray-800 dark:text-[#d5d5e2]">Hasil Pendaftaran (Diterima)</p>
+                                                    <p class="text-[10px] text-emerald-600 font-semibold">Selamat! Anak Anda dinyatakan diterima</p>
                                                 </div>
                                             @elseif($step3 === 'failed')
                                                 <div class="w-8 h-8 rounded-full flex items-center justify-center bg-red-500 text-white font-bold flex-shrink-0">
                                                     <i data-lucide="x" class="w-4 h-4"></i>
                                                 </div>
                                                 <div>
-                                                    <p class="text-xs font-bold text-red-600">Hasil Seleksi (Ditolak)</p>
+                                                    <p class="text-xs font-bold text-red-600">Hasil Pendaftaran (Ditolak)</p>
                                                     <p class="text-[10px] text-red-500 font-semibold">Mohon maaf, pendaftaran ditolak</p>
                                                 </div>
                                             @elseif($step3 === 'upcoming')
@@ -322,7 +322,7 @@
                                                     <i data-lucide="award" class="w-4 h-4"></i>
                                                 </div>
                                                 <div>
-                                                    <p class="text-xs font-medium text-gray-500">Hasil Seleksi</p>
+                                                    <p class="text-xs font-medium text-gray-500">Hasil Pendaftaran</p>
                                                     <p class="text-[10px] text-gray-400">Menunggu hasil keputusan sekolah</p>
                                                 </div>
                                             @endif
@@ -368,7 +368,7 @@
                                                 </div>
                                                 <div>
                                                     <p class="text-xs font-medium text-gray-500">Daftar Ulang</p>
-                                                    <p class="text-[10px] text-gray-400">Menunggu kelulusan seleksi</p>
+                                                    <p class="text-[10px] text-gray-400">Menunggu pengumuman hasil pendaftaran</p>
                                                 </div>
                                             @endif
                                         </div>
@@ -454,7 +454,7 @@
                                                 <div class="w-12 h-12 bg-emerald-500 text-white rounded-full flex items-center justify-center mx-auto mb-3 shadow-md">
                                                     <i data-lucide="party-popper" class="w-6 h-6"></i>
                                                 </div>
-                                                <h4 class="text-lg font-bold text-emerald-800 dark:text-emerald-400 mb-2">Proses Daftar Ulang Selesai!</h4>
+                                                <h4 class="text-lg font-bold text-emerald-800 dark:text-emerald-400 mb-2">Daftar Ulang Selesai</h4>
                                                 <p class="text-xs text-emerald-700 dark:text-[#a1b0cb] max-w-md mx-auto">
                                                     Selamat! Seluruh proses pendaftaran dan daftar ulang untuk <strong>{{ $reg->siswa->nama }}</strong> telah selesai dan terverifikasi sepenuhnya. Selamat bergabung di keluarga besar PAUD Al-Qur'an Azzahra.
                                                 </p>

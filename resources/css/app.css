@@ -474,125 +474,6 @@ html {
 }
 
 /* ===========================
-   Continuous Landing Background
-   One shared canvas replaces hard color breaks between sections.
-   =========================== */
-.landing-flow {
-    position: relative;
-    isolation: isolate;
-    background-color: #f9fbff;
-    background-image:
-        radial-gradient(ellipse 44% 7% at 2% 4%, rgba(105, 108, 255, 0.15), transparent 72%),
-        radial-gradient(ellipse 42% 8% at 98% 13%, rgba(16, 185, 129, 0.13), transparent 70%),
-        radial-gradient(ellipse 48% 8% at 0% 27%, rgba(105, 108, 255, 0.11), transparent 72%),
-        radial-gradient(ellipse 45% 9% at 100% 42%, rgba(16, 185, 129, 0.11), transparent 72%),
-        radial-gradient(ellipse 50% 9% at 4% 59%, rgba(245, 158, 11, 0.07), transparent 74%),
-        radial-gradient(ellipse 42% 8% at 98% 72%, rgba(105, 108, 255, 0.11), transparent 72%),
-        radial-gradient(ellipse 48% 8% at 0% 88%, rgba(16, 185, 129, 0.12), transparent 72%),
-        linear-gradient(180deg, #f7f9ff 0%, #fbfefd 18%, #f8faff 37%, #fdfcf8 56%, #f8fbff 76%, #f7fdfb 100%);
-}
-
-.landing-flow::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    z-index: 0;
-    pointer-events: none;
-    background-image: url("data:image/svg+xml,%3Csvg width='88' height='88' viewBox='0 0 88 88' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23696cff' stroke-opacity='.045' stroke-width='1'%3E%3Cpath d='M44 8 52 36 80 44 52 52 44 80 36 52 8 44 36 36Z'/%3E%3Ccircle cx='44' cy='44' r='5'/%3E%3C/g%3E%3C/svg%3E");
-    background-size: 88px 88px;
-    -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.72), rgba(0, 0, 0, 0.25) 48%, rgba(0, 0, 0, 0.65));
-    mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.72), rgba(0, 0, 0, 0.25) 48%, rgba(0, 0, 0, 0.65));
-}
-
-.landing-flow__backdrop {
-    position: absolute;
-    inset: 0;
-    z-index: 0;
-    overflow: hidden;
-    pointer-events: none;
-}
-
-.landing-flow__backdrop svg {
-    width: 100%;
-    height: 100%;
-}
-
-.landing-flow__ribbon,
-.landing-flow__thread {
-    fill: none;
-    stroke: url('#landing-flow-gradient');
-    vector-effect: non-scaling-stroke;
-}
-
-.landing-flow__ribbon {
-    stroke-width: 180;
-    opacity: 0.035;
-}
-
-.landing-flow__thread {
-    stroke-width: 2;
-    stroke-linecap: round;
-    stroke-dasharray: 2 18;
-    opacity: 0.2;
-}
-
-.landing-flow > section {
-    position: relative;
-    z-index: 1;
-    isolation: isolate;
-    background: transparent;
-}
-
-.landing-flow > section::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    pointer-events: none;
-    background: linear-gradient(180deg, transparent 0%, rgba(255, 255, 255, 0.28) 22%, rgba(255, 255, 255, 0.28) 78%, transparent 100%);
-}
-
-.landing-flow > section:nth-of-type(4n + 2)::before {
-    background: radial-gradient(ellipse 62% 68% at 92% 50%, rgba(16, 185, 129, 0.055), transparent 72%);
-}
-
-.landing-flow > section:nth-of-type(4n + 4)::before {
-    background: radial-gradient(ellipse 62% 68% at 8% 50%, rgba(105, 108, 255, 0.06), transparent 72%);
-}
-
-.landing-flow > section:not(:last-of-type)::after {
-    content: '';
-    position: absolute;
-    left: 50%;
-    bottom: 0;
-    z-index: 2;
-    width: 1px;
-    height: 42px;
-    pointer-events: none;
-    background: linear-gradient(to bottom, transparent, rgba(105, 108, 255, 0.32), rgba(16, 185, 129, 0.32));
-}
-
-@media (max-width: 767px) {
-    .landing-flow {
-        background-image:
-            radial-gradient(ellipse 70% 5% at 0% 5%, rgba(105, 108, 255, 0.13), transparent 72%),
-            radial-gradient(ellipse 70% 6% at 100% 23%, rgba(16, 185, 129, 0.11), transparent 72%),
-            radial-gradient(ellipse 70% 6% at 0% 49%, rgba(105, 108, 255, 0.09), transparent 72%),
-            radial-gradient(ellipse 70% 6% at 100% 74%, rgba(16, 185, 129, 0.1), transparent 72%),
-            linear-gradient(180deg, #f7f9ff 0%, #fbfefd 28%, #f8faff 54%, #f7fdfb 100%);
-    }
-
-    .landing-flow__ribbon {
-        stroke-width: 110;
-        opacity: 0.028;
-    }
-
-    .landing-flow__thread {
-        opacity: 0.14;
-    }
-}
-
-/* ===========================
    Section Headings
    =========================== */
 .section-heading {
@@ -603,27 +484,8 @@ html {
     gap: 0.75rem;
     padding-bottom: 1rem;
     font-weight: 800;
-    line-height: 1.25;
+    line-height: 1.15;
     letter-spacing: -0.025em;
-}
-/* Menyeragamkan ukuran font header section h2 (22.4px di mobile sampai 30px di desktop) */
-h2.section-heading {
-    font-size: clamp(1.4rem, 2vw + 0.6rem, 1.875rem) !important;
-}
-/* Memaksa judul h2 menjadi satu baris saja pada layar tablet ke atas (menyesuaikan) */
-@media (min-width: 768px) {
-    h2.section-heading {
-        white-space: nowrap !important;
-    }
-}
-/* Menyeragamkan sub-header section h3 (20px di mobile sampai 24px di desktop) */
-h3.section-heading {
-    font-size: clamp(1.25rem, 1.5vw + 0.5rem, 1.5rem) !important;
-}
-@media (min-width: 768px) {
-    h3.section-heading {
-        white-space: nowrap !important;
-    }
 }
 .section-heading::after {
     content: '';
