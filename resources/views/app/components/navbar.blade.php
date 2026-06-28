@@ -18,7 +18,7 @@
     <div id="navbar-backdrop" class="pointer-events-auto fixed inset-0 hidden bg-slate-950/20 backdrop-blur-[2px] xl:hidden" aria-hidden="true"></div>
 
     <div id="landing-navbar" class="pointer-events-auto relative z-10 mx-auto flex w-full max-w-7xl items-center justify-between gap-3 rounded-2xl border border-white/70 bg-white/80 px-3 py-2 shadow-lg shadow-slate-900/5 backdrop-blur-xl transition-all duration-300 sm:px-4">
-        <a href="#home" class="group flex min-w-0 shrink-0 items-center gap-2.5 rounded-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2" aria-label="Kembali ke beranda PAUD Al Qur'an Az-Zahra">
+        <a href="/" class="group flex min-w-0 shrink-0 items-center gap-2.5 rounded-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2" aria-label="Kembali ke beranda PAUD Al Qur'an Az-Zahra">
             <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-white shadow-sm ring-1 ring-slate-200/70">
                 <img src="{{ asset('images/azzahra_logo.png') }}" alt="" class="h-9 w-9 object-contain transition-transform duration-300 group-hover:scale-105">
             </span>
