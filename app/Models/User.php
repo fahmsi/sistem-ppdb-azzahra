@@ -15,6 +15,10 @@ class User extends Authenticatable implements MustVerifyEmail
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
 
+    public const TERMS_VERSION = '1.0';
+
+    public const PRIVACY_VERSION = '1.0';
+
     /**
      * The attributes that are mass assignable.
      *
@@ -30,6 +34,12 @@ class User extends Authenticatable implements MustVerifyEmail
         'suspended_at',
         'suspended_by',
         'suspend_reason',
+        'terms_accepted_at',
+        'privacy_accepted_at',
+        'terms_version',
+        'privacy_version',
+        'terms_accepted_ip',
+        'privacy_accepted_ip',
     ];
 
     /**
@@ -53,6 +63,8 @@ class User extends Authenticatable implements MustVerifyEmail
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'suspended_at' => 'datetime',
+            'terms_accepted_at' => 'datetime',
+            'privacy_accepted_at' => 'datetime',
         ];
     }
 

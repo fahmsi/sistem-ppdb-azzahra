@@ -49,6 +49,18 @@ Route::get('/', function () {
     return view('welcome', compact('settings', 'testimonials', 'achievements', 'galleries'));
 })->name('home');
 
+Route::get('/syarat-ketentuan', function () {
+    $settings = Setting::pluck('value', 'key')->toArray();
+
+    return view('app.legal.terms', compact('settings'));
+})->name('terms');
+
+Route::get('/kebijakan-privasi', function () {
+    $settings = Setting::pluck('value', 'key')->toArray();
+
+    return view('app.legal.privacy', compact('settings'));
+})->name('privacy');
+
 Route::get('/prestasi/{achievement}/gambar', AchievementImageController::class)
     ->name('achievements.image');
 

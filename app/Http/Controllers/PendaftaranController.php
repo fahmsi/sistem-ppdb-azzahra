@@ -71,6 +71,12 @@ class PendaftaranController extends Controller
      */
     public function daftar(Request $request, Pendaftaran $pendaftaran): RedirectResponse
     {
+        $request->validate([
+            'data_declaration' => ['accepted'],
+        ], [
+            'data_declaration.accepted' => 'Anda harus menyatakan bahwa data dan dokumen yang diunggah adalah benar.',
+        ]);
+
         /** @var User $user */
         $user = Auth::user();
 

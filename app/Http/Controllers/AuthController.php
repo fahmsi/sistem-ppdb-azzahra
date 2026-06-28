@@ -28,12 +28,20 @@ class AuthController extends Controller
     public function register(RegisterRequest $request): RedirectResponse
     {
         $validated = $request->validated();
+        $acceptedAt = now();
+        $acceptedIp = $request->ip();
 
         $user = User::create([
             'name' => $validated['name'],
             'email' => $validated['email'],
             'password' => $validated['password'], // hashed via model cast
             'role' => 'parent',
+            'terms_accepted_at' => $acceptedAt,
+            'privacy_accepted_at' => $acceptedAt,
+            'terms_version' => User::TERMS_VERSION,
+            'privacy_version' => User::PRIVACY_VERSION,
+            'terms_accepted_ip' => $acceptedIp,
+            'privacy_accepted_ip' => $acceptedIp,
         ]);
 
         Auth::login($user);

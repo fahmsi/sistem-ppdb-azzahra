@@ -213,6 +213,76 @@
                 </div>
                 
                 <div class="p-6">
+                    <!-- Checklist Dokumen (Only if not final) -->
+                    @if($detail->status !== 'diterima' && $detail->status !== 'ditolak')
+                        <div class="mb-5 p-4 rounded-lg bg-slate-50 dark:bg-[#232333] border border-[#d9dee3] dark:border-[#434463]">
+                            <h4 class="text-sm font-semibold text-[#566a7f] dark:text-[#d5d5e2] mb-3 flex items-center gap-1.5">
+                                <i data-lucide="list-checks" class="w-4 h-4 text-[#696cff]"></i>
+                                Checklist Masalah Dokumen (Minta Revisi)
+                            </h4>
+                            <div class="space-y-2.5">
+                                <label class="flex items-start gap-2.5 text-xs text-[#697a8d] dark:text-[#a1b0cb] cursor-pointer">
+                                    <input type="checkbox" id="chk_foto" onchange="updateNotifikasiFromChecklist()" class="mt-0.5 h-4 w-4 rounded border-gray-300 text-[#696cff] focus:ring-[#696cff]">
+                                    <span>Foto anak kurang jelas/tidak sesuai.</span>
+                                </label>
+                                <label class="flex items-start gap-2.5 text-xs text-[#697a8d] dark:text-[#a1b0cb] cursor-pointer">
+                                    <input type="checkbox" id="chk_kk" onchange="updateNotifikasiFromChecklist()" class="mt-0.5 h-4 w-4 rounded border-gray-300 text-[#696cff] focus:ring-[#696cff]">
+                                    <span>Foto KK kurang jelas.</span>
+                                </label>
+                                <label class="flex items-start gap-2.5 text-xs text-[#697a8d] dark:text-[#a1b0cb] cursor-pointer">
+                                    <input type="checkbox" id="chk_akta" onchange="updateNotifikasiFromChecklist()" class="mt-0.5 h-4 w-4 rounded border-gray-300 text-[#696cff] focus:ring-[#696cff]">
+                                    <span>Akta kelahiran kurang jelas.</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <script>
+                            document.addEventListener('DOMContentLoaded', () => {
+                                const registrationId = "{{ $detail->id }}";
+                                let hasLoadedAny = false;
+                                ['foto', 'kk', 'akta'].forEach(item => {
+                                    const val = localStorage.getItem(`spmb_chk_${registrationId}_${item}`);
+                                    const element = document.getElementById(`chk_${item}`);
+                                    if (element && val === 'true') {
+                                        element.checked = true;
+                                        hasLoadedAny = true;
+                                    }
+                                });
+
+                                const textarea = document.getElementById('notifikasi');
+                                if (textarea && textarea.value.trim() === "" && hasLoadedAny) {
+                                    updateNotifikasiFromChecklist();
+                                }
+                            });
+
+                            function updateNotifikasiFromChecklist() {
+                                const chkFoto = document.getElementById('chk_foto').checked;
+                                const chkKk = document.getElementById('chk_kk').checked;
+                                const chkAkta = document.getElementById('chk_akta').checked;
+
+                                const registrationId = "{{ $detail->id }}";
+                                localStorage.setItem(`spmb_chk_${registrationId}_foto`, chkFoto);
+                                localStorage.setItem(`spmb_chk_${registrationId}_kk`, chkKk);
+                                localStorage.setItem(`spmb_chk_${registrationId}_akta`, chkAkta);
+
+                                const textarea = document.getElementById('notifikasi');
+                                if (!textarea) return;
+
+                                let items = [];
+                                if (chkFoto) items.push('Foto anak kurang jelas/tidak sesuai.');
+                                if (chkKk) items.push('Foto KK kurang jelas.');
+                                if (chkAkta) items.push('Akta kelahiran kurang jelas.');
+
+                                if (items.length > 0) {
+                                    textarea.value = "Mohon perbaiki data/dokumen berikut:\n" + items.map(item => `* ${item}`).join('\n');
+                                } else {
+                                    textarea.value = "";
+                                }
+                            }
+                        </script>
+                    @endif
+
+
                     
                     @if($detail->status === 'diterima' || $detail->status === 'ditolak')
                         {{-- Final status reached — show badge only --}}
