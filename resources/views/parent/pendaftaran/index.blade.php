@@ -66,6 +66,13 @@
                             <button disabled class="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-amber-50 dark:bg-amber-500/10 text-amber-600 dark:text-amber-400 font-semibold rounded-md cursor-not-allowed text-sm"><i data-lucide="lock" class="w-4 h-4 flex-shrink-0"></i> Sudah Terdaftar di Gelombang Lain</button>
                         @else
                             <form action="{{ route('parent.pendaftaran.daftar', $p->id) }}" method="POST" class="registration-confirm-form" data-gelombang="{{ $p->gelombang }}">@csrf
+                                <label for="data_declaration_{{ $p->id }}" class="mb-3 flex cursor-pointer items-start gap-2 text-left text-xs leading-5 text-[#697a8d] dark:text-[#a1b0cb]">
+                                    <input id="data_declaration_{{ $p->id }}" type="checkbox" name="data_declaration" value="1" required
+                                        @checked(old('data_declaration'))
+                                        class="mt-0.5 h-4 w-4 flex-shrink-0 rounded border-[#d9dee3] text-[#696cff] focus:ring-[#696cff]">
+                                    <span>Saya menyatakan data dan dokumen yang diunggah adalah benar.</span>
+                                </label>
+                                @error('data_declaration') <p class="mb-3 text-left text-xs text-red-500">{{ $message }}</p> @enderror
                                 <button type="submit" class="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-[#696cff] hover:bg-[#5a5de6] text-white font-semibold rounded-md transition-colors text-sm">Daftar Sekarang <i data-lucide="arrow-right" class="w-4 h-4 flex-shrink-0"></i></button>
                             </form>
                         @endif

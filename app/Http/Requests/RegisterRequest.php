@@ -32,19 +32,24 @@ class RegisterRequest extends FormRequest
                 'regex:/[0-9]/',
                 'confirmed',
             ],
+            'terms_accepted' => ['accepted'],
         ];
     }
 
-    /**
-     * Get custom messages for validator errors.
-     *
-     * @return array<string, string>
-     */
     public function messages(): array
     {
         return [
-            'password.regex' => 'Password harus mengandung huruf besar, huruf kecil, dan angka.',
-            'password.confirmed' => 'Konfirmasi password tidak cocok.',
+            'name.required' => 'Mohon isi nama lengkap Anda sebagai orang tua/wali.',
+            'name.min' => 'Nama lengkap minimal harus terdiri dari 3 karakter.',
+            'name.max' => 'Nama lengkap terlalu panjang (maksimal 255 karakter).',
+            'email.required' => 'Alamat email diperlukan untuk login ke sistem.',
+            'email.email' => 'Format alamat email tidak valid (contoh: nama@email.com).',
+            'email.unique' => 'Email ini sudah terdaftar. Silakan login atau gunakan email lain.',
+            'password.required' => 'Mohon tentukan kata sandi untuk keamanan akun Anda.',
+            'password.min' => 'Kata sandi minimal harus terdiri dari 8 karakter agar akun Anda aman.',
+            'password.regex' => 'Kata sandi harus mengandung huruf besar, huruf kecil, dan angka.',
+            'password.confirmed' => 'Konfirmasi kata sandi tidak cocok.',
+            'terms_accepted.accepted' => 'Anda harus menyetujui Syarat dan Ketentuan serta Kebijakan Privasi untuk melanjutkan pendaftaran akun.',
         ];
     }
 }

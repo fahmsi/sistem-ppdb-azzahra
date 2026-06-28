@@ -19,6 +19,11 @@ class StoreSiswaRequest extends FormRequest
         return $this->siswaRules(documentsRequired: true);
     }
 
+    public function messages(): array
+    {
+        return $this->siswaMessages();
+    }
+
     public function attributes(): array
     {
         return $this->siswaAttributes();

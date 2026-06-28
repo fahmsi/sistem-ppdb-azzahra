@@ -213,6 +213,53 @@
                 </div>
                 
                 <div class="p-6">
+                    <!-- Checklist Dokumen (Only if not final) -->
+                    @if($detail->status !== 'diterima' && $detail->status !== 'ditolak')
+                        <div class="mb-5 p-4 rounded-lg bg-slate-50 dark:bg-[#232333] border border-[#d9dee3] dark:border-[#434463]">
+                            <h4 class="text-sm font-semibold text-[#566a7f] dark:text-[#d5d5e2] mb-3 flex items-center gap-1.5">
+                                <i data-lucide="list-checks" class="w-4 h-4 text-[#696cff]"></i>
+                                Checklist Verifikasi Dokumen
+                            </h4>
+                            <div class="space-y-2.5">
+                                <label class="flex items-start gap-2.5 text-xs text-[#697a8d] dark:text-[#a1b0cb] cursor-pointer">
+                                    <input type="checkbox" id="chk_foto" onchange="saveChecklist('foto')" class="mt-0.5 h-4 w-4 rounded border-gray-300 text-[#696cff] focus:ring-[#696cff]">
+                                    <span>Foto calon siswa jelas & sopan</span>
+                                </label>
+                                <label class="flex items-start gap-2.5 text-xs text-[#697a8d] dark:text-[#a1b0cb] cursor-pointer">
+                                    <input type="checkbox" id="chk_kk" onchange="saveChecklist('kk')" class="mt-0.5 h-4 w-4 rounded border-gray-300 text-[#696cff] focus:ring-[#696cff]">
+                                    <span>Kartu Keluarga (KK) sesuai & terbaca</span>
+                                </label>
+                                <label class="flex items-start gap-2.5 text-xs text-[#697a8d] dark:text-[#a1b0cb] cursor-pointer">
+                                    <input type="checkbox" id="chk_akta" onchange="saveChecklist('akta')" class="mt-0.5 h-4 w-4 rounded border-gray-300 text-[#696cff] focus:ring-[#696cff]">
+                                    <span>Akta Kelahiran sesuai & terbaca</span>
+                                </label>
+                                <label class="flex items-start gap-2.5 text-xs text-[#697a8d] dark:text-[#a1b0cb] cursor-pointer">
+                                    <input type="checkbox" id="chk_identitas" onchange="saveChecklist('identitas')" class="mt-0.5 h-4 w-4 rounded border-gray-300 text-[#696cff] focus:ring-[#696cff]">
+                                    <span>Data NIK & Profil Orang Tua lengkap</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <script>
+                            // Load checklist status from localStorage
+                            document.addEventListener('DOMContentLoaded', () => {
+                                const registrationId = "{{ $detail->id }}";
+                                ['foto', 'kk', 'akta', 'identitas'].forEach(item => {
+                                    const val = localStorage.getItem(`spmb_chk_${registrationId}_${item}`);
+                                    if (val === 'true') {
+                                        document.getElementById(`chk_${item}`).checked = true;
+                                    }
+                                });
+                            });
+
+                            function saveChecklist(item) {
+                                const registrationId = "{{ $detail->id }}";
+                                const isChecked = document.getElementById(`chk_${item}`).checked;
+                                localStorage.setItem(`spmb_chk_${registrationId}_${item}`, isChecked);
+                            }
+                        </script>
+                    @endif
+
                     
                     @if($detail->status === 'diterima' || $detail->status === 'ditolak')
                         {{-- Final status reached — show badge only --}}

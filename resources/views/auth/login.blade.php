@@ -3,206 +3,326 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Sistem Penerimaan Murid Baru (SPMB) PAUD Az-Zahra</title>
-    
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.googleapis.com/css2?family=Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <meta name="description" content="Masuk ke Portal SPMB PAUD Al Qur'an Az-Zahra Depok untuk melanjutkan proses pendaftaran peserta didik baru.">
+    <title>Masuk | SPMB PAUD Al Qur'an Az-Zahra</title>
 
-    <!-- Tailwind CSS -->
+    <link rel="icon" href="{{ asset('images/azzahra_logo.png') }}" type="image/png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <script src="https://unpkg.com/lucide@latest" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11" defer></script>
 
-    <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
-
-    <!-- SweetAlert2 -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        @media (min-width: 1024px) and (max-height: 850px) {
+            .brand-panel { padding: 2rem 3rem; }
+            .brand-copy { margin-top: 2rem; }
+            .brand-heading { font-size: 2.5rem; }
+            .brand-art { padding: 0.75rem; border-radius: 1.5rem; }
+            .brand-illustration { height: 15rem; }
+            .brand-trust { margin-top: 0.75rem; }
+            .auth-panel { padding-top: 1.5rem; padding-bottom: 1.25rem; }
+            .auth-content { padding-top: 1.5rem; padding-bottom: 1.5rem; }
+            .auth-intro { margin-bottom: 1.5rem; }
+            .auth-title { font-size: 2rem; }
+            .login-form { gap: 1rem; }
+            .auth-input, .auth-submit { height: 3.25rem; }
+            .signup-card { margin-top: 1.25rem; padding: 0.75rem; }
+        }
+    </style>
 </head>
-<body class="bg-gray-50 font-body text-gray-800 antialiased h-screen flex">
-
-    <!-- Left Side: Login Form -->
-    <div class="w-full lg:w-1/2 flex flex-col justify-center px-8 sm:px-16 lg:px-24 xl:px-32 relative bg-white animate-slide-right">
-        
-        <!-- Back to Home -->
-        <a href="{{ url('/') }}" class="absolute top-8 left-8 flex items-center gap-2 text-sm font-medium text-gray-500 hover:text-primary-600 transition-colors">
-            <i data-lucide="arrow-left" class="w-4 h-4"></i>
-            Kembali
-        </a>
-
-        <div class="max-w-md w-full mx-auto">
-            
-            <!-- Header -->
-            <div class="mb-10 text-center lg:text-left">
-                <!-- <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary-500 to-secondary-500 flex items-center justify-center shadow-lg mx-auto lg:mx-0 mb-6">
-                    <i data-lucide="book-open" class="w-7 h-7 text-white"></i>
-                </div> -->
-                <h2 class="text-3xl font-heading font-bold text-gray-900 mb-2">Selamat Datang</h2>
-                <p class="text-gray-500">Masuk untuk melanjutkan pendaftaran peserta didik baru.</p>
+<body class="min-h-screen bg-[#f7f8fc] font-body text-slate-900 antialiased">
+    <main class="min-h-screen lg:grid lg:grid-cols-[minmax(430px,0.92fr)_minmax(560px,1.08fr)]">
+        {{-- Brand panel --}}
+        <section class="brand-panel relative hidden min-h-screen overflow-hidden bg-[#3538a6] p-8 text-white lg:flex lg:flex-col xl:p-12" aria-label="Tentang SPMB Az-Zahra">
+            <div class="pointer-events-none absolute inset-0" aria-hidden="true">
+                <div class="absolute -left-28 -top-32 h-80 w-80 rounded-full border-[70px] border-white/[0.04]"></div>
+                <div class="absolute -right-20 top-[30%] h-64 w-64 rounded-full bg-[#6ee7b7]/10 blur-3xl"></div>
+                <div class="absolute bottom-0 left-0 right-0 h-1/2 bg-gradient-to-t from-[#25277f]/70 to-transparent"></div>
+                <div class="absolute inset-0 opacity-[0.07]" style="background-image: radial-gradient(circle at 1px 1px, white 1px, transparent 0); background-size: 28px 28px;"></div>
             </div>
 
-            <!-- Global Error -->
-            @if ($errors->any())
-                <div class="mb-6 p-4 rounded-lg bg-red-50 border border-red-200 text-red-600 text-sm flex items-start gap-3">
-                    <i data-lucide="alert-circle" class="w-5 h-5 flex-shrink-0"></i>
-                    <ul class="list-disc list-inside">
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
+            <a href="{{ url('/') }}" class="relative z-10 inline-flex w-fit items-center gap-3 rounded-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#3538a6]">
+                <span class="flex h-12 w-12 items-center justify-center rounded-2xl bg-white shadow-lg shadow-slate-950/10">
+                    <img src="{{ asset('images/azzahra_logo.png') }}" alt="Logo PAUD Al Qur'an Az-Zahra" class="h-9 w-9 object-contain">
+                </span>
+                <span class="leading-tight">
+                    <span class="block text-[10px] font-bold uppercase tracking-[0.22em] text-indigo-200">Portal SPMB</span>
+                    <span class="mt-1 block text-sm font-extrabold tracking-tight">PAUD Al Qur'an Az-Zahra</span>
+                </span>
+            </a>
 
-            <!-- Form -->
-            <form method="POST" action="{{ route('login') }}" class="space-y-5">
-                @csrf
-
-                <!-- Email Address -->
-                <div>
-                    <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
-                    <div class="relative">
-                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <i data-lucide="mail" class="w-5 h-5 text-gray-400"></i>
-                        </div>
-                        <input id="email" class="block w-full pl-10 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-gray-900 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all sm:text-sm" type="email" name="email" value="{{ old('email') }}" required autofocus autocomplete="username" placeholder="Masukkan email Anda" />
-                    </div>
-                </div>
-
-                <!-- Password -->
-                <div>
-                    <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
-                    <div class="relative">
-                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <i data-lucide="lock" class="w-5 h-5 text-gray-400"></i>
-                        </div>
-                        <input id="password" class="block w-full pl-10 pr-10 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-gray-900 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all sm:text-sm" type="password" name="password" required autocomplete="current-password" placeholder="••••••••" />
-                        
-                        <!-- Toggle Password Visibility (Vanilla JS handled below) -->
-                        <button type="button" id="togglePassword" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-primary-600 focus:outline-none">
-                            <i data-lucide="eye" id="eyeIcon" class="w-5 h-5"></i>
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Remember Me & Forgot Password -->
-                <div class="flex items-center justify-between mt-4">
-                    <label for="remember_me" class="flex items-center cursor-pointer group">
-                        <input id="remember_me" type="checkbox" class="w-4 h-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500 transition-colors cursor-pointer" name="remember">
-                        <span class="ml-2 text-sm text-gray-600 group-hover:text-gray-900 transition-colors">Ingat saya</span>
-                    </label>
-
-                    @if (Route::has('password.request'))
-                        <a class="text-sm font-medium text-primary-600 hover:text-primary-500 transition-colors" href="{{ route('password.request') }}">
-                            Lupa password?
-                        </a>
-                    @endif
-                </div>
-
-                <!-- Submit Button -->
-                <div class="pt-2">
-                    <button type="submit" class="w-full flex justify-center items-center gap-2 py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-semibold text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors">
-                        Masuk Sekarang
-                        <i data-lucide="log-in" class="w-4 h-4"></i>
-                    </button>
-                </div>
-            </form>
-
-            <div class="mt-8 text-center lg:text-left">
-                <p class="text-sm text-gray-600">
-                    Belum punya akun? 
-                    <a href="{{ route('register') }}" class="font-semibold text-primary-600 hover:text-primary-500 transition-colors">Daftar disini</a>
+            <div class="brand-copy relative z-10 mt-10 max-w-xl xl:mt-14">
+                <span class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3.5 py-2 text-xs font-bold text-indigo-50 backdrop-blur-sm">
+                    <span class="relative flex h-2 w-2">
+                        <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-300 opacity-75"></span>
+                        <span class="relative inline-flex h-2 w-2 rounded-full bg-emerald-300"></span>
+                    </span>
+                    Pendaftaran peserta didik baru
+                </span>
+                <h1 class="brand-heading mt-6 max-w-lg text-4xl font-extrabold leading-[1.15] tracking-[-0.04em] text-white xl:text-5xl">
+                    Awal baik untuk perjalanan belajar si kecil.
+                </h1>
+                <p class="mt-5 max-w-lg text-sm leading-7 text-indigo-100 xl:text-base">
+                    Kelola pendaftaran, lengkapi dokumen, dan pantau setiap tahap penerimaan dalam satu portal yang mudah digunakan.
                 </p>
             </div>
-        </div>
-    </div>
 
-    <!-- Right Side: Branded Graphic -->
-    <div class="hidden lg:flex lg:w-1/2 relative bg-gradient-to-br from-primary-900 via-primary-800 to-secondary-900 overflow-hidden items-center justify-center animate-fade-in">
-        
-        <!-- Decorative Elements -->
-        <div class="absolute top-0 left-0 w-full h-full overflow-hidden opacity-20">
-            <div class="absolute -top-24 -left-24 w-96 h-96 rounded-full bg-primary-500 blur-3xl"></div>
-            <div class="absolute bottom-10 right-10 w-80 h-80 rounded-full bg-secondary-400 blur-3xl"></div>
-        </div>
-
-        <div class="relative z-10 text-center px-12 text-white max-w-lg">
-            <div class="w-24 h-24 bg-white/10 backdrop-blur-md rounded-3xl mx-auto flex items-center justify-center mb-8 border border-white/20 shadow-2xl animate-float">
-                <i data-lucide="graduation-cap" class="w-12 h-12 text-white"></i>
-            </div>
-            
-            <h1 class="text-3xl font-heading font-bold mb-6 leading-tight">
-                Sistem Penerimaan Murid Baru (SPMB)<br>
-                <span class="text-secondary-300">PAUD Al Qur'an Az-Zahra</span>
-            </h1>
-            
-            <p class="text-lg text-primary-100 leading-relaxed opacity-90">
-                Langkah awal untuk pendidikan yang berkualitas, berlandaskan nilai-nilai Islami, dan berorientasi pada masa depan.
-            </p>
-
-            <div class="mt-10 flex items-center justify-center gap-4 text-sm text-primary-200">
-                <div class="flex items-center gap-2 bg-white/10 px-4 py-2 rounded-full backdrop-blur-sm border border-white/10">
-                    <i data-lucide="check-circle-2" class="w-4 h-4 text-secondary-400"></i> Mudah
+            <div class="relative z-10 mt-auto pt-8">
+                <div class="brand-art relative mx-auto max-w-xl overflow-hidden rounded-[2rem] border border-white/15 bg-white p-4 shadow-2xl shadow-indigo-950/30 xl:p-5">
+                    <div class="absolute left-5 top-5 z-10 rounded-full bg-[#eef2ff] px-3 py-1.5 text-[10px] font-extrabold uppercase tracking-[0.16em] text-[#3538a6]">
+                        Tumbuh · Belajar · Berakhlak
+                    </div>
+                    <img src="{{ asset('images/about-3.png') }}"
+                         alt="Ilustrasi keluarga mendampingi anak belajar"
+                         class="brand-illustration mx-auto h-[280px] w-full object-contain object-bottom xl:h-[320px]"
+                         loading="eager">
                 </div>
-                <div class="flex items-center gap-2 bg-white/10 px-4 py-2 rounded-full backdrop-blur-sm border border-white/10">
-                    <i data-lucide="check-circle-2" class="w-4 h-4 text-secondary-400"></i> Cepat
-                </div>
-                <div class="flex items-center gap-2 bg-white/10 px-4 py-2 rounded-full backdrop-blur-sm border border-white/10">
-                    <i data-lucide="check-circle-2" class="w-4 h-4 text-secondary-400"></i> Transparan
+
+                <div class="brand-trust mt-5 flex items-center justify-center gap-6 text-xs font-semibold text-indigo-100 xl:justify-start">
+                    <span class="inline-flex items-center gap-2"><i data-lucide="shield-check" class="h-4 w-4 text-emerald-300"></i> Data terlindungi</span>
+                    <span class="inline-flex items-center gap-2"><i data-lucide="circle-check" class="h-4 w-4 text-emerald-300"></i> Proses transparan</span>
                 </div>
             </div>
-        </div>
-    </div>
+        </section>
+
+        {{-- Authentication panel --}}
+        <section class="auth-panel relative flex min-h-screen flex-col bg-[#f7f8fc] px-5 py-6 sm:px-10 sm:py-8 lg:px-12 xl:px-20">
+            <div class="pointer-events-none absolute right-0 top-0 h-64 w-64 overflow-hidden" aria-hidden="true">
+                <div class="absolute -right-24 -top-28 h-64 w-64 rounded-full bg-indigo-100/70 blur-3xl"></div>
+            </div>
+
+            <header class="relative z-10 flex items-center justify-between">
+                <a href="{{ url('/') }}"
+                    class="inline-flex items-center gap-2 rounded-xl px-2 py-2 text-sm font-semibold text-slate-500 transition-colors hover:bg-white hover:text-[#4b4ecc] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#696cff]">
+                    <i data-lucide="arrow-left" class="h-4 w-4"></i>
+                    <span>Kembali ke beranda</span>
+                </a>
+
+                <div class="flex items-center gap-2 lg:hidden">
+                    <span class="flex h-9 w-9 items-center justify-center rounded-xl bg-white shadow-sm ring-1 ring-slate-200">
+                        <img src="{{ asset('images/azzahra_logo.png') }}" alt="" class="h-7 w-7 object-contain">
+                    </span>
+                    <span class="hidden text-xs font-extrabold text-slate-700 sm:block">Az-Zahra Depok</span>
+                </div>
+            </header>
+
+            <div class="auth-content relative z-10 my-auto w-full py-10 sm:py-12">
+                <div class="mx-auto w-full max-w-[460px]">
+                    <div class="auth-intro mb-8">
+                        <div class="mb-5 inline-flex items-center gap-2 rounded-full border border-indigo-100 bg-white px-3 py-1.5 text-[11px] font-extrabold uppercase tracking-[0.16em] text-[#5a5de6] shadow-sm lg:hidden">
+                            <i data-lucide="graduation-cap" class="h-3.5 w-3.5"></i>
+                            Portal SPMB
+                        </div>
+                        <p class="text-sm font-bold text-[#5a5de6]">Selamat datang kembali</p>
+                        <h2 class="auth-title mt-2 text-3xl font-extrabold tracking-[-0.035em] text-slate-950 sm:text-4xl">Masuk ke akun Anda</h2>
+                        <p class="mt-3 max-w-md text-sm leading-6 text-slate-500">
+                            Gunakan akun orang tua atau admin untuk melanjutkan ke dashboard.
+                        </p>
+                    </div>
+
+                    @if ($errors->any())
+                        <div class="mb-6 flex items-start gap-3 rounded-2xl border border-red-200 bg-red-50 px-4 py-3.5 text-sm text-red-700" role="alert">
+                            <span class="mt-0.5 flex h-8 w-8 flex-none items-center justify-center rounded-xl bg-red-100">
+                                <i data-lucide="circle-alert" class="h-4 w-4"></i>
+                            </span>
+                            <div>
+                                <p class="font-bold">Login belum berhasil</p>
+                                <ul class="mt-1 space-y-0.5 text-xs leading-5 text-red-600">
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        </div>
+                    @endif
+
+                    <form id="loginForm" method="POST" action="{{ route('login') }}" class="login-form space-y-5">
+                        @csrf
+
+                        <div>
+                            <label for="email" class="mb-2 block text-sm font-bold text-slate-700">Alamat email</label>
+                            <div class="group relative">
+                                <span class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4 text-slate-400 transition-colors group-focus-within:text-[#696cff]">
+                                    <i data-lucide="mail" class="h-5 w-5"></i>
+                                </span>
+                                <input id="email"
+                                       type="email"
+                                       name="email"
+                                       value="{{ old('email') }}"
+                                       required
+                                       autofocus
+                                       autocomplete="username"
+                                       inputmode="email"
+                                       @class([
+                                           'auth-input block h-14 w-full rounded-2xl border bg-white pl-12 pr-4 text-sm font-medium text-slate-900 outline-none transition placeholder:text-slate-400 hover:border-slate-300 focus:ring-4',
+                                           'border-red-300 focus:border-red-400 focus:ring-red-100' => $errors->has('email'),
+                                           'border-slate-200 focus:border-[#696cff] focus:ring-indigo-100' => ! $errors->has('email'),
+                                       ])
+                                       @if($errors->has('email')) aria-invalid="true" @endif
+                                       placeholder="nama@email.com">
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="mb-2 flex items-center justify-between gap-4">
+                                <label for="password" class="block text-sm font-bold text-slate-700">Kata sandi</label>
+                                @if (Route::has('password.request'))
+                                    <a href="{{ route('password.request') }}" class="text-xs font-bold text-[#5a5de6] transition-colors hover:text-[#3d40b3] hover:underline">
+                                        Lupa kata sandi?
+                                    </a>
+                                @endif
+                            </div>
+                            <div class="group relative">
+                                <span class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4 text-slate-400 transition-colors group-focus-within:text-[#696cff]">
+                                    <i data-lucide="lock-keyhole" class="h-5 w-5"></i>
+                                </span>
+                                <input id="password"
+                                       type="password"
+                                       name="password"
+                                       required
+                                       autocomplete="current-password"
+                                       @class([
+                                           'auth-input block h-14 w-full rounded-2xl border bg-white pl-12 pr-14 text-sm font-medium text-slate-900 outline-none transition placeholder:text-slate-400 hover:border-slate-300 focus:ring-4',
+                                           'border-red-300 focus:border-red-400 focus:ring-red-100' => $errors->has('password'),
+                                           'border-slate-200 focus:border-[#696cff] focus:ring-indigo-100' => ! $errors->has('password'),
+                                       ])
+                                       @if($errors->has('password')) aria-invalid="true" @endif
+                                       placeholder="Masukkan kata sandi">
+                                <button type="button"
+                                        id="togglePassword"
+                                        class="absolute inset-y-0 right-0 flex w-14 items-center justify-center rounded-r-2xl text-slate-400 transition-colors hover:text-[#5a5de6] focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#696cff]"
+                                        aria-label="Tampilkan kata sandi"
+                                        aria-pressed="false">
+                                    <i data-lucide="eye" id="eyeIcon" class="h-5 w-5"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <label for="remember_me" class="flex w-fit cursor-pointer items-center gap-2.5 text-sm font-medium text-slate-600">
+                            <input id="remember_me"
+                                   type="checkbox"
+                                   name="remember"
+                                   @checked(old('remember'))
+                                   class="h-[18px] w-[18px] rounded border-slate-300 text-[#696cff] focus:ring-[#696cff]">
+                            Biarkan saya tetap masuk
+                        </label>
+
+                        <button id="submitButton"
+                                type="submit"
+                                class="auth-submit group flex h-14 w-full items-center justify-center gap-2.5 rounded-2xl bg-[#5a5de6] px-5 text-sm font-extrabold text-white shadow-lg shadow-indigo-600/20 transition-all hover:-translate-y-0.5 hover:bg-[#4b4ecc] hover:shadow-xl hover:shadow-indigo-600/25 focus:outline-none focus-visible:ring-4 focus-visible:ring-indigo-200 disabled:cursor-wait disabled:opacity-70 disabled:hover:translate-y-0">
+                            <span id="submitLabel">Masuk ke dashboard</span>
+                            <i data-lucide="arrow-right" id="submitIcon" class="h-[18px] w-[18px] transition-transform group-hover:translate-x-0.5"></i>
+                            <span id="submitSpinner" class="hidden h-4 w-4 animate-spin rounded-full border-2 border-white/40 border-t-white" aria-hidden="true"></span>
+                        </button>
+                    </form>
+
+                    <div class="signup-card mt-7 flex items-center justify-between gap-4 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+                        <a href="{{ route('register') }}" class="flex min-w-0 items-center gap-3">
+                            <span class="flex h-10 w-10 flex-none items-center justify-center rounded-xl bg-emerald-50 text-emerald-600">
+                                <i data-lucide="user-round-plus" class="h-5 w-5"></i>
+                            </span>
+                            <div class="min-w-0">
+                                <p class="text-xs text-slate-500">Belum memiliki akun?</p>
+                                <p class="truncate text-sm font-bold text-slate-800">Daftar sebagai orang tua</p>
+                            </div>
+                        
+                            <a href="{{ route('register') }}"
+                                class="inline-flex flex-none items-center gap-1 rounded-xl bg-indigo-50 px-3 py-2 text-xs font-extrabold text-[#5a5de6] transition-colors hover:bg-indigo-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#696cff]">
+                                Daftar
+                                <i data-lucide="arrow-up-right" class="h-3.5 w-3.5"></i>
+                            </a>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <footer class="relative z-10 flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-center text-[12px] text-slate-400 sm:justify-between">
+                <p>&copy; {{ date('Y') }} PAUD Al Qur'an Az-Zahra</p>
+                <nav class="flex items-center gap-2" aria-label="Tautan legal">
+                    <a href="{{ route('terms') }}" class="transition-colors hover:text-[#5a5de6]">Syarat & Ketentuan</a>
+                    <span aria-hidden="true">&bull;</span>
+                    <a href="{{ route('privacy') }}" class="transition-colors hover:text-[#5a5de6]">Kebijakan Privasi</a>
+                </nav>
+            </footer>
+        </section>
+    </main>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            lucide.createIcons();
+        document.addEventListener('DOMContentLoaded', function () {
+            if (window.lucide) {
+                window.lucide.createIcons();
+            }
 
-            // Toggle Password Visibility
             const togglePassword = document.getElementById('togglePassword');
             const passwordInput = document.getElementById('password');
-            const eyeIcon = document.getElementById('eyeIcon');
 
-            if(togglePassword && passwordInput) {
-                togglePassword.addEventListener('click', function() {
-                    const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-                    passwordInput.setAttribute('type', type);
-                    
-                    // Toggle Icon
-                    if(type === 'password') {
-                        eyeIcon.setAttribute('data-lucide', 'eye');
-                    } else {
-                        eyeIcon.setAttribute('data-lucide', 'eye-off');
+            if (togglePassword && passwordInput) {
+                togglePassword.addEventListener('click', function () {
+                    const isVisible = passwordInput.type === 'text';
+
+                    passwordInput.type = isVisible ? 'password' : 'text';
+                    togglePassword.setAttribute('aria-pressed', String(!isVisible));
+                    togglePassword.setAttribute('aria-label', isVisible ? 'Tampilkan kata sandi' : 'Sembunyikan kata sandi');
+                    togglePassword.innerHTML = `<i data-lucide="${isVisible ? 'eye' : 'eye-off'}" class="h-5 w-5"></i>`;
+
+                    if (window.lucide) {
+                        window.lucide.createIcons();
                     }
-                    lucide.createIcons(); // Re-render icon
                 });
             }
 
-            // SweetAlert2 Flash Messages
-            @if(session('success'))
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Berhasil!',
-                    text: @json(session('success')),
-                    toast: true,
-                    position: 'top-end',
-                    showConfirmButton: false,
-                    timer: 4000,
-                    timerProgressBar: true,
-                    showCloseButton: true
+            const loginForm = document.getElementById('loginForm');
+            const submitButton = document.getElementById('submitButton');
+            const submitLabel = document.getElementById('submitLabel');
+            const submitIcon = document.getElementById('submitIcon');
+            const submitSpinner = document.getElementById('submitSpinner');
+
+            if (loginForm && submitButton && submitLabel) {
+                loginForm.addEventListener('submit', function () {
+                    if (!loginForm.checkValidity()) {
+                        return;
+                    }
+
+                    submitButton.disabled = true;
+                    submitLabel.textContent = 'Memproses...';
+                    submitIcon?.classList.add('hidden');
+                    submitSpinner?.classList.remove('hidden');
                 });
+            }
+
+            @if(session('success'))
+                if (window.Swal) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Berhasil',
+                        text: @json(session('success')),
+                        toast: true,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 4000,
+                        timerProgressBar: true,
+                        showCloseButton: true
+                    });
+                }
             @endif
 
             @if(session('error'))
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Gagal!',
-                    text: @json(session('error')),
-                    toast: true,
-                    position: 'top-end',
-                    showConfirmButton: false,
-                    timer: 5000,
-                    timerProgressBar: true,
-                    showCloseButton: true
-                });
+                if (window.Swal) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Gagal',
+                        text: @json(session('error')),
+                        toast: true,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 5000,
+                        timerProgressBar: true,
+                        showCloseButton: true
+                    });
+                }
             @endif
         });
     </script>

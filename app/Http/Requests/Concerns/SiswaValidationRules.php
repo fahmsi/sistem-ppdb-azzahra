@@ -81,4 +81,74 @@ trait SiswaValidationRules
             'foto_akta' => 'foto akta kelahiran',
         ];
     }
+
+    protected function siswaMessages(): array
+    {
+        return [
+            // Data Pribadi Anak
+            'nama.required' => 'Mohon isi nama lengkap anak sesuai akta kelahiran.',
+            'nama.max' => 'Nama anak terlalu panjang. Maksimal 255 karakter.',
+            'nama_panggilan.required' => 'Mohon isi nama panggilan anak.',
+            'nama_panggilan.max' => 'Nama panggilan terlalu panjang. Maksimal 50 karakter.',
+            'jenis_kelamin.required' => 'Mohon pilih jenis kelamin anak.',
+            'jenis_kelamin.in' => 'Pilihan jenis kelamin tidak valid. Silakan pilih Laki-laki atau Perempuan.',
+            'tempat_lahir.required' => 'Mohon isi tempat lahir anak sesuai akta kelahiran.',
+            'tanggal_lahir.required' => 'Mohon isi tanggal lahir anak.',
+            'tanggal_lahir.date' => 'Format tanggal lahir tidak valid. Gunakan format yang benar.',
+            'tanggal_lahir.before' => 'Tanggal lahir harus sebelum hari ini.',
+            'agama.required' => 'Mohon isi agama anak.',
+            'anak_ke.required' => 'Mohon isi anak ke berapa dalam keluarga.',
+            'anak_ke.integer' => 'Anak ke harus diisi dengan angka.',
+            'anak_ke.min' => 'Anak ke minimal 1.',
+            'jumlah_saudara.required' => 'Mohon isi jumlah saudara kandung.',
+            'jumlah_saudara.integer' => 'Jumlah saudara harus diisi dengan angka.',
+            'jumlah_saudara.min' => 'Jumlah saudara tidak boleh kurang dari 0.',
+
+            // Kontak & Alamat
+            'no_telpon.required' => 'Mohon isi nomor telepon/WhatsApp yang bisa dihubungi.',
+            'jenis_tempat_tinggal.required' => 'Mohon pilih jenis tempat tinggal.',
+            'alamat.required' => 'Mohon isi alamat lengkap tempat tinggal.',
+            'alamat.max' => 'Alamat terlalu panjang. Maksimal 500 karakter.',
+            'kelurahan.required' => 'Mohon isi kelurahan/desa.',
+            'kecamatan.required' => 'Mohon isi kecamatan.',
+            'kota.required' => 'Mohon isi kota/kabupaten.',
+            'provinsi.required' => 'Mohon isi provinsi.',
+
+            // Data Keluarga
+            'no_kk.required' => 'Mohon isi Nomor Kartu Keluarga (KK).',
+            'no_kk.numeric' => 'Nomor KK hanya boleh berisi angka.',
+            'no_kk.digits' => 'Nomor Kartu Keluarga harus 16 digit angka. Cek kembali dokumen KK Anda.',
+            'kepala_keluarga.required' => 'Mohon isi nama kepala keluarga sesuai KK.',
+            'nama_ayah.required' => 'Mohon isi nama lengkap ayah.',
+            'nik_ayah.required' => 'Mohon isi NIK ayah (16 digit sesuai KTP).',
+            'nik_ayah.size' => 'NIK ayah harus tepat 16 digit. Cek kembali KTP ayah.',
+            'tanggal_lahir_ayah.required' => 'Mohon isi tanggal lahir ayah.',
+            'tanggal_lahir_ayah.before' => 'Tanggal lahir ayah harus sebelum hari ini.',
+            'pendidikan_ayah.required' => 'Mohon pilih pendidikan terakhir ayah.',
+            'pekerjaan_ayah.required' => 'Mohon isi pekerjaan ayah.',
+            'penghasilan_ayah.required' => 'Mohon pilih kisaran penghasilan ayah.',
+            'nama_ibu.required' => 'Mohon isi nama lengkap ibu.',
+            'nik_ibu.required' => 'Mohon isi NIK ibu (16 digit sesuai KTP).',
+            'nik_ibu.size' => 'NIK ibu harus tepat 16 digit. Cek kembali KTP ibu.',
+            'tanggal_lahir_ibu.required' => 'Mohon isi tanggal lahir ibu.',
+            'tanggal_lahir_ibu.before' => 'Tanggal lahir ibu harus sebelum hari ini.',
+            'pendidikan_ibu.required' => 'Mohon pilih pendidikan terakhir ibu.',
+            'pekerjaan_ibu.required' => 'Mohon isi pekerjaan ibu.',
+            'penghasilan_ibu.required' => 'Mohon pilih kisaran penghasilan ibu.',
+
+            // Dokumen Upload
+            'foto.required' => 'Mohon unggah foto anak (pas foto terbaru).',
+            'foto.image' => 'File foto anak harus berupa gambar (JPG/PNG).',
+            'foto.mimes' => 'Format foto anak harus JPG atau PNG.',
+            'foto.max' => 'Ukuran foto anak terlalu besar (maks. 2 MB). Coba foto ulang atau perkecil ukuran file.',
+            'foto_kk.required' => 'Mohon unggah foto Kartu Keluarga (KK).',
+            'foto_kk.image' => 'File KK harus berupa gambar (JPG/PNG). Jika KK berbentuk PDF, silakan screenshot terlebih dahulu.',
+            'foto_kk.mimes' => 'Format foto KK harus JPG atau PNG.',
+            'foto_kk.max' => 'Ukuran foto KK terlalu besar (maks. 2 MB). Coba foto ulang atau perkecil ukuran file.',
+            'foto_akta.required' => 'Mohon unggah foto Akta Kelahiran.',
+            'foto_akta.image' => 'File akta kelahiran harus berupa gambar (JPG/PNG).',
+            'foto_akta.mimes' => 'Format foto akta harus JPG atau PNG.',
+            'foto_akta.max' => 'Ukuran foto akta terlalu besar (maks. 2 MB). Coba foto ulang atau perkecil ukuran file.',
+        ];
+    }
 }

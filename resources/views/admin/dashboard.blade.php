@@ -4,7 +4,7 @@
 @section('header_title', 'Dashboard Administrator')
 
 @section('content')
-<div class="mx-auto max-w-7xl space-y-4 sm:space-y-6">
+<div class="space-y-4 sm:space-y-6">
 
     <!-- Header Section -->
     <div class="relative overflow-hidden rounded-xl border border-[#d9dee3] bg-white p-5 shadow-sneat animate-fade-in dark:border-[#434463] dark:bg-[#2b2c40] dark:shadow-sneat-dark sm:min-h-[168px] sm:p-7 lg:px-8">
