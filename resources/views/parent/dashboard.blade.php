@@ -54,7 +54,7 @@
                     $step1Done = true; // Akun orang tua sudah dibuat karena sedang login
                     $step2Done = $siswa !== null;
                     $step3Done = $latestRegistration !== null;
-                    $step4Done = $latestRegistration && in_array($latestRegistration->status, ['diterima', 'perlu_revisi']) && $latestRegistration->status !== 'pending';
+                    $step4Done = $latestRegistration && $latestRegistration->status === 'diterima';
                     $step5Done = $isPaymentLunas;
                     
                     // Current step estimation
@@ -131,21 +131,25 @@
                     </div>
 
                     <!-- Langkah 4 -->
-                    <div class="p-3 rounded-xl border {{ $currentStep == 4 ? 'border-[#696cff] bg-[#696cff]/5 dark:bg-[#696cff]/10' : 'border-gray-100 dark:border-[#434463]' }} flex flex-col justify-between">
+                    <div class="p-3 rounded-xl border {{ $currentStep == 4 ? ($latestRegistration && $latestRegistration->status === 'perlu_revisi' ? 'border-orange-500 bg-orange-500/5' : 'border-[#696cff] bg-[#696cff]/5 dark:bg-[#696cff]/10') : 'border-gray-100 dark:border-[#434463]' }} flex flex-col justify-between">
                         <div>
                             <div class="flex items-center justify-between mb-1.5">
-                                <span class="text-[10px] font-bold px-2 py-0.5 rounded-full {{ $currentStep == 4 ? 'bg-[#696cff]/20 text-[#696cff]' : ($step4Done ? 'bg-emerald-100 text-emerald-700' : 'bg-gray-100 text-gray-500') }}">Langkah 4</span>
+                                <span class="text-[10px] font-bold px-2 py-0.5 rounded-full {{ $currentStep == 4 ? ($latestRegistration && $latestRegistration->status === 'perlu_revisi' ? 'bg-orange-100 text-orange-700' : 'bg-[#696cff]/20 text-[#696cff]') : ($step4Done ? 'bg-emerald-100 text-emerald-700' : 'bg-gray-100 text-gray-500') }}">Langkah 4</span>
                                 @if($step4Done)
                                     <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-500"></i>
+                                @elseif($latestRegistration && $latestRegistration->status === 'perlu_revisi')
+                                    <i data-lucide="alert-circle" class="w-4 h-4 text-orange-500"></i>
                                 @elseif($currentStep == 4)
                                     <span class="w-2 h-2 rounded-full bg-[#696cff] animate-ping"></span>
                                 @endif
                             </div>
-                            <h4 class="text-xs font-bold {{ $currentStep == 4 ? 'text-[#696cff]' : 'text-gray-800 dark:text-[#d5d5e2]' }}">Verifikasi</h4>
+                            <h4 class="text-xs font-bold {{ $currentStep == 4 ? ($latestRegistration && $latestRegistration->status === 'perlu_revisi' ? 'text-orange-600' : 'text-[#696cff]') : 'text-gray-800 dark:text-[#d5d5e2]' }}">Verifikasi</h4>
                             <p class="text-[10px] text-gray-500 mt-0.5 leading-normal">Pengecekan oleh panitia sekolah</p>
                         </div>
                         @if($step4Done)
                             <span class="text-[10px] text-emerald-600 font-semibold mt-2.5 flex items-center gap-1"><i data-lucide="check" class="w-3 h-3"></i> Diterima</span>
+                        @elseif($latestRegistration && $latestRegistration->status === 'perlu_revisi')
+                            <span class="text-[10px] text-orange-600 font-semibold mt-2.5 flex items-center gap-1"><i data-lucide="alert-circle" class="w-3 h-3"></i> Perlu Perbaikan Data</span>
                         @elseif($currentStep == 4)
                             <span class="text-[10px] text-blue-600 font-medium mt-2.5 flex items-center gap-1"><i data-lucide="loader" class="w-3 h-3 animate-spin"></i> Proses</span>
                         @else

@@ -220,7 +220,7 @@
                     </form>
 
                     <div class="signup-card mt-7 flex items-center justify-between gap-4 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
-                        <a href="{{ route('register') }}" class="flex min-w-0 items-center gap-3">
+                        <div class="flex min-w-0 items-center gap-3">
                             <span class="flex h-10 w-10 flex-none items-center justify-center rounded-xl bg-emerald-50 text-emerald-600">
                                 <i data-lucide="user-round-plus" class="h-5 w-5"></i>
                             </span>
@@ -228,12 +228,12 @@
                                 <p class="text-xs text-slate-500">Belum memiliki akun?</p>
                                 <p class="truncate text-sm font-bold text-slate-800">Daftar sebagai orang tua</p>
                             </div>
+                        </div>
                         
-                            <a href="{{ route('register') }}"
-                                class="inline-flex flex-none items-center gap-1 rounded-xl bg-indigo-50 px-3 py-2 text-xs font-extrabold text-[#5a5de6] transition-colors hover:bg-indigo-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#696cff]">
-                                Daftar
-                                <i data-lucide="arrow-up-right" class="h-3.5 w-3.5"></i>
-                            </a>
+                        <a href="{{ route('register') }}"
+                            class="inline-flex flex-none items-center gap-1 rounded-xl bg-indigo-50 px-3 py-2 text-xs font-extrabold text-[#5a5de6] transition-colors hover:bg-indigo-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#696cff]">
+                            Daftar
+                            <i data-lucide="arrow-up-right" class="h-3.5 w-3.5"></i>
                         </a>
                     </div>
                 </div>

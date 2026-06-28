@@ -314,7 +314,7 @@
                 </form>
 
                 <div class="mt-7 flex items-center justify-between gap-4 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
-                    <a href="{{ route('login') }}" class="flex min-w-0 items-center gap-3">
+                    <div class="flex min-w-0 items-center gap-3">
                         <span class="flex h-10 w-10 flex-none items-center justify-center rounded-xl bg-indigo-50 text-[#5a5de6]">
                             <i data-lucide="log-in" class="h-5 w-5"></i>
                         </span>
@@ -322,13 +322,13 @@
                             <p class="text-xs text-slate-500">Sudah memiliki akun?</p>
                             <p class="truncate text-sm font-bold text-slate-800">Lanjutkan proses Anda</p>
                         </div>
+                    </div>
                     
-                        <a href="{{ route('login') }}"
-                        class="inline-flex flex-none items-center gap-1 rounded-xl bg-indigo-50 px-3 py-2 text-xs font-extrabold text-[#5a5de6] transition-colors hover:bg-indigo-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#696cff]">
-                            Masuk
-                            <i data-lucide="arrow-up-right" class="h-3.5 w-3.5"></i>
-                        </a> 
-                    </a>
+                    <a href="{{ route('login') }}"
+                       class="inline-flex flex-none items-center gap-1 rounded-xl bg-indigo-50 px-3 py-2 text-xs font-extrabold text-[#5a5de6] transition-colors hover:bg-indigo-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#696cff]">
+                        Masuk
+                        <i data-lucide="arrow-up-right" class="h-3.5 w-3.5"></i>
+                    </a> 
                 </div>
 
                 <footer class="mt-8 flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-center text-[12px] text-slate-400 sm:justify-between">
