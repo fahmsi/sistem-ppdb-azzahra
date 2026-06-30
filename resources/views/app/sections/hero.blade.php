@@ -1,5 +1,5 @@
 {{-- Hero: Editorial Enrollment --}}
-<section id="home" class="islamic-pattern relative overflow-hidden bg-gradient-to-br from-blue-50 via-white to-green-50 pb-28 lg:pb-36">
+<section id="home" class="relative overflow-hidden pb-28 lg:pb-36">
     {{-- Decorative background --}}
     <div class="pointer-events-none absolute -right-32 top-16 h-[28rem] w-[28rem] rounded-full bg-primary-200/30 blur-3xl"></div>
     <div class="pointer-events-none absolute -left-40 top-[32rem] h-[32rem] w-[32rem] rounded-full bg-secondary-200/25 blur-3xl"></div>
@@ -39,7 +39,7 @@
 
                 {{-- Existing CTAs, refreshed --}}
                 <div class="mt-5 grid grid-cols-2 gap-2.5 sm:flex sm:flex-wrap lg:mt-6">
-                    <a href="{{ route('register') }}" class="group inline-flex min-w-0 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-primary-600 to-primary-500 px-3 py-3 text-sm font-bold text-white shadow-lg shadow-primary-600/20 transition-all duration-300 hover:-translate-y-1 hover:from-primary-700 hover:to-primary-600 hover:shadow-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 sm:gap-3 sm:px-5 sm:text-base">
+                    <a href="{{ route('register') }}" class="group inline-flex min-w-0 transform-gpu items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-primary-600 to-primary-500 px-3 py-3 text-sm font-bold text-white shadow-lg shadow-primary-600/20 transition-[transform,box-shadow] duration-200 ease-out will-change-transform hover:-translate-y-0.5 hover:shadow-xl hover:shadow-primary-600/25 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 motion-reduce:transform-none motion-reduce:transition-none sm:gap-3 sm:px-5 sm:text-base">
                         <span class="hidden h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white/15 sm:flex">
                             <i data-lucide="user-plus" class="h-5 w-5" aria-hidden="true"></i>
                         </span>
@@ -50,7 +50,7 @@
                         <i data-lucide="arrow-up-right" class="hidden h-4 w-4 shrink-0 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 sm:block" aria-hidden="true"></i>
                     </a>
 
-                    <a href="{{ route('login') }}" class="group inline-flex min-w-0 items-center justify-center gap-2 rounded-xl border border-primary-200 bg-white/80 px-3 py-3 text-sm font-bold text-primary-700 shadow-sm backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:border-primary-300 hover:bg-primary-50 hover:shadow-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 sm:gap-3 sm:px-5 sm:text-base">
+                    <a href="{{ route('login') }}" class="group inline-flex min-w-0 transform-gpu items-center justify-center gap-2 rounded-xl border border-primary-200 bg-white/90 px-3 py-3 text-sm font-bold text-primary-700 shadow-sm transition-[transform,box-shadow,background-color,border-color] duration-200 ease-out will-change-transform hover:-translate-y-0.5 hover:border-primary-300 hover:bg-white hover:shadow-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 motion-reduce:transform-none motion-reduce:transition-none sm:gap-3 sm:px-5 sm:text-base">
                         <span class="hidden h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary-50 sm:flex">
                             <i data-lucide="log-in" class="h-5 w-5" aria-hidden="true"></i>
                         </span>
@@ -87,7 +87,7 @@
                         <img
                             src="{{ asset('images/banner.png') }}"
                             alt="Ilustrasi siswa PAUD Al Qur'an Az-Zahra menyambut SPMB 2026/2027"
-                            class="h-full w-full object-cover object-center transition-transform duration-700 group-hover:scale-105"
+                            class="h-full w-full object-cover object-center transition-transform duration-700 transform-gpu will-change-transform group-hover:scale-105"
                             loading="eager">
                         <div class="absolute inset-0 bg-gradient-to-t from-primary-900/20 via-transparent to-white/5"></div>
                     </div>

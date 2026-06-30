@@ -1,5 +1,5 @@
 {{-- Section: Curriculum Learning Journey --}}
-<section id="kurikulum" class="relative overflow-hidden bg-gradient-to-br from-blue-50 via-white to-green-50 py-20 lg:py-28 islamic-pattern">
+<section id="kurikulum" class="relative overflow-hidden py-20 lg:py-28">
     <div class="absolute -left-32 top-20 h-80 w-80 rounded-full bg-primary-200/30 blur-3xl"></div>
     <div class="absolute -right-32 bottom-0 h-96 w-96 rounded-full bg-secondary-200/30 blur-3xl"></div>
     <div class="absolute left-1/2 top-1/3 h-24 w-24 rotate-45 rounded-3xl bg-primary-400/5"></div>
@@ -113,7 +113,7 @@
                 <div class="overflow-hidden rounded-[2rem] border border-gray-100 bg-white shadow-xl shadow-primary-900/5">
                     <div class="grid lg:grid-cols-12">
                         <div class="relative min-h-[260px] overflow-hidden sm:min-h-[340px] lg:col-span-5 lg:min-h-[430px]">
-                            <img src="{{ $tab['image'] }}" alt="Kegiatan {{ strtolower($tab['title']) }}" class="absolute inset-0 h-full w-full object-cover transition-transform duration-700 hover:scale-105" loading="lazy">
+                            <img src="{{ $tab['image'] }}" alt="Kegiatan {{ strtolower($tab['title']) }}" class="absolute inset-0 h-full w-full object-cover transition-transform duration-700 transform-gpu will-change-transform hover:scale-105" loading="lazy">
                             <div class="absolute inset-0 bg-gradient-to-t from-primary-900/80 via-primary-900/10 to-transparent"></div>
 
                             <div class="absolute inset-x-0 bottom-0 p-6 sm:p-8">
@@ -166,12 +166,12 @@
                                 ? 'lg:col-span-3'
                                 : ($loop->index < 3 ? 'lg:col-span-2' : 'lg:col-span-3');
                         @endphp
-                        <article class="curriculum-card group relative overflow-hidden rounded-2xl border {{ $tab['softBorder'] }} {{ $tab['softBg'] }} p-5 shadow-sm backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:border-primary-200 hover:bg-white hover:shadow-xl hover:shadow-primary-900/5 {{ $spanClass }}">
+                        <article class="curriculum-card group relative overflow-hidden rounded-2xl border {{ $tab['softBorder'] }} {{ $tab['softBg'] }} p-5 shadow-sm backdrop-blur-sm transition-[transform,border-color,background-color,box-shadow] duration-300 transform-gpu will-change-[transform,box-shadow] hover:-translate-y-1 hover:border-primary-200 hover:bg-white hover:shadow-xl hover:shadow-primary-900/5 {{ $spanClass }}">
                             <div class="absolute right-4 top-3 font-heading text-4xl font-black text-primary-900/[0.05] transition-colors group-hover:text-primary-900/[0.09]">
                                 {{ str_pad($loop->iteration, 2, '0', STR_PAD_LEFT) }}
                             </div>
                             <div class="relative flex items-start gap-4">
-                                <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border {{ $tab['softBorder'] }} bg-white {{ $tab['iconColor'] }} shadow-sm transition-transform duration-300 group-hover:scale-110">
+                                <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border {{ $tab['softBorder'] }} bg-white {{ $tab['iconColor'] }} shadow-sm transition-transform duration-300 transform-gpu will-change-transform group-hover:scale-110">
                                     <i data-lucide="{{ $item['icon'] }}" class="h-5 w-5" aria-hidden="true"></i>
                                 </span>
                                 <div class="pr-3">

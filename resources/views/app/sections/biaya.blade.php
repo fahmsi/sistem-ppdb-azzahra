@@ -1,7 +1,7 @@
 {{-- ============================================
     Section 11: Biaya & FAQ
     ============================================ --}}
-<section id="biaya" class="py-20 lg:py-28 bg-gray-50 relative overflow-hidden islamic-pattern">
+<section id="biaya" class="relative overflow-hidden py-20 lg:py-28">
     {{-- Decorative --}}
     <div class="absolute top-0 left-0 w-64 h-64 bg-primary-100/20 rounded-full -translate-x-1/2 -translate-y-1/2"></div>
 
@@ -75,8 +75,8 @@
         <div class="mb-16 grid gap-5 md:grid-cols-2 lg:auto-rows-fr lg:grid-cols-12 stagger-children">
             @foreach($fees as $item)
                 @if($item['featured'])
-                    <article class="group relative flex min-h-[420px] overflow-hidden rounded-[2rem] bg-gradient-to-br from-primary-800 via-primary-600 to-secondary-700 p-7 text-white shadow-xl shadow-primary-900/15 transition-all duration-500 hover:-translate-y-1 hover:shadow-2xl hover:shadow-primary-900/20 sm:p-8 {{ $item['layout'] }}">
-                        <div class="absolute -right-16 -top-16 h-56 w-56 rounded-full border border-white/10 bg-white/10 transition-transform duration-700 group-hover:scale-110"></div>
+                    <article class="group relative flex min-h-[420px] overflow-hidden rounded-[2rem] bg-gradient-to-br from-primary-800 via-primary-600 to-secondary-700 p-7 text-white shadow-xl shadow-primary-900/15 transition-[transform,box-shadow] duration-500 transform-gpu will-change-[transform,box-shadow] hover:-translate-y-1 hover:shadow-2xl hover:shadow-primary-900/20 sm:p-8 {{ $item['layout'] }}">
+                        <div class="absolute -right-16 -top-16 h-56 w-56 rounded-full border border-white/10 bg-white/10 transition-transform duration-700 transform-gpu will-change-transform group-hover:scale-110"></div>
                         <div class="absolute -bottom-20 -left-12 h-52 w-52 rounded-full bg-secondary-300/20 blur-2xl"></div>
                         <div class="absolute inset-0 opacity-[0.08] islamic-pattern"></div>
 
@@ -86,7 +86,7 @@
                                     <i data-lucide="sparkles" class="h-3.5 w-3.5" aria-hidden="true"></i>
                                     {{ $item['badge'] }}
                                 </span>
-                                <span class="flex h-12 w-12 items-center justify-center rounded-2xl border border-white/20 bg-white/15 shadow-lg backdrop-blur-sm transition-transform duration-300 group-hover:-rotate-6 group-hover:scale-110">
+                                <span class="flex h-12 w-12 items-center justify-center rounded-2xl border border-white/20 bg-white/15 shadow-lg backdrop-blur-sm transition-transform duration-300 transform-gpu will-change-transform group-hover:-rotate-6 group-hover:scale-110">
                                     <i data-lucide="{{ $item['icon'] }}" class="h-6 w-6" aria-hidden="true"></i>
                                 </span>
                             </div>
@@ -118,13 +118,13 @@
                         </div>
                     </article>
                 @else
-                    <article class="group relative flex min-h-[200px] overflow-hidden rounded-[1.75rem] border border-gray-200/80 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:border-primary-100 hover:shadow-xl hover:shadow-primary-900/10 sm:p-7 {{ $item['layout'] }}">
+                    <article class="group relative flex min-h-[200px] overflow-hidden rounded-[1.75rem] border border-gray-200/80 bg-white p-6 shadow-sm transition-[transform,border-color,box-shadow] duration-300 transform-gpu will-change-[transform,box-shadow] hover:-translate-y-1.5 hover:border-primary-100 hover:shadow-xl hover:shadow-primary-900/10 sm:p-7 {{ $item['layout'] }}">
                         <div class="absolute inset-x-0 top-0 h-1 bg-gradient-to-r {{ $item['accent'] }}"></div>
-                        <div class="absolute -right-12 -top-12 h-32 w-32 rounded-full bg-gray-50 transition-transform duration-500 group-hover:scale-125"></div>
+                        <div class="absolute -right-12 -top-12 h-32 w-32 rounded-full bg-gray-50 transition-transform duration-500 transform-gpu will-change-transform group-hover:scale-125"></div>
 
                         <div class="relative flex w-full flex-col">
                             <div class="mb-6 flex items-start justify-between gap-3">
-                                <span class="flex h-11 w-11 items-center justify-center rounded-2xl ring-1 ring-inset transition-all duration-300 group-hover:-rotate-6 group-hover:scale-110 {{ $item['icon_style'] }}">
+                                <span class="flex h-11 w-11 items-center justify-center rounded-2xl ring-1 ring-inset transition-[transform,background-color,color] duration-300 transform-gpu will-change-transform group-hover:-rotate-6 group-hover:scale-110 {{ $item['icon_style'] }}">
                                     <i data-lucide="{{ $item['icon'] }}" class="h-5 w-5" aria-hidden="true"></i>
                                 </span>
                                 <span class="rounded-full border px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider {{ $item['badge_style'] }}">
@@ -181,7 +181,7 @@
             <div class="grid gap-px border-t border-gray-100 bg-gray-100 sm:grid-cols-2 lg:grid-cols-4">
                 @foreach($includes as $inc)
                 <div class="group flex items-center gap-3 bg-white p-5 transition-colors hover:bg-gray-50">
-                    <div class="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-secondary-50 text-secondary-600 ring-1 ring-inset ring-secondary-100 transition-transform duration-300 group-hover:scale-105">
+                    <div class="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-secondary-50 text-secondary-600 ring-1 ring-inset ring-secondary-100 transition-transform duration-300 transform-gpu will-change-transform group-hover:scale-105">
                         <i data-lucide="{{ $inc['icon'] }}" class="h-4 w-4" aria-hidden="true"></i>
                     </div>
                     <div class="min-w-0">

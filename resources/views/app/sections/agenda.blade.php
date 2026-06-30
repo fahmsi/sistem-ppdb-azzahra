@@ -1,7 +1,7 @@
 {{-- ============================================
     Section 12: Agenda & Timeline
     ============================================ --}}
-<section id="agenda" class="py-20 lg:py-28 bg-white relative overflow-hidden">
+<section id="agenda" class="relative overflow-hidden py-20 lg:py-28">
     {{-- Decorative --}}
     <div class="absolute top-1/4 right-0 w-64 h-64 bg-primary-50 rounded-full translate-x-1/2"></div>
 
@@ -73,7 +73,7 @@
                     <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 lg:p-8 hover-card group {{ $item['status'] === 'active' ? 'ring-2 ring-primary-100 border-primary-200' : '' }}">
                         <div class="flex flex-col sm:flex-row sm:items-start gap-4">
                             {{-- Icon --}}
-                            <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-primary-500 to-primary-600 flex items-center justify-center flex-shrink-0 shadow-lg shadow-primary-200/50 group-hover:scale-110 transition-transform">
+                            <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-primary-500 to-primary-600 flex items-center justify-center flex-shrink-0 shadow-lg shadow-primary-200/50 transition-transform duration-300 transform-gpu will-change-transform group-hover:scale-110">
                                 <i data-lucide="{{ $item['icon'] }}" class="w-6 h-6 text-white"></i>
                             </div>
 
@@ -124,7 +124,7 @@
             <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mt-12">
                 @foreach($important as $item)
                 <div class="hover-card bg-white rounded-2xl p-5 border border-gray-100 shadow-sm text-center group">
-                    <div class="w-10 h-10 rounded-xl bg-gradient-to-br {{ $item['gradient'] }} flex items-center justify-center mx-auto mb-3 shadow-lg group-hover:scale-110 transition-transform">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-br {{ $item['gradient'] }} flex items-center justify-center mx-auto mb-3 shadow-lg transition-transform duration-300 transform-gpu will-change-transform group-hover:scale-110">
                         <i data-lucide="{{ $item['icon'] }}" class="w-5 h-5 text-white"></i>
                     </div>
                     <p class="font-heading font-semibold text-gray-900 text-xs mb-1.5 leading-tight">

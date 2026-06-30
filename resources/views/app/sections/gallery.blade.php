@@ -1,7 +1,7 @@
 {{-- ============================================
     Section: Gallery Kegiatan Sekolah (Carousel)
     ============================================ --}}
-<section id="gallery" class="py-20 lg:py-24 bg-white relative overflow-hidden">
+<section id="gallery" class="relative overflow-hidden py-20 lg:py-24">
     {{-- Decorative --}}
     <div class="absolute top-0 left-0 w-72 h-72 bg-primary-50 rounded-full -translate-y-1/2 -translate-x-1/2"></div>
     <div class="absolute bottom-0 right-0 w-64 h-64 bg-secondary-50 rounded-full translate-y-1/3 translate-x-1/3"></div>

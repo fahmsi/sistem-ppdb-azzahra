@@ -55,7 +55,7 @@
 
                     {{-- Icon --}}
                     <div class="mb-5 flex justify-center">
-                        <div class="w-14 h-14 rounded-2xl bg-gradient-to-br {{ $item['gradient'] }} flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
+                        <div class="w-14 h-14 rounded-2xl bg-gradient-to-br {{ $item['gradient'] }} flex items-center justify-center shadow-lg transition-transform duration-300 transform-gpu will-change-transform group-hover:scale-110">
                             <i data-lucide="{{ $item['icon'] }}" class="w-7 h-7 text-white"></i>
                         </div>
                     </div>

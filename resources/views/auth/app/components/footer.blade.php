@@ -24,7 +24,7 @@
                 <a href="{{ $social['url'] }}"
                     target="_blank"
                     aria-label="{{ $social['name'] }}"
-                    class="w-11 h-11 rounded-xl bg-gray-800 flex items-center justify-center {{ $social['hover'] }} transition-all duration-300 hover:-translate-y-1 hover:shadow-lg flex-shrink-0 leading-none">
+                    class="w-11 h-11 rounded-xl bg-gray-800 flex items-center justify-center {{ $social['hover'] }} transition-[transform,background-color,box-shadow] duration-300 transform-gpu will-change-[transform,box-shadow] hover:-translate-y-1 hover:shadow-lg flex-shrink-0 leading-none">
                     <i class="{{ 'ri-' . $social['icon'] . '-fill' }} text-xl leading-none align-middle text-white"></i>
                 </a>
                 @endforeach

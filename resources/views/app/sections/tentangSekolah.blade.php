@@ -1,7 +1,7 @@
 {{-- ============================================
     Section 3: Tentang Sekolah + Tujuan
     ============================================ --}}
-<section id="tentang" class="py-20 lg:py-28 bg-white relative overflow-hidden">
+<section id="tentang" class="relative overflow-hidden py-20 lg:py-28">
     {{-- Decorative --}}
     <div class="absolute top-0 right-0 w-64 h-64 bg-primary-50 rounded-full -translate-y-1/2 translate-x-1/2"></div>
     <div class="absolute bottom-0 left-0 w-48 h-48 bg-secondary-50 rounded-full translate-y-1/2 -translate-x-1/2"></div>
@@ -24,7 +24,7 @@
                 {{-- Text --}}
                 <div class="text-gray-700 space-y-5 leading-relaxed fade-left">
                     <p class="text-lg text-justify">
-                        <strong class="text-gray-900">PAUD Al Qur'an Az-Zahra</strong> berkomitmen memberikan pendidikan berkualitas dengan memadukan
+                        <strong class="text-gray-900">PAUD Al Qur'an Azzahra</strong> berkomitmen memberikan pendidikan berkualitas dengan memadukan
                         <span class="text-primary-600 font-semibold">pembelajaran modern</span> dan
                         <span class="text-secondary-600 font-semibold">nilai-nilai keislaman</span>.
                     </p>
@@ -37,7 +37,7 @@
                     </p>
 
                     <p class="text-justify">
-                        <strong>PAUD Al Qur'an Az-Zahra</strong> juga mendukung penuh dalam mensukseskan
+                        <strong>PAUD Al Qur'an Azzahra</strong> juga mendukung penuh dalam mensukseskan
                         <span class="text-secondary-600 font-semibold">PROGRAM PAUD SATU TAHUN</span> di Kota Depok.
                     </p>
 
@@ -61,7 +61,7 @@
                         <img
                             src="{{ asset('images/foto_wisuda.jpg') }}"
                             class="w-full h-[420px] object-cover rounded-3xl shadow-2xl"
-                            alt="Lingkungan PAUD Az-Zahra"
+                            alt="Lingkungan PAUD Al Qur'an Azzahra"
                             loading="lazy">
 
                         {{-- Accent border --}}
@@ -101,9 +101,9 @@
 
         <div class="fade-up">
             <div class="text-center mb-12">
-                <h3 class="section-heading font-heading font-bold text-gray-900">
+                <h2 class="section-heading font-heading font-bold text-gray-900">
                     <span>Tujuan <span class="gradient-text"> Sekolah</span></span>
-                </h3>
+                </h2>
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-5xl mx-auto stagger-children">
@@ -111,7 +111,7 @@
                     <div class="hover-card bg-white border border-gray-100 rounded-2xl p-8 text-center shadow-sm group">
                         {{-- Icon --}}
                         <div class="mb-5 flex justify-center">
-                            <div class="w-16 h-16 rounded-2xl {{ $g['iconWrap'] }} flex items-center justify-center duration-300 group-hover:scale-110 transform transition-all">
+                            <div class="w-16 h-16 rounded-2xl {{ $g['iconWrap'] }} flex items-center justify-center transition-[transform,background-color] duration-300 ease-out transform-gpu will-change-transform group-hover:scale-110">
                                 <i data-lucide="{{ $g['icon'] }}" class="w-8 h-8 {{ $g['iconColor'] }}"></i>
                             </div>
                         </div>

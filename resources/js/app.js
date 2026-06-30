@@ -772,6 +772,37 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
+    // Prev / Next Button click
+    const prevBtn = document.getElementById('testiPrev');
+    const nextBtn = document.getElementById('testiNext');
+    const prevBtnMobile = document.getElementById('testiPrevMobile');
+    const nextBtnMobile = document.getElementById('testiNextMobile');
+
+    if (prevBtn) {
+        prevBtn.addEventListener('click', function () {
+            prevSlide();
+            startAutoPlay();
+        });
+    }
+    if (nextBtn) {
+        nextBtn.addEventListener('click', function () {
+            nextSlide();
+            startAutoPlay();
+        });
+    }
+    if (prevBtnMobile) {
+        prevBtnMobile.addEventListener('click', function () {
+            prevSlide();
+            startAutoPlay();
+        });
+    }
+    if (nextBtnMobile) {
+        nextBtnMobile.addEventListener('click', function () {
+            nextSlide();
+            startAutoPlay();
+        });
+    }
+
     // Pause on hover
     carousel.addEventListener('mouseenter', stopAutoPlay);
     carousel.addEventListener('mouseleave', startAutoPlay);

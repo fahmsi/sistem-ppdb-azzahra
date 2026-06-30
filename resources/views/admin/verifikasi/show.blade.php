@@ -23,7 +23,7 @@
             <i data-lucide="arrow-left" class="w-4 h-4"></i> Kembali ke Daftar
         </a>
         
-        <div class="flex items-center gap-3">
+        <div class="flex flex-wrap items-center gap-2 sm:gap-3">
             <span class="text-sm font-medium text-[#697a8d] dark:text-[#a1b0cb]">Status Saat Ini:</span>
             @if($detail->status === 'pending')
                 <span class="sneat-badge bg-[#f5f5f9] dark:bg-[#232333] text-[#697a8d] dark:text-[#a1b0cb] border border-[#d9dee3] dark:border-[#434463]">Pending</span>
@@ -51,7 +51,7 @@
                     <i data-lucide="user" class="w-5 h-5 text-[#696cff]"></i>
                     <h3 class="font-heading font-semibold text-[#566a7f] dark:text-[#d5d5e2]">Profil Calon Siswa</h3>
                 </div>
-                <div class="p-6">
+                <div class="p-4 sm:p-6">
                     <div class="flex flex-col sm:flex-row gap-6 mb-6">
                         <img src="{{ $detail->siswa->foto ? Storage::url($detail->siswa->foto) : asset('images/default-avatar.png') }}" class="w-24 h-32 object-cover rounded-lg border border-[#d9dee3] dark:border-[#434463] shadow-sm cursor-pointer hover:opacity-80 hover:shadow-lg transition-all duration-300" alt="Foto Siswa" onclick="openLightbox(this.src)">
                         <div class="flex-1 space-y-2">
@@ -63,7 +63,7 @@
                                 <p class="text-xs text-[#a1b0cb] uppercase tracking-wider">No. Pendaftaran</p>
                                 <p class="font-semibold text-[#566a7f] dark:text-[#d5d5e2]">{{ $detail->nomor_pendaftaran }}</p>
                             </div>
-                            <div class="grid grid-cols-2 gap-4">
+                            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
                                 <div>
                                     <p class="text-xs text-[#a1b0cb] uppercase">Jenis Kelamin</p>
                                     <p class="font-medium text-[#566a7f] dark:text-[#d5d5e2]">{{ $detail->siswa->jenis_kelamin == 'L' ? 'Laki-laki' : 'Perempuan' }}</p>
@@ -99,24 +99,24 @@
                     <i data-lucide="folder-open" class="w-5 h-5 text-[#696cff]"></i>
                     <h3 class="font-heading font-semibold text-[#566a7f] dark:text-[#d5d5e2]">Berkas Lampiran</h3>
                 </div>
-                <div class="p-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div class="grid grid-cols-1 gap-4 p-4 sm:grid-cols-2 sm:p-6">
                     
                     <!-- KK -->
-                    <div class="border border-[#d9dee3] dark:border-[#434463] rounded-lg p-4 flex flex-col items-center text-center hover:border-[#696cff] hover:bg-[#f5f5f9] dark:hover:bg-[#232333] transition-colors">
+                    <div class="flex flex-col items-center rounded-lg border border-[#d9dee3] p-4 text-center transition-colors hover:border-[#696cff] hover:bg-[#f5f5f9] dark:border-[#434463] dark:hover:bg-[#232333]">
                         <i data-lucide="file-text" class="w-12 h-12 text-[#a1b0cb] mb-3"></i>
                         <h4 class="font-medium text-[#566a7f] dark:text-[#d5d5e2] mb-1">Kartu Keluarga (KK)</h4>
                         <p class="text-xs text-[#a1b0cb] mb-4">No: {{ $detail->siswa->no_kk ?? '-' }}</p>
-                        <a href="{{ $detail->siswa->foto_kk ? route('dokumen.show', ['siswa' => $detail->siswa, 'field' => 'foto_kk']) : '#' }}" onclick="openLightbox(this.href); event.preventDefault();" class="w-full inline-flex justify-center items-center gap-2 px-3 py-2 text-sm font-medium text-[#696cff] bg-[#e7e7ff] dark:bg-[#696cff]/20 hover:bg-[#d4d5ff] dark:hover:bg-[#696cff]/30 rounded-md transition-all duration-300 cursor-pointer hover:shadow-lg">
+                        <a href="{{ $detail->siswa->foto_kk ? route('dokumen.show', ['siswa' => $detail->siswa, 'field' => 'foto_kk']) : '#' }}" onclick="openLightbox(this.href); event.preventDefault();" class="inline-flex w-full cursor-pointer items-center justify-center gap-2 rounded-md bg-[#e7e7ff] px-3 py-2 text-sm font-medium text-[#696cff] transition-colors duration-200 hover:bg-[#d4d5ff] dark:bg-[#696cff]/20 dark:hover:bg-[#696cff]/30">
                             <i data-lucide="zoom-in" class="w-4 h-4"></i> Perbesar Dokumen
                         </a>
                     </div>
 
                     <!-- Akta -->
-                    <div class="border border-[#d9dee3] dark:border-[#434463] rounded-lg p-4 flex flex-col items-center text-center hover:border-[#696cff] hover:bg-[#f5f5f9] dark:hover:bg-[#232333] transition-colors">
+                    <div class="flex flex-col items-center rounded-lg border border-[#d9dee3] p-4 text-center transition-colors hover:border-[#696cff] hover:bg-[#f5f5f9] dark:border-[#434463] dark:hover:bg-[#232333]">
                         <i data-lucide="file-badge-2" class="w-12 h-12 text-[#a1b0cb] mb-3"></i>
                         <h4 class="font-medium text-[#566a7f] dark:text-[#d5d5e2] mb-1">Akta Kelahiran</h4>
                         <p class="text-xs text-[#a1b0cb] mb-4">Pastikan terbaca jelas</p>
-                        <a href="{{ $detail->siswa->foto_akta ? route('dokumen.show', ['siswa' => $detail->siswa, 'field' => 'foto_akta']) : '#' }}" onclick="openLightbox(this.href); event.preventDefault();" class="w-full inline-flex justify-center items-center gap-2 px-3 py-2 text-sm font-medium text-[#696cff] bg-[#e7e7ff] dark:bg-[#696cff]/20 hover:bg-[#d4d5ff] dark:hover:bg-[#696cff]/30 rounded-md transition-all duration-300 cursor-pointer hover:shadow-lg">
+                        <a href="{{ $detail->siswa->foto_akta ? route('dokumen.show', ['siswa' => $detail->siswa, 'field' => 'foto_akta']) : '#' }}" onclick="openLightbox(this.href); event.preventDefault();" class="inline-flex w-full cursor-pointer items-center justify-center gap-2 rounded-md bg-[#e7e7ff] px-3 py-2 text-sm font-medium text-[#696cff] transition-colors duration-200 hover:bg-[#d4d5ff] dark:bg-[#696cff]/20 dark:hover:bg-[#696cff]/30">
                             <i data-lucide="zoom-in" class="w-4 h-4"></i> Perbesar Dokumen
                         </a>
                     </div>
@@ -126,7 +126,7 @@
             <!-- Pembayaran / Daftar Ulang -->
             @if($payment)
             <div class="bg-white dark:bg-[#2b2c40] rounded-lg shadow-sneat dark:shadow-sneat-dark border border-[#d9dee3] dark:border-[#434463] overflow-hidden mt-6">
-                <div class="bg-blue-50 dark:bg-blue-500/10 px-6 py-4 border-b border-blue-100 dark:border-blue-500/20 flex items-center justify-between">
+                <div class="flex flex-col items-start justify-between gap-3 border-b border-blue-100 bg-blue-50 px-4 py-4 dark:border-blue-500/20 dark:bg-blue-500/10 sm:flex-row sm:items-center sm:px-6">
                     <div class="flex items-center gap-2">
                         <i data-lucide="credit-card" class="w-5 h-5 text-blue-600 dark:text-blue-400"></i>
                         <h3 class="font-heading font-semibold text-blue-900 dark:text-blue-300">Bukti Daftar Ulang (Pembayaran)</h3>
@@ -140,7 +140,7 @@
                     @endif
                 </div>
                 
-                <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="grid grid-cols-1 gap-6 p-4 sm:p-6 md:grid-cols-2">
                     <div>
                         <p class="text-sm text-[#a1b0cb] mb-1">Nominal Ditransfer</p>
                         <p class="text-2xl font-bold text-[#566a7f] dark:text-[#d5d5e2] mb-4">Rp {{ number_format($payment->jumlah, 0, ',', '.') }}</p>
@@ -157,7 +157,7 @@
                         @endif
                     </div>
                     
-                    <div class="border-l border-[#d9dee3] dark:border-[#434463] pl-0 md:pl-6">
+                    <div class="border-t border-[#d9dee3] pt-6 dark:border-[#434463] md:border-l md:border-t-0 md:pl-6 md:pt-0">
                         <form action="{{ route('admin.pembayaran.verify', $payment->id) }}" method="POST" class="space-y-4">
                             @csrf
                             @method('PATCH')
@@ -206,13 +206,13 @@
 
         <!-- Right Column: Aksi Verifikasi -->
         <div class="space-y-6 relative">
-            <div class="bg-white dark:bg-[#2b2c40] rounded-lg shadow-sneat dark:shadow-sneat-dark border border-[#d9dee3] dark:border-[#434463] overflow-hidden sticky top-6">
+            <div class="overflow-hidden rounded-lg border border-[#d9dee3] bg-white shadow-sneat dark:border-[#434463] dark:bg-[#2b2c40] dark:shadow-sneat-dark lg:sticky lg:top-6">
                 <div class="bg-[#2b2c40] dark:bg-[#232333] px-6 py-4 border-b border-[#434463] flex items-center gap-2">
                     <i data-lucide="check-square" class="w-5 h-5 text-[#a1b0cb]"></i>
                     <h3 class="font-heading font-semibold text-white">Aksi Verifikasi</h3>
                 </div>
                 
-                <div class="p-6">
+                <div class="p-4 sm:p-6">
                     <!-- Checklist Dokumen (Only if not final) -->
                     @if($detail->status !== 'diterima' && $detail->status !== 'ditolak')
                         <div class="mb-5 p-4 rounded-lg bg-slate-50 dark:bg-[#232333] border border-[#d9dee3] dark:border-[#434463]">
@@ -337,11 +337,11 @@
                                     <i data-lucide="check" class="w-5 h-5"></i> Setujui Pendaftaran
                                 </button>
                                 
-                                <button type="button" onclick="handleRevisi()" class="w-full flex justify-center items-center gap-2 py-3 px-4 bg-white hover:bg-orange-50 text-orange-600 border border-orange-200 font-semibold rounded-lg transition-colors">
+                                <button type="button" onclick="handleRevisi()" class="flex w-full items-center justify-center gap-2 rounded-lg border border-orange-200 bg-white px-4 py-3 font-semibold text-orange-600 transition-colors hover:bg-orange-50 dark:border-orange-500/30 dark:bg-[#2b2c40] dark:text-orange-400 dark:hover:bg-orange-500/10">
                                     <i data-lucide="edit-3" class="w-5 h-5"></i> Minta Revisi Dokumen
                                 </button>
 
-                                <button type="button" onclick="handleTolak()" class="w-full flex justify-center items-center gap-2 py-3 px-4 bg-white hover:bg-red-50 text-red-600 border border-red-200 font-semibold rounded-lg transition-colors">
+                                <button type="button" onclick="handleTolak()" class="flex w-full items-center justify-center gap-2 rounded-lg border border-red-200 bg-white px-4 py-3 font-semibold text-red-600 transition-colors hover:bg-red-50 dark:border-red-500/30 dark:bg-[#2b2c40] dark:text-red-400 dark:hover:bg-red-500/10">
                                     <i data-lucide="x" class="w-5 h-5"></i> Tolak Pendaftaran
                                 </button>
                             </div>
@@ -463,8 +463,8 @@
 </script>
 <!-- Lightbox Modal -->
 <div id="lightboxModal" class="fixed inset-0 z-[9999] bg-black/90 hidden flex items-center justify-center transition-opacity duration-300 opacity-0 backdrop-blur-sm">
-    <button onclick="closeLightbox()" class="absolute top-5 right-5 text-white text-4xl cursor-pointer hover:text-gray-300 z-50 p-2 leading-none">&times;</button>
-    <img id="lightboxImage" src="" class="max-w-full max-h-[90vh] object-contain p-4 transform scale-95 transition-transform duration-300 shadow-2xl rounded-lg">
+    <button type="button" onclick="closeLightbox()" class="absolute right-3 top-3 z-50 flex h-11 w-11 cursor-pointer items-center justify-center rounded-full bg-black/40 text-3xl leading-none text-white transition-colors hover:bg-black/70 hover:text-gray-200 sm:right-5 sm:top-5" aria-label="Tutup pratinjau dokumen">&times;</button>
+    <img id="lightboxImage" src="" alt="Pratinjau dokumen" class="max-h-[90vh] max-w-full scale-95 transform rounded-lg object-contain p-4 shadow-2xl transition-transform duration-300">
 </div>
 
 <script>

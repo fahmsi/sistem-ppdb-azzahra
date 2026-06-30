@@ -1,5 +1,5 @@
 {{-- Section: Gerakan 7 Kebiasaan Hebat Anak Indonesia --}}
-<section id="g7kaih" class="relative overflow-hidden bg-white py-20 lg:py-28">
+<section id="g7kaih" class="relative overflow-hidden py-20 lg:py-28">
     <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary-200 to-transparent"></div>
     <div class="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-secondary-200 to-transparent"></div>
 
@@ -136,10 +136,10 @@
                 @php
                     $spanClass = $loop->last ? 'lg:col-span-4 lg:col-start-5' : 'lg:col-span-4';
                 @endphp
-                <article class="group relative overflow-hidden rounded-lg border {{ $habit['border'] }} bg-white p-5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-primary-900/5 {{ $spanClass }}">
+                <article class="group relative overflow-hidden rounded-lg border {{ $habit['border'] }} bg-white p-5 shadow-sm transition-[transform,box-shadow] duration-300 transform-gpu will-change-[transform,box-shadow] hover:-translate-y-1 hover:shadow-xl hover:shadow-primary-900/5 {{ $spanClass }}">
                     <div class="absolute left-0 top-0 h-1 w-full bg-gradient-to-r {{ $habit['gradient'] }} opacity-80"></div>
                     <div class="flex items-start gap-4">
-                        <span class="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br {{ $habit['gradient'] }} text-white shadow-md transition-transform duration-300 group-hover:scale-105">
+                        <span class="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br {{ $habit['gradient'] }} text-white shadow-md transition-transform duration-300 transform-gpu will-change-transform group-hover:scale-105">
                             <i data-lucide="{{ $habit['icon'] }}" class="h-6 w-6" aria-hidden="true"></i>
                         </span>
                         <div class="min-w-0">
