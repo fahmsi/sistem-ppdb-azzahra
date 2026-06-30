@@ -22,7 +22,7 @@
     <script src="https://unpkg.com/lucide@latest" defer></script>
 
 </head>
-<body class="bg-gray-50 font-body antialiased text-gray-900">
+<body class="overflow-x-hidden bg-gray-50 font-body antialiased text-gray-900">
 
     @include('app.components.navbar')
 

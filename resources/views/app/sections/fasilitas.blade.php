@@ -80,7 +80,7 @@
                         <figure class="group relative overflow-hidden rounded-[1.75rem] border-4 border-white bg-gray-100 shadow-xl shadow-primary-900/10 {{ $loop->first ? 'col-span-2 h-[330px] sm:col-span-1 sm:row-span-2 sm:h-auto sm:min-h-[580px]' : 'h-48 sm:h-auto sm:min-h-[280px]' }}">
                             <img src="{{ asset($photo['src']) }}"
                                  alt="{{ $photo['alt'] }}"
-                                 class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105 {{ $loop->first ? 'object-center' : '' }}"
+                                 class="h-full w-full object-cover transition-transform duration-700 transform-gpu will-change-transform group-hover:scale-105 {{ $loop->first ? 'object-center' : '' }}"
                                  loading="lazy">
                             <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-900/10 to-transparent"></div>
 
@@ -131,7 +131,7 @@
                     <div class="relative mt-8 grid gap-4">
                         @foreach ($facilitySupports as $support)
                             <div class="group flex items-start gap-4 rounded-2xl border border-white/10 bg-white/[0.07] p-4 backdrop-blur-sm transition-colors duration-300 hover:bg-white/[0.12]">
-                                <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl ring-1 ring-inset transition-transform duration-300 group-hover:scale-105 {{ $support['style'] }}">
+                                <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl ring-1 ring-inset transition-transform duration-300 transform-gpu will-change-transform group-hover:scale-105 {{ $support['style'] }}">
                                     <i data-lucide="{{ $support['icon'] }}" class="h-5 w-5" aria-hidden="true"></i>
                                 </span>
                                 <div>

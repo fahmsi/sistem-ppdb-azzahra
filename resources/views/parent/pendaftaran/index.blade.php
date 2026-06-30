@@ -3,11 +3,11 @@
 @section('header_title', 'Pilih Gelombang Pendaftaran')
 @section('content')
 <div class="space-y-6">
-    <div class="bg-white dark:bg-[#2b2c40] rounded-lg shadow-sneat dark:shadow-sneat-dark border border-[#d9dee3] dark:border-[#434463] p-6 sm:p-8">
-        <h2 class="text-2xl font-heading font-bold text-[#566a7f] dark:text-[#d5d5e2] mb-4">Gelombang Pendaftaran Tersedia</h2>
+    <div class="rounded-lg border border-[#d9dee3] bg-white p-4 shadow-sneat dark:border-[#434463] dark:bg-[#2b2c40] dark:shadow-sneat-dark sm:p-8">
+        <h2 class="mb-4 font-heading text-xl font-bold text-[#566a7f] dark:text-[#d5d5e2] sm:text-2xl">Gelombang Pendaftaran Tersedia</h2>
         
         @if($hasActiveRegistration)
-        <div class="p-4 rounded-lg bg-yellow-50 dark:bg-yellow-500/10 border border-yellow-200 dark:border-yellow-500/20 flex items-center gap-3">
+        <div class="flex items-start gap-3 rounded-lg border border-yellow-200 bg-yellow-50 p-4 dark:border-yellow-500/20 dark:bg-yellow-500/10">
             <i data-lucide="alert-circle" class="w-5 h-5 text-yellow-500 flex-shrink-0"></i>
             <p class="text-yellow-800 dark:text-yellow-300 text-sm">
                 Anda sudah terdaftar pada salah satu gelombang. Silakan pantau status pendaftaran anak Anda di dashboard.
@@ -30,7 +30,7 @@
     </div>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         @forelse($pendaftarans as $p)
-        <div class="bg-white dark:bg-[#2b2c40] rounded-lg shadow-sneat dark:shadow-sneat-dark border border-[#d9dee3] dark:border-[#434463] overflow-hidden flex flex-col hover:shadow-sneat-lg dark:hover:shadow-sneat-dark-lg transition-shadow">
+        <div class="flex flex-col overflow-hidden rounded-lg border border-[#d9dee3] bg-white shadow-sneat transition-[border-color,box-shadow] duration-200 hover:border-[#b0b1ff] hover:shadow-sneat-lg dark:border-[#434463] dark:bg-[#2b2c40] dark:shadow-sneat-dark dark:hover:border-[#696cff] dark:hover:shadow-sneat-dark-lg">
             @if($p->gambar)
                 <img src="{{ Storage::url($p->gambar) }}" class="w-full h-40 object-cover" alt="Banner Gelombang">
             @else
@@ -39,11 +39,11 @@
                 </div>
             @endif
             <div class="p-6 flex-1 flex flex-col">
-                <div class="flex items-center justify-between mb-3">
+                <div class="mb-3 flex flex-wrap items-start justify-between gap-2">
                     <span class="sneat-badge {{ $p->status === 'buka' ? 'bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400' : 'bg-red-50 dark:bg-red-500/10 text-red-600 dark:text-red-400' }}">
                         {{ $p->status === 'buka' ? 'Pendaftaran Dibuka' : 'Ditutup' }}
                     </span>
-                    <span class="text-sm font-medium text-[#a1b0cb]">T.A. {{ $p->tahun_ajaran }}</span>
+                    <span class="whitespace-nowrap text-sm font-medium text-[#a1b0cb]">T.A. {{ $p->tahun_ajaran }}</span>
                 </div>
                 <h3 class="text-xl font-heading font-bold text-[#566a7f] dark:text-[#d5d5e2] mb-2">{{ $p->gelombang }}</h3>
                 <div class="space-y-2 mb-6">

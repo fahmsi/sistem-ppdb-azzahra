@@ -112,7 +112,7 @@
                     <div class="hover-card bg-white border border-gray-100 rounded-2xl p-8 text-center shadow-sm group">
                         {{-- Icon --}}
                         <div class="mb-5 flex justify-center">
-                            <div class="w-16 h-16 rounded-2xl bg-{{ $g['color'] }}-50 flex items-center justify-center group-hover:bg-{{ $g['color'] }}-100 transition-colors duration-300 group-hover:scale-110 transform transition-transform">
+                            <div class="w-16 h-16 rounded-2xl bg-{{ $g['color'] }}-50 flex items-center justify-center group-hover:bg-{{ $g['color'] }}-100 transition-[transform,background-color] duration-300 ease-out transform-gpu will-change-transform group-hover:scale-110">
                                 <i data-lucide="{{ $g['icon'] }}" class="w-8 h-8 text-{{ $g['color'] }}-600"></i>
                             </div>
                         </div>

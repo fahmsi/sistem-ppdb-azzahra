@@ -1,7 +1,7 @@
 {{-- ============================================
     Section 13: Kontak & Google Maps
     ============================================ --}}
-<section id="kontak" class="py-20 lg:py-28 bg-gradient-to-b from-gray-50 to-white relative overflow-hidden islamic-pattern">
+<section id="kontak" class="relative overflow-hidden py-20 lg:py-28">
     {{-- Decorative --}}
     <div class="absolute bottom-0 left-0 w-80 h-80 bg-secondary-50 rounded-full translate-y-1/2 -translate-x-1/3"></div>
 

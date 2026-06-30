@@ -16,11 +16,12 @@
     <script src="https://unpkg.com/lucide@latest" defer></script>
 </head>
 <body class="min-h-screen bg-[#f7f8fc] font-body text-slate-900 antialiased">
-    <a href="{{ url('/') }}"
-       class="fixed left-4 top-4 z-50 inline-flex items-center gap-2 rounded-2xl border border-slate-200 bg-white/95 px-4 py-3 text-sm font-bold text-slate-600 shadow-lg shadow-slate-900/[0.07] backdrop-blur-md transition-all hover:-translate-y-0.5 hover:border-indigo-200 hover:text-[#5a5de6] hover:shadow-xl focus:outline-none focus-visible:ring-4 focus-visible:ring-indigo-100 sm:left-6 sm:top-6"
-       aria-label="Kembali ke beranda">
-        <i data-lucide="arrow-left" class="h-4 w-4"></i>
-        <span>Kembali ke Beranda</span>
+    <a href="{{ url()->previous() === url()->current() ? url('/') : url()->previous() }}"
+       onclick="if(document.referrer && document.referrer.includes(window.location.hostname)) { event.preventDefault(); window.history.back(); }"
+       class="group fixed left-4 top-4 z-50 inline-flex items-center gap-2 rounded-2xl border border-slate-200 bg-white/95 px-4 py-3 text-sm font-bold text-slate-600 shadow-lg shadow-slate-900/[0.07] backdrop-blur-md transition-[transform,background-color,border-color,color,box-shadow] duration-300 transform-gpu will-change-[transform,box-shadow] hover:-translate-y-0.5 hover:border-indigo-200 hover:text-[#5a5de6] hover:shadow-xl focus:outline-none focus-visible:ring-4 focus-visible:ring-indigo-100 sm:left-6 sm:top-6"
+       aria-label="Kembali ke halaman sebelumnya">
+        <i data-lucide="arrow-left" class="h-4 w-4 transition-transform duration-300 transform-gpu will-change-transform group-hover:-translate-x-0.5"></i>
+        <span>Kembali</span>
     </a>
 
     <main>

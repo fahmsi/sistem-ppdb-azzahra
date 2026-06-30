@@ -89,17 +89,19 @@
             @endphp
 
             {{-- Bento highlight cards --}}
-            <div class="stagger-children grid gap-5 sm:grid-cols-2 lg:col-span-8">
+            <div class="fade-up grid gap-5 sm:grid-cols-2 lg:col-span-8">
                 @foreach ($highlights as $item)
-                    <article class="group relative flex min-h-[285px] flex-col overflow-hidden rounded-[1.75rem] border border-white/90 bg-white/85 p-6 shadow-lg shadow-primary-900/[0.05] backdrop-blur-md transition-all duration-500 hover:-translate-y-1.5 hover:shadow-2xl hover:shadow-primary-900/10 sm:p-7 {{ $item['border'] }}">
+                    <a href="{{ $item['href'] }}"
+                       class="group relative flex min-h-[285px] transform-gpu cursor-pointer flex-col overflow-hidden rounded-[1.75rem] border border-white/90 bg-white/90 p-6 shadow-lg shadow-primary-900/[0.05] transition-[transform,box-shadow,border-color] duration-200 ease-out will-change-transform hover:-translate-y-0.5 hover:shadow-xl hover:shadow-primary-900/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 motion-reduce:transform-none motion-reduce:transition-none sm:p-7 {{ $item['border'] }}"
+                       aria-label="{{ $item['link_label'] }}: {{ $item['title'] }}">
                         <div class="absolute inset-x-0 top-0 h-1 bg-gradient-to-r {{ $item['gradient'] }}"></div>
-                        <div class="absolute -right-14 -top-14 h-36 w-36 rounded-full {{ $item['glow'] }} opacity-40 blur-2xl transition-transform duration-700 group-hover:scale-125" aria-hidden="true"></div>
+                        <div class="absolute -right-14 -top-14 h-36 w-36 rounded-full {{ $item['glow'] }} opacity-40 blur-2xl" aria-hidden="true"></div>
                         <span class="absolute right-6 top-5 font-heading text-4xl font-black text-gray-300 transition-colors duration-300 group-hover:text-gray-200/80" aria-hidden="true">
                             {{ str_pad($loop->iteration, 2, '0', STR_PAD_LEFT) }}
                         </span>
 
                         <div class="relative mb-5 flex items-center gap-4 pr-12">
-                            <span class="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl shadow-sm ring-1 ring-inset transition-transform duration-300 group-hover:-rotate-3 group-hover:scale-110 {{ $item['soft'] }}">
+                            <span class="flex h-12 w-12 shrink-0 transform-gpu items-center justify-center rounded-2xl shadow-sm ring-1 ring-inset transition-[transform,box-shadow] duration-200 ease-out will-change-transform group-hover:-translate-y-0.5 group-hover:shadow-md motion-reduce:transform-none motion-reduce:transition-none {{ $item['soft'] }}">
                                 <i data-lucide="{{ $item['icon'] }}" class="h-6 w-6" aria-hidden="true"></i>
                             </span>
                             <p class="text-[11px] font-extrabold uppercase tracking-[0.16em] text-gray-400">
@@ -119,13 +121,11 @@
                                 <span class="h-1.5 w-1.5 rounded-full bg-secondary-500"></span>
                                 {{ $item['note'] }}
                             </span>
-                            <a href="{{ $item['href'] }}"
-                               class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gray-50 text-gray-500 transition-all duration-300 hover:bg-primary-600 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2"
-                               aria-label="{{ $item['link_label'] }}">
-                                <i data-lucide="arrow-up-right" class="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" aria-hidden="true"></i>
-                            </a>
+                            <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-gray-50 text-gray-500 transition-colors duration-200 group-hover:bg-primary-600 group-hover:text-white" aria-hidden="true">
+                                <i data-lucide="arrow-up-right" class="h-4 w-4" aria-hidden="true"></i>
+                            </span>
                         </div>
-                    </article>
+                    </a>
                 @endforeach
             </div>
         </div>
@@ -133,7 +133,7 @@
 </section>
 
 {{-- Section: Legalitas Izin Resmi --}}
-<section id="legalitas" class="relative overflow-hidden bg-gradient-to-br from-slate-50 via-white to-secondary-50 py-20 lg:py-28">
+<section id="legalitas" class="relative overflow-hidden py-20 lg:py-28">
     <div class="absolute left-0 top-0 h-full w-full islamic-pattern opacity-70"></div>
 
     <div class="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">

@@ -110,13 +110,13 @@
         @endphp
 
         {{-- Program exploration cards --}}
-        <div class="stagger-children mt-12 grid items-start gap-6 lg:grid-cols-3 lg:gap-7">
+        <div class="fade-up mt-12 grid items-start gap-6 lg:grid-cols-3 lg:gap-7">
             @foreach ($programs as $program)
-                <article class="group overflow-hidden rounded-[2rem] border border-white/90 bg-white/85 shadow-xl shadow-primary-900/[0.06] backdrop-blur-md transition-all duration-500 hover:-translate-y-1 hover:shadow-2xl hover:shadow-primary-900/10 {{ $program['border'] }}">
+                <article class="group transform-gpu overflow-hidden rounded-[2rem] border border-white/90 bg-white/90 shadow-xl shadow-primary-900/[0.06] transition-[transform,box-shadow,border-color] duration-200 ease-out will-change-transform hover:-translate-y-0.5 hover:shadow-xl hover:shadow-primary-900/10 motion-reduce:transform-none motion-reduce:transition-none {{ $program['border'] }}">
                     <div class="relative h-60 overflow-hidden sm:h-72 lg:h-64">
                         <img src="{{ asset($program['image']) }}"
                              alt="{{ $program['image_alt'] }}"
-                             class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                             class="h-full w-full transform-gpu object-cover transition-transform duration-500 ease-out will-change-transform group-hover:scale-[1.03] motion-reduce:transform-none motion-reduce:transition-none"
                              loading="lazy">
                         <div class="absolute inset-0 bg-gradient-to-t from-slate-950/75 via-slate-900/10 to-transparent"></div>
                         <span class="absolute left-5 top-5 inline-flex items-center gap-2 rounded-full border border-white/25 bg-slate-950/35 px-3 py-2 text-[10px] font-extrabold uppercase tracking-[0.14em] text-white backdrop-blur-md">
@@ -127,13 +127,13 @@
                     </div>
 
                     <div class="relative p-6 sm:p-7">
-                        <span class="absolute -top-7 left-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br {{ $program['gradient'] }} text-white shadow-lg ring-4 ring-white transition-transform duration-300 group-hover:-rotate-3 group-hover:scale-105">
-                            <i data-lucide="{{ $program['icon'] }}" class="h-7 w-7" aria-hidden="true"></i>
+                        <span class="absolute -top-7 left-6 flex h-14 w-14 transform-gpu items-center justify-center rounded-2xl bg-gradient-to-br {{ $program['gradient'] }} text-white shadow-lg ring-4 ring-white transition-[transform,box-shadow] duration-200 ease-out will-change-transform group-hover:-translate-y-0.5 group-hover:shadow-xl motion-reduce:transform-none motion-reduce:transition-none">
+                            <i data-lucide="{{ $program['icon'] }}" class="h-8 w-8" aria-hidden="true"></i>
                         </span>
 
                         <p class="mt-3 text-[11px] font-extrabold uppercase tracking-[0.17em] text-gray-400">{{ $program['eyebrow'] }}</p>
                         <h3 class="mt-2 font-heading text-2xl font-extrabold text-gray-900">{{ $program['title'] }}</h3>
-                        <p class="mt-4 text-sm leading-7 text-gray-600">{{ $program['summary'] }}</p>
+                        <p class="mt-4 text-sm text-justify leading-7 text-gray-600">{{ $program['summary'] }}</p>
 
                         <div class="mt-5">
                             <p class="text-[10px] font-extrabold uppercase tracking-[0.16em] text-gray-400">Yang ikut berkembang</p>
@@ -173,7 +173,7 @@
                                         <i data-lucide="lightbulb" class="h-4 w-4 text-amber-500" aria-hidden="true"></i>
                                         Mengapa ini penting?
                                     </p>
-                                    <p class="mt-2 text-xs leading-5 text-gray-500">{{ $program['why'] }}</p>
+                                    <p class="mt-2 text-xs text-justify leading-5 text-gray-500">{{ $program['why'] }}</p>
                                 </div>
                             </div>
                         </details>
@@ -243,11 +243,11 @@
 
                 <div class="stagger-children mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                     @foreach($achievements as $achievement)
-                        <article class="group overflow-hidden rounded-[1.75rem] border border-white/90 bg-white/85 shadow-lg shadow-primary-900/[0.05] backdrop-blur-sm transition-all duration-500 hover:-translate-y-1.5 hover:border-primary-100 hover:shadow-2xl hover:shadow-primary-900/10">
+                        <article class="group overflow-hidden rounded-[1.75rem] border border-white/90 bg-white/85 shadow-lg shadow-primary-900/[0.05] backdrop-blur-sm transition-[transform,border-color,box-shadow] duration-500 transform-gpu will-change-[transform,box-shadow] hover:-translate-y-1.5 hover:border-primary-100 hover:shadow-2xl hover:shadow-primary-900/10">
                             <div class="relative h-60 overflow-hidden">
                                 <img src="{{ $achievement->image_url }}"
                                      alt="{{ $achievement->title }}"
-                                     class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                                     class="h-full w-full object-cover transition-transform duration-700 transform-gpu will-change-transform group-hover:scale-105"
                                      loading="lazy">
                                 <div class="absolute inset-0 bg-gradient-to-t from-primary-950/75 via-primary-900/5 to-transparent"></div>
 

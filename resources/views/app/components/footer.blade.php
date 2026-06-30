@@ -13,10 +13,10 @@
     <div class="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 
         {{-- Main Footer Content --}}
-        <div class="grid gap-10 py-12 sm:py-14 md:grid-cols-3 md:gap-8 lg:gap-12">
+        <div class="py-12 sm:py-14">
             
             {{-- Column 3: Social Media --}}
-            <div class="flex flex-col items-center text-center md:items-start md:text-left">
+            <div class="mx-auto flex max-w-xl flex-col items-center text-center">
                 <h3 class="mb-4 text-xs font-bold uppercase tracking-[0.16em] text-gray-500">Ikuti Kami</h3>
                 @php
                     $socials = [
@@ -33,7 +33,7 @@
                            target="_blank"
                            rel="noopener noreferrer"
                            aria-label="{{ $social['name'] }}"
-                           class="group flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-white/[0.06] ring-1 ring-white/10 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg {{ $social['color'] }}">
+                           class="group flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-white/[0.06] ring-1 ring-white/10 transition-[transform,background-color,box-shadow] duration-300 transform-gpu will-change-[transform,box-shadow] hover:-translate-y-1 hover:shadow-lg {{ $social['color'] }}">
                             <i class="{{ 'ri-' . $social['icon'] . '-fill' }} text-lg text-gray-400 transition-colors group-hover:text-white"></i>
                         </a>
                     @endforeach
@@ -50,11 +50,11 @@
             {{-- Copyright --}}
             <p class="text-center text-sm sm:text-left">
                 &copy; {{ date('Y') }} <span class="font-semibold text-gray-300">PAUD AL QUR'AN AZZAHRA</span>.
-                Hak Cipta Dilindungi.
+                <!-- Hak Cipta Dilindungi. -->
             </p>
 
             {{-- Legal Links --}}
-            <nav class="flex items-center gap-1 text-sm" aria-label="Informasi legal">
+            <nav class="flex flex-wrap items-center justify-center gap-1 text-sm" aria-label="Informasi legal">
                 <a href="{{ route('terms') }}"
                    class="rounded-lg px-3 py-1.5 transition-colors duration-200 hover:bg-white/[0.06] hover:text-white">
                     Syarat & Ketentuan
@@ -68,7 +68,7 @@
         </div>
 
         {{-- Creator Credit --}}
-        <div class="flex items-center justify-center gap-1.5 border-t border-gray-800/50 py-4 text-xs text-gray-600">
+        <div class="flex flex-wrap items-center justify-center gap-1.5 border-t border-gray-800/50 px-4 py-4 text-center text-xs text-gray-600">
             Made with
             <i data-lucide="heart" class="inline-block h-3.5 w-3.5 animate-pulse fill-red-500 text-red-500"></i>
             and
@@ -91,7 +91,7 @@
 <button id="backToTop"
     onclick="window.scrollTo({top: 0, behavior: 'smooth'})"
     class="group fixed bottom-6 right-6 z-50 flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-primary-600 to-primary-500 text-white opacity-0 invisible shadow-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-primary-500/30"
-    aria-label="Back to top">
+    aria-label="Kembali ke atas">
     <i data-lucide="arrow-up" class="h-5 w-5 group-hover:animate-bounce"></i>
 </button>
 

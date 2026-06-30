@@ -51,7 +51,7 @@
                 </span>
                 <span class="leading-tight">
                     <span class="block text-[10px] font-bold uppercase tracking-[0.22em] text-indigo-200">Portal SPMB</span>
-                    <span class="mt-1 block text-sm font-extrabold tracking-tight">PAUD Al Qur'an Az-Zahra</span>
+                    <span class="mt-1 block text-sm font-extrabold tracking-tight">PAUD Al Qur'an Azzahra</span>
                 </span>
             </a>
 
@@ -294,7 +294,7 @@
                                 <a href="{{ route('terms') }}" target="_blank" rel="noopener noreferrer" class="font-bold text-[#5a5de6] hover:underline">Syarat & Ketentuan</a>
                                 dan
                                 <a href="{{ route('privacy') }}" target="_blank" rel="noopener noreferrer" class="font-bold text-[#5a5de6] hover:underline">Kebijakan Privasi</a>
-                                SPMB PAUD Az-Zahra.
+                                SPMB PAUD Azzahra.
                             </span>
                         </label>
                         @error('terms_accepted')
@@ -306,15 +306,15 @@
 
                     <button id="submitButton"
                             type="submit"
-                            class="group flex h-14 w-full items-center justify-center gap-2.5 rounded-2xl bg-[#5a5de6] px-5 text-sm font-extrabold text-white shadow-lg shadow-indigo-600/20 transition-all hover:-translate-y-0.5 hover:bg-[#4b4ecc] hover:shadow-xl hover:shadow-indigo-600/25 focus:outline-none focus-visible:ring-4 focus-visible:ring-indigo-200 disabled:cursor-wait disabled:opacity-70 disabled:hover:translate-y-0">
+                            class="group flex h-14 w-full items-center justify-center gap-2.5 rounded-2xl bg-[#5a5de6] px-5 text-sm font-extrabold text-white shadow-lg shadow-indigo-600/20 transition-[transform,background-color,box-shadow] duration-300 transform-gpu will-change-[transform,box-shadow] hover:-translate-y-0.5 hover:bg-[#4b4ecc] hover:shadow-xl hover:shadow-indigo-600/25 focus:outline-none focus-visible:ring-4 focus-visible:ring-indigo-200 disabled:cursor-wait disabled:opacity-70 disabled:hover:translate-y-0">
                         <span id="submitLabel">Buat akun dan lanjutkan</span>
-                        <i data-lucide="arrow-right" id="submitIcon" class="h-[18px] w-[18px] transition-transform group-hover:translate-x-0.5"></i>
+                        <i data-lucide="arrow-right" id="submitIcon" class="h-[18px] w-[18px] transition-transform duration-300 transform-gpu will-change-transform group-hover:translate-x-0.5"></i>
                         <span id="submitSpinner" class="hidden h-4 w-4 animate-spin rounded-full border-2 border-white/40 border-t-white" aria-hidden="true"></span>
                     </button>
                 </form>
 
-                <div class="mt-7 flex items-center justify-between gap-4 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
-                    <a href="{{ route('login') }}" class="flex min-w-0 items-center gap-3">
+                <a href="{{ route('login') }}" class="group mt-7 flex items-center justify-between gap-4 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm transition-colors hover:border-indigo-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#696cff] focus-visible:ring-offset-2">
+                    <span class="flex min-w-0 items-center gap-3">
                         <span class="flex h-10 w-10 flex-none items-center justify-center rounded-xl bg-indigo-50 text-[#5a5de6]">
                             <i data-lucide="log-in" class="h-5 w-5"></i>
                         </span>
@@ -322,12 +322,12 @@
                             <p class="text-xs text-slate-500">Sudah memiliki akun?</p>
                             <p class="truncate text-sm font-bold text-slate-800">Lanjutkan proses Anda</p>
                         </div>
-                        <a href="{{ route('login') }}" class="inline-flex flex-none items-center gap-1 rounded-xl bg-indigo-50 px-3 py-2 text-xs font-extrabold text-[#5a5de6] transition-colors hover:bg-indigo-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#696cff]">
-                            Masuk
-                            <i data-lucide="arrow-up-right" class="h-3.5 w-3.5"></i>
-                        </a>
-                    </a>
-                </div>
+                    </span>
+                    <span class="inline-flex flex-none items-center gap-1 rounded-xl bg-indigo-50 px-3 py-2 text-xs font-extrabold text-[#5a5de6] transition-colors group-hover:bg-indigo-100">
+                        Masuk
+                        <i data-lucide="arrow-up-right" class="h-3.5 w-3.5"></i>
+                    </span>
+                </a>
 
                 <footer class="mt-8 flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-center text-[12px] text-slate-400 sm:justify-between">
                     <p>&copy; {{ date('Y') }} PAUD Al Qur'an Azzahra</p>

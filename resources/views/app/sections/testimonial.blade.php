@@ -1,143 +1,181 @@
-{{-- ============================================
-Section: Testimoni Dinamis (Google Reviews Style - Carousel)
-============================================ --}}
+{{-- Section: Testimoni orang tua dan siswa --}}
+<section id="testimonial" class="relative overflow-hidden py-20 lg:py-28">
+    <div class="pointer-events-none absolute -right-28 top-16 h-80 w-80 rounded-full bg-primary-200/25 blur-3xl" aria-hidden="true"></div>
+    <div class="pointer-events-none absolute -left-32 bottom-10 h-80 w-80 rounded-full bg-secondary-200/25 blur-3xl" aria-hidden="true"></div>
 
-<section id="testimonial" class="py-20 lg:py-28 islamic-pattern bg-gradient-to-br from-blue-50 via-white to-green-50 relative overflow-hidden">
-    {{-- Decorative --}}
-    <div class="absolute top-1/2 right-0 w-96 h-96 bg-primary-50 rounded-full translate-x-1/2 -translate-y-1/2"></div>
-    <div class="absolute bottom-0 left-0 w-72 h-72 bg-secondary-50 rounded-full -translate-x-1/3 translate-y-1/3"></div>
-
-    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-
-        {{-- Section Header --}}
-        <div class="text-center mb-16 fade-up">
-            <h2 class="section-heading font-heading text-gray-900">
-                <span>Apa <span class="gradient-text">Kata Mereka?</span></span>
-            </h2>
-            <p class="text-gray-600 max-w-2xl mx-auto mt-6">
-                Testimoni dari orang tua dan siswa yang telah merasakan pendidikan di Azzahra
-            </p>
-        </div>
-
-        {{-- Google Reviews Summary Bar --}}
+    <div class="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         @if(isset($testimonials) && $testimonials->count() > 0)
             @php
                 $avgRating = round($testimonials->avg('rating'), 1);
                 $totalReviews = $testimonials->count();
+                $testimonials = $testimonials->sortBy('created_at')->values();
+                $totalSlides = $testimonials->count();
             @endphp
-            <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12 fade-up">
-                <div class="flex items-center gap-3 bg-white border border-gray-300 rounded-2xl px-6 py-3 shadow-sm">
-                    <span class="text-3xl font-bold text-gray-900">{{ number_format($avgRating, 1) }}</span>
-                    <div>
-                        <div class="flex gap-0.5">
-                            @for($i = 1; $i <= 5; $i++)
-                                @if($i <= floor($avgRating))
-                                    <i data-lucide="star" class="w-5 h-5 text-amber-400 fill-amber-400"></i>
-                                @elseif($i - $avgRating < 1 && $i - $avgRating > 0)
-                                    <i data-lucide="star" class="w-5 h-5 text-amber-400 fill-amber-400 opacity-50"></i>
-                                @else
-                                    <i data-lucide="star" class="w-5 h-5 text-gray-300"></i>
-                                @endif
-                            @endfor
+
+            <div class="grid items-center gap-12 lg:grid-cols-12 lg:gap-16">
+                <!-- Left Column: Title & Ratings Summary -->
+                <div class="lg:col-span-5 fade-up">
+                    <span class="inline-flex items-center gap-2 rounded-full border border-primary-200 bg-white/90 px-4 py-2 text-sm font-semibold text-primary-700 shadow-sm">
+                        <i data-lucide="heart-handshake" class="h-4 w-4 text-secondary-600" aria-hidden="true"></i>
+                        Cerita Keluarga Azzahra
+                    </span>
+                    
+                    <h2 class="mt-6 font-heading text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl leading-tight">
+                        <span>Pengalaman yang <span class="gradient-text">Mereka Rasakan</span></span>
+                    </h2>
+                    
+                    <p class="mt-4 text-base text-justify leading-relaxed text-gray-600 sm:text-lg">
+                        Cerita nyata dari orang tua dan siswa tentang proses belajar, pendampingan, dan lingkungan tumbuh di PAUD Al Qur'an Azzahra.
+                    </p>
+
+                    <!-- Beautifully Refined Rating Summary Card -->
+                    <div class="mt-8 rounded-3xl border border-primary-700/20 bg-gradient-to-br from-primary-900 via-primary-800 to-secondary-900 p-6 text-white shadow-xl shadow-primary-900/15 relative overflow-hidden">
+                        <!-- Glowing spots inside dark card -->
+                        <div class="absolute -right-10 -top-10 h-32 w-32 rounded-full bg-primary-500/10 blur-2xl" aria-hidden="true"></div>
+                        <div class="absolute -left-10 -bottom-10 h-32 w-32 rounded-full bg-secondary-500/10 blur-2xl" aria-hidden="true"></div>
+
+                        <div class="relative flex items-center justify-between gap-5">
+                            <div>
+                                <p class="text-[11px] font-bold uppercase tracking-[0.18em] text-primary-300">Rata-rata penilaian</p>
+                                <div class="mt-2 flex items-end gap-2">
+                                    <span class="font-heading text-5xl font-extrabold leading-none">{{ number_format($avgRating, 1) }}</span>
+                                    <span class="pb-1 text-sm font-semibold text-primary-300">/ 5.0</span>
+                                </div>
+                            </div>
+                            <span class="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-white/10 ring-1 ring-white/15">
+                                <i data-lucide="message-circle-heart" class="h-7 w-7 text-secondary-300" aria-hidden="true"></i>
+                            </span>
                         </div>
-                        <p class="text-sm text-gray-500 mt-0.5">{{ $totalReviews }} ulasan</p>
+
+                        <div class="relative mt-6 flex flex-wrap items-center justify-between gap-3 border-t border-white/10 pt-4">
+                            <div class="flex gap-1" aria-label="Rating {{ number_format($avgRating, 1) }} dari 5">
+                                @for($i = 1; $i <= 5; $i++)
+                                    <i data-lucide="star"
+                                       class="h-4 w-4 {{ $i <= round($avgRating) ? 'fill-amber-400 text-amber-400' : 'text-white/25' }}"
+                                       aria-hidden="true"></i>
+                                @endfor
+                            </div>
+                            <span class="text-xs font-semibold text-primary-200">{{ $totalReviews }} ulasan terpublikasi di Google Reviews</span>
+                        </div>
                     </div>
+
+                    <!-- Navigation controls (Desktop) -->
+                    @if($totalSlides > 1)
+                        <div class="mt-8 hidden lg:flex items-center gap-3">
+                            <button type="button" id="testiPrev" class="flex h-12 w-12 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-700 shadow-sm hover:border-primary-300 hover:text-primary-600 transition-all focus:outline-none focus:ring-2 focus:ring-primary-500" aria-label="Testimoni sebelumnya">
+                                <i data-lucide="arrow-left" class="h-5 w-5"></i>
+                            </button>
+                            <button type="button" id="testiNext" class="flex h-12 w-12 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-700 shadow-sm hover:border-primary-300 hover:text-primary-600 transition-all focus:outline-none focus:ring-2 focus:ring-primary-500" aria-label="Testimoni selanjutnya">
+                                <i data-lucide="arrow-right" class="h-5 w-5"></i>
+                            </button>
+                        </div>
+                    @endif
                 </div>
-            </div>
-        @endif
 
-        {{-- Testimonial Carousel --}}
-        @if(isset($testimonials) && $testimonials->count() > 0)
-            @php
-                $testimonials = $testimonials->values();
-                $perSlide = 2;
-                $slides = $testimonials->chunk($perSlide);
-                $totalSlides = $slides->count();
-            @endphp
+                <!-- Right Column: Spotlight Testimonials Carousel -->
+                <div class="lg:col-span-7 relative">
+                    <!-- Soft gradient glow under the card -->
+                    <div class="absolute -inset-2 rounded-[2.5rem] bg-gradient-to-tr from-primary-100 to-secondary-100 opacity-50 blur-lg" aria-hidden="true"></div>
 
-            <div class="testimonial-carousel fade-up" id="testiCarousel" data-total="{{ $totalSlides }}" data-interval="4000">
+                    <div class="testimonial-carousel-shell fade-up rounded-[2.5rem] bg-white/40 p-2 shadow-2xl shadow-primary-900/[0.04] sm:p-4 backdrop-blur-md relative z-10">
+                        <div class="testimonial-carousel" id="testiCarousel" data-total="{{ $totalSlides }}" data-interval="6000" role="region" aria-label="Testimoni keluarga Azzahra">
+                            <div class="testimonial-track" id="testiTrack">
+                                @foreach($testimonials as $slideIndex => $testimonial)
+                                    <div class="testimonial-slide" role="group" aria-label="Testimoni {{ $slideIndex + 1 }} dari {{ $totalSlides }}">
+                                        <article class="testimonial-card group relative flex flex-col justify-between h-full bg-white/90 border border-white rounded-[2rem] p-8 shadow-lg hover:shadow-xl transition-all duration-300">
+                                            
+                                            <!-- Quote icon in background -->
+                                            <svg class="absolute right-6 top-6 h-20 w-20 text-primary-200/25 pointer-events-none transition-transform duration-300 transform-gpu will-change-transform group-hover:scale-110" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                                <path d="M14.017 18L14.017 10.609C14.017 4.905 17.748 1.039 23 0L23.995 2.151C21.563 3.068 20 5.789 20 8H24V18H14.017ZM0 18V10.609C0 4.905 3.748 1.039 9 0L9.996 2.151C7.563 3.068 6 5.789 6 8H9.983L9.983 18L0 18Z" />
+                                            </svg>
 
-                <div class="testimonial-track" id="testiTrack">
-                    @foreach($slides as $slideIndex => $slideItems)
-                        <div class="testimonial-slide">
-                            @foreach($slideItems as $testimonial)
-                                <article class="testimonial-card">
-                                    {{-- Left accent border is via CSS ::before --}}
+                                            <div>
+                                                <!-- Stars rating -->
+                                                <div class="flex gap-1" aria-label="{{ $testimonial->rating }} dari 5 bintang">
+                                                    @for($i = 1; $i <= 5; $i++)
+                                                        <i data-lucide="star"
+                                                           class="h-5 w-5 {{ $i <= $testimonial->rating ? 'fill-amber-400 text-amber-400' : 'text-gray-300' }}"
+                                                           aria-hidden="true"></i>
+                                                    @endfor
+                                                </div>
 
-                                    {{-- Photo --}}
-                                    <img src="https://ui-avatars.com/api/?name={{ urlencode($testimonial->name) }}&background=random&color=fff&size=96&font-size=0.4&bold=true&rounded=false"
-                                        alt="{{ $testimonial->name }}"
-                                        class="testi-photo"
-                                        loading="lazy">
-
-                                    {{-- Content --}}
-                                    <div class="testi-content">
-                                        {{-- Decorative quote icon --}}
-                                        <svg class="testi-quote-icon" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M14.017 18L14.017 10.609C14.017 4.905 17.748 1.039 23 0L23.995 2.151C21.563 3.068 20 5.789 20 8H24V18H14.017ZM0 18V10.609C0 4.905 3.748 1.039 9 0L9.996 2.151C7.563 3.068 6 5.789 6 8H9.983L9.983 18L0 18Z" />
-                                        </svg>
-
-                                        {{-- Review text --}}
-                                        <p class="testi-text">{{ $testimonial->content }}</p>
-
-                                        {{-- Meta: Name, Role, Google icon --}}
-                                        <div class="testi-meta">
-                                            <div class="testi-meta-left">
-                                                <span class="testi-name">{{ $testimonial->name }}</span>
-                                                <span class="testi-role">
-                                                    {{ $testimonial->created_at->diffForHumans() }}
-                                                </span>
+                                                <!-- Testimonial Content text -->
+                                                <p class="mt-6 text-base text-justify leading-relaxed text-gray-700 sm:text-lg italic font-medium">
+                                                    “{{ $testimonial->content }}”
+                                                </p>
                                             </div>
-                                            {{-- Google logo --}}
-                                            <div class="testi-google-icon">
-                                                <svg class="w-5 h-5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                                    <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4" />
-                                                    <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
-                                                    <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05" />
-                                                    <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
-                                                </svg>
-                                            </div>
-                                        </div>
 
-                                        {{-- Stars --}}
-                                        <div class="testi-stars">
-                                            @for($i = 1; $i <= 5; $i++)
-                                                @if($i <= $testimonial->rating)
-                                                    <i data-lucide="star" class="w-4 h-4 text-amber-400 fill-amber-400"></i>
-                                                @else
-                                                    <i data-lucide="star" class="w-4 h-4 text-gray-300"></i>
-                                                @endif
-                                            @endfor
-                                        </div>
+                                            <!-- Author metadata footer -->
+                                            <div class="mt-8 flex items-center justify-between gap-4 border-t border-gray-100 pt-6">
+                                                <div class="flex items-center gap-3">
+                                                    <img src="https://ui-avatars.com/api/?name={{ urlencode($testimonial->name) }}&background=696cff&color=fff&size=96&font-size=0.4&bold=true&rounded=false"
+                                                         alt="Foto profil {{ $testimonial->name }}"
+                                                         class="h-12 w-12 rounded-xl object-cover border-2 border-white shadow-md ring-1 ring-primary-100"
+                                                         loading="lazy">
+                                                    <div>
+                                                        <h4 class="font-heading text-sm font-bold text-gray-900">{{ $testimonial->name }}</h4>
+                                                        <p class="text-xs text-gray-500">{{ $testimonial->created_at->diffForHumans() }}</p>
+                                                    </div>
+                                                </div>
+
+                                                <div class="flex items-center gap-2">
+                                                    <!-- Google Logo -->
+                                                    <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border border-gray-200 bg-white p-1.5 shadow-sm" title="Ulasan terpublikasi di Google">
+                                                        <svg class="h-full w-full" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                                            <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4" />
+                                                            <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
+                                                            <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05" />
+                                                            <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
+                                                        </svg>
+                                                    </span>
+
+                                                    <div class="flex items-center gap-1.5 rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700">
+                                                        <i data-lucide="badge-check" class="h-3.5 w-3.5 text-emerald-600" aria-hidden="true"></i>
+                                                        Orang Tua
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </article>
                                     </div>
-                                </article>
-                            @endforeach
+                                @endforeach
+                            </div>
+                            
+                            <!-- Bottom control dots and mobile arrows -->
+                            <div class="mt-6 flex items-center justify-between px-2">
+                                @if($totalSlides > 1)
+                                    <div class="testi-dots flex gap-1" id="testiDots" aria-label="Pilih halaman testimoni">
+                                        @for($d = 0; $d < $totalSlides; $d++)
+                                            <button type="button"
+                                                    class="testi-dot {{ $d === 0 ? 'active' : '' }}"
+                                                    data-slide="{{ $d }}"
+                                                    aria-label="Tampilkan testimoni halaman {{ $d + 1 }}"></button>
+                                        @endfor
+                                    </div>
+                                    
+                                    <!-- Mobile only navigation arrows -->
+                                    <div class="flex items-center gap-2 lg:hidden">
+                                        <button type="button" id="testiPrevMobile" class="flex h-10 w-10 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-700 shadow-sm active:bg-gray-50" aria-label="Testimoni sebelumnya">
+                                            <i data-lucide="chevron-left" class="h-5 w-5"></i>
+                                        </button>
+                                        <button type="button" id="testiNextMobile" class="flex h-10 w-10 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-700 shadow-sm active:bg-gray-50" aria-label="Testimoni selanjutnya">
+                                            <i data-lucide="chevron-right" class="h-5 w-5"></i>
+                                        </button>
+                                    </div>
+                                @endif
+                            </div>
                         </div>
-                    @endforeach
-                </div>
-
-                {{-- Pagination Dots --}}
-                @if($totalSlides > 1)
-                    <div class="testi-dots" id="testiDots">
-                        @for($d = 0; $d < $totalSlides; $d++)
-                            <button class="testi-dot {{ $d === 0 ? 'active' : '' }}"
-                                    data-slide="{{ $d }}"
-                                    aria-label="Slide {{ $d + 1 }}"></button>
-                        @endfor
                     </div>
-                @endif
-            </div>
-
-            
-        @else
-            {{-- Empty State --}}
-            <div class="text-center py-12 fade-up">
-                <div class="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <i data-lucide="message-circle" class="w-10 h-10 text-gray-400"></i>
                 </div>
-                <p class="text-gray-500">Belum ada testimoni tersedia.</p>
+            </div>
+        @else
+            <div class="fade-up rounded-[2rem] border border-gray-200 bg-white/80 px-6 py-14 text-center shadow-sm">
+                <span class="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-primary-50 text-primary-600">
+                    <i data-lucide="message-circle" class="h-8 w-8" aria-hidden="true"></i>
+                </span>
+                <h2 class="mt-5 font-heading text-xl font-bold text-gray-900">Cerita keluarga Azzahra segera hadir</h2>
+                <p class="mx-auto mt-2 max-w-md text-sm leading-6 text-gray-500">Belum ada testimoni yang dipublikasikan saat ini.</p>
             </div>
         @endif
-
     </div>
 </section>
