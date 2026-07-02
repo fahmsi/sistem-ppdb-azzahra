@@ -53,7 +53,7 @@ class PembayaranExport implements FromCollection, WithHeadings, WithMapping
 
         // Gunakan created_at sebagai tanggal pembayaran jika tidak ada kolom khusus
         $tanggalBayar = $pembayaran->created_at
-                        ? Carbon::parse($pembayaran->created_at)->format('d-m-Y')
+                        ? Carbon::parse($pembayaran->created_at)->format('d/m/Y')
                         : '-';
 
         // Ambil nama dari relasi pendaftaranDetail -> siswa -> user

@@ -28,8 +28,8 @@
                         Cerita nyata dari orang tua dan siswa tentang proses belajar, pendampingan, dan lingkungan tumbuh di PAUD Al Qur'an Azzahra.
                     </p>
 
-                    <!-- Beautifully Refined Rating Summary Card -->
-                    <div class="mt-6 rounded-2xl border border-primary-700/20 bg-gradient-to-br from-primary-900 via-primary-800 to-secondary-900 p-5 text-white shadow-xl shadow-primary-900/15 relative overflow-hidden sm:mt-8 sm:rounded-3xl sm:p-6">
+                    <!-- Rating summary -->
+                    <div class="relative mt-6 overflow-hidden rounded-2xl border border-primary-700/20 bg-gradient-to-br from-primary-900 via-primary-800 to-secondary-900 p-5 text-white shadow-lg shadow-primary-900/10 sm:mt-8 sm:rounded-3xl sm:p-6">
                         <!-- Glowing spots inside dark card -->
                         <div class="absolute -right-10 -top-10 h-32 w-32 rounded-full bg-primary-500/10 blur-2xl" aria-hidden="true"></div>
                         <div class="absolute -left-10 -bottom-10 h-32 w-32 rounded-full bg-secondary-500/10 blur-2xl" aria-hidden="true"></div>
@@ -62,10 +62,10 @@
                     <!-- Navigation controls (Desktop) -->
                     @if($totalSlides > 1)
                         <div class="mt-8 hidden lg:flex items-center gap-3">
-                            <button type="button" id="testiPrev" class="flex h-12 w-12 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-700 shadow-sm hover:border-primary-300 hover:text-primary-600 transition-all focus:outline-none focus:ring-2 focus:ring-primary-500" aria-label="Testimoni sebelumnya">
+                            <button type="button" id="testiPrev" class="testimonial-nav-btn h-12 w-12" aria-label="Testimoni sebelumnya">
                                 <i data-lucide="arrow-left" class="h-5 w-5"></i>
                             </button>
-                            <button type="button" id="testiNext" class="flex h-12 w-12 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-700 shadow-sm hover:border-primary-300 hover:text-primary-600 transition-all focus:outline-none focus:ring-2 focus:ring-primary-500" aria-label="Testimoni selanjutnya">
+                            <button type="button" id="testiNext" class="testimonial-nav-btn h-12 w-12" aria-label="Testimoni selanjutnya">
                                 <i data-lucide="arrow-right" class="h-5 w-5"></i>
                             </button>
                         </div>
@@ -73,16 +73,13 @@
                 </div>
 
                 <!-- Right Column: Spotlight Testimonials Carousel -->
-                <div class="min-w-0 overflow-hidden lg:col-span-7 relative">
-                    <!-- Soft gradient glow under the card -->
-                    <div class="absolute -inset-2 rounded-[2rem] bg-gradient-to-tr from-primary-100 to-secondary-100 opacity-50 blur-lg sm:rounded-[2.5rem]" aria-hidden="true"></div>
-
-                    <div class="testimonial-carousel-shell fade-up rounded-2xl bg-white/40 p-1.5 shadow-2xl shadow-primary-900/[0.04] backdrop-blur-md relative z-10 sm:rounded-[2rem] sm:p-2 md:rounded-[2.5rem] md:p-4">
+                <div class="relative min-w-0 lg:col-span-7">
+                    <div class="testimonial-carousel-shell fade-up">
                         <div class="testimonial-carousel" id="testiCarousel" data-total="{{ $totalSlides }}" data-interval="6000" role="region" aria-label="Testimoni keluarga Azzahra">
                             <div class="testimonial-track" id="testiTrack">
                                 @foreach($testimonials as $slideIndex => $testimonial)
                                     <div class="testimonial-slide" role="group" aria-label="Testimoni {{ $slideIndex + 1 }} dari {{ $totalSlides }}">
-                                        <article class="testimonial-card group relative flex flex-col justify-between h-full bg-white/90 border border-white rounded-xl p-5 shadow-lg hover:shadow-xl transition-shadow duration-300 sm:rounded-2xl sm:p-6 md:rounded-[2rem] md:p-8">
+                                        <article class="testimonial-card group h-full">
                                             
                                             <!-- Quote icon in background -->
                                             <svg class="absolute right-4 top-4 h-14 w-14 text-primary-200/25 pointer-events-none transition-transform duration-300 transform-gpu will-change-transform group-hover:scale-110 sm:right-6 sm:top-6 sm:h-20 sm:w-20" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -114,7 +111,7 @@
                                                          loading="lazy">
                                                     <div class="min-w-0">
                                                         <h4 class="font-heading text-sm font-bold text-gray-900 truncate">{{ $testimonial->name }}</h4>
-                                                        <p class="text-xs text-gray-500">{{ $testimonial->created_at->diffForHumans() }}</p>
+                                                        <p class="text-xs text-gray-500">{{ $testimonial->created_at->locale('id')->diffForHumans() }}</p>
                                                     </div>
                                                 </div>
 
@@ -140,30 +137,34 @@
                                     </div>
                                 @endforeach
                             </div>
-                            
-                            <!-- Bottom control dots and mobile arrows -->
-                            <div class="mt-4 flex items-center justify-between gap-2 px-1 sm:mt-6 sm:px-2">
-                                @if($totalSlides > 1)
-                                    <div class="testi-dots flex min-w-0 flex-wrap gap-1" id="testiDots" aria-label="Pilih halaman testimoni">
-                                        @for($d = 0; $d < $totalSlides; $d++)
-                                            <button type="button"
-                                                    class="testi-dot {{ $d === 0 ? 'active' : '' }}"
-                                                    data-slide="{{ $d }}"
-                                                    aria-label="Tampilkan testimoni halaman {{ $d + 1 }}"></button>
-                                        @endfor
-                                    </div>
-                                    
-                                    <!-- Mobile only navigation arrows -->
-                                    <div class="flex shrink-0 items-center gap-2 lg:hidden">
-                                        <button type="button" id="testiPrevMobile" class="flex h-9 w-9 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-700 shadow-sm active:bg-gray-50 sm:h-10 sm:w-10" aria-label="Testimoni sebelumnya">
-                                            <i data-lucide="chevron-left" class="h-4 w-4 sm:h-5 sm:w-5"></i>
-                                        </button>
-                                        <button type="button" id="testiNextMobile" class="flex h-9 w-9 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-700 shadow-sm active:bg-gray-50 sm:h-10 sm:w-10" aria-label="Testimoni selanjutnya">
-                                            <i data-lucide="chevron-right" class="h-4 w-4 sm:h-5 sm:w-5"></i>
-                                        </button>
-                                    </div>
-                                @endif
-                            </div>
+                        </div>
+
+                        <!-- Kept outside the overflow-hidden carousel so card corners cannot clip it. -->
+                        <div class="testimonial-controls mt-5 flex items-center gap-3 px-2 sm:mt-6 sm:gap-4 sm:px-3">
+                            @if($totalSlides > 1)
+                                <div
+                                    id="testiProgress"
+                                    class="testi-progress"
+                                    role="progressbar"
+                                    aria-label="Posisi testimoni"
+                                    aria-valuemin="1"
+                                    aria-valuemax="{{ $totalSlides }}"
+                                    aria-valuenow="1">
+                                    <div id="testiProgressBar" class="testi-progress-bar"></div>
+                                </div>
+
+                                <span id="testiCounter" class="shrink-0 text-xs font-bold tabular-nums tracking-wide text-gray-400">1 / {{ $totalSlides }}</span>
+
+                                <!-- Mobile only navigation arrows -->
+                                <div class="flex shrink-0 items-center gap-2 lg:hidden">
+                                    <button type="button" id="testiPrevMobile" class="testimonial-nav-btn h-9 w-9 sm:h-10 sm:w-10" aria-label="Testimoni sebelumnya">
+                                        <i data-lucide="chevron-left" class="h-4 w-4 sm:h-5 sm:w-5"></i>
+                                    </button>
+                                    <button type="button" id="testiNextMobile" class="testimonial-nav-btn h-9 w-9 sm:h-10 sm:w-10" aria-label="Testimoni selanjutnya">
+                                        <i data-lucide="chevron-right" class="h-4 w-4 sm:h-5 sm:w-5"></i>
+                                    </button>
+                                </div>
+                            @endif
                         </div>
                     </div>
                 </div>

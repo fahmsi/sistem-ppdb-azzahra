@@ -58,7 +58,7 @@
                                 <p class="text-sm text-[#697a8d] dark:text-[#a1b0cb] truncate">{{ Str::limit($testimonial->content, 60) }}</p>
                             </td>
                             <td class="whitespace-nowrap text-sm">
-                                {{ $testimonial->created_at->format('d M Y') }}
+                                {{ $testimonial->created_at->translatedFormat('d M Y') }}
                             </td>
                             <td class="text-right admin-table-actions-cell">
                                 <div class="flex items-center justify-end gap-2">

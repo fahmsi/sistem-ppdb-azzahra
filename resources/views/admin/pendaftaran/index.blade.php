@@ -46,7 +46,7 @@
                     <div class="space-y-3 mb-6 bg-[#f5f5f9] dark:bg-[#232333] rounded-lg p-4 border border-[#d9dee3] dark:border-[#434463]">
                         <div class="flex items-start justify-between text-sm">
                             <span class="text-[#a1b0cb]">Masa Pendaftaran:</span>
-                            <span class="font-medium text-[#566a7f] dark:text-[#d5d5e2] text-right">{{ \Carbon\Carbon::parse($p->tanggal_mulai)->format('d M Y') }} <br> s/d {{ \Carbon\Carbon::parse($p->tanggal_selesai)->format('d M Y') }}</span>
+                            <span class="font-medium text-[#566a7f] dark:text-[#d5d5e2] text-right">{{ \Carbon\Carbon::parse($p->tanggal_mulai)->translatedFormat('d M Y') }} <br> s/d {{ \Carbon\Carbon::parse($p->tanggal_selesai)->translatedFormat('d M Y') }}</span>
                         </div>
                         <div class="flex items-center justify-between text-sm pt-3 border-t border-[#d9dee3] dark:border-[#434463]">
                             <span class="text-[#a1b0cb]">Kuota / Pendaftar:</span>

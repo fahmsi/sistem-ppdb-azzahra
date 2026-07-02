@@ -51,7 +51,7 @@
                         </td>
                         <td>{{ $siswa->deletedBy?->name ?? '-' }}</td>
                         <td class="max-w-xs whitespace-normal">{{ $siswa->deleted_reason ?? '-' }}</td>
-                        <td>{{ $siswa->deleted_at?->format('d M Y H:i') ?? '-' }}</td>
+                        <td>{{ $siswa->deleted_at ? $siswa->deleted_at->translatedFormat('d M Y, H:i').' WIB' : '-' }}</td>
                         <td class="text-center">
                             @if(auth()->user()->isSuperAdmin())
                                 <div class="flex items-center justify-center gap-2">

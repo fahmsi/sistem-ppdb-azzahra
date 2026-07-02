@@ -57,7 +57,7 @@
             <tbody id="paymentTableBody">
                 @forelse($pembayarans as $pembayaran)
                     <tr data-payment-row>
-                        <td>{{ $pembayaran->created_at->format('d M Y') }}</td>
+                        <td>{{ $pembayaran->created_at->translatedFormat('d M Y') }}</td>
                         <td class="font-semibold text-[#566a7f] dark:text-[#d5d5e2]">{{ $pembayaran->pendaftaranDetail->nomor_pendaftaran ?? '-' }}</td>
                         <td class="font-medium text-[#566a7f] dark:text-[#d5d5e2]">{{ $pembayaran->pendaftaranDetail->siswa->nama ?? '-' }}</td>
                         <td>{{ $pembayaran->pendaftaranDetail->pendaftaran->gelombang ?? '-' }}</td>

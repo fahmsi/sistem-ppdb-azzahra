@@ -75,7 +75,7 @@
             <tbody>
                 @forelse($registrations as $reg)
                     <tr>
-                        <td>{{ $reg->created_at->format('d/m/Y H:i') }}</td>
+                        <td>{{ $reg->created_at->format('d/m/Y H:i') }} WIB</td>
                         <td class="font-semibold text-[#566a7f] dark:text-[#d5d5e2]">{{ $reg->nomor_pendaftaran }}</td>
                         <td>
                             <div class="font-medium text-[#566a7f] dark:text-[#d5d5e2]">{{ $reg->siswa->nama ?? '-' }}</div>

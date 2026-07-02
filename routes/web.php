@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\AdminManageController;
 use App\Http\Controllers\Admin\AchievementController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\GalleryController;
+use App\Http\Controllers\Admin\PaymentSettingController;
 use App\Http\Controllers\Admin\PembayaranController;
 use App\Http\Controllers\Admin\PendaftaranManageController;
 use App\Http\Controllers\Admin\SettingController;
@@ -25,6 +26,7 @@ use App\Http\Controllers\SiswaController;
 use App\Models\Setting;
 use App\Models\Achievement;
 use App\Models\Gallery;
+use App\Models\PaymentSetting;
 use App\Models\Testimonial;
 use Illuminate\Support\Facades\Route;
 
@@ -130,7 +132,9 @@ Route::middleware('auth')->group(function () {
     */
     Route::middleware('role:parent')->prefix('parent')->name('parent.')->group(function () {
         Route::get('/dashboard', function () {
-            return view('parent.dashboard');
+            return view('parent.dashboard', [
+                'paymentSetting' => PaymentSetting::current(),
+            ]);
         })->name('dashboard');
 
         // Siswa (child data) management
@@ -192,6 +196,10 @@ Route::middleware('auth')->group(function () {
         // Route Export Pembayaran
         Route::get('/pembayaran/export', [PembayaranController::class, 'export'])->name('pembayaran.export');
         Route::get('/pembayaran', [PembayaranController::class, 'index'])->name('pembayaran.index');
+
+        // Payment information shown to parents
+        Route::get('/payment-settings', [PaymentSettingController::class, 'edit'])->name('payment-settings.edit');
+        Route::put('/payment-settings', [PaymentSettingController::class, 'update'])->name('payment-settings.update');
 
         // Settings (admin & super_admin)
         Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');

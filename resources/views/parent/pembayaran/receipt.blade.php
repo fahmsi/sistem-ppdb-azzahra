@@ -45,7 +45,7 @@
         <div class="receipt-body">
             <div class="receipt-title">
                 <h2>✅ Bukti Pembayaran Daftar Ulang</h2>
-                <p>Dicetak pada: {{ now()->format('d F Y, H:i') }} WIB</p>
+                <p>Dicetak pada: {{ now()->translatedFormat('d F Y, H:i') }} WIB</p>
             </div>
 
             <table class="info-table">
@@ -67,7 +67,7 @@
                 </tr>
                 <tr>
                     <th>Tanggal Bayar</th>
-                    <td>{{ $detail->pembayaran->updated_at->format('d F Y') }}</td>
+                    <td>{{ $detail->pembayaran->updated_at->translatedFormat('d F Y') }}</td>
                 </tr>
                 <tr>
                     <th>Status</th>

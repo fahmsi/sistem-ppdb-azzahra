@@ -66,7 +66,7 @@
                             </div>
                             <div class="flex justify-between">
                                 <dt class="text-gray-500">Tempat, Tanggal Lahir</dt>
-                                <dd class="font-medium text-gray-900">{{ $siswa->tempat_lahir }}, {{ \Carbon\Carbon::parse($siswa->tanggal_lahir)->format('d F Y') }}</dd>
+                                <dd class="font-medium text-gray-900">{{ $siswa->tempat_lahir }}, {{ \Carbon\Carbon::parse($siswa->tanggal_lahir)->translatedFormat('d F Y') }}</dd>
                             </div>
                             <div class="flex justify-between">
                                 <dt class="text-gray-500">Agama</dt>

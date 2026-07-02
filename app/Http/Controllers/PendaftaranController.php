@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Pendaftaran;
 use App\Models\PendaftaranDetail;
+use App\Models\PaymentSetting;
 use App\Models\Siswa;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
@@ -172,7 +173,10 @@ class PendaftaranController extends Controller
                 ->get();
         }
 
-        return view('parent.pendaftaran.status', compact('registrations'));
+        return view('parent.pendaftaran.status', [
+            'registrations' => $registrations,
+            'paymentSetting' => PaymentSetting::current(),
+        ]);
     }
 
     private function generateNoPendaftaran(PendaftaranDetail $detail): string

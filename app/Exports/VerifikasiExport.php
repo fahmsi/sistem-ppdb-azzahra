@@ -56,7 +56,7 @@ class VerifikasiExport implements FromCollection, WithHeadings, WithMapping
             $detail->pendaftaran->tahun_ajaran ?? '-',
             $statusFormatted,
             $detail->catatan ?? '-',
-            $detail->created_at ? $detail->created_at->format('d-m-Y H:i') : '-',
+            $detail->created_at ? $detail->created_at->format('d/m/Y H:i').' WIB' : '-',
         ];
     }
 }

@@ -134,7 +134,7 @@
                                     <span class="sneat-badge bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"><i data-lucide="check-circle" class="w-3 h-3"></i> Aktif</span>
                                 @endif
                             </td>
-                            <td class="whitespace-nowrap">{{ $admin->created_at->format('d M Y') }}</td>
+                            <td class="whitespace-nowrap">{{ $admin->created_at->translatedFormat('d M Y') }}</td>
                             <td class="text-right admin-table-actions-cell">
                                 <div class="flex items-center justify-end gap-2">
                                     <button type="button"

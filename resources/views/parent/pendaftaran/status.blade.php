@@ -5,10 +5,6 @@
 
 @section('content')
 @php
-    $bankName = config('spmb.bank_name', '-');
-    $bankAccountNumber = config('spmb.bank_account_number', '-');
-    $bankAccountHolder = config('spmb.bank_account_holder', '-');
-    $daftarUlangAmount = (int) config('spmb.daftar_ulang_amount', 0);
     $adminWhatsapp = preg_replace('/[^0-9]/', '', (string) config('spmb.admin_whatsapp', ''));
 @endphp
 
@@ -399,7 +395,7 @@
                                 <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
                                     <div>
                                         <h5 class="mb-1 text-sm font-medium text-gray-500 dark:text-[#a1b0cb]">Tanggal Mendaftar</h5>
-                                        <p class="font-medium text-gray-900 dark:text-[#d5d5e2]">{{ $reg->created_at->format('d F Y, H:i') }}</p>
+                                        <p class="font-medium text-gray-900 dark:text-[#d5d5e2]">{{ $reg->created_at->translatedFormat('d F Y, H:i') }} WIB</p>
                                     </div>
                                     <div>
                                         <h5 class="mb-1 text-sm font-medium text-gray-500 dark:text-[#a1b0cb]">Nama Anak</h5>
@@ -424,25 +420,10 @@
                                                 Selamat, pendaftaran anak Anda telah diterima.
                                             </h5>
                                             <p class="mb-4 text-sm text-gray-700 dark:text-[#d5d5e2]">Silakan melakukan daftar ulang dengan melakukan pembayaran ke rekening berikut:</p>
-                                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
-                                                <div class="rounded-lg border border-secondary-100 bg-white p-3 dark:border-[#434463] dark:bg-[#232333]">
-                                                    <p class="text-xs text-gray-500 dark:text-[#a1b0cb]">Bank</p>
-                                                    <p class="font-semibold text-gray-900 dark:text-[#d5d5e2]">{{ $bankName }}</p>
-                                                </div>
-                                                <div class="rounded-lg border border-secondary-100 bg-white p-3 dark:border-[#434463] dark:bg-[#232333]">
-                                                    <p class="text-xs text-gray-500 dark:text-[#a1b0cb]">No. Rekening</p>
-                                                    <p class="break-all font-semibold text-gray-900 dark:text-[#d5d5e2]">{{ $bankAccountNumber }}</p>
-                                                </div>
-                                                <div class="rounded-lg border border-secondary-100 bg-white p-3 dark:border-[#434463] dark:bg-[#232333]">
-                                                    <p class="text-xs text-gray-500 dark:text-[#a1b0cb]">Atas Nama</p>
-                                                    <p class="font-semibold text-gray-900 dark:text-[#d5d5e2]">{{ $bankAccountHolder }}</p>
-                                                </div>
-                                                <div class="rounded-lg border border-secondary-100 bg-white p-3 dark:border-[#434463] dark:bg-[#232333]">
-                                                    <p class="text-xs text-gray-500 dark:text-[#a1b0cb]">Nominal Daftar Ulang</p>
-                                                    <p class="font-semibold text-gray-900 dark:text-[#d5d5e2]">{{ $daftarUlangAmount > 0 ? 'Rp '.number_format($daftarUlangAmount, 0, ',', '.') : '-' }}</p>
-                                                </div>
-                                            </div>
-                                            <p class="mt-4 text-sm text-gray-700 dark:text-[#d5d5e2]">Setelah melakukan pembayaran, silakan upload bukti pembayaran melalui tombol di bawah ini.</p>
+                                            @include('parent.components.payment-information', ['paymentSetting' => $paymentSetting])
+                                            @if($paymentSetting)
+                                                <p class="mt-4 text-sm text-gray-700 dark:text-[#d5d5e2]">Setelah melakukan pembayaran, silakan upload bukti pembayaran melalui tombol di bawah ini.</p>
+                                            @endif
                                         @elseif($isPaymentWaiting)
                                             <h5 class="text-base font-bold text-yellow-800 flex items-center gap-2 mb-2">
                                                 <i data-lucide="clock" class="w-5 h-5 text-yellow-600"></i>
@@ -548,12 +529,9 @@
                                             <form action="{{ route('parent.pembayaran.store', $reg->id) }}" method="POST" enctype="multipart/form-data">
                                                 @csrf
                                                 <div class="space-y-5 px-4 py-5 sm:px-6 sm:py-6">
-                                                    <div class="space-y-1 rounded-lg border border-blue-100 bg-blue-50 p-3 text-sm text-blue-800 dark:border-blue-500/20 dark:bg-blue-500/10 dark:text-blue-300">
-                                                        <p class="font-semibold mb-2">Silakan transfer biaya daftar ulang ke rekening berikut:</p>
-                                                        <p>Bank: <strong>{{ $bankName }}</strong></p>
-                                                        <p>No. Rekening: <strong>{{ $bankAccountNumber }}</strong></p>
-                                                        <p>Atas Nama: <strong>{{ $bankAccountHolder }}</strong></p>
-                                                        <p>Nominal: <strong>{{ $daftarUlangAmount > 0 ? 'Rp '.number_format($daftarUlangAmount, 0, ',', '.') : '-' }}</strong></p>
+                                                    <div>
+                                                        <p class="mb-3 text-sm font-semibold text-gray-800 dark:text-[#d5d5e2]">Informasi pembayaran:</p>
+                                                        @include('parent.components.payment-information', ['paymentSetting' => $paymentSetting])
                                                     </div>
 
                                                     <div>

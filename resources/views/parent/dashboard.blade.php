@@ -29,10 +29,6 @@
         $isPaymentWaiting = $payment && in_array($paymentStatus, ['pending', 'menunggu_verifikasi'], true);
         $isPaymentLunas = $paymentStatus === 'lunas';
         $isPaymentRejected = $paymentStatus === 'ditolak';
-        $bankName = config('spmb.bank_name', '-');
-        $bankAccountNumber = config('spmb.bank_account_number', '-');
-        $bankAccountHolder = config('spmb.bank_account_holder', '-');
-        $daftarUlangAmount = (int) config('spmb.daftar_ulang_amount', 0);
         $adminWhatsapp = preg_replace('/[^0-9]/', '', (string) config('spmb.admin_whatsapp', ''));
         $helpWaMessage = "Assalamu'alaikum Admin PAUD Al-Qur'an Azzahra, saya butuh bantuan terkait pendaftaran anak saya.";
         $helpWaUrl = $adminWhatsapp ? 'https://wa.me/'.$adminWhatsapp.'?text='.urlencode($helpWaMessage) : '#';
@@ -264,25 +260,12 @@
                                 @if(!$payment)
                                     <h4 class="font-semibold text-emerald-800 dark:text-emerald-400">Selamat, pendaftaran anak Anda telah diterima.</h4>
                                     <p class="text-sm text-[#697a8d] dark:text-[#a1b0cb] mt-2">Silakan melakukan daftar ulang dengan pembayaran ke rekening berikut:</p>
-                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-3 text-sm">
-                                        <div>
-                                            <span class="text-[#a1b0cb]">Bank:</span>
-                                            <span class="font-semibold text-[#566a7f] dark:text-[#d5d5e2]">{{ $bankName }}</span>
-                                        </div>
-                                        <div>
-                                            <span class="text-[#a1b0cb]">No. Rekening:</span>
-                                            <span class="font-semibold text-[#566a7f] dark:text-[#d5d5e2]">{{ $bankAccountNumber }}</span>
-                                        </div>
-                                        <div>
-                                            <span class="text-[#a1b0cb]">Atas Nama:</span>
-                                            <span class="font-semibold text-[#566a7f] dark:text-[#d5d5e2]">{{ $bankAccountHolder }}</span>
-                                        </div>
-                                        <div>
-                                            <span class="text-[#a1b0cb]">Nominal:</span>
-                                            <span class="font-semibold text-[#566a7f] dark:text-[#d5d5e2]">{{ $daftarUlangAmount > 0 ? 'Rp '.number_format($daftarUlangAmount, 0, ',', '.') : '-' }}</span>
-                                        </div>
+                                    <div class="mt-3">
+                                        @include('parent.components.payment-information', ['paymentSetting' => $paymentSetting])
                                     </div>
-                                    <p class="text-sm text-[#697a8d] dark:text-[#a1b0cb] mt-3">Setelah melakukan pembayaran, silakan upload bukti pembayaran melalui tombol di bawah ini.</p>
+                                    @if($paymentSetting)
+                                        <p class="text-sm text-[#697a8d] dark:text-[#a1b0cb] mt-3">Setelah melakukan pembayaran, silakan upload bukti pembayaran melalui tombol di bawah ini.</p>
+                                    @endif
                                 @elseif($isPaymentWaiting)
                                     <h4 class="font-semibold text-amber-700 dark:text-amber-400">Bukti pembayaran Anda sedang menunggu verifikasi admin.</h4>
                                     <p class="text-sm text-[#697a8d] dark:text-[#a1b0cb] mt-1">Silakan hubungi admin untuk konfirmasi.</p>
