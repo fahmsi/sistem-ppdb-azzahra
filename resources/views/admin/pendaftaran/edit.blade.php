@@ -28,12 +28,12 @@
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-[#566a7f] dark:text-[#d5d5e2] mb-1">Tanggal Mulai <span class="text-red-500">*</span></label>
-                    <input type="date" name="tanggal_mulai" value="{{ old('tanggal_mulai', $pendaftaran->tanggal_mulai) }}" class="sneat-input @error('tanggal_mulai') !border-red-500 @enderror">
+                    <input type="date" name="tanggal_mulai" value="{{ old('tanggal_mulai', $pendaftaran->tanggal_mulai?->format('Y-m-d')) }}" class="sneat-input @error('tanggal_mulai') !border-red-500 @enderror">
                     @error('tanggal_mulai') <p class="mt-1 text-xs text-red-500">{{ $message }}</p> @enderror
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-[#566a7f] dark:text-[#d5d5e2] mb-1">Tanggal Selesai <span class="text-red-500">*</span></label>
-                    <input type="date" name="tanggal_selesai" value="{{ old('tanggal_selesai', $pendaftaran->tanggal_selesai) }}" class="sneat-input @error('tanggal_selesai') !border-red-500 @enderror">
+                    <input type="date" name="tanggal_selesai" value="{{ old('tanggal_selesai', $pendaftaran->tanggal_selesai?->format('Y-m-d')) }}" class="sneat-input @error('tanggal_selesai') !border-red-500 @enderror">
                     @error('tanggal_selesai') <p class="mt-1 text-xs text-red-500">{{ $message }}</p> @enderror
                 </div>
                 <div>

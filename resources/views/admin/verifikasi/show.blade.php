@@ -70,7 +70,7 @@
                                 </div>
                                 <div>
                                     <p class="text-xs text-[#a1b0cb] uppercase">Tempat, Tgl Lahir</p>
-                                    <p class="font-medium text-[#566a7f] dark:text-[#d5d5e2]">{{ $detail->siswa->tempat_lahir }}, {{ $detail->siswa->tanggal_lahir }}</p>
+                                    <p class="font-medium text-[#566a7f] dark:text-[#d5d5e2]">{{ $detail->siswa->tempat_lahir }}, {{ \Carbon\Carbon::parse($detail->siswa->tanggal_lahir)->translatedFormat('d F Y') }}</p>
                                 </div>
                             </div>
                         </div>

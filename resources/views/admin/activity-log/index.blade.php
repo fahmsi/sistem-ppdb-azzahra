@@ -15,8 +15,8 @@
                     <tr>
                         <td class="whitespace-nowrap">
                             <div class="text-xs">
-                                <span class="font-medium text-[#566a7f] dark:text-[#d5d5e2]">{{ $log->created_at->format('d M Y') }}</span><br>
-                                <span>{{ $log->created_at->format('H:i:s') }}</span>
+                                <span class="font-medium text-[#566a7f] dark:text-[#d5d5e2]">{{ $log->created_at->translatedFormat('d M Y') }}</span><br>
+                                <span>{{ $log->created_at->format('H:i:s') }} WIB</span>
                             </div>
                         </td>
                         <td>

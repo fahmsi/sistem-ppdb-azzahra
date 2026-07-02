@@ -22,7 +22,7 @@
 
                 <span class="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-lg border border-[#d9dee3] bg-[#f5f5f9] px-3.5 py-2 text-sm font-semibold text-[#697a8d] shadow-sm transition-colors dark:border-[#434463] dark:bg-[#232333] dark:text-[#a1b0cb] sm:w-auto sm:justify-start">
                     <i data-lucide="calendar" class="h-4 w-4 text-[#696cff]"></i>
-                    {{ date('d F Y') }}
+                    {{ now()->translatedFormat('d F Y') }}
                 </span>
             </div>
 
@@ -143,7 +143,7 @@
                     @forelse($recentRegistrations ?? [] as $reg)
                         <tr>
                             <td class="whitespace-nowrap">
-                                {{ $reg->created_at->format('d M Y, H:i') }}
+                                {{ $reg->created_at->translatedFormat('d M Y, H:i') }} WIB
                             </td>
                             <td>
                                 <div class="font-medium text-[#566a7f] dark:text-[#d5d5e2]">{{ $reg->siswa->nama ?? '-' }}</div>
@@ -218,7 +218,7 @@
                     @foreach($recentLogs as $log)
                         <tr>
                             <td class="whitespace-nowrap text-xs">
-                                {{ $log->created_at->format('d/m H:i') }}
+                                {{ $log->created_at->translatedFormat('d/m H:i') }} WIB
                             </td>
                             <td class="text-xs font-medium text-[#566a7f] dark:text-[#d5d5e2]">
                                 {{ $log->user_name ?? 'System' }}

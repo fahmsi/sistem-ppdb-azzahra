@@ -49,7 +49,7 @@
                 <div class="space-y-2 mb-6">
                     <div class="flex items-center gap-2 text-sm text-[#697a8d] dark:text-[#a1b0cb]">
                         <i data-lucide="calendar-range" class="w-4 h-4 text-[#696cff] flex-shrink-0"></i>
-                        {{ \Carbon\Carbon::parse($p->tanggal_mulai)->format('d M') }} - {{ \Carbon\Carbon::parse($p->tanggal_selesai)->format('d M Y') }}
+                        {{ \Carbon\Carbon::parse($p->tanggal_mulai)->translatedFormat('d M') }} - {{ \Carbon\Carbon::parse($p->tanggal_selesai)->translatedFormat('d M Y') }}
                     </div>
                     <div class="flex items-center gap-2 text-sm text-[#697a8d] dark:text-[#a1b0cb]">
                         <i data-lucide="users" class="w-4 h-4 text-[#696cff] flex-shrink-0"></i>

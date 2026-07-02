@@ -683,7 +683,9 @@ document.addEventListener('DOMContentLoaded', function () {
     if (!carousel) return;
 
     const track = document.getElementById('testiTrack');
-    const dots = document.querySelectorAll('#testiDots .testi-dot');
+    const progress = document.getElementById('testiProgress');
+    const progressBar = document.getElementById('testiProgressBar');
+    const counter = document.getElementById('testiCounter');
     const total = parseInt(carousel.dataset.total, 10);
     const interval = parseInt(carousel.dataset.interval, 10) || 4000;
 
@@ -702,9 +704,23 @@ document.addEventListener('DOMContentLoaded', function () {
     // Set initial track state
     track.style.transition = transitionCSS;
 
-    function updateDots() {
-        dots.forEach(function (dot, i) {
-            dot.classList.toggle('active', i === (current % total));
+    function updateProgress() {
+        const activeIndex = current % total;
+
+        if (progressBar) {
+            progressBar.style.width = (((activeIndex + 1) / total) * 100) + '%';
+        }
+
+        if (progress) {
+            progress.setAttribute('aria-valuenow', String(activeIndex + 1));
+        }
+
+        if (counter) {
+            counter.textContent = (activeIndex + 1) + ' / ' + total;
+        }
+
+        Array.from(track.children).forEach(function (slide, index) {
+            slide.setAttribute('aria-hidden', String(index !== activeIndex));
         });
     }
 
@@ -720,7 +736,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         
         track.style.transform = 'translateX(-' + (current * 100) + '%)';
-        updateDots();
+        updateProgress();
     }
 
     // Handle end of transition for infinite loop
@@ -752,6 +768,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function startAutoPlay() {
         stopAutoPlay();
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
         timer = setInterval(nextSlide, interval);
     }
 
@@ -761,16 +778,6 @@ document.addEventListener('DOMContentLoaded', function () {
             timer = null;
         }
     }
-
-    // Dot click
-    dots.forEach(function (dot) {
-        dot.addEventListener('click', function () {
-            if (isTransitioning) return;
-            const target = parseInt(this.dataset.slide, 10);
-            goToSlide(target);
-            startAutoPlay(); // reset timer
-        });
-    });
 
     // Prev / Next Button click
     const prevBtn = document.getElementById('testiPrev');
@@ -832,6 +839,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }, { passive: true });
 
     // Start
+    updateProgress();
     startAutoPlay();
 });
 
@@ -844,6 +852,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
     var slides = track.querySelectorAll('.gallery-carousel-slide');
     var progressBar = document.getElementById('galleryProgressBar');
+    var prevButton = document.getElementById('galleryPrevButton');
+    var nextButton = document.getElementById('galleryNextButton');
     var totalSlides = slides.length;
     var currentPos = 0;
     var autoTimer = null;
@@ -853,9 +863,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function getVisibleCount() {
         var w = window.innerWidth;
-        if (w >= 1024) return 4;
-        if (w >= 640) return 3;
-        return 2;
+        if (w >= 1024) return 3;
+        if (w >= 640) return 2;
+        return 1;
     }
 
     function getMaxPos() {
@@ -872,9 +882,12 @@ document.addEventListener('DOMContentLoaded', function () {
         // Update progress
         var maxPos = getMaxPos();
         if (progressBar) {
-            var progress = maxPos > 0 ? ((currentPos / maxPos) * 100) : 100;
+            var progress = maxPos > 0 ? (((currentPos + 1) / (maxPos + 1)) * 100) : 100;
             progressBar.style.width = progress + '%';
         }
+
+        if (prevButton) prevButton.disabled = maxPos === 0;
+        if (nextButton) nextButton.disabled = maxPos === 0;
     }
 
     window.galleryCarousel = {
@@ -892,6 +905,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Autoplay
     function startAuto() {
+        clearInterval(autoTimer);
+        if (getMaxPos() === 0 || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
         autoTimer = setInterval(function () {
             currentPos = currentPos >= getMaxPos() ? 0 : currentPos + 1;
             updateCarousel();
@@ -953,6 +969,7 @@ document.addEventListener('DOMContentLoaded', function () {
     window.addEventListener('resize', function () {
         if (currentPos > getMaxPos()) currentPos = getMaxPos();
         updateCarousel();
+        startAuto();
     });
 
     // Init
@@ -961,17 +978,29 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // ---- Lightbox ----
     var currentGalleryIndex = 0;
+    var lightbox = document.getElementById('galleryLightbox');
+    var lightboxTrigger = null;
+
+    // Keep the modal outside section stacking contexts so it always covers
+    // the floating landing-page navbar.
+    if (lightbox && lightbox.parentElement !== document.body) {
+        document.body.appendChild(lightbox);
+    }
 
     window.openGalleryLightbox = function (index) {
         if (typeof galleryData === 'undefined' || !galleryData.length) return;
 
+        lightboxTrigger = document.activeElement;
         currentGalleryIndex = index;
         updateLightboxContent();
 
-        var lightbox = document.getElementById('galleryLightbox');
         if (lightbox) {
             lightbox.classList.add('active');
-            document.body.style.overflow = 'hidden';
+            lightbox.setAttribute('aria-hidden', 'false');
+            document.body.classList.add('gallery-lightbox-open');
+
+            var closeButton = lightbox.querySelector('.gallery-lightbox-close');
+            if (closeButton) closeButton.focus({ preventScroll: true });
         }
 
         if (typeof lucide !== 'undefined') {
@@ -981,10 +1010,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
     window.closeGalleryLightbox = function (event) {
         if (event) event.stopPropagation();
-        var lightbox = document.getElementById('galleryLightbox');
         if (lightbox) {
             lightbox.classList.remove('active');
-            document.body.style.overflow = '';
+            lightbox.setAttribute('aria-hidden', 'true');
+            document.body.classList.remove('gallery-lightbox-open');
+
+            if (lightboxTrigger && typeof lightboxTrigger.focus === 'function') {
+                lightboxTrigger.focus({ preventScroll: true });
+            }
         }
     };
 
@@ -1013,7 +1046,6 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     document.addEventListener('keydown', function (e) {
-        var lightbox = document.getElementById('galleryLightbox');
         if (!lightbox || !lightbox.classList.contains('active')) return;
         if (e.key === 'Escape') closeGalleryLightbox();
         if (e.key === 'ArrowRight') navigateGallery(1);

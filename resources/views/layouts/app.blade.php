@@ -49,7 +49,7 @@
 </head>
 
 <body
-    class="dashboard-readable bg-[#f5f5f9] dark:bg-[#232333] font-body text-[#697a8d] dark:text-[#a1b0cb] antialiased overflow-hidden h-screen transition-colors duration-300">
+    class="dashboard-readable {{ request()->routeIs('parent.dashboard') ? 'parent-dashboard-performance' : '' }} bg-[#f5f5f9] dark:bg-[#232333] font-body text-[#697a8d] dark:text-[#a1b0cb] antialiased overflow-hidden h-screen transition-colors duration-300">
 
     <!-- ============================================
          SIDEBAR — Sneat Style
@@ -107,6 +107,12 @@
                     class="sidebar-menu-link flex items-center px-6 py-2.5 mx-3 rounded-lg overflow-hidden whitespace-nowrap {{ request()->routeIs('admin.pembayaran.*') ? 'active bg-[#696cff] text-white' : 'text-[#697a8d] hover:bg-gray-100 dark:hover:bg-[#232333]' }}">
                     <i data-lucide="credit-card" class="w-5 h-5 flex-shrink-0"></i>
                     <span class="menu-text ml-3 transition-opacity duration-300">Rekap Pembayaran</span>
+                </a>
+
+                <a href="{{ route('admin.payment-settings.edit') }}"
+                    class="sidebar-menu-link flex items-center px-6 py-2.5 mx-3 rounded-lg overflow-hidden whitespace-nowrap {{ request()->routeIs('admin.payment-settings.*') ? 'active bg-[#696cff] text-white' : 'text-[#697a8d] hover:bg-gray-100 dark:hover:bg-[#232333]' }}">
+                    <i data-lucide="landmark" class="w-5 h-5 flex-shrink-0"></i>
+                    <span class="menu-text ml-3 transition-opacity duration-300">Konfigurasi Pembayaran</span>
                 </a>
 
                 <a href="{{ route('admin.testimonials.index') }}"
@@ -209,7 +215,7 @@
              ============================================ -->
         <div class="relative">
             <div id="dashboardNavBackdrop"
-                class="pointer-events-none absolute inset-x-0 top-0 z-30 h-20 backdrop-blur-xl bg-white/10 dark:bg-[#232333]/10"></div>
+                class="pointer-events-none absolute inset-x-0 top-0 z-30 h-20 bg-white/80 dark:bg-[#232333]/80"></div>
 
             <header id="dashboardNav"
                 class="sneat-navbar absolute top-0 inset-x-0 z-40 flex items-center justify-between border border-[#d9dee3] dark:border-[#434463] !mx-3 !px-3 sm:!mx-4 sm:!px-6 !bg-white/90 dark:!bg-[#2b2c40]/90 !backdrop-blur-none transition-all duration-300">
@@ -305,7 +311,7 @@
                                     </div>
                                     <div class="flex-1 min-w-0">
                                         <p class="text-sm text-[#566a7f] dark:text-[#d5d5e2] leading-snug">{{ $notif->data['message'] ?? 'Notifikasi baru.' }}</p>
-                                        <p class="text-xs text-[#a1b0cb] mt-1">{{ $notif->created_at->diffForHumans() }}</p>
+                                        <p class="text-xs text-[#a1b0cb] mt-1">{{ $notif->created_at->locale('id')->diffForHumans() }}</p>
                                     </div>
                                     @if(!$notif->read_at)
                                         <span class="w-2 h-2 bg-[#696cff] rounded-full flex-shrink-0 mt-2"></span>

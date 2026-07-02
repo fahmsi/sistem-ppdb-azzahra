@@ -96,7 +96,7 @@
                                 <th class="py-3 px-2 text-sm font-semibold text-gray-500">Tempat, Tanggal Lahir</th>
                                 <td class="py-3 px-2 font-medium text-gray-800">
                                     {{ $siswa->tempat_lahir }}, 
-                                    {{ \Carbon\Carbon::parse($siswa->tanggal_lahir)->format('d F Y') }}
+                                    {{ \Carbon\Carbon::parse($siswa->tanggal_lahir)->translatedFormat('d F Y') }}
                                 </td>
                             </tr>
                             <tr>
