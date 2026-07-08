@@ -25,7 +25,7 @@
                                 <span class="font-medium text-[#566a7f] dark:text-[#d5d5e2] text-xs">{{ $log->user_name ?? 'System' }}</span>
                             </div>
                         </td>
-                        <td><span class="sneat-badge {{ $log->action_color }}">{{ $log->action_label }}</span></td>
+                        <td><span class="activity-action-badge activity-action-{{ Str::slug($log->action) }} sneat-badge {{ $log->action_color }}">{{ $log->action_label }}</span></td>
                         <td>
                             <div class="text-xs">
                                 <span class="text-[#a1b0cb]">{{ $log->target_type_label }}</span>

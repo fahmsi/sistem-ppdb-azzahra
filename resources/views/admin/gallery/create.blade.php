@@ -2,16 +2,16 @@
 @section('title', 'Tambah Foto Gallery')
 @section('header_title', 'Tambah Foto Gallery')
 @section('content')
-<div class="max-w-3xl mx-auto">
+<div class="mx-auto w-full max-w-4xl py-2 sm:py-4">
     <div class="bg-white dark:bg-[#2b2c40] rounded-lg shadow-sneat dark:shadow-sneat-dark border border-[#d9dee3] dark:border-[#434463] overflow-hidden">
-        <div class="bg-[#e7e7ff] dark:bg-[#696cff]/20 border-b border-[#d9dee3] dark:border-[#434463] px-6 py-6 flex items-center justify-between">
+        <div class="flex flex-col gap-4 border-b border-[#d9dee3] bg-[#e7e7ff] px-5 py-5 dark:border-[#434463] dark:bg-[#696cff]/20 sm:flex-row sm:items-center sm:justify-between sm:px-8 sm:py-6">
             <div>
                 <h2 class="text-xl font-heading font-bold text-[#566a7f] dark:text-[#d5d5e2] flex items-center gap-2">
                     <i data-lucide="plus-circle" class="w-5 h-5 text-[#696cff]"></i> Tambah Foto Gallery
                 </h2>
                 <p class="text-[#696cff] dark:text-[#a1b0cb] text-sm mt-1">Upload foto kegiatan untuk ditampilkan di landing page.</p>
             </div>
-            <a href="{{ route('admin.gallery.index') }}" class="text-sm font-medium text-[#697a8d] dark:text-[#a1b0cb] hover:text-[#696cff] transition-colors flex items-center gap-1"><i data-lucide="x" class="w-4 h-4"></i> Batal</a>
+            <a href="{{ route('admin.gallery.index') }}" class="flex w-fit items-center gap-1 text-sm font-medium text-[#697a8d] transition-colors hover:text-[#696cff] dark:text-[#a1b0cb]"><i data-lucide="x" class="w-4 h-4"></i> Batal</a>
         </div>
         <form action="{{ route('admin.gallery.store') }}" method="POST" enctype="multipart/form-data" class="p-6 sm:p-8 space-y-6">
             @csrf
@@ -66,11 +66,11 @@
                 </div>
             </div>
 
-            <div class="pt-6 border-t border-[#d9dee3] dark:border-[#434463] flex items-center justify-end gap-3">
-                <a href="{{ route('admin.gallery.index') }}" class="sneat-btn-secondary">
+            <div class="flex flex-col-reverse items-stretch justify-end gap-3 border-t border-[#d9dee3] pt-6 dark:border-[#434463] sm:flex-row sm:items-center">
+                <a href="{{ route('admin.gallery.index') }}" class="sneat-btn-secondary justify-center">
                     <i data-lucide="arrow-left" class="w-4 h-4"></i> Kembali
                 </a>
-                <button type="submit" class="sneat-btn-primary"><i data-lucide="save" class="w-4 h-4"></i> Simpan Foto</button>
+                <button type="submit" class="sneat-btn-primary justify-center"><i data-lucide="save" class="w-4 h-4"></i> Simpan Foto</button>
             </div>
         </form>
     </div>

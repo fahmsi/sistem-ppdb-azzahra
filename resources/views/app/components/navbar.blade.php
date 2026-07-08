@@ -4,8 +4,8 @@
         ['label' => 'Program', 'href' => '#program', 'icon' => 'layers-3'],
         ['label' => 'Kurikulum', 'href' => '#kurikulum', 'icon' => 'book-open-check'],
         ['label' => 'Biaya', 'href' => '#biaya', 'icon' => 'wallet-cards'],
-        ['label' => 'Agenda', 'href' => '#agenda', 'icon' => 'calendar-days'],
         ['label' => 'Syarat', 'href' => '#persyaratan', 'icon' => 'clipboard-check'],
+        ['label' => 'Agenda', 'href' => '#agenda', 'icon' => 'calendar-days'],
         ['label' => 'Kontak', 'href' => '#kontak', 'icon' => 'phone'],
     ];
 

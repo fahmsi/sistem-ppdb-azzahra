@@ -1054,12 +1054,17 @@ h3.section-heading {
 .dark .swal2-popup {
     background: #2b2c40 !important;
     color: #d5d5e2 !important;
+    --swal2-background: #2b2c40 !important;
 }
 .dark .swal2-title {
     color: #d5d5e2 !important;
 }
 .dark .swal2-html-container {
     color: #a1b0cb !important;
+}
+.dark .swal2-icon.swal2-success [class^=swal2-success-circular-line],
+.dark .swal2-icon.swal2-success .swal2-success-fix {
+    background-color: #2b2c40 !important;
 }
 
 /* ===========================
@@ -1776,6 +1781,238 @@ html.dark .dashboard-readable .admin-table thead th,
 html.dark .dashboard-readable .admin-table tbody td,
 html.dark .dashboard-readable .sneat-table thead th {
     color: var(--dashboard-text);
+}
+
+/* Dashboard sidebar owns one scroll surface, including its logout action. */
+#sidebarNav {
+    scrollbar-width: thin;
+    scrollbar-color: #c4c9d0 transparent;
+}
+
+#sidebarNav::-webkit-scrollbar {
+    width: 4px;
+}
+
+#sidebarNav::-webkit-scrollbar-track {
+    margin-block: 0.75rem;
+    background: transparent;
+}
+
+#sidebarNav::-webkit-scrollbar-thumb {
+    border-radius: 9999px;
+    background: #c4c9d0;
+}
+
+html.dark #sidebarNav {
+    scrollbar-color: #55566f transparent;
+}
+
+html.dark #sidebarNav::-webkit-scrollbar-thumb {
+    background: #55566f;
+}
+
+/* Parent create/edit form: scoped dark surfaces and controls. */
+html.dark .parent-student-form {
+    border-color: #434463;
+    background: #2b2c40;
+    color: #d5deea;
+}
+
+html.dark .parent-student-form h3,
+html.dark .parent-student-form h4,
+html.dark .parent-student-form label {
+    color: #eef2f7;
+}
+
+html.dark .parent-student-form input:not([type="checkbox"]):not([type="radio"]):not([type="file"]),
+html.dark .parent-student-form select,
+html.dark .parent-student-form textarea {
+    border-color: #55566f;
+    background-color: #232437;
+    color: #eef2f7;
+    color-scheme: dark;
+}
+
+html.dark .parent-student-form input::placeholder,
+html.dark .parent-student-form textarea::placeholder {
+    color: #929db0;
+    opacity: 1;
+}
+
+html.dark .parent-student-form select:disabled,
+html.dark .parent-student-form input:disabled {
+    color: #aeb9c8;
+    opacity: 0.75;
+}
+
+html.dark .parent-student-form .bg-white,
+html.dark .parent-student-form .bg-gray-50,
+html.dark .parent-student-form .bg-gray-100,
+html.dark .parent-student-form-actions {
+    border-color: #434463;
+    background-color: #232437;
+}
+
+html.dark .parent-student-form .border-gray-100,
+html.dark .parent-student-form .border-gray-200,
+html.dark .parent-student-form .border-gray-300 {
+    border-color: #434463;
+}
+
+html.dark .parent-student-form .text-gray-400,
+html.dark .parent-student-form .text-gray-500 {
+    color: #aeb9c8;
+}
+
+html.dark .parent-student-form .text-gray-600,
+html.dark .parent-student-form .text-gray-700,
+html.dark .parent-student-form .text-gray-800,
+html.dark .parent-student-form .text-gray-900 {
+    color: #e2e8f0;
+}
+
+html.dark .parent-student-form input[type="file"]::file-selector-button {
+    border: 0;
+    background: rgba(105, 108, 255, 0.2);
+    color: #c7c8ff;
+}
+
+/* Parent profile/detail card uses the same dashboard palette. */
+html.dark .parent-profile-card,
+html.dark .admin-student-detail-card {
+    border-color: #434463;
+    background: #2b2c40;
+}
+
+html.dark .parent-profile-card .bg-white,
+html.dark .parent-profile-card .bg-gray-50,
+html.dark .admin-student-detail-card .bg-white,
+html.dark .admin-student-detail-card .bg-gray-50 {
+    border-color: #434463;
+    background-color: #232437;
+}
+
+html.dark .parent-profile-card .border-gray-100,
+html.dark .parent-profile-card .border-gray-200,
+html.dark .admin-student-detail-card .border-gray-100,
+html.dark .admin-student-detail-card .border-gray-200 {
+    border-color: #434463;
+}
+
+html.dark .parent-profile-card .text-gray-900,
+html.dark .parent-profile-card .text-gray-800,
+html.dark .parent-profile-card .text-gray-700,
+html.dark .admin-student-detail-card .text-gray-900,
+html.dark .admin-student-detail-card .text-gray-800,
+html.dark .admin-student-detail-card .text-gray-700 {
+    color: #eef2f7;
+}
+
+html.dark .parent-profile-card .text-gray-600,
+html.dark .parent-profile-card .text-gray-500,
+html.dark .parent-profile-card .text-gray-400,
+html.dark .admin-student-detail-card .text-gray-600,
+html.dark .admin-student-detail-card .text-gray-500,
+html.dark .admin-student-detail-card .text-gray-400 {
+    color: #b7c2d1;
+}
+
+/* Small workflow states need semantic contrast on dark dashboard cards. */
+html.dark .parent-dashboard-page .bg-gray-100,
+html.dark .parent-status-page .bg-gray-100 {
+    background-color: #434463;
+}
+
+html.dark .parent-dashboard-page .bg-emerald-100,
+html.dark .parent-status-page .bg-emerald-100 {
+    background-color: rgba(16, 185, 129, 0.16);
+}
+
+html.dark .parent-dashboard-page .bg-orange-100,
+html.dark .parent-status-page .bg-orange-100 {
+    background-color: rgba(249, 115, 22, 0.16);
+}
+
+html.dark .parent-dashboard-page .text-emerald-600,
+html.dark .parent-dashboard-page .text-emerald-700,
+html.dark .parent-status-page .text-emerald-600,
+html.dark .parent-status-page .text-emerald-700 {
+    color: #6ee7b7;
+}
+
+html.dark .parent-dashboard-page .text-blue-500,
+html.dark .parent-dashboard-page .text-blue-600,
+html.dark .parent-status-page .text-blue-500,
+html.dark .parent-status-page .text-blue-600 {
+    color: #93c5fd;
+}
+
+html.dark .parent-dashboard-page .text-orange-500,
+html.dark .parent-dashboard-page .text-orange-600,
+html.dark .parent-dashboard-page .text-orange-700,
+html.dark .parent-status-page .text-orange-500,
+html.dark .parent-status-page .text-orange-600,
+html.dark .parent-status-page .text-orange-700 {
+    color: #fdba74;
+}
+
+html.dark .parent-status-page .text-red-500,
+html.dark .parent-status-page .text-red-600 {
+    color: #fca5a5;
+}
+
+html.dark .parent-status-page .text-yellow-500,
+html.dark .parent-status-page .text-yellow-600 {
+    color: #fde047;
+}
+
+/* Activity badges keep their semantic colors and contrast in dark mode. */
+html.dark .dashboard-readable .activity-action-badge {
+    border: 1px solid transparent;
+}
+
+html.dark .dashboard-readable .activity-action-created,
+html.dark .dashboard-readable .activity-action-payment-uploaded,
+html.dark .dashboard-readable .activity-action-payment-reuploaded {
+    border-color: rgba(96, 165, 250, 0.3);
+    background: rgba(59, 130, 246, 0.16);
+    color: #93c5fd;
+}
+
+html.dark .dashboard-readable .activity-action-updated {
+    border-color: rgba(250, 204, 21, 0.3);
+    background: rgba(234, 179, 8, 0.16);
+    color: #fde047;
+}
+
+html.dark .dashboard-readable .activity-action-deleted,
+html.dark .dashboard-readable .activity-action-force-deleted,
+html.dark .dashboard-readable .activity-action-rejected {
+    border-color: rgba(248, 113, 113, 0.3);
+    background: rgba(239, 68, 68, 0.16);
+    color: #fca5a5;
+}
+
+html.dark .dashboard-readable .activity-action-soft-deleted,
+html.dark .dashboard-readable .activity-action-revision {
+    border-color: rgba(251, 146, 60, 0.3);
+    background: rgba(249, 115, 22, 0.16);
+    color: #fdba74;
+}
+
+html.dark .dashboard-readable .activity-action-restored,
+html.dark .dashboard-readable .activity-action-login,
+html.dark .dashboard-readable .activity-action-verified,
+html.dark .dashboard-readable .activity-action-accepted {
+    border-color: rgba(52, 211, 153, 0.3);
+    background: rgba(16, 185, 129, 0.16);
+    color: #6ee7b7;
+}
+
+html.dark .dashboard-readable .activity-action-logout {
+    border-color: rgba(148, 163, 184, 0.32);
+    background: rgba(100, 116, 139, 0.22);
+    color: #e2e8f0;
 }
 
 /* Keep the parent dashboard scroll path lightweight on mobile and low-end GPUs. */

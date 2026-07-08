@@ -64,7 +64,16 @@ class PendaftaranController extends Controller
                 ->first();
         }
 
-        return view('parent.pendaftaran.show', compact('pendaftaran', 'siswa', 'existingDetail'));
+        $hasActiveRegistration = $siswa?->pendaftaranDetails()
+            ->whereNotIn('status', [PendaftaranDetail::STATUS_DITOLAK])
+            ->exists() ?? false;
+
+        return view('parent.pendaftaran.show', compact(
+            'pendaftaran',
+            'siswa',
+            'existingDetail',
+            'hasActiveRegistration'
+        ));
     }
 
     /**

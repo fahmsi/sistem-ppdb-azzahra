@@ -106,7 +106,7 @@
                     <div class="grid sm:grid-cols-[160px_1fr]">
                         <div class="relative h-44 bg-[#f5f5f9] sm:h-full">
                             <img src="{{ $achievement->image_url }}" alt="{{ $achievement->title }}" class="h-full w-full object-cover">
-                            <span class="absolute left-3 top-3 rounded-full px-2.5 py-1 text-[10px] font-bold {{ $achievement->is_active ? 'bg-emerald-100 text-emerald-700' : 'bg-gray-200 text-gray-600' }}">
+                            <span class="absolute left-3 top-3 rounded-full px-2.5 py-1 text-[10px] font-bold {{ $achievement->is_active ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300' : 'bg-gray-200 text-gray-600 dark:bg-gray-500/20 dark:text-gray-300' }}">
                                 {{ $achievement->is_active ? 'Tampil' : 'Disembunyikan' }}
                             </span>
                         </div>

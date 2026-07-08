@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('pendaftaran_detail_id')->constrained('spmb_pendaftaran_detail')->onDelete('cascade');
             $table->decimal('jumlah', 15, 2)->default(0);
             $table->string('bukti_bayar')->nullable();
-            $table->enum('status', ['pending', 'lunas', 'ditolak'])->default('pending');
+            $table->enum('status', ['pending', 'menunggu_verifikasi', 'lunas', 'ditolak'])->default('pending');
             $table->text('catatan_admin')->nullable();
             $table->timestamps();
         });

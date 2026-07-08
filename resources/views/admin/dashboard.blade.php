@@ -224,7 +224,7 @@
                                 {{ $log->user_name ?? 'System' }}
                             </td>
                             <td>
-                                <span class="sneat-badge {{ $log->action_color }}">
+                                <span class="activity-action-badge activity-action-{{ Str::slug($log->action) }} sneat-badge {{ $log->action_color }}">
                                     {{ $log->action_label }}
                                 </span>
                             </td>

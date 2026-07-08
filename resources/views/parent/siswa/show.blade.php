@@ -26,7 +26,7 @@
     </div>
 
     <!-- Main Profile Card -->
-    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden animate-fade-up">
+    <div class="parent-profile-card animate-fade-up overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm">
         
         <!-- Header / Cover -->
         <div class="h-32 bg-gradient-to-r from-primary-600 to-primary-800 relative">

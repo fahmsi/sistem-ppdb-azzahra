@@ -192,40 +192,5 @@
                 @endforeach
             </div>
         </div>
-
-        {{-- FAQ --}}
-        @php
-        $faqs = [
-            ['q' => 'Bagaimana PAUD Azzahra menilai perkembangan anak?', 'a' => 'Di PAUD Azzahra, perkembangan anak dipantau melalui observasi harian, portofolio karya anak, dan checklist perkembangan sesuai tahap usianya.'],
-            ['q' => 'Apakah tersedia cicilan pembayaran?', 'a' => 'Ya, tersedia cicilan sebelum tahun ajaran dimulai. Anda dapat menghubungi Admin SPMB untuk informasi lebih lanjut.'],
-            ['q' => 'Apa saja yang termasuk dalam biaya tahunan?', 'a' => 'Biaya tahunan mencakup study tour/fieldtrip, kegiatan hari besar Islam dan manasik haji bersama Ayah dan Bunda.'],
-            ['q' => 'Bagaimana metode pembayaran yang tersedia?', 'a' => 'Pembayaran dapat dilakukan hanya melalui transfer bank.'],
-            ['q' => 'Berapa total biaya yang harus dibayar?', 'a' => 'Total biaya yang harus dibayar adalah Rp 850.000'],
-        ];
-        @endphp
-
-        <div class="max-w-3xl mx-auto fade-up">
-            <div class="text-center mb-10">
-                <h3 class="section-heading font-heading font-bold text-gray-900">
-                    Pertanyaan Umum <span class="gradient-text">(FAQ)</span>
-                </h3>
-            </div>
-
-            <div class="space-y-3 mt-10">
-                @foreach($faqs as $i => $faq)
-                <div class="faq-item bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
-                    <button onclick="toggleFAQ(this)"
-                        class="w-full text-left p-6 flex items-center justify-between gap-4 hover:bg-gray-50 transition-colors">
-                        <span class="font-heading font-semibold text-gray-900">{{ $faq['q'] }}</span>
-                        <i data-lucide="chevron-down" class="faq-chevron w-5 h-5 text-gray-400 flex-shrink-0"></i>
-                    </button>
-                    <div class="faq-answer text-gray-600 leading-relaxed">
-                        {{ $faq['a'] }}
-                    </div>
-                </div>
-                @endforeach
-            </div>
-        </div>
-
     </div>
 </section>

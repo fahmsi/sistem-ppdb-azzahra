@@ -27,7 +27,7 @@
                     "Dokumen KTP Orang Tua/Wali",
                     "Pas Foto Anak",
                     "Mengisi formulir pendaftaran online di Aplikasi SPMB",
-                    "Membayar biaya pendaftaran",
+                    "Mengikuti observasi/wawancara calon siswa di sekolah sesuai jadwal",
                 ];
             @endphp
 
@@ -55,13 +55,17 @@
                     <div>
                         <h4 class="font-heading font-semibold text-gray-900 mb-3">Catatan Penting</h4>
                         <ul class="text-sm text-gray-600 space-y-2">
-                            <li class="flex items-center gap-2">
-                                <i data-lucide="chevron-right" class="w-3 h-3 text-primary-500"></i>
-                                Semua dokumen harus asli dan masih berlaku
+                            <li class="flex items-start gap-2">
+                                <i data-lucide="chevron-right" class="w-3 h-3 text-primary-500 flex-shrink-0 mt-1"></i>
+                                <span>Semua dokumen harus asli dan masih berlaku</span>
                             </li>
-                            <li class="flex items-center gap-2">
-                                <i data-lucide="chevron-right" class="w-3 h-3 text-primary-500"></i>
-                                Berkas tidak lengkap tidak akan diproses
+                            <li class="flex items-start gap-2">
+                                <i data-lucide="chevron-right" class="w-3 h-3 text-primary-500 flex-shrink-0 mt-1"></i>
+                                <span>Berkas tidak lengkap tidak akan diproses</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <i data-lucide="chevron-right" class="w-3 h-3 text-primary-500 flex-shrink-0 mt-1"></i>
+                                <span>Pendaftaran tidak dikenakan biaya. Pembayaran hanya dilakukan pada tahap daftar ulang setelah observasi/wawancara dan sesuai arahan pihak sekolah</span>
                             </li>
                         </ul>
                     </div>
