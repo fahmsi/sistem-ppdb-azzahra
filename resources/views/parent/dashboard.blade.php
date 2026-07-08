@@ -4,7 +4,7 @@
 @section('header_title', 'Dashboard')
 
 @section('content')
-<div class="mx-auto max-w-7xl space-y-4 sm:space-y-6">
+<div class="parent-dashboard-page mx-auto max-w-7xl space-y-4 sm:space-y-6">
 
     <!-- Welcome Banner -->
     <div class="relative overflow-hidden rounded-xl bg-gradient-to-r from-[#696cff] to-[#7b7dff] p-5 text-white shadow-sneat-lg animate-fade-up sm:p-8">
@@ -30,7 +30,7 @@
         $isPaymentLunas = $paymentStatus === 'lunas';
         $isPaymentRejected = $paymentStatus === 'ditolak';
         $adminWhatsapp = preg_replace('/[^0-9]/', '', (string) config('spmb.admin_whatsapp', ''));
-        $helpWaMessage = "Assalamu'alaikum Admin PAUD Al-Qur'an Azzahra, saya butuh bantuan terkait pendaftaran anak saya.";
+        $helpWaMessage = "Assalamu'alaikum Admin PAUD Az-Zahra, saya ingin menanyakan jadwal atau arahan observasi/wawancara untuk calon siswa atas nama " . ($siswa ? $siswa->nama : '...');
         $helpWaUrl = $adminWhatsapp ? 'https://wa.me/'.$adminWhatsapp.'?text='.urlencode($helpWaMessage) : '#';
     @endphp
 
@@ -50,8 +50,9 @@
                     $step1Done = true; // Akun orang tua sudah dibuat karena sedang login
                     $step2Done = $siswa !== null;
                     $step3Done = $latestRegistration !== null;
-                    $step4Done = $latestRegistration && $latestRegistration->status === 'diterima';
-                    $step5Done = $isPaymentLunas;
+                    $step4Done = $latestRegistration && in_array($latestRegistration->status, ['diterima']);
+                    $step5Done = $latestRegistration && $latestRegistration->status === 'diterima' && $payment !== null;
+                    $step6Done = $isPaymentLunas;
                     
                     // Current step estimation
                     if (!$step2Done) {
@@ -59,121 +60,158 @@
                     } elseif (!$step3Done) {
                         $currentStep = 3;
                     } elseif ($latestRegistration && in_array($latestRegistration->status, ['pending', 'menunggu_verifikasi', 'perlu_revisi'])) {
-                        $currentStep = 4; // Menunggu hasil / verifikasi
-                    } elseif ($latestRegistration && $latestRegistration->status === 'diterima' && !$isPaymentLunas) {
-                        $currentStep = 5; // Daftar ulang
+                        $currentStep = 4; // Verifikasi Berkas
+                    } elseif ($latestRegistration && $latestRegistration->status === 'diterima' && !$payment) {
+                        $currentStep = 5; // Observasi & Wawancara
+                    } elseif ($latestRegistration && $latestRegistration->status === 'diterima' && $payment && !$isPaymentLunas) {
+                        $currentStep = 6; // Daftar Ulang / Verifikasi Pembayaran
                     } else {
-                        $currentStep = 6; // Selesai
+                        $currentStep = 7; // Selesai
                     }
                 @endphp
 
-                <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-5">
+                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
                     
                     <!-- Langkah 1 -->
-                    <div class="p-3 rounded-xl border {{ $currentStep == 1 ? 'border-[#696cff] bg-[#696cff]/5 dark:bg-[#696cff]/10' : 'border-gray-100 dark:border-[#434463]' }} flex flex-col justify-between">
-                        <div>
-                            <div class="flex items-center justify-between mb-1.5">
-                                <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700">Langkah 1</span>
-                                <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-500"></i>
-                            </div>
-                            <h4 class="text-xs font-bold text-gray-800 dark:text-[#d5d5e2]">Buat Akun</h4>
-                            <p class="text-[10px] text-gray-500 mt-0.5 leading-normal">Registrasi akun wali murid</p>
+                    <div class="p-4 rounded-xl border {{ $currentStep == 1 ? 'border-[#696cff] bg-[#696cff]/5 dark:bg-[#696cff]/10 shadow-sm ring-1 ring-[#696cff]/20' : 'border-emerald-100 dark:border-emerald-500/10 bg-emerald-50/20 dark:bg-emerald-500/5' }} flex flex-col min-h-[165px] transition-all duration-200">
+                        <div class="flex items-center justify-between">
+                            <span class="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 dark:bg-emerald-500/20">Langkah 1</span>
+                            <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-500"></i>
                         </div>
-                        <span class="text-[10px] text-emerald-600 font-semibold mt-2.5 flex items-center gap-1"><i data-lucide="check" class="w-3 h-3"></i> Selesai</span>
+                        <div class="flex-grow my-3">
+                            <h4 class="text-sm font-bold text-gray-800 dark:text-[#d5d5e2] tracking-tight">Buat Akun</h4>
+                            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1 leading-relaxed">Registrasi akun wali murid</p>
+                        </div>
+                        <div class="pt-2 border-t border-gray-100/50 dark:border-[#434463]/50 mt-auto">
+                            <span class="text-xs text-emerald-600 dark:text-emerald-400 font-semibold flex items-center gap-1"><i data-lucide="check" class="w-3.5 h-3.5"></i> Selesai</span>
+                        </div>
                     </div>
 
                     <!-- Langkah 2 -->
-                    <div class="p-3 rounded-xl border {{ $currentStep == 2 ? 'border-[#696cff] bg-[#696cff]/5 dark:bg-[#696cff]/10' : 'border-gray-100 dark:border-[#434463]' }} flex flex-col justify-between">
-                        <div>
-                            <div class="flex items-center justify-between mb-1.5">
-                                <span class="text-[10px] font-bold px-2 py-0.5 rounded-full {{ $currentStep == 2 ? 'bg-[#696cff]/20 text-[#696cff]' : ($step2Done ? 'bg-emerald-100 text-emerald-700' : 'bg-gray-100 text-gray-500') }}">Langkah 2</span>
-                                @if($step2Done)
-                                    <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-500"></i>
-                                @elseif($currentStep == 2)
-                                    <span class="w-2 h-2 rounded-full bg-[#696cff] animate-ping"></span>
-                                @endif
-                            </div>
-                            <h4 class="text-xs font-bold {{ $currentStep == 2 ? 'text-[#696cff]' : 'text-gray-800 dark:text-[#d5d5e2]' }}">Isi Data Anak</h4>
-                            <p class="text-[10px] text-gray-500 mt-0.5 leading-normal">Lengkapi biodata & berkas</p>
+                    <div class="p-4 rounded-xl border {{ $currentStep == 2 ? 'border-[#696cff] bg-[#696cff]/5 dark:bg-[#696cff]/10 shadow-sm ring-1 ring-[#696cff]/20' : ($step2Done ? 'border-emerald-100 dark:border-emerald-500/10 bg-emerald-50/20 dark:bg-emerald-500/5' : 'border-gray-200 dark:border-[#434463] bg-gray-50/30 dark:bg-[#28293d]/50') }} flex flex-col min-h-[165px] transition-all duration-200">
+                        <div class="flex items-center justify-between">
+                            <span class="text-[10px] font-bold px-2.5 py-0.5 rounded-full {{ $currentStep == 2 ? 'bg-[#696cff]/10 text-[#696cff] dark:text-[#a3a5ff]' : ($step2Done ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 dark:bg-emerald-500/20' : 'bg-gray-100 text-gray-500 dark:bg-[#34354c] dark:text-[#a1b0cb]') }}">Langkah 2</span>
+                            @if($step2Done)
+                                <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-500"></i>
+                            @elseif($currentStep == 2)
+                                <span class="w-2 h-2 rounded-full bg-[#696cff] animate-ping"></span>
+                            @endif
                         </div>
-                        @if($step2Done)
-                            <span class="text-[10px] text-emerald-600 font-semibold mt-2.5 flex items-center gap-1"><i data-lucide="check" class="w-3 h-3"></i> Selesai</span>
-                        @else
-                            <a href="{{ route('parent.siswa.create') }}" class="text-[10px] text-[#696cff] font-bold mt-2.5 hover:underline flex items-center gap-0.5">Isi Sekarang &rarr;</a>
-                        @endif
+                        <div class="flex-grow my-3">
+                            <h4 class="text-sm font-bold {{ $currentStep == 2 ? 'text-[#696cff]' : 'text-gray-800 dark:text-[#d5d5e2]' }} tracking-tight">Isi Data Anak</h4>
+                            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1 leading-relaxed">Lengkapi biodata & berkas</p>
+                        </div>
+                        <div class="pt-2 border-t border-gray-100/50 dark:border-[#434463]/50 mt-auto">
+                            @if($step2Done)
+                                <span class="text-xs text-emerald-600 dark:text-emerald-400 font-semibold flex items-center gap-1"><i data-lucide="check" class="w-3.5 h-3.5"></i> Selesai</span>
+                            @else
+                                <a href="{{ route('parent.siswa.create') }}" class="text-xs text-[#696cff] font-bold hover:underline flex items-center gap-0.5">Isi Sekarang &rarr;</a>
+                            @endif
+                        </div>
                     </div>
 
                     <!-- Langkah 3 -->
-                    <div class="p-3 rounded-xl border {{ $currentStep == 3 ? 'border-[#696cff] bg-[#696cff]/5 dark:bg-[#696cff]/10' : 'border-gray-100 dark:border-[#434463]' }} flex flex-col justify-between">
-                        <div>
-                            <div class="flex items-center justify-between mb-1.5">
-                                <span class="text-[10px] font-bold px-2 py-0.5 rounded-full {{ $currentStep == 3 ? 'bg-[#696cff]/20 text-[#696cff]' : ($step3Done ? 'bg-emerald-100 text-emerald-700' : 'bg-gray-100 text-gray-500') }}">Langkah 3</span>
-                                @if($step3Done)
-                                    <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-500"></i>
-                                @elseif($currentStep == 3)
-                                    <span class="w-2 h-2 rounded-full bg-[#696cff] animate-ping"></span>
-                                @endif
-                            </div>
-                            <h4 class="text-xs font-bold {{ $currentStep == 3 ? 'text-[#696cff]' : 'text-gray-800 dark:text-[#d5d5e2]' }}">Pilih Gelombang</h4>
-                            <p class="text-[10px] text-gray-500 mt-0.5 leading-normal">Daftar ke gelombang aktif</p>
+                    <div class="p-4 rounded-xl border {{ $currentStep == 3 ? 'border-[#696cff] bg-[#696cff]/5 dark:bg-[#696cff]/10 shadow-sm ring-1 ring-[#696cff]/20' : ($step3Done ? 'border-emerald-100 dark:border-emerald-500/10 bg-emerald-50/20 dark:bg-emerald-500/5' : 'border-gray-200 dark:border-[#434463] bg-gray-50/30 dark:bg-[#28293d]/50') }} flex flex-col min-h-[165px] transition-all duration-200">
+                        <div class="flex items-center justify-between">
+                            <span class="text-[10px] font-bold px-2.5 py-0.5 rounded-full {{ $currentStep == 3 ? 'bg-[#696cff]/10 text-[#696cff] dark:text-[#a3a5ff]' : ($step3Done ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 dark:bg-emerald-500/20' : 'bg-gray-100 text-gray-500 dark:bg-[#34354c] dark:text-[#a1b0cb]') }}">Langkah 3</span>
+                            @if($step3Done)
+                                <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-500"></i>
+                            @elseif($currentStep == 3)
+                                <span class="w-2 h-2 rounded-full bg-[#696cff] animate-ping"></span>
+                            @endif
                         </div>
-                        @if($step3Done)
-                            <span class="text-[10px] text-emerald-600 font-semibold mt-2.5 flex items-center gap-1"><i data-lucide="check" class="w-3 h-3"></i> Terdaftar</span>
-                        @elseif($siswa)
-                            <a href="{{ route('parent.pendaftaran.index') }}" class="text-[10px] text-[#696cff] font-bold mt-2.5 hover:underline flex items-center gap-0.5">Daftar Gelombang &rarr;</a>
-                        @else
-                            <span class="text-[10px] text-gray-400 mt-2.5">Terkunci</span>
-                        @endif
+                        <div class="flex-grow my-3">
+                            <h4 class="text-sm font-bold {{ $currentStep == 3 ? 'text-[#696cff]' : 'text-gray-800 dark:text-[#d5d5e2]' }} tracking-tight">Pilih Gelombang</h4>
+                            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1 leading-relaxed">Daftar ke gelombang aktif</p>
+                        </div>
+                        <div class="pt-2 border-t border-gray-100/50 dark:border-[#434463]/50 mt-auto">
+                            @if($step3Done)
+                                <span class="text-xs text-emerald-600 dark:text-emerald-400 font-semibold flex items-center gap-1"><i data-lucide="check" class="w-3.5 h-3.5"></i> Terdaftar</span>
+                            @elseif($siswa)
+                                <a href="{{ route('parent.pendaftaran.index') }}" class="text-xs text-[#696cff] font-bold hover:underline flex items-center gap-0.5">Daftar Gelombang &rarr;</a>
+                            @else
+                                <span class="text-xs text-gray-400 dark:text-gray-500">Terkunci</span>
+                            @endif
+                        </div>
                     </div>
 
                     <!-- Langkah 4 -->
-                    <div class="p-3 rounded-xl border {{ $currentStep == 4 ? ($latestRegistration && $latestRegistration->status === 'perlu_revisi' ? 'border-orange-500 bg-orange-500/5' : 'border-[#696cff] bg-[#696cff]/5 dark:bg-[#696cff]/10') : 'border-gray-100 dark:border-[#434463]' }} flex flex-col justify-between">
-                        <div>
-                            <div class="flex items-center justify-between mb-1.5">
-                                <span class="text-[10px] font-bold px-2 py-0.5 rounded-full {{ $currentStep == 4 ? ($latestRegistration && $latestRegistration->status === 'perlu_revisi' ? 'bg-orange-100 text-orange-700' : 'bg-[#696cff]/20 text-[#696cff]') : ($step4Done ? 'bg-emerald-100 text-emerald-700' : 'bg-gray-100 text-gray-500') }}">Langkah 4</span>
-                                @if($step4Done)
-                                    <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-500"></i>
-                                @elseif($latestRegistration && $latestRegistration->status === 'perlu_revisi')
-                                    <i data-lucide="alert-circle" class="w-4 h-4 text-orange-500"></i>
-                                @elseif($currentStep == 4)
-                                    <span class="w-2 h-2 rounded-full bg-[#696cff] animate-ping"></span>
-                                @endif
-                            </div>
-                            <h4 class="text-xs font-bold {{ $currentStep == 4 ? ($latestRegistration && $latestRegistration->status === 'perlu_revisi' ? 'text-orange-600' : 'text-[#696cff]') : 'text-gray-800 dark:text-[#d5d5e2]' }}">Verifikasi</h4>
-                            <p class="text-[10px] text-gray-500 mt-0.5 leading-normal">Pengecekan oleh panitia sekolah</p>
+                    <div class="p-4 rounded-xl border {{ $currentStep == 4 ? ($latestRegistration && $latestRegistration->status === 'perlu_revisi' ? 'border-orange-500 bg-orange-500/5' : 'border-[#696cff] bg-[#696cff]/5 dark:bg-[#696cff]/10 shadow-sm ring-1 ring-[#696cff]/20') : ($step4Done ? 'border-emerald-100 dark:border-emerald-500/10 bg-emerald-50/20 dark:bg-emerald-500/5' : 'border-gray-200 dark:border-[#434463] bg-gray-50/30 dark:bg-[#28293d]/50') }} flex flex-col min-h-[165px] transition-all duration-200">
+                        <div class="flex items-center justify-between">
+                            <span class="text-[10px] font-bold px-2.5 py-0.5 rounded-full {{ $currentStep == 4 ? ($latestRegistration && $latestRegistration->status === 'perlu_revisi' ? 'bg-orange-100 text-orange-700 dark:bg-orange-500/20 dark:text-orange-400' : 'bg-[#696cff]/10 text-[#696cff] dark:text-[#a3a5ff]') : ($step4Done ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 dark:bg-emerald-500/20' : 'bg-gray-100 text-gray-500 dark:bg-[#34354c] dark:text-[#a1b0cb]') }}">Langkah 4</span>
+                            @if($step4Done)
+                                <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-500"></i>
+                            @elseif($latestRegistration && $latestRegistration->status === 'perlu_revisi')
+                                <i data-lucide="alert-circle" class="w-4 h-4 text-orange-500"></i>
+                            @elseif($currentStep == 4)
+                                <span class="w-2 h-2 rounded-full bg-[#696cff] animate-ping"></span>
+                            @endif
                         </div>
-                        @if($step4Done)
-                            <span class="text-[10px] text-emerald-600 font-semibold mt-2.5 flex items-center gap-1"><i data-lucide="check" class="w-3 h-3"></i> Diterima</span>
-                        @elseif($latestRegistration && $latestRegistration->status === 'perlu_revisi')
-                            <span class="text-[10px] text-orange-600 font-semibold mt-2.5 flex items-center gap-1"><i data-lucide="alert-circle" class="w-3 h-3"></i> Perlu Perbaikan Data</span>
-                        @elseif($currentStep == 4)
-                            <span class="text-[10px] text-blue-600 font-medium mt-2.5 flex items-center gap-1"><i data-lucide="loader" class="w-3 h-3 animate-spin"></i> Proses</span>
-                        @else
-                            <span class="text-[10px] text-gray-400 mt-2.5">Belum Mulai</span>
-                        @endif
+                        <div class="flex-grow my-3">
+                            <h4 class="text-sm font-bold {{ $currentStep == 4 ? ($latestRegistration && $latestRegistration->status === 'perlu_revisi' ? 'text-orange-600' : 'text-[#696cff]') : 'text-gray-800 dark:text-[#d5d5e2]' }} tracking-tight">Verifikasi Berkas</h4>
+                            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1 leading-relaxed">Pengecekan oleh panitia sekolah</p>
+                        </div>
+                        <div class="pt-2 border-t border-gray-100/50 dark:border-[#434463]/50 mt-auto">
+                            @if($step4Done)
+                                <span class="text-xs text-emerald-600 dark:text-emerald-400 font-semibold flex items-center gap-1"><i data-lucide="check" class="w-3.5 h-3.5"></i> Terverifikasi</span>
+                            @elseif($latestRegistration && $latestRegistration->status === 'perlu_revisi')
+                                <span class="text-xs text-orange-600 dark:text-orange-400 font-semibold flex items-center gap-1"><i data-lucide="alert-circle" class="w-3.5 h-3.5"></i> Perlu Revisi</span>
+                            @elseif($currentStep == 4)
+                                <span class="text-xs text-blue-600 dark:text-blue-400 font-medium flex items-center gap-1"><i data-lucide="loader" class="w-3.5 h-3.5 animate-spin"></i> Proses</span>
+                            @else
+                                <span class="text-xs text-gray-400 dark:text-gray-500">Belum Mulai</span>
+                            @endif
+                        </div>
                     </div>
 
                     <!-- Langkah 5 -->
-                    <div class="p-3 rounded-xl border {{ $currentStep == 5 ? 'border-[#696cff] bg-[#696cff]/5 dark:bg-[#696cff]/10' : 'border-gray-100 dark:border-[#434463]' }} flex flex-col justify-between">
-                        <div>
-                            <div class="flex items-center justify-between mb-1.5">
-                                <span class="text-[10px] font-bold px-2 py-0.5 rounded-full {{ $currentStep == 5 ? 'bg-[#696cff]/20 text-[#696cff]' : ($step5Done ? 'bg-emerald-100 text-emerald-700' : 'bg-gray-100 text-gray-500') }}">Langkah 5</span>
-                                @if($step5Done)
-                                    <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-500"></i>
-                                @elseif($currentStep == 5)
-                                    <span class="w-2 h-2 rounded-full bg-[#696cff] animate-ping"></span>
-                                @endif
-                            </div>
-                            <h4 class="text-xs font-bold {{ $currentStep == 5 ? 'text-[#696cff]' : 'text-gray-800 dark:text-[#d5d5e2]' }}">Daftar Ulang</h4>
-                            <p class="text-[10px] text-gray-500 mt-0.5 leading-normal">Unggah bukti transfer masuk</p>
+                    <div class="p-4 rounded-xl border {{ $currentStep == 5 ? 'border-[#696cff] bg-[#696cff]/5 dark:bg-[#696cff]/10 shadow-sm ring-1 ring-[#696cff]/20' : ($step5Done ? 'border-emerald-100 dark:border-emerald-500/10 bg-emerald-50/20 dark:bg-emerald-500/5' : 'border-gray-200 dark:border-[#434463] bg-gray-50/30 dark:bg-[#28293d]/50') }} flex flex-col min-h-[165px] transition-all duration-200">
+                        <div class="flex items-center justify-between">
+                            <span class="text-[10px] font-bold px-2.5 py-0.5 rounded-full {{ $currentStep == 5 ? 'bg-[#696cff]/10 text-[#696cff] dark:text-[#a3a5ff]' : ($step5Done ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 dark:bg-emerald-500/20' : 'bg-gray-100 text-gray-500 dark:bg-[#34354c] dark:text-[#a1b0cb]') }}">Langkah 5</span>
+                            @if($step5Done)
+                                <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-500"></i>
+                            @elseif($currentStep == 5)
+                                <span class="w-2 h-2 rounded-full bg-[#696cff] animate-ping"></span>
+                            @endif
                         </div>
-                        @if($step5Done)
-                            <span class="text-[10px] text-emerald-600 font-semibold mt-2.5 flex items-center gap-1"><i data-lucide="check" class="w-3 h-3"></i> Lunas</span>
-                        @elseif($currentStep == 5)
-                            <a href="{{ route('parent.pendaftaran.status') }}" class="text-[10px] text-[#696cff] font-bold mt-2.5 hover:underline flex items-center gap-0.5">Bayar & Upload &rarr;</a>
-                        @else
-                            <span class="text-[10px] text-gray-400 mt-2.5">Belum Mulai</span>
-                        @endif
+                        <div class="flex-grow my-3">
+                            <h4 class="text-sm font-bold {{ $currentStep == 5 ? 'text-[#696cff]' : 'text-gray-800 dark:text-[#d5d5e2]' }} tracking-tight">Observasi</h4>
+                            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1 leading-relaxed">Hadir ke sekolah bersama anak</p>
+                        </div>
+                        <div class="pt-2 border-t border-gray-100/50 dark:border-[#434463]/50 mt-auto">
+                            @if($step5Done)
+                                <span class="text-xs text-emerald-600 dark:text-emerald-400 font-semibold flex items-center gap-1"><i data-lucide="check" class="w-3.5 h-3.5"></i> Selesai</span>
+                            @elseif($currentStep == 5)
+                                <span class="text-xs text-[#696cff] dark:text-[#a3a5ff] font-medium flex items-center gap-1"><i data-lucide="calendar" class="w-3.5 h-3.5"></i> Observasi</span>
+                            @else
+                                <span class="text-xs text-gray-400 dark:text-gray-500">Belum Mulai</span>
+                            @endif
+                        </div>
+                    </div>
+
+                    <!-- Langkah 6 -->
+                    <div class="p-4 rounded-xl border {{ $currentStep == 6 ? 'border-[#696cff] bg-[#696cff]/5 dark:bg-[#696cff]/10 shadow-sm ring-1 ring-[#696cff]/20' : ($step6Done ? 'border-emerald-100 dark:border-emerald-500/10 bg-emerald-50/20 dark:bg-emerald-500/5' : 'border-gray-200 dark:border-[#434463] bg-gray-50/30 dark:bg-[#28293d]/50') }} flex flex-col min-h-[165px] transition-all duration-200">
+                        <div class="flex items-center justify-between">
+                            <span class="text-[10px] font-bold px-2.5 py-0.5 rounded-full {{ $currentStep == 6 ? 'bg-[#696cff]/10 text-[#696cff] dark:text-[#a3a5ff]' : ($step6Done ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 dark:bg-emerald-500/20' : 'bg-gray-100 text-gray-500 dark:bg-[#34354c] dark:text-[#a1b0cb]') }}">Langkah 6</span>
+                            @if($step6Done)
+                                <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-500"></i>
+                            @elseif($currentStep == 6)
+                                <span class="w-2 h-2 rounded-full bg-[#696cff] animate-ping"></span>
+                            @endif
+                        </div>
+                        <div class="flex-grow my-3">
+                            <h4 class="text-sm font-bold {{ $currentStep == 6 ? 'text-[#696cff]' : 'text-gray-800 dark:text-[#d5d5e2]' }} tracking-tight">Daftar Ulang</h4>
+                            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1 leading-relaxed">Unggah bukti transfer masuk</p>
+                        </div>
+                        <div class="pt-2 border-t border-gray-100/50 dark:border-[#434463]/50 mt-auto">
+                            @if($step6Done)
+                                <span class="text-xs text-emerald-600 dark:text-emerald-400 font-semibold flex items-center gap-1"><i data-lucide="check" class="w-3.5 h-3.5"></i> Lunas</span>
+                            @elseif($currentStep == 6)
+                                <a href="{{ route('parent.pendaftaran.status') }}" class="text-xs text-[#696cff] font-bold hover:underline flex items-center gap-0.5">Bayar & Upload &rarr;</a>
+                            @else
+                                <span class="text-xs text-gray-400 dark:text-gray-500">Belum Mulai</span>
+                            @endif
+                        </div>
                     </div>
 
                 </div>
@@ -229,19 +267,19 @@
                                     </span>
                                 @elseif($latestRegistration->status === 'menunggu_verifikasi')
                                     <span class="sneat-badge bg-amber-50 dark:bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-200 dark:border-amber-500/20">
-                                        <i data-lucide="search" class="w-3.5 h-3.5"></i> Menunggu Verifikasi
+                                        <i data-lucide="search" class="w-3.5 h-3.5"></i> Menunggu Verifikasi Berkas
                                     </span>
                                 @elseif($latestRegistration->status === 'diterima')
                                     <span class="sneat-badge bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-500/20">
-                                        <i data-lucide="check-circle-2" class="w-3.5 h-3.5"></i> Diterima
+                                        <i data-lucide="check-circle-2" class="w-3.5 h-3.5"></i> Berkas Terverifikasi – Lanjut Observasi
                                     </span>
                                 @elseif($latestRegistration->status === 'ditolak')
                                     <span class="sneat-badge bg-red-50 dark:bg-red-500/10 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-500/20">
-                                        <i data-lucide="x-circle" class="w-3.5 h-3.5"></i> Ditolak
+                                        <i data-lucide="x-circle" class="w-3.5 h-3.5"></i> Pendaftaran Ditolak
                                     </span>
                                 @elseif($latestRegistration->status === 'perlu_revisi')
                                     <span class="sneat-badge bg-orange-50 dark:bg-orange-500/10 text-orange-600 dark:text-orange-400 border border-orange-200 dark:border-orange-500/20">
-                                        <i data-lucide="edit-3" class="w-3.5 h-3.5"></i> Perlu Revisi
+                                        <i data-lucide="edit-3" class="w-3.5 h-3.5"></i> Perlu Revisi Data
                                     </span>
                                 @endif
                             </div>
@@ -253,18 +291,22 @@
                                 <span class="block font-semibold mb-1 {{ $latestRegistration->status === 'diterima' ? 'text-emerald-800 dark:text-emerald-400' : ($latestRegistration->status === 'ditolak' ? 'text-red-800 dark:text-red-400' : 'text-[#566a7f] dark:text-[#d5d5e2]') }}">Pesan dari Admin:</span>
                                 <p class="text-[#697a8d] dark:text-[#a1b0cb]">{{ $latestRegistration->notifikasi }}</p>
                             </div>
-                        @endif
-
-                        @if($isAccepted)
+                        @endif                        @if($isAccepted)
                             <div class="mt-4 p-4 rounded-lg bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/20">
                                 @if(!$payment)
-                                    <h4 class="font-semibold text-emerald-800 dark:text-emerald-400">Selamat, pendaftaran anak Anda telah diterima.</h4>
-                                    <p class="text-sm text-[#697a8d] dark:text-[#a1b0cb] mt-2">Silakan melakukan daftar ulang dengan pembayaran ke rekening berikut:</p>
-                                    <div class="mt-3">
+                                    <h4 class="font-semibold text-emerald-800 dark:text-emerald-400">Berkas Terverifikasi – Lanjut Observasi</h4>
+                                    <p class="text-sm text-[#697a8d] dark:text-[#a1b0cb] mt-2">
+                                        Berkas pendaftaran Anda telah diverifikasi. Tahap berikutnya adalah observasi/wawancara calon siswa di sekolah. Silakan datang bersama calon siswa sesuai arahan admin PAUD Al-Qur’an Az-Zahra.
+                                    </p>
+                                    <p class="text-xs text-amber-700 dark:text-amber-400 mt-2 bg-amber-500/10 p-2.5 rounded-lg border border-amber-500/20">
+                                        <i data-lucide="info" class="w-3.5 h-3.5 inline mr-1"></i> Pembayaran daftar ulang dilakukan setelah tahap observasi/wawancara selesai sesuai arahan pihak sekolah.
+                                    </p>
+                                    <div class="mt-4">
+                                        <p class="text-xs font-semibold text-gray-500 dark:text-[#a1b0cb] mb-2">Informasi Rekening Daftar Ulang:</p>
                                         @include('parent.components.payment-information', ['paymentSetting' => $paymentSetting])
                                     </div>
                                     @if($paymentSetting)
-                                        <p class="text-sm text-[#697a8d] dark:text-[#a1b0cb] mt-3">Setelah melakukan pembayaran, silakan upload bukti pembayaran melalui tombol di bawah ini.</p>
+                                        <p class="text-sm text-[#697a8d] dark:text-[#a1b0cb] mt-3">Setelah mengikuti observasi dan mendapat arahan sekolah, silakan lakukan pembayaran daftar ulang dan unggah bukti pembayaran melalui tombol di bawah ini.</p>
                                     @endif
                                 @elseif($isPaymentWaiting)
                                     <h4 class="font-semibold text-amber-700 dark:text-amber-400">Bukti pembayaran Anda sedang menunggu verifikasi admin.</h4>
@@ -274,7 +316,7 @@
                                         <div class="w-10 h-10 bg-emerald-500 text-white rounded-full flex items-center justify-center mx-auto mb-3 shadow-sm">
                                             <i data-lucide="party-popper" class="w-5 h-5"></i>
                                         </div>
-                                        <h4 class="font-semibold text-emerald-800 dark:text-emerald-400">Daftar Ulang Selesai</h4>
+                                        <h4 class="font-semibold text-emerald-800 dark:text-emerald-400">Daftar Ulang Selesai / Siswa Diterima</h4>
                                         <p class="text-xs text-emerald-700 dark:text-[#a1b0cb] mt-1">Seluruh proses pendaftaran dan daftar ulang untuk <strong>{{ $siswa->nama }}</strong> telah selesai dan diverifikasi sepenuhnya.</p>
                                     </div>
                                 @elseif($isPaymentRejected)
@@ -354,7 +396,7 @@
             <div class="rounded-lg border border-[#d9dee3] bg-white p-4 shadow-sneat dark:border-[#434463] dark:bg-[#2b2c40] dark:shadow-sneat-dark sm:p-6">
                 <h3 class="text-lg font-heading font-semibold text-[#566a7f] dark:text-[#d5d5e2] mb-4">Aksi Cepat</h3>
                 
-                <div class="space-y-3">
+                <div class="space-y-4">
                     @if(!$siswa)
                         <a href="{{ route('parent.siswa.create') }}" class="flex items-center justify-between p-3 rounded-lg border border-[#d9dee3] dark:border-[#434463] hover:border-[#696cff] dark:hover:border-[#696cff] hover:bg-[#e7e7ff]/30 dark:hover:bg-[#696cff]/10 transition-colors group">
                             <div class="flex min-w-0 items-center gap-3">

@@ -54,7 +54,7 @@
                     <label for="amount" class="mb-1.5 block text-sm font-semibold text-[#566a7f] dark:text-[#d5d5e2]">Nominal Pembayaran <span class="text-red-500">*</span></label>
                     <div class="relative">
                         <span class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-sm font-semibold text-[#697a8d]">Rp</span>
-                        <input id="amount" name="amount" type="number" min="0" max="9999999999999.99" step="0.01" required value="{{ old('amount', $paymentSetting?->amount) }}" class="sneat-input !pl-10" placeholder="0">
+                        <input id="amount" name="amount" type="number" min="1" max="9999999999999.99" step="0.01" required value="{{ old('amount', $paymentSetting?->amount) }}" class="sneat-input !pl-10" placeholder="0">
                     </div>
                     @error('amount')<p class="mt-1.5 text-xs text-red-500">{{ $message }}</p>@enderror
                 </div>

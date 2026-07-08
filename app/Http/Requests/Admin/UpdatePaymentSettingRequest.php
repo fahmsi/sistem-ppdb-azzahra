@@ -20,7 +20,7 @@ class UpdatePaymentSettingRequest extends FormRequest
             'bank_name' => ['required', 'string', 'max:100'],
             'account_number' => ['required', 'string', 'max:50'],
             'account_holder_name' => ['required', 'string', 'max:150'],
-            'amount' => ['required', 'numeric', 'min:0', 'max:9999999999999.99'],
+            'amount' => ['required', 'numeric', 'min:1', 'max:9999999999999.99'],
             'qris' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
             'remove_qris' => ['nullable', 'boolean'],
             'payment_note' => ['nullable', 'string', 'max:2000'],

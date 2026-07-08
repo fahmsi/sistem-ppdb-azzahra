@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\ActivityLog;
 use App\Models\PendaftaranDetail;
 use App\Models\Pembayaran;
+use App\Models\PaymentSetting;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -26,10 +27,10 @@ class PembayaranController extends Controller
             return back()->with('error', 'Pembayaran daftar ulang sudah diverifikasi dan tidak dapat diunggah ulang.');
         }
 
-        $jumlah = (int) config('spmb.daftar_ulang_amount', 0);
+        $jumlah = (int) round((float) PaymentSetting::current()?->amount);
 
         if ($jumlah <= 0) {
-            return back()->with('error', 'Nominal daftar ulang belum dikonfigurasi. Silakan hubungi admin.');
+            return back()->with('error', 'Informasi pembayaran belum dikonfigurasi. Silakan hubungi admin.');
         }
 
         $request->validate([

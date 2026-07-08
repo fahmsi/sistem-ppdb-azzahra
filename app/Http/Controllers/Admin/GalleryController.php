@@ -19,7 +19,7 @@ class GalleryController extends Controller
      */
     public function index(): View
     {
-        $galleries = Gallery::orderBy('sort_order')->latest()->get();
+        $galleries = Gallery::oldest()->get();
 
         return view('admin.gallery.index', compact('galleries'));
     }

@@ -104,8 +104,42 @@
             </div>
         </div>
 
+        {{-- FAQ --}}
+        @php
+        $faqs = [
+            ['q' => 'Bagaimana PAUD Azzahra menilai perkembangan anak?', 'a' => 'Di PAUD Azzahra, perkembangan anak dipantau melalui observasi harian, portofolio karya anak, dan checklist perkembangan sesuai tahap usianya.'],
+            ['q' => 'Apakah tersedia cicilan pembayaran?', 'a' => 'Ya, tersedia cicilan sebelum tahun ajaran dimulai. Anda dapat menghubungi Admin SPMB untuk informasi lebih lanjut.'],
+            ['q' => 'Apa saja yang termasuk dalam biaya tahunan?', 'a' => 'Biaya tahunan mencakup study tour/fieldtrip, kegiatan hari besar Islam dan manasik haji bersama Ayah dan Bunda.'],
+            ['q' => 'Bagaimana metode pembayaran yang tersedia?', 'a' => 'Pembayaran dapat dilakukan hanya melalui transfer bank.'],
+            ['q' => 'Berapa total biaya yang harus dibayar?', 'a' => 'Total biaya yang harus dibayar adalah Rp 850.000'],
+        ];
+        @endphp
+
+        <div class="max-w-3xl mx-auto mt-16 fade-up">
+            <div class="text-center mb-10">
+                <h3 class="section-heading font-heading font-bold text-gray-900">
+                    Pertanyaan Umum <span class="gradient-text">(FAQ)</span>
+                </h3>
+            </div>
+
+            <div class="space-y-3 mt-10">
+                @foreach($faqs as $i => $faq)
+                <div class="faq-item bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+                    <button onclick="toggleFAQ(this)"
+                        class="w-full text-left p-6 flex items-center justify-between gap-4 hover:bg-gray-50 transition-colors">
+                        <span class="font-heading font-semibold text-gray-900">{{ $faq['q'] }}</span>
+                        <i data-lucide="chevron-down" class="faq-chevron w-5 h-5 text-gray-400 flex-shrink-0"></i>
+                    </button>
+                    <div class="faq-answer text-gray-600 leading-relaxed">
+                        {{ $faq['a'] }}
+                    </div>
+                </div>
+                @endforeach
+            </div>
+        </div>
+
         {{-- Google Maps Bawah (Full Width) --}}
-        <div class="w-full fade-up">
+        <div class="w-full mt-16 fade-up">
             <div class="bg-white p-2 rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
                 <iframe
                     src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3510.6726761888185!2d106.8353951!3d-6.394641999999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69e974c0b42d7f%3A0x23c154e4eaa6d1c1!2sPAUD%20AL%20QURAN%20AZZAHRA!5e1!3m2!1sen!2sid!4v1776849031234!5m2!1sen!2sid"

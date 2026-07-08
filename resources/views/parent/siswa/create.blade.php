@@ -16,7 +16,7 @@
 
 @section('content')
 <div class="">
-    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+    <div class="parent-student-form overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm">
         
         <!-- Header Form yang Dirapikan -->
         <div class="bg-primary-800 px-6 py-8 sm:px-10 relative overflow-hidden">
@@ -427,9 +427,9 @@
             </div>
 
             <!-- Submit -->
-            <div class="pt-6 mt-4 border-t border-gray-200 flex items-center justify-end gap-4 bg-gray-50 -mx-6 -mb-6 sm:-mx-10 sm:-mb-10 p-6 sm:p-8 rounded-b-2xl">
-                <a href="{{ $cancelUrl }}" class="px-5 py-2.5 text-sm font-medium text-gray-700 hover:text-gray-900 bg-white border border-gray-300 rounded-lg shadow-sm hover:bg-gray-50 transition-colors">{{ $cancelText }}</a>
-                <button type="submit" class="px-6 py-2.5 flex items-center gap-2 text-sm font-medium text-white bg-primary-600 border border-transparent rounded-lg shadow-sm hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors">
+            <div class="parent-student-form-actions -mx-6 -mb-6 mt-4 flex flex-col-reverse items-stretch justify-end gap-3 rounded-b-2xl border-t border-gray-200 bg-gray-50 p-6 pt-6 sm:-mx-10 sm:-mb-10 sm:flex-row sm:items-center sm:gap-4 sm:p-8">
+                <a href="{{ $cancelUrl }}" class="rounded-lg border border-gray-300 bg-white px-5 py-2.5 text-center text-sm font-medium text-gray-700 shadow-sm transition-colors hover:bg-gray-50 hover:text-gray-900">{{ $cancelText }}</a>
+                <button type="submit" class="flex items-center justify-center gap-2 rounded-lg border border-transparent bg-primary-600 px-6 py-2.5 text-sm font-medium text-white shadow-sm transition-colors hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2">
                     <i data-lucide="save" class="w-4 h-4"></i> {{ $submitText }}
                 </button>
             </div>

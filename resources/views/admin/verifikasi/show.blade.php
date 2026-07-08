@@ -16,82 +16,291 @@
 @endphp
 
 <div class="max-w-7xl mx-auto">
-    
+
     <!-- Back Button & Header -->
     <div class="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <a href="{{ route('admin.verifikasi.index') }}" class="inline-flex items-center gap-2 text-sm font-medium text-[#697a8d] dark:text-[#a1b0cb] hover:text-[#696cff] transition-colors">
             <i data-lucide="arrow-left" class="w-4 h-4"></i> Kembali ke Daftar
         </a>
-        
+
         <div class="flex flex-wrap items-center gap-2 sm:gap-3">
             <span class="text-sm font-medium text-[#697a8d] dark:text-[#a1b0cb]">Status Saat Ini:</span>
             @if($detail->status === 'pending')
                 <span class="sneat-badge bg-[#f5f5f9] dark:bg-[#232333] text-[#697a8d] dark:text-[#a1b0cb] border border-[#d9dee3] dark:border-[#434463]">Pending</span>
             @elseif($detail->status === 'menunggu_verifikasi')
-                <span class="sneat-badge bg-amber-50 dark:bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-200 dark:border-amber-500/20">Menunggu Verifikasi</span>
+                <span class="sneat-badge bg-amber-50 dark:bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-200 dark:border-amber-500/20">Menunggu Verifikasi Berkas</span>
             @elseif($detail->status === 'diterima')
-                <span class="sneat-badge bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-500/20">Diterima</span>
+                <span class="sneat-badge bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-500/20">Berkas Terverifikasi – Lanjut Observasi</span>
             @elseif($detail->status === 'ditolak')
-                <span class="sneat-badge bg-red-50 dark:bg-red-500/10 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-500/20">Ditolak</span>
+                <span class="sneat-badge bg-red-50 dark:bg-red-500/10 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-500/20">Pendaftaran Ditolak</span>
             @elseif($detail->status === 'perlu_revisi')
-                <span class="sneat-badge bg-orange-50 dark:bg-orange-500/10 text-orange-600 dark:text-orange-400 border border-orange-200 dark:border-orange-500/20">Perlu Revisi</span>
+                <span class="sneat-badge bg-orange-50 dark:bg-orange-500/10 text-orange-600 dark:text-orange-400 border border-orange-200 dark:border-orange-500/20">Perlu Revisi Data</span>
             @endif
         </div>
     </div>
 
     <!-- Split View Layout -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        
+
         <!-- Left Column: Data & Dokumen (Span 2) -->
         <div class="lg:col-span-2 space-y-6">
-            
+
             <!-- Profil Anak -->
             <div class="bg-white dark:bg-[#2b2c40] rounded-lg shadow-sneat dark:shadow-sneat-dark border border-[#d9dee3] dark:border-[#434463] overflow-hidden">
-                <div class="bg-[#e7e7ff] dark:bg-[#696cff]/20 px-6 py-4 border-b border-[#d9dee3] dark:border-[#434463] flex items-center gap-2">
-                    <i data-lucide="user" class="w-5 h-5 text-[#696cff]"></i>
-                    <h3 class="font-heading font-semibold text-[#566a7f] dark:text-[#d5d5e2]">Profil Calon Siswa</h3>
+                <div class="bg-[#e7e7ff] dark:bg-[#696cff]/20 px-6 py-4 border-b border-[#d9dee3] dark:border-[#434463] flex flex-wrap items-center justify-between gap-4">
+                    <div class="flex items-center gap-2">
+                        <i data-lucide="user" class="w-5 h-5 text-[#696cff]"></i>
+                        <h3 class="font-heading font-semibold text-[#566a7f] dark:text-[#d5d5e2]">Profil Calon Siswa</h3>
+                    </div>
+                    <a href="{{ route('admin.siswa.show', $detail->siswa->id) }}" target="_blank" class="inline-flex items-center gap-1.5 px-3 py-1 bg-white hover:bg-gray-50 border border-gray-200 dark:bg-[#2b2c40] dark:hover:bg-[#434463] dark:border-[#434463] text-xs font-semibold text-[#696cff] rounded transition-colors">
+                        <i data-lucide="external-link" class="w-3.5 h-3.5"></i> Detail Lengkap Siswa
+                    </a>
                 </div>
                 <div class="p-4 sm:p-6">
                     <div class="flex flex-col sm:flex-row gap-6 mb-6">
                         <img src="{{ $detail->siswa->foto ? Storage::url($detail->siswa->foto) : asset('images/default-avatar.png') }}" class="w-24 h-32 object-cover rounded-lg border border-[#d9dee3] dark:border-[#434463] shadow-sm cursor-pointer hover:opacity-80 hover:shadow-lg transition-all duration-300" alt="Foto Siswa" onclick="openLightbox(this.src)">
-                        <div class="flex-1 space-y-2">
+                        <div class="flex-1 space-y-2.5">
                             <div>
                                 <p class="text-xs text-[#a1b0cb] uppercase tracking-wider">Nama Lengkap</p>
                                 <p class="font-bold text-[#566a7f] dark:text-[#d5d5e2] text-lg">{{ $detail->siswa->nama ?? '-' }}</p>
                             </div>
-                            <div>
-                                <p class="text-xs text-[#a1b0cb] uppercase tracking-wider">No. Pendaftaran</p>
-                                <p class="font-semibold text-[#566a7f] dark:text-[#d5d5e2]">{{ $detail->nomor_pendaftaran }}</p>
-                            </div>
-                            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                            <div class="grid grid-cols-2 gap-4">
                                 <div>
-                                    <p class="text-xs text-[#a1b0cb] uppercase">Jenis Kelamin</p>
-                                    <p class="font-medium text-[#566a7f] dark:text-[#d5d5e2]">{{ $detail->siswa->jenis_kelamin == 'L' ? 'Laki-laki' : 'Perempuan' }}</p>
+                                    <p class="text-xs text-[#a1b0cb] uppercase">No. Pendaftaran</p>
+                                    <p class="font-semibold text-[#566a7f] dark:text-[#d5d5e2]">{{ $detail->nomor_pendaftaran }}</p>
                                 </div>
                                 <div>
-                                    <p class="text-xs text-[#a1b0cb] uppercase">Tempat, Tgl Lahir</p>
-                                    <p class="font-medium text-[#566a7f] dark:text-[#d5d5e2]">{{ $detail->siswa->tempat_lahir }}, {{ \Carbon\Carbon::parse($detail->siswa->tanggal_lahir)->translatedFormat('d F Y') }}</p>
+                                    <p class="text-xs text-[#a1b0cb] uppercase">Jenis Kelamin</p>
+                                    <p class="font-semibold text-[#566a7f] dark:text-[#d5d5e2]">{{ $detail->siswa->jenis_kelamin == 'L' ? 'Laki-laki' : 'Perempuan' }}</p>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-8 pt-4 border-t border-[#d9dee3] dark:border-[#434463] text-sm">
-                        <div>
-                            <p class="text-[#a1b0cb] mb-1">NIK Ayah / Nama Ayah</p>
-                            <p class="font-medium text-[#566a7f] dark:text-[#d5d5e2]">{{ $detail->siswa->nik_ayah ?? '-' }} / {{ $detail->siswa->nama_ayah ?? '-' }}</p>
+                    <!-- Navigation Tabs -->
+                    <div class="flex border-b border-[#d9dee3] dark:border-[#434463] mb-5 overflow-x-auto scrollbar-none gap-2">
+                        <button type="button" onclick="switchVerificationTab('tab-data-anak')" id="btn-tab-data-anak" class="verification-tab-btn px-4 py-2 text-xs font-bold uppercase tracking-wider border-b-2 border-[#696cff] text-[#696cff] focus:outline-none transition-colors whitespace-nowrap">
+                            Data Anak
+                        </button>
+                        <button type="button" onclick="switchVerificationTab('tab-alamat')" id="btn-tab-alamat" class="verification-tab-btn px-4 py-2 text-xs font-bold uppercase tracking-wider border-b-2 border-transparent text-[#697a8d] dark:text-[#a1b0cb] hover:text-[#696cff] focus:outline-none transition-colors whitespace-nowrap">
+                            Alamat & Kontak
+                        </button>
+                        <button type="button" onclick="switchVerificationTab('tab-keluarga')" id="btn-tab-keluarga" class="verification-tab-btn px-4 py-2 text-xs font-bold uppercase tracking-wider border-b-2 border-transparent text-[#697a8d] dark:text-[#a1b0cb] hover:text-[#696cff] focus:outline-none transition-colors whitespace-nowrap">
+                            Orang Tua / Wali
+                        </button>
+                        <button type="button" onclick="switchVerificationTab('tab-pendaftaran')" id="btn-tab-pendaftaran" class="verification-tab-btn px-4 py-2 text-xs font-bold uppercase tracking-wider border-b-2 border-transparent text-[#697a8d] dark:text-[#a1b0cb] hover:text-[#696cff] focus:outline-none transition-colors whitespace-nowrap">
+                            Pendaftaran
+                        </button>
+                    </div>
+
+                    <!-- Tab Contents -->
+                    <div class="space-y-4 text-sm text-[#566a7f] dark:text-[#d5d5e2]">
+                        <!-- Tab 1: Data Anak -->
+                        <div id="tab-data-anak" class="verification-tab-content block">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div class="bg-slate-50/50 dark:bg-[#232333]/30 p-3.5 rounded-lg border border-slate-100 dark:border-[#434463]/50">
+                                    <span class="text-xs text-[#a1b0cb] block mb-0.5">Nama Panggilan</span>
+                                    <span class="font-medium text-gray-900 dark:text-[#e7e7ff]">{{ $detail->siswa->nama_panggilan ?: '-' }}</span>
+                                </div>
+                                <div class="bg-slate-50/50 dark:bg-[#232333]/30 p-3.5 rounded-lg border border-slate-100 dark:border-[#434463]/50">
+                                    <span class="text-xs text-[#a1b0cb] block mb-0.5">Tempat, Tanggal Lahir</span>
+                                    <span class="font-medium text-gray-900 dark:text-[#e7e7ff]">{{ $detail->siswa->tempat_lahir ?: '-' }}, {{ $detail->siswa->tanggal_lahir ? \Carbon\Carbon::parse($detail->siswa->tanggal_lahir)->translatedFormat('d F Y') : '-' }}</span>
+                                </div>
+                                <div class="bg-slate-50/50 dark:bg-[#232333]/30 p-3.5 rounded-lg border border-slate-100 dark:border-[#434463]/50">
+                                    <span class="text-xs text-[#a1b0cb] block mb-0.5">Agama</span>
+                                    <span class="font-medium text-gray-900 dark:text-[#e7e7ff]">{{ $detail->siswa->agama ?: '-' }}</span>
+                                </div>
+                                <div class="bg-slate-50/50 dark:bg-[#232333]/30 p-3.5 rounded-lg border border-slate-100 dark:border-[#434463]/50">
+                                    <span class="text-xs text-[#a1b0cb] block mb-0.5">Anak Ke</span>
+                                    <span class="font-medium text-gray-900 dark:text-[#e7e7ff]">{{ $detail->siswa->anak_ke ?: '-' }}</span>
+                                </div>
+                                <div class="bg-slate-50/50 dark:bg-[#232333]/30 p-3.5 rounded-lg border border-slate-100 dark:border-[#434463]/50">
+                                    <span class="text-xs text-[#a1b0cb] block mb-0.5">Jumlah Saudara</span>
+                                    <span class="font-medium text-gray-900 dark:text-[#e7e7ff]">{{ $detail->siswa->jumlah_saudara !== null ? $detail->siswa->jumlah_saudara : '-' }}</span>
+                                </div>
+                                <div class="bg-slate-50/50 dark:bg-[#232333]/30 p-3.5 rounded-lg border border-slate-100 dark:border-[#434463]/50">
+                                    <span class="text-xs text-[#a1b0cb] block mb-0.5">Hobi</span>
+                                    <span class="font-medium text-gray-900 dark:text-[#e7e7ff]">{{ $detail->siswa->hobi ?: '-' }}</span>
+                                </div>
+                                <div class="bg-slate-50/50 dark:bg-[#232333]/30 p-3.5 rounded-lg border border-slate-100 dark:border-[#434463]/50">
+                                    <span class="text-xs text-[#a1b0cb] block mb-0.5">Cita-Cita</span>
+                                    <span class="font-medium text-gray-900 dark:text-[#e7e7ff]">{{ $detail->siswa->cita_cita ?: '-' }}</span>
+                                </div>
+                                <div class="bg-slate-50/50 dark:bg-[#232333]/30 p-3.5 rounded-lg border border-slate-100 dark:border-[#434463]/50">
+                                    <span class="text-xs text-[#a1b0cb] block mb-0.5">Moda Transportasi</span>
+                                    <span class="font-medium text-gray-900 dark:text-[#e7e7ff]">{{ $detail->siswa->transportasi ?: '-' }}</span>
+                                </div>
+                            </div>
                         </div>
-                        <div>
-                            <p class="text-[#a1b0cb] mb-1">NIK Ibu / Nama Ibu</p>
-                            <p class="font-medium text-[#566a7f] dark:text-[#d5d5e2]">{{ $detail->siswa->nik_ibu ?? '-' }} / {{ $detail->siswa->nama_ibu ?? '-' }}</p>
+
+                        <!-- Tab 2: Alamat & Kontak -->
+                        <div id="tab-alamat" class="verification-tab-content hidden">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                                <div class="bg-slate-50/50 dark:bg-[#232333]/30 p-3.5 rounded-lg border border-slate-100 dark:border-[#434463]/50">
+                                    <span class="text-xs text-[#a1b0cb] block mb-0.5">No. Telepon / WA</span>
+                                    <span class="font-semibold text-[#696cff]">{{ $detail->siswa->no_telpon ?: '-' }}</span>
+                                </div>
+                                <div class="bg-slate-50/50 dark:bg-[#232333]/30 p-3.5 rounded-lg border border-slate-100 dark:border-[#434463]/50">
+                                    <span class="text-xs text-[#a1b0cb] block mb-0.5">Jenis Tempat Tinggal</span>
+                                    <span class="font-medium text-gray-900 dark:text-[#e7e7ff]">{{ $detail->siswa->jenis_tempat_tinggal ?: '-' }}</span>
+                                </div>
+                                <div class="bg-slate-50/50 dark:bg-[#232333]/30 p-3.5 rounded-lg border border-slate-100 dark:border-[#434463]/50">
+                                    <span class="text-xs text-[#a1b0cb] block mb-0.5">Provinsi</span>
+                                    <span class="font-medium text-gray-900 dark:text-[#e7e7ff]">{{ $detail->siswa->provinsi ?: '-' }}</span>
+                                </div>
+                                <div class="bg-slate-50/50 dark:bg-[#232333]/30 p-3.5 rounded-lg border border-slate-100 dark:border-[#434463]/50">
+                                    <span class="text-xs text-[#a1b0cb] block mb-0.5">Kota / Kabupaten</span>
+                                    <span class="font-medium text-gray-900 dark:text-[#e7e7ff]">{{ $detail->siswa->kota ?: '-' }}</span>
+                                </div>
+                                <div class="bg-slate-50/50 dark:bg-[#232333]/30 p-3.5 rounded-lg border border-slate-100 dark:border-[#434463]/50">
+                                    <span class="text-xs text-[#a1b0cb] block mb-0.5">Kecamatan</span>
+                                    <span class="font-medium text-gray-900 dark:text-[#e7e7ff]">{{ $detail->siswa->kecamatan ?: '-' }}</span>
+                                </div>
+                                <div class="bg-slate-50/50 dark:bg-[#232333]/30 p-3.5 rounded-lg border border-slate-100 dark:border-[#434463]/50">
+                                    <span class="text-xs text-[#a1b0cb] block mb-0.5">Kelurahan / Desa</span>
+                                    <span class="font-medium text-gray-900 dark:text-[#e7e7ff]">{{ $detail->siswa->kelurahan ?: '-' }}</span>
+                                </div>
+                                <div class="bg-slate-50/50 dark:bg-[#232333]/30 p-3.5 rounded-lg border border-slate-100 dark:border-[#434463]/50 sm:col-span-2">
+                                    <span class="text-xs text-[#a1b0cb] block mb-0.5">Kode Pos</span>
+                                    <span class="font-medium text-gray-900 dark:text-[#e7e7ff]">{{ $detail->siswa->kode_pos ?: '-' }}</span>
+                                </div>
+                            </div>
+                            <div class="bg-slate-50/50 dark:bg-[#232333]/30 p-4 rounded-lg border border-slate-100 dark:border-[#434463]/50">
+                                <span class="text-xs text-[#a1b0cb] block mb-1">Alamat Jalan / RT / RW</span>
+                                <span class="font-medium text-gray-900 dark:text-[#e7e7ff] leading-relaxed">{{ $detail->siswa->alamat ?: '-' }}</span>
+                            </div>
                         </div>
-                        <div class="md:col-span-2">
-                            <p class="text-[#a1b0cb] mb-1">Alamat Domisili</p>
-                            <p class="font-medium text-[#566a7f] dark:text-[#d5d5e2]">{{ $detail->siswa->alamat }}, {{ $detail->siswa->kelurahan }}, {{ $detail->siswa->kecamatan }}, {{ $detail->siswa->kota }}</p>
+
+                        <!-- Tab 3: Orang Tua / Wali -->
+                        <div id="tab-keluarga" class="verification-tab-content hidden space-y-4">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-slate-50 dark:bg-[#232333]/20 p-4 rounded-lg border border-slate-100 dark:border-[#434463]/50">
+                                <div>
+                                    <span class="text-xs text-[#a1b0cb] block mb-0.5">Nomor Kartu Keluarga (KK)</span>
+                                    <span class="font-semibold font-mono text-gray-900 dark:text-[#e7e7ff]">{{ $detail->siswa->no_kk ?: '-' }}</span>
+                                </div>
+                                <div>
+                                    <span class="text-xs text-[#a1b0cb] block mb-0.5">Nama Kepala Keluarga</span>
+                                    <span class="font-semibold text-gray-900 dark:text-[#e7e7ff]">{{ $detail->siswa->kepala_keluarga ?: '-' }}</span>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                                <!-- Ayah -->
+                                <div class="bg-white dark:bg-[#2b2c40] p-4 rounded-lg border border-gray-150 dark:border-[#434463] space-y-2">
+                                    <h4 class="font-bold text-[#696cff] flex items-center gap-1.5 border-b border-gray-100 dark:border-[#434463]/80 pb-1.5 mb-2">
+                                        <i data-lucide="user" class="w-3.5 h-3.5"></i> Data Ayah
+                                    </h4>
+                                    <div class="flex justify-between text-xs">
+                                        <span class="text-gray-500 dark:text-gray-400">Nama</span>
+                                        <span class="font-semibold text-gray-900 dark:text-[#e7e7ff]">{{ $detail->siswa->nama_ayah ?: '-' }}</span>
+                                    </div>
+                                    <div class="flex justify-between text-xs">
+                                        <span class="text-gray-500 dark:text-gray-400">NIK</span>
+                                        <span class="font-medium font-mono text-gray-900 dark:text-[#e7e7ff]">{{ $detail->siswa->nik_ayah ?: '-' }}</span>
+                                    </div>
+                                    <div class="flex justify-between text-xs">
+                                        <span class="text-gray-500 dark:text-gray-400">Tgl Lahir</span>
+                                        <span class="font-medium text-gray-900 dark:text-[#e7e7ff]">{{ $detail->siswa->tanggal_lahir_ayah ? \Carbon\Carbon::parse($detail->siswa->tanggal_lahir_ayah)->translatedFormat('d F Y') : '-' }}</span>
+                                    </div>
+                                    <div class="flex justify-between text-xs">
+                                        <span class="text-gray-500 dark:text-gray-400">Pendidikan</span>
+                                        <span class="font-medium text-gray-900 dark:text-[#e7e7ff]">{{ $detail->siswa->pendidikan_ayah ?: '-' }}</span>
+                                    </div>
+                                    <div class="flex justify-between text-xs">
+                                        <span class="text-gray-500 dark:text-gray-400">Pekerjaan</span>
+                                        <span class="font-medium text-gray-900 dark:text-[#e7e7ff]">{{ $detail->siswa->pekerjaan_ayah ?: '-' }}</span>
+                                    </div>
+                                    <div class="flex justify-between text-xs">
+                                        <span class="text-gray-500 dark:text-gray-400">Penghasilan</span>
+                                        <span class="font-medium text-gray-900 dark:text-[#e7e7ff]">{{ $detail->siswa->penghasilan_ayah ?: '-' }}</span>
+                                    </div>
+                                </div>
+                                <!-- Ibu -->
+                                <div class="bg-white dark:bg-[#2b2c40] p-4 rounded-lg border border-gray-150 dark:border-[#434463] space-y-2">
+                                    <h4 class="font-bold text-[#696cff] flex items-center gap-1.5 border-b border-gray-100 dark:border-[#434463]/80 pb-1.5 mb-2">
+                                        <i data-lucide="user" class="w-3.5 h-3.5"></i> Data Ibu
+                                    </h4>
+                                    <div class="flex justify-between text-xs">
+                                        <span class="text-gray-500 dark:text-gray-400">Nama</span>
+                                        <span class="font-semibold text-gray-900 dark:text-[#e7e7ff]">{{ $detail->siswa->nama_ibu ?: '-' }}</span>
+                                    </div>
+                                    <div class="flex justify-between text-xs">
+                                        <span class="text-gray-500 dark:text-gray-400">NIK</span>
+                                        <span class="font-medium font-mono text-gray-900 dark:text-[#e7e7ff]">{{ $detail->siswa->nik_ibu ?: '-' }}</span>
+                                    </div>
+                                    <div class="flex justify-between text-xs">
+                                        <span class="text-gray-500 dark:text-gray-400">Tgl Lahir</span>
+                                        <span class="font-medium text-gray-900 dark:text-[#e7e7ff]">{{ $detail->siswa->tanggal_lahir_ibu ? \Carbon\Carbon::parse($detail->siswa->tanggal_lahir_ibu)->translatedFormat('d F Y') : '-' }}</span>
+                                    </div>
+                                    <div class="flex justify-between text-xs">
+                                        <span class="text-gray-500 dark:text-gray-400">Pendidikan</span>
+                                        <span class="font-medium text-gray-900 dark:text-[#e7e7ff]">{{ $detail->siswa->pendidikan_ibu ?: '-' }}</span>
+                                    </div>
+                                    <div class="flex justify-between text-xs">
+                                        <span class="text-gray-500 dark:text-gray-400">Pekerjaan</span>
+                                        <span class="font-medium text-gray-900 dark:text-[#e7e7ff]">{{ $detail->siswa->pekerjaan_ibu ?: '-' }}</span>
+                                    </div>
+                                    <div class="flex justify-between text-xs">
+                                        <span class="text-gray-500 dark:text-gray-400">Penghasilan</span>
+                                        <span class="font-medium text-gray-900 dark:text-[#e7e7ff]">{{ $detail->siswa->penghasilan_ibu ?: '-' }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="bg-slate-50 dark:bg-[#232333]/30 p-3.5 rounded-lg border border-slate-100 dark:border-[#434463]/50">
+                                <span class="text-xs text-[#a1b0cb] block mb-0.5">Akun Wali Penginput (Sistem)</span>
+                                <span class="font-semibold text-gray-900 dark:text-[#e7e7ff]">
+                                    @if($detail->siswa->user)
+                                        {{ $detail->siswa->user->name }} ({{ $detail->siswa->user->email }})
+                                    @else
+                                        <span class="text-gray-400 font-normal italic">Dibuat Manual oleh Admin</span>
+                                    @endif
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Tab 4: Pendaftaran -->
+                        <div id="tab-pendaftaran" class="verification-tab-content hidden space-y-4">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div class="bg-slate-50/50 dark:bg-[#232333]/30 p-3.5 rounded-lg border border-slate-100 dark:border-[#434463]/50">
+                                    <span class="text-xs text-[#a1b0cb] block mb-0.5">Gelombang Pendaftaran</span>
+                                    <span class="font-semibold text-[#696cff]">{{ $detail->pendaftaran->gelombang ?? '-' }}</span>
+                                </div>
+                                <div class="bg-slate-50/50 dark:bg-[#232333]/30 p-3.5 rounded-lg border border-slate-100 dark:border-[#434463]/50">
+                                    <span class="text-xs text-[#a1b0cb] block mb-0.5">Tahun Ajaran</span>
+                                    <span class="font-medium text-gray-900 dark:text-[#e7e7ff]">{{ $detail->pendaftaran->tahun_ajaran ?? '-' }}</span>
+                                </div>
+                                <div class="bg-slate-50/50 dark:bg-[#232333]/30 p-3.5 rounded-lg border border-slate-100 dark:border-[#434463]/50">
+                                    <span class="text-xs text-[#a1b0cb] block mb-0.5">Kuota Gelombang</span>
+                                    <span class="font-medium text-gray-900 dark:text-[#e7e7ff]">{{ $detail->pendaftaran->kuota ?? '-' }} Pendaftar</span>
+                                </div>
+                                <div class="bg-slate-50/50 dark:bg-[#232333]/30 p-3.5 rounded-lg border border-slate-100 dark:border-[#434463]/50">
+                                    <span class="text-xs text-[#a1b0cb] block mb-0.5">Tanggal Mendaftar</span>
+                                    <span class="font-medium text-gray-900 dark:text-[#e7e7ff]">{{ $detail->created_at?->translatedFormat('d F Y H:i') ?: '-' }}</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
+
+            <script>
+                function switchVerificationTab(tabId) {
+                    document.querySelectorAll('.verification-tab-content').forEach(content => {
+                        content.classList.add('hidden');
+                        content.classList.remove('block');
+                    });
+                    document.getElementById(tabId).classList.remove('hidden');
+                    document.getElementById(tabId).classList.add('block');
+
+                    document.querySelectorAll('.verification-tab-btn').forEach(btn => {
+                        btn.classList.remove('border-[#696cff]', 'text-[#696cff]');
+                        btn.classList.add('border-transparent', 'text-[#697a8d]', 'dark:text-[#a1b0cb]');
+                    });
+                    const activeBtn = document.getElementById('btn-' + tabId);
+                    activeBtn.classList.remove('border-transparent', 'text-[#697a8d]', 'dark:text-[#a1b0cb]');
+                    activeBtn.classList.add('border-[#696cff]', 'text-[#696cff]');
+                }
+            </script>
 
             <!-- Pratinjau Dokumen -->
             <div class="bg-white dark:bg-[#2b2c40] rounded-lg shadow-sneat dark:shadow-sneat-dark border border-[#d9dee3] dark:border-[#434463] overflow-hidden">
@@ -100,25 +309,37 @@
                     <h3 class="font-heading font-semibold text-[#566a7f] dark:text-[#d5d5e2]">Berkas Lampiran</h3>
                 </div>
                 <div class="grid grid-cols-1 gap-4 p-4 sm:grid-cols-2 sm:p-6">
-                    
+
                     <!-- KK -->
-                    <div class="flex flex-col items-center rounded-lg border border-[#d9dee3] p-4 text-center transition-colors hover:border-[#696cff] hover:bg-[#f5f5f9] dark:border-[#434463] dark:hover:bg-[#232333]">
+                    <div class="flex flex-col items-center rounded-lg border border-[#d9dee3] p-4 text-center transition-colors hover:border-[#696cff] hover:bg-[#f5f5f9] dark:border-[#434463] dark:hover:bg-[#232333] {{ $detail->siswa->foto_kk ? 'border-emerald-200 dark:border-emerald-500/20' : '' }}">
                         <i data-lucide="file-text" class="w-12 h-12 text-[#a1b0cb] mb-3"></i>
                         <h4 class="font-medium text-[#566a7f] dark:text-[#d5d5e2] mb-1">Kartu Keluarga (KK)</h4>
                         <p class="text-xs text-[#a1b0cb] mb-4">No: {{ $detail->siswa->no_kk ?? '-' }}</p>
-                        <a href="{{ $detail->siswa->foto_kk ? route('dokumen.show', ['siswa' => $detail->siswa, 'field' => 'foto_kk']) : '#' }}" onclick="openLightbox(this.href); event.preventDefault();" class="inline-flex w-full cursor-pointer items-center justify-center gap-2 rounded-md bg-[#e7e7ff] px-3 py-2 text-sm font-medium text-[#696cff] transition-colors duration-200 hover:bg-[#d4d5ff] dark:bg-[#696cff]/20 dark:hover:bg-[#696cff]/30">
-                            <i data-lucide="zoom-in" class="w-4 h-4"></i> Perbesar Dokumen
-                        </a>
+                        @if($detail->siswa->foto_kk)
+                            <a href="{{ route('dokumen.show', ['siswa' => $detail->siswa, 'field' => 'foto_kk']) }}" onclick="openLightbox(this.href); event.preventDefault();" class="inline-flex w-full cursor-pointer items-center justify-center gap-2 rounded-md bg-[#e7e7ff] px-3 py-2 text-sm font-medium text-[#696cff] transition-colors duration-200 hover:bg-[#d4d5ff] dark:bg-[#696cff]/20 dark:hover:bg-[#696cff]/30">
+                                <i data-lucide="zoom-in" class="w-4 h-4"></i> Perbesar Dokumen
+                            </a>
+                        @else
+                            <span class="inline-flex w-full items-center justify-center gap-2 rounded-md bg-red-50 text-red-700 px-3 py-2 text-sm font-medium border border-red-100 dark:bg-red-500/10 dark:text-red-400 dark:border-red-500/20">
+                                Tidak Tersedia
+                            </span>
+                        @endif
                     </div>
 
                     <!-- Akta -->
-                    <div class="flex flex-col items-center rounded-lg border border-[#d9dee3] p-4 text-center transition-colors hover:border-[#696cff] hover:bg-[#f5f5f9] dark:border-[#434463] dark:hover:bg-[#232333]">
+                    <div class="flex flex-col items-center rounded-lg border border-[#d9dee3] p-4 text-center transition-colors hover:border-[#696cff] hover:bg-[#f5f5f9] dark:border-[#434463] dark:hover:bg-[#232333] {{ $detail->siswa->foto_akta ? 'border-emerald-200 dark:border-emerald-500/20' : '' }}">
                         <i data-lucide="file-badge-2" class="w-12 h-12 text-[#a1b0cb] mb-3"></i>
                         <h4 class="font-medium text-[#566a7f] dark:text-[#d5d5e2] mb-1">Akta Kelahiran</h4>
                         <p class="text-xs text-[#a1b0cb] mb-4">Pastikan terbaca jelas</p>
-                        <a href="{{ $detail->siswa->foto_akta ? route('dokumen.show', ['siswa' => $detail->siswa, 'field' => 'foto_akta']) : '#' }}" onclick="openLightbox(this.href); event.preventDefault();" class="inline-flex w-full cursor-pointer items-center justify-center gap-2 rounded-md bg-[#e7e7ff] px-3 py-2 text-sm font-medium text-[#696cff] transition-colors duration-200 hover:bg-[#d4d5ff] dark:bg-[#696cff]/20 dark:hover:bg-[#696cff]/30">
-                            <i data-lucide="zoom-in" class="w-4 h-4"></i> Perbesar Dokumen
-                        </a>
+                        @if($detail->siswa->foto_akta)
+                            <a href="{{ route('dokumen.show', ['siswa' => $detail->siswa, 'field' => 'foto_akta']) }}" onclick="openLightbox(this.href); event.preventDefault();" class="inline-flex w-full cursor-pointer items-center justify-center gap-2 rounded-md bg-[#e7e7ff] px-3 py-2 text-sm font-medium text-[#696cff] transition-colors duration-200 hover:bg-[#d4d5ff] dark:bg-[#696cff]/20 dark:hover:bg-[#696cff]/30">
+                                <i data-lucide="zoom-in" class="w-4 h-4"></i> Perbesar Dokumen
+                            </a>
+                        @else
+                            <span class="inline-flex w-full items-center justify-center gap-2 rounded-md bg-red-50 text-red-700 px-3 py-2 text-sm font-medium border border-red-100 dark:bg-red-500/10 dark:text-red-400 dark:border-red-500/20">
+                                Tidak Tersedia
+                            </span>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -139,16 +360,16 @@
                         <span class="px-3 py-1 bg-yellow-100 text-yellow-800 text-xs font-bold rounded-full">PERLU VERIFIKASI</span>
                     @endif
                 </div>
-                
+
                 <div class="grid grid-cols-1 gap-6 p-4 sm:p-6 md:grid-cols-2">
                     <div>
                         <p class="text-sm text-[#a1b0cb] mb-1">Nominal Ditransfer</p>
                         <p class="text-2xl font-bold text-[#566a7f] dark:text-[#d5d5e2] mb-4">Rp {{ number_format($payment->jumlah, 0, ',', '.') }}</p>
-                        
+
                         <a href="{{ route('dokumen.show', ['siswa' => $detail->siswa, 'field' => 'bukti_bayar', 'pembayaran' => $payment]) }}" target="_blank" class="inline-flex items-center justify-center w-full gap-2 px-4 py-2 bg-[#f5f5f9] dark:bg-[#232333] hover:bg-[#e7e7ff] dark:hover:bg-[#696cff]/10 text-[#566a7f] dark:text-[#d5d5e2] text-sm font-medium rounded-lg transition-all duration-300 border border-[#d9dee3] dark:border-[#434463] cursor-pointer hover:shadow-lg">
                             <i data-lucide="file-search" class="w-4 h-4"></i> Lihat Bukti Pembayaran
                         </a>
-                        
+
                         @if($payment->catatan_admin)
                         <div class="mt-4 p-3 bg-red-50 border border-red-100 rounded-lg">
                             <p class="text-xs text-red-800 font-semibold mb-1">Catatan Admin Sebelumnya:</p>
@@ -156,12 +377,12 @@
                         </div>
                         @endif
                     </div>
-                    
+
                     <div class="border-t border-[#d9dee3] pt-6 dark:border-[#434463] md:border-l md:border-t-0 md:pl-6 md:pt-0">
                         <form action="{{ route('admin.pembayaran.verify', $payment->id) }}" method="POST" class="space-y-4">
                             @csrf
                             @method('PATCH')
-                            
+
                             <div>
                                 <label class="block text-sm font-medium text-[#566a7f] dark:text-[#d5d5e2] mb-1">Tindakan</label>
                                 <select name="status" id="paymentStatusSelect" class="sneat-input" onchange="togglePaymentNote()">
@@ -189,7 +410,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <script>
                 function togglePaymentNote() {
                     const status = document.getElementById('paymentStatusSelect').value;
@@ -211,7 +432,7 @@
                     <i data-lucide="check-square" class="w-5 h-5 text-[#a1b0cb]"></i>
                     <h3 class="font-heading font-semibold text-white">Aksi Verifikasi</h3>
                 </div>
-                
+
                 <div class="p-4 sm:p-6">
                     <!-- Checklist Dokumen (Only if not final) -->
                     @if($detail->status !== 'diterima' && $detail->status !== 'ditolak')
@@ -283,7 +504,7 @@
                     @endif
 
 
-                    
+
                     @if($detail->status === 'diterima' || $detail->status === 'ditolak')
                         {{-- Final status reached — show badge only --}}
                         <div class="text-center py-4">
@@ -291,13 +512,13 @@
                                 <div class="w-14 h-14 mx-auto rounded-full bg-secondary-100 flex items-center justify-center mb-3">
                                     <i data-lucide="check-circle" class="w-8 h-8 text-secondary-600"></i>
                                 </div>
-                                <span class="inline-flex items-center px-4 py-2 rounded-full text-sm font-bold bg-secondary-100 text-secondary-700 border border-secondary-200">DITERIMA</span>
-                                <p class="text-xs text-[#a1b0cb] mt-3">Pendaftaran ini sudah disetujui. Tidak ada aksi lanjutan.</p>
+                                <span class="inline-flex items-center px-4 py-2 rounded-full text-xs font-bold bg-secondary-100 text-secondary-700 border border-secondary-200">BERKAS TERVERIFIKASI – LANJUT OBSERVASI</span>
+                                <p class="text-xs text-[#a1b0cb] mt-3">Berkas pendaftaran telah diverifikasi. Calon siswa diarahkan untuk observasi/wawancara di sekolah.</p>
                             @else
                                 <div class="w-14 h-14 mx-auto rounded-full bg-red-100 flex items-center justify-center mb-3">
                                     <i data-lucide="x-circle" class="w-8 h-8 text-red-600"></i>
                                 </div>
-                                <span class="inline-flex items-center px-4 py-2 rounded-full text-sm font-bold bg-red-100 text-red-700 border border-red-200">DITOLAK</span>
+                                <span class="inline-flex items-center px-4 py-2 rounded-full text-xs font-bold bg-red-100 text-red-700 border border-red-200">PENDAFTARAN DITOLAK</span>
                                 <p class="text-xs text-[#a1b0cb] mt-3">Pendaftaran ini sudah ditolak.</p>
                             @endif
                         </div>
@@ -332,11 +553,15 @@
                                 <p class="text-xs text-[#a1b0cb] mt-1">Catatan ini akan dilihat oleh Wali Murid.</p>
                             </div>
 
+                            <p class="text-xs text-blue-600 dark:text-blue-400 bg-blue-500/10 p-2.5 rounded-lg border border-blue-500/20 mb-1">
+                                <i data-lucide="info" class="w-3.5 h-3.5 inline mr-1"></i> Setelah berkas disetujui, orang tua/wali diarahkan untuk datang ke sekolah bersama calon siswa pada tahap observasi/wawancara sebelum proses daftar ulang.
+                            </p>
+
                             <div class="flex flex-col gap-3 pt-2">
                                 <button type="button" onclick="handleTerima()" class="w-full flex justify-center items-center gap-2 py-3 px-4 bg-secondary-600 hover:bg-secondary-700 text-white font-semibold rounded-lg shadow-sm transition-colors">
-                                    <i data-lucide="check" class="w-5 h-5"></i> Setujui Pendaftaran
+                                    <i data-lucide="check" class="w-5 h-5"></i> Setujui Berkas & Lanjut Observasi
                                 </button>
-                                
+
                                 <button type="button" onclick="handleRevisi()" class="flex w-full items-center justify-center gap-2 rounded-lg border border-orange-200 bg-white px-4 py-3 font-semibold text-orange-600 transition-colors hover:bg-orange-50 dark:border-orange-500/30 dark:bg-[#2b2c40] dark:text-orange-400 dark:hover:bg-orange-500/10">
                                     <i data-lucide="edit-3" class="w-5 h-5"></i> Minta Revisi Dokumen
                                 </button>
@@ -376,17 +601,17 @@
 <script>
     async function handleTerima() {
         const notifikasi = document.getElementById('notifikasi').value;
-        
+
         const result = await Swal.fire({
             title: 'Konfirmasi Persetujuan',
-            html: `Apakah Anda yakin dokumen pendaftar atas nama <b>{{ $detail->siswa->nama }}</b> sudah valid dan lengkap? Tindakan ini akan mengubah status menjadi <span class="font-bold text-emerald-600">DITERIMA</span>.`,
+            html: `Apakah Anda yakin dokumen pendaftar atas nama <b>{{ $detail->siswa->nama }}</b> sudah valid dan lengkap? Tindakan ini akan mengarahkan orang tua ke tahap <span class="font-bold text-[#696cff]">Observasi & Wawancara di Sekolah</span>.`,
             icon: 'success',
             showCancelButton: true,
-            confirmButtonText: 'Ya, Setujui Pendaftar',
+            confirmButtonText: 'Ya, Setujui Berkas',
             cancelButtonText: 'Batal',
             confirmButtonColor: '#2dce89',
         });
-        
+
         if (result.isConfirmed) {
             document.getElementById('hiddenNotifikasiTerima').value = notifikasi;
             document.getElementById('formTerima').submit();
@@ -395,7 +620,7 @@
 
     async function handleTolak() {
         const notifikasi = document.getElementById('notifikasi').value;
-        
+
         if (!notifikasi.trim()) {
             Swal.fire({
                 title: 'Catatan Diperlukan',
@@ -406,7 +631,7 @@
             document.getElementById('notifikasi').focus();
             return;
         }
-        
+
         const result = await Swal.fire({
             title: 'Konfirmasi Penolakan',
             text: 'Anda akan menolak pendaftar ini secara permanen. Pastikan alasan sudah jelas di catatan.',
@@ -416,7 +641,7 @@
             cancelButtonText: 'Batal',
             confirmButtonColor: '#dc2626',
         });
-        
+
         if (result.isConfirmed) {
             document.getElementById('hiddenNotifikasiTolak').value = notifikasi;
             document.getElementById('formTolak').submit();
@@ -425,7 +650,7 @@
 
     async function handleRevisi() {
         const notifikasi = document.getElementById('notifikasi').value;
-        
+
         if (!notifikasi.trim()) {
             Swal.fire({
                 title: 'Catatan Diperlukan',
@@ -436,7 +661,7 @@
             document.getElementById('notifikasi').focus();
             return;
         }
-        
+
         const result = await Swal.fire({
             title: 'Konfirmasi Permintaan Revisi',
             text: 'Anda akan meminta revisi untuk pendaftar ini. Wali murid akan menerima catatan dan dapat memperbaikinya.',
@@ -446,7 +671,7 @@
             cancelButtonText: 'Batal',
             confirmButtonColor: '#f97316',
         });
-        
+
         if (result.isConfirmed) {
             document.getElementById('hiddenNotifikasiRevisi').value = notifikasi;
             document.getElementById('formRevisi').submit();
@@ -472,10 +697,10 @@
         if (imageSrc === '#' || !imageSrc) return;
         const modal = document.getElementById('lightboxModal');
         const lightboxImage = document.getElementById('lightboxImage');
-        
+
         lightboxImage.src = imageSrc;
         modal.classList.remove('hidden');
-        
+
         // Trigger animasi smooth open
         setTimeout(() => {
             modal.classList.remove('opacity-0');
@@ -487,12 +712,12 @@
     function closeLightbox() {
         const modal = document.getElementById('lightboxModal');
         const lightboxImage = document.getElementById('lightboxImage');
-        
+
         // Trigger animasi smooth close
         modal.classList.add('opacity-0');
         lightboxImage.classList.remove('scale-100');
         lightboxImage.classList.add('scale-95');
-        
+
         setTimeout(() => {
             modal.classList.add('hidden');
             lightboxImage.src = '';
@@ -505,7 +730,7 @@
             closeLightbox();
         }
     });
-    
+
     // Tutup lightbox jika user menekan tombol ESC di keyboard
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape' && !document.getElementById('lightboxModal').classList.contains('hidden')) {

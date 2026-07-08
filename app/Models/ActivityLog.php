@@ -123,19 +123,19 @@ class ActivityLog extends Model
     public function getActionColorAttribute(): string
     {
         return match ($this->action) {
-            'created'            => 'bg-blue-100 text-blue-700',
-            'updated'            => 'bg-yellow-100 text-yellow-700',
-            'deleted'            => 'bg-red-100 text-red-700',
-            'soft_deleted'       => 'bg-orange-100 text-orange-700',
-            'restored'           => 'bg-emerald-100 text-emerald-700',
-            'force_deleted'      => 'bg-red-100 text-red-700',
-            'payment_uploaded', 'payment_reuploaded' => 'bg-blue-100 text-blue-700',
-            'login'              => 'bg-green-100 text-green-700',
-            'logout'             => 'bg-gray-100 text-gray-700',
-            'verified', 'accepted' => 'bg-emerald-100 text-emerald-700',
-            'rejected'           => 'bg-red-100 text-red-700',
-            'revision'           => 'bg-orange-100 text-orange-700',
-            default              => 'bg-gray-100 text-gray-700',
+            'created' => 'bg-blue-100 text-blue-700 border border-blue-200 dark:bg-blue-500/15 dark:text-blue-300 dark:border-blue-400/20',
+            'updated' => 'bg-yellow-100 text-yellow-700 border border-yellow-200 dark:bg-amber-500/15 dark:text-amber-300 dark:border-amber-400/20',
+            'deleted' => 'bg-red-100 text-red-700 border border-red-200 dark:bg-red-500/15 dark:text-red-300 dark:border-red-400/20',
+            'soft_deleted' => 'bg-orange-100 text-orange-700 border border-orange-200 dark:bg-orange-500/15 dark:text-orange-300 dark:border-orange-400/20',
+            'restored' => 'bg-emerald-100 text-emerald-700 border border-emerald-200 dark:bg-emerald-500/15 dark:text-emerald-300 dark:border-emerald-400/20',
+            'force_deleted' => 'bg-red-100 text-red-700 border border-red-200 dark:bg-red-500/15 dark:text-red-300 dark:border-red-400/20',
+            'payment_uploaded', 'payment_reuploaded' => 'bg-blue-100 text-blue-700 border border-blue-200 dark:bg-blue-500/15 dark:text-blue-300 dark:border-blue-400/20',
+            'login' => 'bg-green-100 text-green-700 border border-green-200 dark:bg-emerald-500/15 dark:text-emerald-300 dark:border-emerald-400/20',
+            'logout' => 'bg-gray-100 text-gray-700 border border-gray-200 dark:bg-slate-500/15 dark:text-slate-300 dark:border-slate-400/20',
+            'verified', 'accepted' => 'bg-emerald-100 text-emerald-700 border border-emerald-200 dark:bg-emerald-500/15 dark:text-emerald-300 dark:border-emerald-400/20',
+            'rejected' => 'bg-red-100 text-red-700 border border-red-200 dark:bg-red-500/15 dark:text-red-300 dark:border-red-400/20',
+            'revision' => 'bg-orange-100 text-orange-700 border border-orange-200 dark:bg-orange-500/15 dark:text-orange-300 dark:border-orange-400/20',
+            default => 'bg-gray-100 text-gray-700 border border-gray-200 dark:bg-slate-500/15 dark:text-slate-300 dark:border-slate-400/20',
         };
     }
 }

@@ -531,7 +531,7 @@
     @if(auth()->check() && auth()->user()->isParent())
         @php
             $adminWhatsapp = preg_replace('/[^0-9]/', '', (string) config('spmb.admin_whatsapp', ''));
-            $helpWaMessage = "Assalamu'alaikum Admin PAUD Al-Qur'an Azzahra, saya butuh bantuan terkait pendaftaran anak saya.";
+            $helpWaMessage = "Assalamu'alaikum Admin PAUD Az-Zahra, saya ingin menanyakan jadwal atau arahan observasi/wawancara untuk calon siswa atas nama " . (auth()->user()->siswa ? auth()->user()->siswa->nama : '...');
             $helpWaUrl = $adminWhatsapp ? 'https://wa.me/'.$adminWhatsapp.'?text='.urlencode($helpWaMessage) : '#';
         @endphp
         @if($adminWhatsapp)
