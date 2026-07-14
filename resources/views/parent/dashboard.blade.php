@@ -4,484 +4,185 @@
 @section('header_title', 'Dashboard')
 
 @section('content')
-<div class="parent-dashboard-page mx-auto max-w-7xl space-y-4 sm:space-y-6">
+@php
+    $adminWhatsapp = preg_replace('/[^0-9]/', '', (string) config('spmb.admin_whatsapp', ''));
+    $helpWaMessage = "Assalamu'alaikum Admin PAUD Az-Zahra, saya ingin menanyakan proses pendaftaran anak saya.";
+    $helpWaUrl = $adminWhatsapp ? 'https://wa.me/'.$adminWhatsapp.'?text='.urlencode($helpWaMessage) : '#';
+    $statusLabels = [
+        'pending' => 'Pending',
+        'menunggu_verifikasi' => 'Menunggu Verifikasi Berkas',
+        'perlu_revisi' => 'Perlu Revisi Data',
+        'ditolak' => 'Pendaftaran Ditolak',
+        'diterima' => 'Berkas Terverifikasi - Lanjut Observasi',
+    ];
+    $statusClasses = [
+        'pending' => 'bg-gray-100 text-gray-700 dark:bg-[#434463] dark:text-[#d5d5e2]',
+        'menunggu_verifikasi' => 'bg-amber-50 text-amber-700 dark:bg-amber-500/10 dark:text-amber-300',
+        'perlu_revisi' => 'bg-orange-50 text-orange-700 dark:bg-orange-500/10 dark:text-orange-300',
+        'ditolak' => 'bg-red-50 text-red-700 dark:bg-red-500/10 dark:text-red-300',
+        'diterima' => 'bg-emerald-50 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-300',
+    ];
+@endphp
 
-    <!-- Welcome Banner -->
+<div class="parent-dashboard-page mx-auto max-w-7xl space-y-6">
     <div class="relative overflow-hidden rounded-xl bg-gradient-to-r from-[#696cff] to-[#7b7dff] p-5 text-white shadow-sneat-lg animate-fade-up sm:p-8">
-        <!-- Decoration -->
-        <div class="absolute -right-10 -top-24 w-64 h-64 bg-white/10 rounded-full blur-2xl"></div>
-        <div class="absolute right-32 -bottom-10 w-40 h-40 bg-white/10 rounded-full blur-xl"></div>
-        
-        <div class="relative z-10">
-            <h2 class="mb-2 break-words font-heading text-xl font-bold leading-tight sm:text-3xl">Assalamu'alaikum, {{ explode(' ', auth()->user()->name)[0] }}!</h2>
-            <p class="max-w-2xl text-sm leading-6 text-white/85 sm:text-base sm:leading-7">
-                Selamat datang di panel wali murid. Di sini Anda dapat melengkapi data anak, mendaftar gelombang SPMB, dan memantau status pendaftaran.
-            </p>
+        <div class="absolute -right-10 -top-24 h-64 w-64 rounded-full bg-white/10 blur-2xl"></div>
+        <div class="relative z-10 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+                <h2 class="mb-2 break-words font-heading text-xl font-bold leading-tight sm:text-3xl">Assalamu'alaikum, {{ explode(' ', auth()->user()->name)[0] }}!</h2>
+                <p class="max-w-2xl text-sm leading-6 text-white/85 sm:text-base sm:leading-7">Kelola data setiap anak secara terpisah agar profil, pendaftaran, pembayaran, dan kartu pendaftaran tidak saling tercampur.</p>
+            </div>
+            <a href="{{ route('parent.siswa.create') }}" class="inline-flex items-center justify-center gap-2 rounded-md bg-white px-4 py-2.5 text-sm font-semibold text-[#696cff] transition-colors hover:bg-[#f5f5f9]">
+                <i data-lucide="plus" class="h-4 w-4"></i>
+                Tambah Anak
+            </a>
         </div>
     </div>
 
-    @php
-        $siswa = auth()->user()->siswa;
-        $latestRegistration = $siswa ? $siswa->pendaftaranDetails()->with(['pendaftaran', 'pembayaran'])->latest()->first() : null;
-        $isAccepted = $latestRegistration && $latestRegistration->status === 'diterima';
-        $payment = $latestRegistration?->pembayaran;
-        $paymentStatus = $payment?->status;
-        $isPaymentWaiting = $payment && in_array($paymentStatus, ['pending', 'menunggu_verifikasi'], true);
-        $isPaymentLunas = $paymentStatus === 'lunas';
-        $isPaymentRejected = $paymentStatus === 'ditolak';
-        $adminWhatsapp = preg_replace('/[^0-9]/', '', (string) config('spmb.admin_whatsapp', ''));
-        $helpWaMessage = "Assalamu'alaikum Admin PAUD Az-Zahra, saya ingin menanyakan jadwal atau arahan observasi/wawancara untuk calon siswa atas nama " . ($siswa ? $siswa->nama : '...');
-        $helpWaUrl = $adminWhatsapp ? 'https://wa.me/'.$adminWhatsapp.'?text='.urlencode($helpWaMessage) : '#';
-    @endphp
-
-    <div class="grid grid-cols-1 gap-4 sm:gap-6 lg:grid-cols-3">
-        
-        <!-- Main Status Card -->
-        <div class="space-y-4 sm:space-y-6 lg:col-span-2">
-            
-            <!-- Panduan Langkah Pendaftaran -->
-            <div class="rounded-lg border border-[#d9dee3] bg-white p-4 shadow-sneat animate-fade-up dark:border-[#434463] dark:bg-[#2b2c40] dark:shadow-sneat-dark sm:p-6" style="animation-delay: 0.05s;">
-                <h3 class="mb-4 flex items-center gap-2 font-heading text-base font-semibold leading-6 text-[#566a7f] dark:text-[#d5d5e2] sm:text-lg">
-                    <i data-lucide="help-circle" class="w-5 h-5 text-[#696cff]"></i>
-                    Panduan Langkah Pendaftaran (SPMB)
-                </h3>
-                
-                @php
-                    $step1Done = true; // Akun orang tua sudah dibuat karena sedang login
-                    $step2Done = $siswa !== null;
-                    $step3Done = $latestRegistration !== null;
-                    $step4Done = $latestRegistration && in_array($latestRegistration->status, ['diterima']);
-                    $step5Done = $latestRegistration && $latestRegistration->status === 'diterima' && $payment !== null;
-                    $step6Done = $isPaymentLunas;
-                    
-                    // Current step estimation
-                    if (!$step2Done) {
-                        $currentStep = 2;
-                    } elseif (!$step3Done) {
-                        $currentStep = 3;
-                    } elseif ($latestRegistration && in_array($latestRegistration->status, ['pending', 'menunggu_verifikasi', 'perlu_revisi'])) {
-                        $currentStep = 4; // Verifikasi Berkas
-                    } elseif ($latestRegistration && $latestRegistration->status === 'diterima' && !$payment) {
-                        $currentStep = 5; // Observasi & Wawancara
-                    } elseif ($latestRegistration && $latestRegistration->status === 'diterima' && $payment && !$isPaymentLunas) {
-                        $currentStep = 6; // Daftar Ulang / Verifikasi Pembayaran
-                    } else {
-                        $currentStep = 7; // Selesai
-                    }
-                @endphp
-
-                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                    
-                    <!-- Langkah 1 -->
-                    <div class="p-4 rounded-xl border {{ $currentStep == 1 ? 'border-[#696cff] bg-[#696cff]/5 dark:bg-[#696cff]/10 shadow-sm ring-1 ring-[#696cff]/20' : 'border-emerald-100 dark:border-emerald-500/10 bg-emerald-50/20 dark:bg-emerald-500/5' }} flex flex-col min-h-[165px] transition-all duration-200">
-                        <div class="flex items-center justify-between">
-                            <span class="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 dark:bg-emerald-500/20">Langkah 1</span>
-                            <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-500"></i>
-                        </div>
-                        <div class="flex-grow my-3">
-                            <h4 class="text-sm font-bold text-gray-800 dark:text-[#d5d5e2] tracking-tight">Buat Akun</h4>
-                            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1 leading-relaxed">Registrasi akun wali murid</p>
-                        </div>
-                        <div class="pt-2 border-t border-gray-100/50 dark:border-[#434463]/50 mt-auto">
-                            <span class="text-xs text-emerald-600 dark:text-emerald-400 font-semibold flex items-center gap-1"><i data-lucide="check" class="w-3.5 h-3.5"></i> Selesai</span>
-                        </div>
-                    </div>
-
-                    <!-- Langkah 2 -->
-                    <div class="p-4 rounded-xl border {{ $currentStep == 2 ? 'border-[#696cff] bg-[#696cff]/5 dark:bg-[#696cff]/10 shadow-sm ring-1 ring-[#696cff]/20' : ($step2Done ? 'border-emerald-100 dark:border-emerald-500/10 bg-emerald-50/20 dark:bg-emerald-500/5' : 'border-gray-200 dark:border-[#434463] bg-gray-50/30 dark:bg-[#28293d]/50') }} flex flex-col min-h-[165px] transition-all duration-200">
-                        <div class="flex items-center justify-between">
-                            <span class="text-[10px] font-bold px-2.5 py-0.5 rounded-full {{ $currentStep == 2 ? 'bg-[#696cff]/10 text-[#696cff] dark:text-[#a3a5ff]' : ($step2Done ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 dark:bg-emerald-500/20' : 'bg-gray-100 text-gray-500 dark:bg-[#34354c] dark:text-[#a1b0cb]') }}">Langkah 2</span>
-                            @if($step2Done)
-                                <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-500"></i>
-                            @elseif($currentStep == 2)
-                                <span class="w-2 h-2 rounded-full bg-[#696cff] animate-ping"></span>
-                            @endif
-                        </div>
-                        <div class="flex-grow my-3">
-                            <h4 class="text-sm font-bold {{ $currentStep == 2 ? 'text-[#696cff]' : 'text-gray-800 dark:text-[#d5d5e2]' }} tracking-tight">Isi Data Anak</h4>
-                            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1 leading-relaxed">Lengkapi biodata & berkas</p>
-                        </div>
-                        <div class="pt-2 border-t border-gray-100/50 dark:border-[#434463]/50 mt-auto">
-                            @if($step2Done)
-                                <span class="text-xs text-emerald-600 dark:text-emerald-400 font-semibold flex items-center gap-1"><i data-lucide="check" class="w-3.5 h-3.5"></i> Selesai</span>
-                            @else
-                                <a href="{{ route('parent.siswa.create') }}" class="text-xs text-[#696cff] font-bold hover:underline flex items-center gap-0.5">Isi Sekarang &rarr;</a>
-                            @endif
-                        </div>
-                    </div>
-
-                    <!-- Langkah 3 -->
-                    <div class="p-4 rounded-xl border {{ $currentStep == 3 ? 'border-[#696cff] bg-[#696cff]/5 dark:bg-[#696cff]/10 shadow-sm ring-1 ring-[#696cff]/20' : ($step3Done ? 'border-emerald-100 dark:border-emerald-500/10 bg-emerald-50/20 dark:bg-emerald-500/5' : 'border-gray-200 dark:border-[#434463] bg-gray-50/30 dark:bg-[#28293d]/50') }} flex flex-col min-h-[165px] transition-all duration-200">
-                        <div class="flex items-center justify-between">
-                            <span class="text-[10px] font-bold px-2.5 py-0.5 rounded-full {{ $currentStep == 3 ? 'bg-[#696cff]/10 text-[#696cff] dark:text-[#a3a5ff]' : ($step3Done ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 dark:bg-emerald-500/20' : 'bg-gray-100 text-gray-500 dark:bg-[#34354c] dark:text-[#a1b0cb]') }}">Langkah 3</span>
-                            @if($step3Done)
-                                <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-500"></i>
-                            @elseif($currentStep == 3)
-                                <span class="w-2 h-2 rounded-full bg-[#696cff] animate-ping"></span>
-                            @endif
-                        </div>
-                        <div class="flex-grow my-3">
-                            <h4 class="text-sm font-bold {{ $currentStep == 3 ? 'text-[#696cff]' : 'text-gray-800 dark:text-[#d5d5e2]' }} tracking-tight">Pilih Gelombang</h4>
-                            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1 leading-relaxed">Daftar ke gelombang aktif</p>
-                        </div>
-                        <div class="pt-2 border-t border-gray-100/50 dark:border-[#434463]/50 mt-auto">
-                            @if($step3Done)
-                                <span class="text-xs text-emerald-600 dark:text-emerald-400 font-semibold flex items-center gap-1"><i data-lucide="check" class="w-3.5 h-3.5"></i> Terdaftar</span>
-                            @elseif($siswa)
-                                <a href="{{ route('parent.pendaftaran.index') }}" class="text-xs text-[#696cff] font-bold hover:underline flex items-center gap-0.5">Daftar Gelombang &rarr;</a>
-                            @else
-                                <span class="text-xs text-gray-400 dark:text-gray-500">Terkunci</span>
-                            @endif
-                        </div>
-                    </div>
-
-                    <!-- Langkah 4 -->
-                    <div class="p-4 rounded-xl border {{ $currentStep == 4 ? ($latestRegistration && $latestRegistration->status === 'perlu_revisi' ? 'border-orange-500 bg-orange-500/5' : 'border-[#696cff] bg-[#696cff]/5 dark:bg-[#696cff]/10 shadow-sm ring-1 ring-[#696cff]/20') : ($step4Done ? 'border-emerald-100 dark:border-emerald-500/10 bg-emerald-50/20 dark:bg-emerald-500/5' : 'border-gray-200 dark:border-[#434463] bg-gray-50/30 dark:bg-[#28293d]/50') }} flex flex-col min-h-[165px] transition-all duration-200">
-                        <div class="flex items-center justify-between">
-                            <span class="text-[10px] font-bold px-2.5 py-0.5 rounded-full {{ $currentStep == 4 ? ($latestRegistration && $latestRegistration->status === 'perlu_revisi' ? 'bg-orange-100 text-orange-700 dark:bg-orange-500/20 dark:text-orange-400' : 'bg-[#696cff]/10 text-[#696cff] dark:text-[#a3a5ff]') : ($step4Done ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 dark:bg-emerald-500/20' : 'bg-gray-100 text-gray-500 dark:bg-[#34354c] dark:text-[#a1b0cb]') }}">Langkah 4</span>
-                            @if($step4Done)
-                                <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-500"></i>
-                            @elseif($latestRegistration && $latestRegistration->status === 'perlu_revisi')
-                                <i data-lucide="alert-circle" class="w-4 h-4 text-orange-500"></i>
-                            @elseif($currentStep == 4)
-                                <span class="w-2 h-2 rounded-full bg-[#696cff] animate-ping"></span>
-                            @endif
-                        </div>
-                        <div class="flex-grow my-3">
-                            <h4 class="text-sm font-bold {{ $currentStep == 4 ? ($latestRegistration && $latestRegistration->status === 'perlu_revisi' ? 'text-orange-600' : 'text-[#696cff]') : 'text-gray-800 dark:text-[#d5d5e2]' }} tracking-tight">Verifikasi Berkas</h4>
-                            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1 leading-relaxed">Pengecekan oleh panitia sekolah</p>
-                        </div>
-                        <div class="pt-2 border-t border-gray-100/50 dark:border-[#434463]/50 mt-auto">
-                            @if($step4Done)
-                                <span class="text-xs text-emerald-600 dark:text-emerald-400 font-semibold flex items-center gap-1"><i data-lucide="check" class="w-3.5 h-3.5"></i> Terverifikasi</span>
-                            @elseif($latestRegistration && $latestRegistration->status === 'perlu_revisi')
-                                <span class="text-xs text-orange-600 dark:text-orange-400 font-semibold flex items-center gap-1"><i data-lucide="alert-circle" class="w-3.5 h-3.5"></i> Perlu Revisi</span>
-                            @elseif($currentStep == 4)
-                                <span class="text-xs text-blue-600 dark:text-blue-400 font-medium flex items-center gap-1"><i data-lucide="loader" class="w-3.5 h-3.5 animate-spin"></i> Proses</span>
-                            @else
-                                <span class="text-xs text-gray-400 dark:text-gray-500">Belum Mulai</span>
-                            @endif
-                        </div>
-                    </div>
-
-                    <!-- Langkah 5 -->
-                    <div class="p-4 rounded-xl border {{ $currentStep == 5 ? 'border-[#696cff] bg-[#696cff]/5 dark:bg-[#696cff]/10 shadow-sm ring-1 ring-[#696cff]/20' : ($step5Done ? 'border-emerald-100 dark:border-emerald-500/10 bg-emerald-50/20 dark:bg-emerald-500/5' : 'border-gray-200 dark:border-[#434463] bg-gray-50/30 dark:bg-[#28293d]/50') }} flex flex-col min-h-[165px] transition-all duration-200">
-                        <div class="flex items-center justify-between">
-                            <span class="text-[10px] font-bold px-2.5 py-0.5 rounded-full {{ $currentStep == 5 ? 'bg-[#696cff]/10 text-[#696cff] dark:text-[#a3a5ff]' : ($step5Done ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 dark:bg-emerald-500/20' : 'bg-gray-100 text-gray-500 dark:bg-[#34354c] dark:text-[#a1b0cb]') }}">Langkah 5</span>
-                            @if($step5Done)
-                                <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-500"></i>
-                            @elseif($currentStep == 5)
-                                <span class="w-2 h-2 rounded-full bg-[#696cff] animate-ping"></span>
-                            @endif
-                        </div>
-                        <div class="flex-grow my-3">
-                            <h4 class="text-sm font-bold {{ $currentStep == 5 ? 'text-[#696cff]' : 'text-gray-800 dark:text-[#d5d5e2]' }} tracking-tight">Observasi</h4>
-                            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1 leading-relaxed">Hadir ke sekolah bersama anak</p>
-                        </div>
-                        <div class="pt-2 border-t border-gray-100/50 dark:border-[#434463]/50 mt-auto">
-                            @if($step5Done)
-                                <span class="text-xs text-emerald-600 dark:text-emerald-400 font-semibold flex items-center gap-1"><i data-lucide="check" class="w-3.5 h-3.5"></i> Selesai</span>
-                            @elseif($currentStep == 5)
-                                <span class="text-xs text-[#696cff] dark:text-[#a3a5ff] font-medium flex items-center gap-1"><i data-lucide="calendar" class="w-3.5 h-3.5"></i> Observasi</span>
-                            @else
-                                <span class="text-xs text-gray-400 dark:text-gray-500">Belum Mulai</span>
-                            @endif
-                        </div>
-                    </div>
-
-                    <!-- Langkah 6 -->
-                    <div class="p-4 rounded-xl border {{ $currentStep == 6 ? 'border-[#696cff] bg-[#696cff]/5 dark:bg-[#696cff]/10 shadow-sm ring-1 ring-[#696cff]/20' : ($step6Done ? 'border-emerald-100 dark:border-emerald-500/10 bg-emerald-50/20 dark:bg-emerald-500/5' : 'border-gray-200 dark:border-[#434463] bg-gray-50/30 dark:bg-[#28293d]/50') }} flex flex-col min-h-[165px] transition-all duration-200">
-                        <div class="flex items-center justify-between">
-                            <span class="text-[10px] font-bold px-2.5 py-0.5 rounded-full {{ $currentStep == 6 ? 'bg-[#696cff]/10 text-[#696cff] dark:text-[#a3a5ff]' : ($step6Done ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 dark:bg-emerald-500/20' : 'bg-gray-100 text-gray-500 dark:bg-[#34354c] dark:text-[#a1b0cb]') }}">Langkah 6</span>
-                            @if($step6Done)
-                                <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-500"></i>
-                            @elseif($currentStep == 6)
-                                <span class="w-2 h-2 rounded-full bg-[#696cff] animate-ping"></span>
-                            @endif
-                        </div>
-                        <div class="flex-grow my-3">
-                            <h4 class="text-sm font-bold {{ $currentStep == 6 ? 'text-[#696cff]' : 'text-gray-800 dark:text-[#d5d5e2]' }} tracking-tight">Daftar Ulang</h4>
-                            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1 leading-relaxed">Unggah bukti transfer masuk</p>
-                        </div>
-                        <div class="pt-2 border-t border-gray-100/50 dark:border-[#434463]/50 mt-auto">
-                            @if($step6Done)
-                                <span class="text-xs text-emerald-600 dark:text-emerald-400 font-semibold flex items-center gap-1"><i data-lucide="check" class="w-3.5 h-3.5"></i> Lunas</span>
-                            @elseif($currentStep == 6)
-                                <a href="{{ route('parent.pendaftaran.status') }}" class="text-xs text-[#696cff] font-bold hover:underline flex items-center gap-0.5">Bayar & Upload &rarr;</a>
-                            @else
-                                <span class="text-xs text-gray-400 dark:text-gray-500">Belum Mulai</span>
-                            @endif
-                        </div>
-                    </div>
-
-                </div>
+    @if($siswas->isEmpty())
+        <div class="rounded-lg border border-[#d9dee3] bg-white p-8 text-center shadow-sneat dark:border-[#434463] dark:bg-[#2b2c40] dark:shadow-sneat-dark">
+            <div class="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-[#e7e7ff] text-[#696cff] dark:bg-[#696cff]/20">
+                <i data-lucide="user-plus" class="h-7 w-7"></i>
             </div>
-
-            <!-- Registration Status -->
-            <div class="rounded-lg border border-[#d9dee3] bg-white p-4 shadow-sneat animate-fade-up dark:border-[#434463] dark:bg-[#2b2c40] dark:shadow-sneat-dark sm:p-6" style="animation-delay: 0.1s;">
-                <h3 class="mb-4 flex items-start gap-2 font-heading text-base font-semibold leading-6 text-[#566a7f] dark:text-[#d5d5e2] sm:items-center sm:text-lg">
-                    <i data-lucide="activity" class="w-5 h-5 text-[#696cff]"></i>
-                    Status Pendaftaran Saat Ini
-                </h3>
-
-                @if(!$siswa)
-                    <div class="flex flex-col items-center gap-4 rounded-lg border border-amber-200 bg-amber-50 p-4 text-center dark:border-amber-500/20 dark:bg-amber-500/10 sm:flex-row sm:p-5 sm:text-left">
-                        <div class="w-12 h-12 rounded-lg bg-amber-100 dark:bg-amber-500/20 flex items-center justify-center flex-shrink-0 text-amber-500">
-                            <i data-lucide="user-plus" class="w-6 h-6"></i>
-                        </div>
-                        <div class="flex-1">
-                            <h4 class="font-semibold text-amber-800 dark:text-amber-400">Data Anak Belum Lengkap</h4>
-                            <p class="text-sm text-amber-700 dark:text-amber-300/80 mt-1">Anda belum melengkapi profil dan dokumen anak. Silakan lengkapi terlebih dahulu untuk dapat memilih gelombang pendaftaran.</p>
-                        </div>
-                        <a href="{{ route('parent.siswa.create') }}" class="mt-2 inline-flex w-full items-center justify-center whitespace-nowrap rounded-md bg-amber-500 px-4 py-2.5 text-sm font-medium text-white shadow-sm transition-colors hover:bg-amber-600 sm:mt-0 sm:w-auto">
-                            Lengkapi Data
-                        </a>
-                    </div>
-                @elseif(!$latestRegistration)
-                    <div class="flex flex-col items-center gap-4 rounded-lg border border-blue-200 bg-blue-50 p-4 text-center dark:border-blue-500/20 dark:bg-blue-500/10 sm:flex-row sm:p-5 sm:text-left">
-                        <div class="w-12 h-12 rounded-lg bg-blue-100 dark:bg-blue-500/20 flex items-center justify-center flex-shrink-0 text-blue-500">
-                            <i data-lucide="info" class="w-6 h-6"></i>
-                        </div>
-                        <div class="flex-1">
-                            <h4 class="font-semibold text-blue-800 dark:text-blue-400">Belum Memilih Gelombang</h4>
-                            <p class="text-sm text-blue-700 dark:text-blue-300/80 mt-1">Data anak sudah lengkap, namun Anda belum mendaftar di gelombang manapun.</p>
-                        </div>
-                        <a href="{{ route('parent.pendaftaran.index') }}" class="sneat-btn-primary mt-2 w-full justify-center whitespace-nowrap sm:mt-0 sm:w-auto">
-                            Daftar Sekarang
-                        </a>
-                    </div>
-                @else
-                    <!-- Status Display -->
-                    <div class="rounded-lg border border-[#d9dee3] bg-[#f5f5f9] p-4 dark:border-[#434463] dark:bg-[#232333] sm:p-5">
-                        <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-4 mb-4">
-                            <div>
-                                <p class="text-xs text-[#a1b0cb] uppercase tracking-wide font-semibold">Gelombang Pilihan</p>
-                                <p class="font-medium text-[#566a7f] dark:text-[#d5d5e2]">{{ $latestRegistration->pendaftaran->gelombang }} - {{ $latestRegistration->pendaftaran->tahun_ajaran }}</p>
-                            </div>
-                            
-                            <!-- Badges -->
-                            <div>
-                                @if($latestRegistration->status === 'pending')
-                                    <span class="sneat-badge bg-[#f5f5f9] dark:bg-[#434463] text-[#697a8d] dark:text-[#a1b0cb] border border-[#d9dee3] dark:border-[#434463]">
-                                        <i data-lucide="clock" class="w-3.5 h-3.5"></i> Pending
-                                    </span>
-                                @elseif($latestRegistration->status === 'menunggu_verifikasi')
-                                    <span class="sneat-badge bg-amber-50 dark:bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-200 dark:border-amber-500/20">
-                                        <i data-lucide="search" class="w-3.5 h-3.5"></i> Menunggu Verifikasi Berkas
-                                    </span>
-                                @elseif($latestRegistration->status === 'diterima')
-                                    <span class="sneat-badge bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-500/20">
-                                        <i data-lucide="check-circle-2" class="w-3.5 h-3.5"></i> Berkas Terverifikasi – Lanjut Observasi
-                                    </span>
-                                @elseif($latestRegistration->status === 'ditolak')
-                                    <span class="sneat-badge bg-red-50 dark:bg-red-500/10 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-500/20">
-                                        <i data-lucide="x-circle" class="w-3.5 h-3.5"></i> Pendaftaran Ditolak
-                                    </span>
-                                @elseif($latestRegistration->status === 'perlu_revisi')
-                                    <span class="sneat-badge bg-orange-50 dark:bg-orange-500/10 text-orange-600 dark:text-orange-400 border border-orange-200 dark:border-orange-500/20">
-                                        <i data-lucide="edit-3" class="w-3.5 h-3.5"></i> Perlu Revisi Data
-                                    </span>
-                                @endif
-                            </div>
-                        </div>
-
-                        <!-- Notification Alert -->
-                        @if($latestRegistration->notifikasi)
-                            <div class="mt-4 p-4 rounded-lg {{ $latestRegistration->status === 'diterima' ? 'bg-emerald-50 dark:bg-emerald-500/10 border-emerald-200 dark:border-emerald-500/20' : ($latestRegistration->status === 'ditolak' ? 'bg-red-50 dark:bg-red-500/10 border-red-200 dark:border-red-500/20' : 'bg-white dark:bg-[#2b2c40] border-[#d9dee3] dark:border-[#434463]') }} border text-sm">
-                                <span class="block font-semibold mb-1 {{ $latestRegistration->status === 'diterima' ? 'text-emerald-800 dark:text-emerald-400' : ($latestRegistration->status === 'ditolak' ? 'text-red-800 dark:text-red-400' : 'text-[#566a7f] dark:text-[#d5d5e2]') }}">Pesan dari Admin:</span>
-                                <p class="text-[#697a8d] dark:text-[#a1b0cb]">{{ $latestRegistration->notifikasi }}</p>
-                            </div>
-                        @endif                        @if($isAccepted)
-                            <div class="mt-4 p-4 rounded-lg bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/20">
-                                @if(!$payment)
-                                    <h4 class="font-semibold text-emerald-800 dark:text-emerald-400">Berkas Terverifikasi – Lanjut Observasi</h4>
-                                    <p class="text-sm text-[#697a8d] dark:text-[#a1b0cb] mt-2">
-                                        Berkas pendaftaran Anda telah diverifikasi. Tahap berikutnya adalah observasi/wawancara calon siswa di sekolah. Silakan datang bersama calon siswa sesuai arahan admin PAUD Al-Qur’an Az-Zahra.
-                                    </p>
-                                    <p class="text-xs text-amber-700 dark:text-amber-400 mt-2 bg-amber-500/10 p-2.5 rounded-lg border border-amber-500/20">
-                                        <i data-lucide="info" class="w-3.5 h-3.5 inline mr-1"></i> Pembayaran daftar ulang dilakukan setelah tahap observasi/wawancara selesai sesuai arahan pihak sekolah.
-                                    </p>
-                                    <div class="mt-4">
-                                        <p class="text-xs font-semibold text-gray-500 dark:text-[#a1b0cb] mb-2">Informasi Rekening Daftar Ulang:</p>
-                                        @include('parent.components.payment-information', ['paymentSetting' => $paymentSetting])
-                                    </div>
-                                    @if($paymentSetting)
-                                        <p class="text-sm text-[#697a8d] dark:text-[#a1b0cb] mt-3">Setelah mengikuti observasi dan mendapat arahan sekolah, silakan lakukan pembayaran daftar ulang dan unggah bukti pembayaran melalui tombol di bawah ini.</p>
-                                    @endif
-                                @elseif($isPaymentWaiting)
-                                    <h4 class="font-semibold text-amber-700 dark:text-amber-400">Bukti pembayaran Anda sedang menunggu verifikasi admin.</h4>
-                                    <p class="text-sm text-[#697a8d] dark:text-[#a1b0cb] mt-1">Silakan hubungi admin untuk konfirmasi.</p>
-                                @elseif($isPaymentLunas)
-                                    <div class="text-center py-5 px-3 bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/20 rounded-lg">
-                                        <div class="w-10 h-10 bg-emerald-500 text-white rounded-full flex items-center justify-center mx-auto mb-3 shadow-sm">
-                                            <i data-lucide="party-popper" class="w-5 h-5"></i>
-                                        </div>
-                                        <h4 class="font-semibold text-emerald-800 dark:text-emerald-400">Daftar Ulang Selesai / Siswa Diterima</h4>
-                                        <p class="text-xs text-emerald-700 dark:text-[#a1b0cb] mt-1">Seluruh proses pendaftaran dan daftar ulang untuk <strong>{{ $siswa->nama }}</strong> telah selesai dan diverifikasi sepenuhnya.</p>
-                                    </div>
-                                @elseif($isPaymentRejected)
-                                    <h4 class="font-semibold text-red-700 dark:text-red-400">Bukti pembayaran perlu diperbaiki. Silakan upload ulang bukti pembayaran.</h4>
-                                @endif
-                            </div>
-                        @endif
-                        
-                        <!-- Actions if Accepted -->
-                        @if($isAccepted)
-                            <div class="mt-5 grid grid-cols-1 gap-3 sm:flex sm:flex-wrap sm:items-center">
-                                <a href="{{ route('parent.siswa.kartu') }}" target="_blank" class="inline-flex w-full items-center justify-center gap-2 rounded-md bg-emerald-500 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-emerald-600 sm:w-auto sm:py-2">
-                                    <i data-lucide="printer" class="w-4 h-4"></i> Cetak Bukti Penerimaan
-                                </a>
-                                @if($isPaymentLunas)
-                                    <a href="{{ route('parent.pembayaran.receipt', $latestRegistration->id) }}" target="_blank" class="inline-flex w-full items-center justify-center gap-2 rounded-md bg-blue-500 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-blue-600 sm:w-auto sm:py-2">
-                                        <i data-lucide="file-down" class="w-4 h-4"></i> Cetak Bukti Bayar
-                                    </a>
-                                @elseif($isPaymentWaiting)
-                                    <a href="{{ route('parent.pendaftaran.status') }}" class="sneat-btn-secondary w-full justify-center sm:w-auto">
-                                        <i data-lucide="clock" class="w-4 h-4"></i> Lihat Status Pembayaran
-                                    </a>
-                                @else
-                                    <a href="{{ route('parent.pendaftaran.status') }}" class="sneat-btn-secondary w-full justify-center sm:w-auto">
-                                        <i data-lucide="upload" class="w-4 h-4"></i> Upload Bukti Pembayaran
-                                    </a>
-                                @endif
-                            </div>
-                        @endif
-                    </div>
-                @endif
-            </div>
-
-            <!-- Child Info Summary (If exists) -->
-            @if($siswa)
-            <div class="rounded-lg border border-[#d9dee3] bg-white p-4 shadow-sneat animate-fade-up dark:border-[#434463] dark:bg-[#2b2c40] dark:shadow-sneat-dark sm:p-6" style="animation-delay: 0.2s;">
-                <div class="mb-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-                    <h3 class="text-lg font-heading font-semibold text-[#566a7f] dark:text-[#d5d5e2] flex items-center gap-2">
-                        <i data-lucide="user" class="w-5 h-5 text-[#696cff]"></i>
-                        Ringkasan Profil Anak
-                    </h3>
-                    <div class="flex items-center gap-2">
-                        <a href="{{ route('parent.siswa.show', $siswa->id) }}" class="text-sm text-[#696cff] hover:text-[#5a5de6] font-medium">Lihat Detail &rarr;</a>
-                    </div>
-                </div>
-
-                <div class="flex flex-col items-stretch gap-4 rounded-lg border border-[#d9dee3] bg-[#f5f5f9] p-4 dark:border-[#434463] dark:bg-[#232333] sm:flex-row sm:items-center">
-                    <img src="{{ $siswa->foto ? Storage::url($siswa->foto) : asset('images/default-avatar.png') }}" alt="Foto Anak" class="h-16 w-16 self-center rounded-full border-2 border-white bg-[#f5f5f9] object-cover shadow-sm dark:border-[#434463] dark:bg-[#232333] sm:self-auto">
-                    <div class="min-w-0 flex-1 text-center sm:text-left">
-                        <h4 class="font-semibold text-[#566a7f] dark:text-[#d5d5e2]">{{ $siswa->nama }}</h4>
-                        <p class="text-sm text-[#a1b0cb] mt-0.5">Panggilan: {{ $siswa->nama_panggilan ?? '-' }}</p>
-                        <p class="text-xs text-[#a1b0cb] mt-1"><i data-lucide="map-pin" class="w-3 h-3 inline"></i> {{ $siswa->kota }}</p>
-                    </div>
-                    <!-- Edit & Delete Buttons -->
-                    <div class="grid grid-cols-2 gap-2 sm:flex sm:flex-col">
-                        <a href="{{ route('parent.siswa.edit', $siswa->id) }}" class="inline-flex items-center justify-center gap-1.5 rounded-md bg-[#e7e7ff] px-3 py-2 text-xs font-medium text-[#696cff] transition-colors hover:bg-[#d4d5ff] dark:bg-[#696cff]/20 dark:hover:bg-[#696cff]/30">
-                            <i data-lucide="edit-3" class="w-3 h-3"></i> Edit
-                        </a>
-                        @if(!$latestRegistration || $latestRegistration->status === 'ditolak')
-                        <form action="{{ route('parent.siswa.destroy', $siswa->id) }}" method="POST" class="child-delete-form" data-child-name="{{ $siswa->nama }}">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="inline-flex w-full items-center justify-center gap-1.5 rounded-md bg-red-50 px-3 py-2 text-xs font-medium text-red-500 transition-colors hover:bg-red-100 dark:bg-red-500/10 dark:hover:bg-red-500/20">
-                                <i data-lucide="trash-2" class="w-3 h-3"></i> Hapus
-                            </button>
-                        </form>
-                        @endif
-                    </div>
-                </div>
-            </div>
-            @endif
-
+            <h3 class="font-heading text-lg font-semibold text-[#566a7f] dark:text-[#d5d5e2]">Belum Ada Data Anak</h3>
+            <p class="mx-auto mt-2 max-w-md text-sm text-[#a1b0cb]">Tambahkan data anak terlebih dahulu. Setelah itu Anda dapat memilih gelombang pendaftaran untuk masing-masing anak.</p>
+            <a href="{{ route('parent.siswa.create') }}" class="sneat-btn-primary mt-5 inline-flex justify-center">
+                <i data-lucide="plus" class="h-4 w-4"></i>
+                Tambah Anak
+            </a>
         </div>
-
-        <!-- Right Sidebar (Quick Actions) -->
-        <div class="space-y-4 animate-fade-up sm:space-y-6" style="animation-delay: 0.3s;">
-            <div class="rounded-lg border border-[#d9dee3] bg-white p-4 shadow-sneat dark:border-[#434463] dark:bg-[#2b2c40] dark:shadow-sneat-dark sm:p-6">
-                <h3 class="text-lg font-heading font-semibold text-[#566a7f] dark:text-[#d5d5e2] mb-4">Aksi Cepat</h3>
-                
-                <div class="space-y-4">
-                    @if(!$siswa)
-                        <a href="{{ route('parent.siswa.create') }}" class="flex items-center justify-between p-3 rounded-lg border border-[#d9dee3] dark:border-[#434463] hover:border-[#696cff] dark:hover:border-[#696cff] hover:bg-[#e7e7ff]/30 dark:hover:bg-[#696cff]/10 transition-colors group">
-                            <div class="flex min-w-0 items-center gap-3">
-                                <div class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-[#e7e7ff] text-[#696cff] dark:bg-[#696cff]/20">
-                                    <i data-lucide="file-edit" class="w-5 h-5"></i>
-                                </div>
-                                <div class="min-w-0">
-                                    <p class="font-medium text-sm text-[#566a7f] dark:text-[#d5d5e2] group-hover:text-[#696cff]">Isi Data Anak</p>
-                                    <p class="text-xs text-[#a1b0cb]">Lengkapi formulir biodata</p>
-                                </div>
-                            </div>
-                            <i data-lucide="chevron-right" class="w-4 h-4 text-[#a1b0cb] group-hover:text-[#696cff] transition-transform group-hover:translate-x-1"></i>
-                        </a>
-                    @else
-                        <a href="{{ route('parent.siswa.edit', $siswa->id) }}" class="flex items-center justify-between p-3 rounded-lg border border-[#d9dee3] dark:border-[#434463] hover:border-[#696cff] dark:hover:border-[#696cff] hover:bg-[#e7e7ff]/30 dark:hover:bg-[#696cff]/10 transition-colors group">
-                            <div class="flex min-w-0 items-center gap-3">
-                                <div class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-[#e7e7ff] text-[#696cff] dark:bg-[#696cff]/20">
-                                    <i data-lucide="edit-3" class="w-5 h-5"></i>
-                                </div>
-                                <div class="min-w-0">
-                                    <p class="font-medium text-sm text-[#566a7f] dark:text-[#d5d5e2] group-hover:text-[#696cff]">Edit Data Anak</p>
-                                    <p class="text-xs text-[#a1b0cb]">Perbarui biodata & dokumen</p>
-                                </div>
-                            </div>
-                            <i data-lucide="chevron-right" class="w-4 h-4 text-[#a1b0cb] group-hover:text-[#696cff] transition-transform group-hover:translate-x-1"></i>
-                        </a>
-                    @endif
-
-                    @if(!$isAccepted)
-                    <a href="{{ route('parent.pendaftaran.index') }}" class="flex items-center justify-between p-3 rounded-lg border border-[#d9dee3] dark:border-[#434463] hover:border-blue-400 dark:hover:border-blue-400 hover:bg-blue-50/50 dark:hover:bg-blue-500/10 transition-colors group">
-                        <div class="flex min-w-0 items-center gap-3">
-                            <div class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-blue-50 text-blue-500 dark:bg-blue-500/10">
-                                <i data-lucide="calendar-check" class="w-5 h-5"></i>
-                            </div>
-                            <div class="min-w-0">
-                                <p class="font-medium text-sm text-[#566a7f] dark:text-[#d5d5e2] group-hover:text-blue-600 dark:group-hover:text-blue-400">Daftar Gelombang</p>
-                                <p class="text-xs text-[#a1b0cb]">Pilih periode pendaftaran</p>
-                            </div>
-                        </div>
-                        <i data-lucide="chevron-right" class="w-4 h-4 text-[#a1b0cb] group-hover:text-blue-500 transition-transform group-hover:translate-x-1"></i>
-                    </a>
-                    @else
-                    <div class="flex items-center justify-between p-3 rounded-lg border border-[#d9dee3] dark:border-[#434463] bg-[#f5f5f9] dark:bg-[#232333] opacity-60 cursor-not-allowed">
-                        <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-lg bg-[#f5f5f9] dark:bg-[#434463] flex items-center justify-center text-[#a1b0cb]">
-                                <i data-lucide="calendar-check" class="w-5 h-5"></i>
-                            </div>
-                            <div>
-                                <p class="font-medium text-sm text-[#a1b0cb]">Daftar Gelombang</p>
-                                <p class="text-xs text-[#a1b0cb]">Sudah diterima ✓</p>
-                            </div>
-                        </div>
-                        <i data-lucide="lock" class="w-4 h-4 text-[#a1b0cb]"></i>
-                    </div>
-                    @endif
-
-                    @if($isAccepted)
-                    <a href="{{ route('parent.pendaftaran.status') }}" class="flex items-center justify-between p-3 rounded-lg border border-[#d9dee3] dark:border-[#434463] hover:border-emerald-400 dark:hover:border-emerald-400 hover:bg-emerald-50/50 dark:hover:bg-emerald-500/10 transition-colors group">
-                        <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-lg bg-emerald-50 dark:bg-emerald-500/10 flex items-center justify-center text-emerald-500">
-                                <i data-lucide="credit-card" class="w-5 h-5"></i>
-                            </div>
-                            <div>
-                                <p class="font-medium text-sm text-[#566a7f] dark:text-[#d5d5e2] group-hover:text-emerald-600 dark:group-hover:text-emerald-400">Pembayaran</p>
-                                <p class="text-xs text-[#a1b0cb]">Upload bukti daftar ulang</p>
-                            </div>
-                        </div>
-                        <i data-lucide="chevron-right" class="w-4 h-4 text-[#a1b0cb] group-hover:text-emerald-500 transition-transform group-hover:translate-x-1"></i>
-                    </a>
-                    @endif
+    @else
+        <section class="space-y-4">
+            <div class="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+                <div>
+                    <h3 class="font-heading text-xl font-bold text-[#566a7f] dark:text-[#d5d5e2]">Ringkasan Anak</h3>
+                    <p class="text-sm text-[#a1b0cb]">Setiap kartu menampilkan status terbaru anak tersebut saja.</p>
                 </div>
-            </div>
-
-            <!-- Help / Contact Card -->
-            <div class="rounded-lg bg-white p-5 text-center text-slate-700 shadow-sneat dark:bg-[#2b2c40] dark:text-white dark:shadow-sneat-dark sm:p-6">
-                <div class="w-12 h-12 rounded-full bg-[#696cff]/10 dark:bg-[#696cff]/20 mx-auto flex items-center justify-center mb-4">
-                    <i data-lucide="help-circle" class="w-6 h-6 text-[#696cff]"></i>
-                </div>
-                <h3 class="font-semibold mb-2 text-slate-900 dark:text-[#d5d5e2]">Butuh Bantuan?</h3>
-                <p class="text-sm text-slate-500 dark:text-[#a1b0cb] mb-4">Jika Anda mengalami kendala saat mendaftar, silakan hubungi admin kami.</p>
-                <a href="{{ $helpWaUrl }}" target="_blank" class="inline-flex items-center justify-center gap-2 w-full py-2.5 bg-emerald-500 hover:bg-emerald-600 text-white rounded-md transition-colors text-sm font-medium">
-                    <i data-lucide="message-circle" class="w-4 h-4"></i> Hubungi Admin SPMB
+                <a href="{{ route('parent.siswa.index') }}" class="inline-flex items-center gap-2 text-sm font-semibold text-[#696cff] hover:text-[#5a5de6]">
+                    Kelola Anak
+                    <i data-lucide="arrow-right" class="h-4 w-4"></i>
                 </a>
             </div>
+
+            <div class="grid gap-4 lg:grid-cols-2">
+                @foreach($siswas as $siswa)
+                    @php
+                        $latestRegistration = $siswa->pendaftaranDetails->first();
+                        $payment = $latestRegistration?->pembayaran;
+                        $paymentStatus = $payment?->status;
+                        $isPaymentWaiting = $payment && in_array($paymentStatus, ['pending', 'menunggu_verifikasi'], true);
+                        $isPaymentLunas = $paymentStatus === 'lunas';
+                        $isPaymentRejected = $paymentStatus === 'ditolak';
+                    @endphp
+
+                    <article class="rounded-lg border border-[#d9dee3] bg-white p-5 shadow-sneat dark:border-[#434463] dark:bg-[#2b2c40] dark:shadow-sneat-dark">
+                        <div class="flex flex-col gap-4 sm:flex-row sm:items-start">
+                            <img src="{{ $siswa->foto ? Storage::url($siswa->foto) : asset('images/default-avatar.png') }}" alt="Foto {{ $siswa->nama }}" class="h-20 w-20 rounded-lg border border-[#d9dee3] object-cover dark:border-[#434463]">
+                            <div class="min-w-0 flex-1">
+                                <h4 class="break-words font-heading text-lg font-bold text-[#566a7f] dark:text-[#d5d5e2]">{{ $siswa->nama }}</h4>
+                                <p class="text-sm text-[#a1b0cb]">Panggilan: {{ $siswa->nama_panggilan ?: '-' }}</p>
+                                <p class="mt-1 text-xs text-[#a1b0cb]">{{ $siswa->jenis_kelamin === 'L' ? 'Laki-laki' : 'Perempuan' }} | {{ $siswa->tanggal_lahir ? \Carbon\Carbon::parse($siswa->tanggal_lahir)->translatedFormat('d M Y') : '-' }}</p>
+                            </div>
+                            <a href="{{ route('parent.siswa.show', $siswa) }}" class="inline-flex items-center justify-center gap-2 rounded-md border border-[#d9dee3] px-3 py-2 text-sm font-medium text-[#566a7f] transition-colors hover:bg-[#f5f5f9] dark:border-[#434463] dark:text-[#d5d5e2] dark:hover:bg-[#232333]">
+                                <i data-lucide="eye" class="h-4 w-4"></i>
+                                Detail
+                            </a>
+                        </div>
+
+                        <div class="mt-5 rounded-lg bg-[#f5f5f9] p-4 dark:bg-[#232333]">
+                            @if($latestRegistration)
+                                <div class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                                    <div>
+                                        <p class="text-xs font-semibold uppercase tracking-wide text-[#a1b0cb]">Status Terbaru</p>
+                                        <div class="mt-2 flex flex-wrap items-center gap-2">
+                                            <span class="rounded-full px-2.5 py-1 text-xs font-semibold {{ $statusClasses[$latestRegistration->status] ?? 'bg-gray-100 text-gray-700' }}">
+                                                {{ $statusLabels[$latestRegistration->status] ?? str($latestRegistration->status)->replace('_', ' ')->title() }}
+                                            </span>
+                                            <span class="text-xs text-[#a1b0cb]">{{ $latestRegistration->pendaftaran?->gelombang ?? '-' }}</span>
+                                        </div>
+                                        <p class="mt-2 text-xs text-[#a1b0cb]">No. Pendaftaran: <span class="font-semibold text-[#566a7f] dark:text-[#d5d5e2]">{{ $latestRegistration->nomor_pendaftaran }}</span></p>
+                                    </div>
+                                    <a href="{{ route('parent.siswa.pendaftaran.status', $siswa) }}" class="sneat-btn-secondary justify-center whitespace-nowrap">
+                                        <i data-lucide="activity" class="h-4 w-4"></i>
+                                        Lihat Status
+                                    </a>
+                                </div>
+
+                                @if($latestRegistration->status === 'diterima')
+                                    <div class="mt-4 rounded-lg border border-emerald-100 bg-emerald-50 p-4 dark:border-emerald-500/20 dark:bg-emerald-500/10">
+                                        @if(!$payment)
+                                            <p class="text-sm text-[#697a8d] dark:text-[#d5d5e2]">Berkas sudah terverifikasi. Pembayaran daftar ulang dilakukan sesuai arahan sekolah.</p>
+                                            <div class="mt-3">
+                                                @include('parent.components.payment-information', ['paymentSetting' => $paymentSetting])
+                                            </div>
+                                        @elseif($isPaymentWaiting)
+                                            <p class="text-sm font-semibold text-amber-700 dark:text-amber-300">Bukti pembayaran sedang menunggu verifikasi admin.</p>
+                                        @elseif($isPaymentLunas)
+                                            <p class="text-sm font-semibold text-emerald-700 dark:text-emerald-300">Daftar ulang selesai dan pembayaran terverifikasi.</p>
+                                        @elseif($isPaymentRejected)
+                                            <p class="text-sm font-semibold text-red-700 dark:text-red-300">Bukti pembayaran perlu diperbaiki.</p>
+                                        @endif
+
+                                        <div class="mt-4 flex flex-wrap gap-2">
+                                            <a href="{{ route('parent.siswa.pendaftaran.kartu', ['siswa' => $siswa, 'detail' => $latestRegistration]) }}" target="_blank" class="inline-flex items-center justify-center gap-2 rounded-md bg-emerald-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-emerald-700">
+                                                <i data-lucide="printer" class="h-4 w-4"></i>
+                                                Cetak Kartu
+                                            </a>
+                                            <a href="{{ route('parent.siswa.pendaftaran.status', $siswa) }}" class="inline-flex items-center justify-center gap-2 rounded-md border border-[#d9dee3] bg-white px-4 py-2 text-sm font-medium text-[#566a7f] transition-colors hover:bg-[#f5f5f9] dark:border-[#434463] dark:bg-[#2b2c40] dark:text-[#d5d5e2] dark:hover:bg-[#232333]">
+                                                <i data-lucide="upload" class="h-4 w-4"></i>
+                                                Pembayaran
+                                            </a>
+                                        </div>
+                                    </div>
+                                @endif
+                            @else
+                                <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                                    <div>
+                                        <p class="text-sm font-semibold text-[#566a7f] dark:text-[#d5d5e2]">Belum ada pendaftaran</p>
+                                        <p class="mt-1 text-xs text-[#a1b0cb]">Pilih gelombang untuk mendaftarkan anak ini.</p>
+                                    </div>
+                                    <a href="{{ route('parent.siswa.pendaftaran.index', $siswa) }}" class="sneat-btn-primary justify-center">
+                                        <i data-lucide="clipboard-list" class="h-4 w-4"></i>
+                                        Daftar Gelombang
+                                    </a>
+                                </div>
+                            @endif
+                        </div>
+
+                        <div class="mt-4 flex flex-wrap gap-2">
+                            <a href="{{ route('parent.siswa.edit', $siswa) }}" class="inline-flex items-center justify-center gap-2 rounded-md border border-[#d9dee3] px-3 py-2 text-sm font-medium text-[#566a7f] transition-colors hover:bg-[#f5f5f9] dark:border-[#434463] dark:text-[#d5d5e2] dark:hover:bg-[#232333]">
+                                <i data-lucide="edit-3" class="h-4 w-4"></i>
+                                Edit Data
+                            </a>
+                            @if(!$latestRegistration || $latestRegistration->status === 'ditolak')
+                                <form action="{{ route('parent.siswa.destroy', $siswa) }}" method="POST" class="child-delete-form" data-child-name="{{ $siswa->nama }}">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="inline-flex items-center justify-center gap-2 rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm font-medium text-red-600 transition-colors hover:bg-red-100 dark:border-red-500/20 dark:bg-red-500/10 dark:text-red-300 dark:hover:bg-red-500/20">
+                                        <i data-lucide="trash-2" class="h-4 w-4"></i>
+                                        Hapus
+                                    </button>
+                                </form>
+                            @endif
+                        </div>
+                    </article>
+                @endforeach
+            </div>
+        </section>
+    @endif
+
+    <div class="rounded-lg bg-white p-5 text-center text-slate-700 shadow-sneat dark:bg-[#2b2c40] dark:text-white dark:shadow-sneat-dark sm:p-6">
+        <div class="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-[#696cff]/10 text-[#696cff] dark:bg-[#696cff]/20">
+            <i data-lucide="help-circle" class="h-6 w-6"></i>
         </div>
+        <h3 class="mb-2 font-semibold text-slate-900 dark:text-[#d5d5e2]">Butuh Bantuan?</h3>
+        <p class="mx-auto mb-4 max-w-lg text-sm text-slate-500 dark:text-[#a1b0cb]">Jika Anda mengalami kendala saat mendaftarkan salah satu anak, silakan hubungi admin SPMB.</p>
+        @if($adminWhatsapp)
+            <a href="{{ $helpWaUrl }}" target="_blank" class="inline-flex items-center justify-center gap-2 rounded-md bg-emerald-500 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-emerald-600">
+                <i data-lucide="message-circle" class="h-4 w-4"></i>
+                Hubungi Admin SPMB
+            </a>
+        @endif
     </div>
 </div>
 @endsection

@@ -1,6 +1,8 @@
 <?php
 
 use App\Models\Pendaftaran;
+use App\Models\PendaftaranDetail;
+use App\Models\Siswa;
 use App\Models\User;
 
 test('parent must confirm data accuracy before submitting a registration', function () {
@@ -13,9 +15,10 @@ test('parent must confirm data accuracy before submitting a registration', funct
         'tanggal_mulai' => now()->subDay(),
         'tanggal_selesai' => now()->addMonth(),
     ]);
+    $siswa = Siswa::factory()->for($parent)->create();
 
     $response = $this->actingAs($parent)
-        ->post(route('parent.pendaftaran.daftar', $pendaftaran));
+        ->post(route('parent.siswa.pendaftaran.daftar', ['siswa' => $siswa, 'pendaftaran' => $pendaftaran]));
 
     $response->assertSessionHasErrors('data_declaration');
 });
@@ -30,12 +33,19 @@ test('accepted data confirmation reaches the existing registration flow', functi
         'tanggal_mulai' => now()->subDay(),
         'tanggal_selesai' => now()->addMonth(),
     ]);
+    $siswa = Siswa::factory()->for($parent)->create();
 
     $response = $this->actingAs($parent)
-        ->post(route('parent.pendaftaran.daftar', $pendaftaran), [
+        ->post(route('parent.siswa.pendaftaran.daftar', ['siswa' => $siswa, 'pendaftaran' => $pendaftaran]), [
             'data_declaration' => '1',
         ]);
 
     $response->assertSessionDoesntHaveErrors('data_declaration')
-        ->assertRedirect(route('parent.siswa.create'));
+        ->assertRedirect(route('parent.siswa.pendaftaran.status', $siswa));
+
+    $this->assertDatabaseHas('spmb_pendaftaran_detail', [
+        'siswa_id' => $siswa->id,
+        'pendaftaran_id' => $pendaftaran->id,
+        'status' => PendaftaranDetail::STATUS_PENDING,
+    ]);
 });

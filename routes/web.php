@@ -18,15 +18,15 @@ use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\VerifyEmailController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AchievementImageController;
-use App\Http\Controllers\GalleryImageController;
 use App\Http\Controllers\DokumenController;
+use App\Http\Controllers\GalleryImageController;
+use App\Http\Controllers\ParentDashboardController;
 use App\Http\Controllers\PendaftaranController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SiswaController;
-use App\Models\Setting;
 use App\Models\Achievement;
 use App\Models\Gallery;
-use App\Models\PaymentSetting;
+use App\Models\Setting;
 use App\Models\Testimonial;
 use Illuminate\Support\Facades\Route;
 
@@ -131,26 +131,30 @@ Route::middleware('auth')->group(function () {
     |----------------------------------------------------------------------
     */
     Route::middleware('role:parent')->prefix('parent')->name('parent.')->group(function () {
-        Route::get('/dashboard', function () {
-            return view('parent.dashboard', [
-                'paymentSetting' => PaymentSetting::current(),
-            ]);
-        })->name('dashboard');
+        $legacyChildSelectionRedirect = function () {
+            return redirect()
+                ->route('parent.siswa.index')
+                ->with('warning', 'Silakan pilih anak untuk melanjutkan proses pendaftaran.');
+        };
+
+        Route::get('/dashboard', ParentDashboardController::class)->name('dashboard');
+        Route::get('/pendaftaran', $legacyChildSelectionRedirect)->name('pendaftaran.index');
+        Route::get('/status', $legacyChildSelectionRedirect)->name('pendaftaran.status');
 
         // Siswa (child data) management
+        Route::get('/siswa', [SiswaController::class, 'index'])->name('siswa.index');
         Route::get('/siswa/create', [SiswaController::class, 'create'])->name('siswa.create');
         Route::post('/siswa', [SiswaController::class, 'store'])->name('siswa.store');
-        Route::get('/siswa/kartu', [SiswaController::class, 'kartu'])->name('siswa.kartu');
+        Route::get('/siswa/kartu', $legacyChildSelectionRedirect)->name('siswa.kartu');
+        Route::get('/siswa/{siswa}/pendaftaran', [PendaftaranController::class, 'index'])->name('siswa.pendaftaran.index');
+        Route::get('/siswa/{siswa}/pendaftaran/{pendaftaran}', [PendaftaranController::class, 'show'])->name('siswa.pendaftaran.show');
+        Route::post('/siswa/{siswa}/pendaftaran/{pendaftaran}/daftar', [PendaftaranController::class, 'daftar'])->name('siswa.pendaftaran.daftar');
+        Route::get('/siswa/{siswa}/pendaftaran/{detail}/kartu', [SiswaController::class, 'kartu'])->name('siswa.pendaftaran.kartu');
+        Route::get('/siswa/{siswa}/status', [PendaftaranController::class, 'status'])->name('siswa.pendaftaran.status');
         Route::get('/siswa/{siswa}', [SiswaController::class, 'show'])->name('siswa.show');
         Route::get('/siswa/{siswa}/edit', [SiswaController::class, 'edit'])->name('siswa.edit');
         Route::put('/siswa/{siswa}', [SiswaController::class, 'update'])->name('siswa.update');
         Route::delete('/siswa/{siswa}', [SiswaController::class, 'destroy'])->name('siswa.destroy');
-
-        // Registration (pendaftaran)
-        Route::get('/pendaftaran', [PendaftaranController::class, 'index'])->name('pendaftaran.index');
-        Route::get('/pendaftaran/{pendaftaran}', [PendaftaranController::class, 'show'])->name('pendaftaran.show');
-        Route::post('/pendaftaran/{pendaftaran}/daftar', [PendaftaranController::class, 'daftar'])->name('pendaftaran.daftar');
-        Route::get('/status', [PendaftaranController::class, 'status'])->name('pendaftaran.status');
 
         // Pembayaran
         Route::post('/pembayaran/{detail}', [App\Http\Controllers\PembayaranController::class, 'store'])->name('pembayaran.store');

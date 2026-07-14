@@ -9,12 +9,17 @@
 @endphp
 
 <div class="parent-status-page space-y-6">
+    <a href="{{ route('parent.siswa.index') }}" class="inline-flex items-center gap-2 text-sm font-semibold text-[#696cff] hover:text-[#5a5de6]">
+        <i data-lucide="arrow-left" class="h-4 w-4"></i>
+        Anak Saya
+    </a>
+
     <div class="animate-fade-up overflow-hidden rounded-lg border border-[#d9dee3] bg-white shadow-sneat dark:border-[#434463] dark:bg-[#2b2c40] dark:shadow-sneat-dark">
         <div class="border-b border-primary-100 bg-primary-50 p-4 dark:border-[#434463] dark:bg-[#696cff]/15 sm:px-8 sm:py-6">
             <h2 class="flex items-start gap-2 font-heading text-xl font-bold text-primary-900 dark:text-[#d5d5e2] sm:items-center sm:text-2xl">
                 <i data-lucide="activity" class="w-6 h-6 text-primary-600"></i> Riwayat & Status Pendaftaran
             </h2>
-            <p class="mt-1 text-sm text-primary-600 dark:text-[#a1b0cb]">Pantau perkembangan proses verifikasi, penerimaan, dan daftar ulang anak Anda di sini.</p>
+            <p class="mt-1 text-sm text-primary-600 dark:text-[#a1b0cb]">Pantau perkembangan proses verifikasi, penerimaan, dan daftar ulang untuk {{ $siswa->nama }} di sini.</p>
         </div>
 
         <div class="p-4 sm:p-8">
@@ -25,8 +30,8 @@
                         <i data-lucide="clipboard-list" class="w-8 h-8 text-gray-400"></i>
                     </div>
                     <h3 class="font-heading text-lg font-semibold text-gray-800 dark:text-[#d5d5e2]">Belum Ada Pendaftaran</h3>
-                    <p class="mb-6 mt-1 max-w-md text-gray-500 dark:text-[#a1b0cb]">Anda belum mendaftar ke gelombang manapun. Silakan pilih gelombang yang tersedia.</p>
-                    <a href="{{ route('parent.pendaftaran.index') }}" class="px-5 py-2.5 bg-primary-600 text-white font-medium rounded-lg hover:bg-primary-700 transition-colors">
+                    <p class="mb-6 mt-1 max-w-md text-gray-500 dark:text-[#a1b0cb]">{{ $siswa->nama }} belum mendaftar ke gelombang manapun. Silakan pilih gelombang yang tersedia.</p>
+                    <a href="{{ route('parent.siswa.pendaftaran.index', $siswa) }}" class="px-5 py-2.5 bg-primary-600 text-white font-medium rounded-lg hover:bg-primary-700 transition-colors">
                         Lihat Gelombang Pendaftaran
                     </a>
                 </div>
@@ -510,7 +515,7 @@
 
                                 @if($reg->status === 'diterima')
                                     <div class="relative z-10 mt-6 flex flex-wrap gap-3 border-t border-gray-100 pt-6 dark:border-[#434463]">
-                                        <a href="{{ route('parent.siswa.kartu') }}" target="_blank" class="inline-flex w-full cursor-pointer items-center justify-center gap-2 rounded-lg bg-secondary-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-secondary-700 sm:w-auto">
+                                        <a href="{{ route('parent.siswa.pendaftaran.kartu', ['siswa' => $siswa, 'detail' => $reg]) }}" target="_blank" class="inline-flex w-full cursor-pointer items-center justify-center gap-2 rounded-lg bg-secondary-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-secondary-700 sm:w-auto">
                                             <i data-lucide="printer" class="w-4 h-4"></i> Cetak Kartu Pendaftaran
                                         </a>
 

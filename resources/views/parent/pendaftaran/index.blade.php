@@ -4,28 +4,26 @@
 @section('content')
 <div class="space-y-6">
     <div class="rounded-lg border border-[#d9dee3] bg-white p-4 shadow-sneat dark:border-[#434463] dark:bg-[#2b2c40] dark:shadow-sneat-dark sm:p-8">
-        <h2 class="mb-4 font-heading text-xl font-bold text-[#566a7f] dark:text-[#d5d5e2] sm:text-2xl">Gelombang Pendaftaran Tersedia</h2>
+        <div class="mb-4 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+            <div>
+                <h2 class="font-heading text-xl font-bold text-[#566a7f] dark:text-[#d5d5e2] sm:text-2xl">Gelombang Pendaftaran Tersedia</h2>
+                <p class="mt-1 text-sm text-[#a1b0cb]">Untuk: <span class="font-semibold text-[#566a7f] dark:text-[#d5d5e2]">{{ $siswa->nama }}</span></p>
+            </div>
+            <a href="{{ route('parent.siswa.index') }}" class="inline-flex items-center gap-2 text-sm font-semibold text-[#696cff] hover:text-[#5a5de6]">
+                <i data-lucide="arrow-left" class="h-4 w-4"></i>
+                Anak Saya
+            </a>
+        </div>
         
         @if($hasActiveRegistration)
         <div class="flex items-start gap-3 rounded-lg border border-yellow-200 bg-yellow-50 p-4 dark:border-yellow-500/20 dark:bg-yellow-500/10">
             <i data-lucide="alert-circle" class="w-5 h-5 text-yellow-500 flex-shrink-0"></i>
             <p class="text-yellow-800 dark:text-yellow-300 text-sm">
-                Anda sudah terdaftar pada salah satu gelombang. Silakan pantau status pendaftaran anak Anda di dashboard.
+                {{ $siswa->nama }} sudah terdaftar pada salah satu gelombang. Silakan pantau status pendaftarannya dari halaman status anak.
             </p>
         </div>
         @else
-            <p class="text-[#a1b0cb] text-sm max-w-3xl">Pilih salah satu gelombang di bawah ini untuk mendaftarkan anak Anda. Pastikan data profil anak sudah lengkap sebelum memilih gelombang.</p>
-        @endif
-        
-        @if(!auth()->user()->siswa)
-        <div class="mt-4 p-4 rounded-lg bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/20 flex items-start gap-3">
-            <i data-lucide="alert-triangle" class="w-5 h-5 text-amber-500 mt-0.5 flex-shrink-0"></i>
-            <div>
-                <h4 class="font-medium text-amber-800 dark:text-amber-400 text-sm">Perhatian</h4>
-                <p class="text-sm text-amber-700 dark:text-amber-300/80 mt-1">Anda belum melengkapi data profil anak. Anda tidak dapat melakukan pendaftaran sebelum profil dilengkapi.</p>
-                <a href="{{ route('parent.siswa.create') }}" class="inline-block mt-2 text-sm font-semibold text-amber-800 dark:text-amber-400 hover:underline">Lengkapi Data Anak Sekarang &rarr;</a>
-            </div>
-        </div>
+            <p class="text-[#a1b0cb] text-sm max-w-3xl">Pilih salah satu gelombang di bawah ini untuk mendaftarkan {{ $siswa->nama }}. Pastikan data profil anak sudah lengkap sebelum memilih gelombang.</p>
         @endif
     </div>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -58,14 +56,12 @@
                 </div>
                 <div class="mt-auto pt-4">
                     @if($p->status === 'buka')
-                        @if(!$siswa)
-                            <button disabled class="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-[#f5f5f9] dark:bg-[#232333] text-[#a1b0cb] font-semibold rounded-md cursor-not-allowed text-sm">Lengkapi Data Dahulu</button>
-                        @elseif($isAccepted)
+                        @if($isAccepted)
                             <button disabled class="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-[#f5f5f9] dark:bg-[#232333] text-[#a1b0cb] font-semibold rounded-md cursor-not-allowed text-sm"><i data-lucide="check" class="w-4 h-4 flex-shrink-0"></i> Anak Sudah Diterima</button>
                         @elseif($hasActiveRegistration)
                             <button disabled class="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-amber-50 dark:bg-amber-500/10 text-amber-600 dark:text-amber-400 font-semibold rounded-md cursor-not-allowed text-sm"><i data-lucide="lock" class="w-4 h-4 flex-shrink-0"></i> Sudah Terdaftar di Gelombang Lain</button>
                         @else
-                            <form action="{{ route('parent.pendaftaran.daftar', $p->id) }}" method="POST" class="registration-confirm-form" data-gelombang="{{ $p->gelombang }}">@csrf
+                            <form action="{{ route('parent.siswa.pendaftaran.daftar', ['siswa' => $siswa, 'pendaftaran' => $p]) }}" method="POST" class="registration-confirm-form" data-gelombang="{{ $p->gelombang }}">@csrf
                                 <label for="data_declaration_{{ $p->id }}" class="mb-3 flex cursor-pointer items-start gap-2 text-left text-xs leading-5 text-[#697a8d] dark:text-[#a1b0cb]">
                                     <input id="data_declaration_{{ $p->id }}" type="checkbox" name="data_declaration" value="1" required
                                         @checked(old('data_declaration'))
@@ -73,7 +69,7 @@
                                     <span>Saya menyatakan data dan dokumen yang diunggah adalah benar.</span>
                                 </label>
                                 @error('data_declaration') <p class="mb-3 text-left text-xs text-red-500">{{ $message }}</p> @enderror
-                                <button type="submit" class="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-[#696cff] hover:bg-[#5a5de6] text-white font-semibold rounded-md transition-colors text-sm">Daftar Sekarang <i data-lucide="arrow-right" class="w-4 h-4 flex-shrink-0"></i></button>
+                                <button type="submit" class="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-[#696cff] hover:bg-[#5a5de6] text-white font-semibold rounded-md transition-colors text-sm">Daftarkan {{ Str::limit($siswa->nama_panggilan ?: $siswa->nama, 18) }} <i data-lucide="arrow-right" class="w-4 h-4 flex-shrink-0"></i></button>
                             </form>
                         @endif
                     @else

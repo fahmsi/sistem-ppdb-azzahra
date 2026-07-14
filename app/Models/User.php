@@ -5,8 +5,8 @@ namespace App\Models;
 use Database\Factories\UserFactory;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -69,11 +69,11 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
-     * A parent-role user owns one Siswa (child) record.
+     * A parent-role user can own many Siswa (child) records.
      */
-    public function siswa(): HasOne
+    public function siswas(): HasMany
     {
-        return $this->hasOne(Siswa::class);
+        return $this->hasMany(Siswa::class);
     }
 
     /**

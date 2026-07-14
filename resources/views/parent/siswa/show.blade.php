@@ -8,10 +8,13 @@
 
     <!-- Action Header -->
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 animate-fade-in">
-        <a href="{{ route('parent.dashboard') }}" class="inline-flex items-center gap-2 text-sm font-medium text-gray-500 hover:text-primary-600 transition-colors">
-            <i data-lucide="arrow-left" class="w-4 h-4"></i> Kembali ke Dashboard
+        <a href="{{ route('parent.siswa.index') }}" class="inline-flex items-center gap-2 text-sm font-medium text-gray-500 hover:text-primary-600 transition-colors">
+            <i data-lucide="arrow-left" class="w-4 h-4"></i> Kembali ke Anak Saya
         </a>
         <div class="flex flex-col sm:flex-row items-center gap-3">
+            <a href="{{ route('parent.siswa.pendaftaran.index', $siswa) }}" class="inline-flex items-center justify-center gap-2 px-4 py-2 bg-secondary-600 hover:bg-secondary-700 text-white text-sm font-medium rounded-lg transition-colors shadow-sm">
+                <i data-lucide="clipboard-list" class="w-4 h-4"></i> Proses Pendaftaran
+            </a>
             <form action="{{ route('parent.siswa.destroy', $siswa->id) }}" method="POST" class="child-delete-form" data-child-name="{{ $siswa->nama }}">
                 @csrf
                 @method('DELETE')
