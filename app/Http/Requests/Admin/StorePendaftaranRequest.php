@@ -22,7 +22,22 @@ class StorePendaftaranRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'tahun_ajaran' => ['required', 'string', 'max:20'],
+            'tahun_ajaran' => [
+                'required',
+                'string',
+                'max:20',
+                function ($attribute, $value, $fail) {
+                    if (!preg_match('/^(\d{4})\/(\d{4})$/', $value, $matches)) {
+                        $fail('Format tahun ajaran harus YYYY/YYYY (contoh: 2026/2027).');
+                        return;
+                    }
+                    $year1 = (int) $matches[1];
+                    $year2 = (int) $matches[2];
+                    if ($year2 !== $year1 + 1) {
+                        $fail('Tahun kedua harus tepat satu tahun setelah tahun pertama (contoh: 2026/2027).');
+                    }
+                }
+            ],
             'gelombang' => ['required', 'string', 'max:50'],
             'kuota' => ['required', 'integer', 'min:1'],
             'status' => ['required', 'in:buka,tutup'],

@@ -122,51 +122,83 @@
 
                 <!-- Right Column -->
                 <div class="space-y-8">
-                    <!-- Data Orang Tua -->
+                    <!-- Data Orang Tua / Wali -->
                     <div>
                         <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2 border-b border-gray-100 pb-2">
-                            <i data-lucide="users" class="w-5 h-5 text-primary-600"></i> Data Orang Tua
+                            <i data-lucide="users" class="w-5 h-5 text-primary-600"></i> Data Orang Tua / Wali
                         </h3>
                         
-                        <div class="bg-gray-50 rounded-xl p-4 mb-4">
-                            <div class="text-xs text-gray-500 uppercase tracking-wider mb-1">No. Kartu Keluarga (KK)</div>
-                            <div class="font-medium text-gray-900 font-mono">{{ $siswa->no_kk }}</div>
+                        <div class="bg-gray-50 rounded-xl p-4 mb-4 flex justify-between items-center">
+                            <div>
+                                <div class="text-xs text-gray-500 uppercase tracking-wider mb-1">No. Kartu Keluarga (KK)</div>
+                                <div class="font-medium text-gray-900 font-mono">{{ $siswa->no_kk }}</div>
+                            </div>
+                            <div>
+                                <div class="text-xs text-gray-500 uppercase tracking-wider mb-1">Tinggal Bersama</div>
+                                <span class="px-2.5 py-1 text-xs font-semibold rounded-full bg-primary-100 text-primary-700">
+                                    {{ $siswa->tinggal_bersama === 'wali' ? 'Wali' : 'Orang Tua' }}
+                                </span>
+                            </div>
                         </div>
 
-                        <div class="grid grid-cols-2 gap-6 text-sm">
-                            <!-- Ayah -->
-                            <div class="space-y-2">
-                                <h4 class="font-semibold text-primary-800">Ayah</h4>
-                                <div>
-                                    <p class="text-gray-500 text-xs">Nama Lengkap</p>
-                                    <p class="font-medium text-gray-900">{{ $siswa->nama_ayah }}</p>
+                        @if($siswa->tinggal_bersama === 'wali')
+                            <div class="bg-primary-50/50 rounded-xl p-4 border border-primary-100 space-y-2">
+                                <h4 class="font-semibold text-primary-800 text-sm flex items-center gap-1.5"><i data-lucide="user-check" class="w-4 h-4"></i> Identitas Wali</h4>
+                                <dl class="grid grid-cols-2 gap-x-4 gap-y-2 text-xs">
+                                    <div>
+                                        <dt class="text-gray-500">Nama Wali</dt>
+                                        <dd class="font-medium text-gray-900">{{ $siswa->nama_wali }}</dd>
+                                    </div>
+                                    <div>
+                                        <dt class="text-gray-500">NIK Wali</dt>
+                                        <dd class="font-medium text-gray-900 font-mono">{{ $siswa->nik_wali }}</dd>
+                                    </div>
+                                    <div>
+                                        <dt class="text-gray-500">Hubungan Wali</dt>
+                                        <dd class="font-medium text-gray-900">{{ $siswa->hubungan_wali }}</dd>
+                                    </div>
+                                    <div>
+                                        <dt class="text-gray-500">Telepon Wali</dt>
+                                        <dd class="font-medium text-gray-900">{{ $siswa->no_telpon_wali }}</dd>
+                                    </div>
+                                </dl>
+                            </div>
+                        @else
+                            <div class="grid grid-cols-2 gap-6 text-sm">
+                                <!-- Ayah -->
+                                <div class="space-y-2">
+                                    <h4 class="font-semibold text-primary-800">Ayah</h4>
+                                    <div>
+                                        <p class="text-gray-500 text-xs">Nama Lengkap</p>
+                                        <p class="font-medium text-gray-900">{{ $siswa->nama_ayah }}</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-gray-500 text-xs">Pendidikan</p>
+                                        <p class="font-medium text-gray-900">{{ $siswa->pendidikan_ayah }}</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-gray-500 text-xs">Pekerjaan</p>
+                                        <p class="font-medium text-gray-900">{{ $siswa->pekerjaan_ayah }}</p>
+                                    </div>
                                 </div>
-                                <div>
-                                    <p class="text-gray-500 text-xs">Pendidikan</p>
-                                    <p class="font-medium text-gray-900">{{ $siswa->pendidikan_ayah }}</p>
-                                </div>
-                                <div>
-                                    <p class="text-gray-500 text-xs">Pekerjaan</p>
-                                    <p class="font-medium text-gray-900">{{ $siswa->pekerjaan_ayah }}</p>
+                                <!-- Ibu -->
+                                <div class="space-y-2">
+                                    <h4 class="font-semibold text-primary-800">Ibu</h4>
+                                    <div>
+                                        <p class="text-gray-500 text-xs">Nama Lengkap</p>
+                                        <p class="font-medium text-gray-900">{{ $siswa->nama_ibu }}</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-gray-500 text-xs">Pendidikan</p>
+                                        <p class="font-medium text-gray-900">{{ $siswa->pendidikan_ibu }}</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-gray-500 text-xs">Pekerjaan</p>
+                                        <p class="font-medium text-gray-900">{{ $siswa->pekerjaan_ibu }}</p>
+                                    </div>
                                 </div>
                             </div>
-                            <!-- Ibu -->
-                            <div class="space-y-2">
-                                <h4 class="font-semibold text-primary-800">Ibu</h4>
-                                <div>
-                                    <p class="text-gray-500 text-xs">Nama Lengkap</p>
-                                    <p class="font-medium text-gray-900">{{ $siswa->nama_ibu }}</p>
-                                </div>
-                                <div>
-                                    <p class="text-gray-500 text-xs">Pendidikan</p>
-                                    <p class="font-medium text-gray-900">{{ $siswa->pendidikan_ibu }}</p>
-                                </div>
-                                <div>
-                                    <p class="text-gray-500 text-xs">Pekerjaan</p>
-                                    <p class="font-medium text-gray-900">{{ $siswa->pekerjaan_ibu }}</p>
-                                </div>
-                            </div>
-                        </div>
+                        @endif
                     </div>
 
                     <!-- Dokumen Terlampir -->
@@ -174,19 +206,41 @@
                         <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2 border-b border-gray-100 pb-2">
                             <i data-lucide="folder" class="w-5 h-5 text-primary-600"></i> Dokumen Terlampir
                         </h3>
-                        <div class="flex gap-4">
+                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
                             @if($siswa->foto_kk)
-                            <a href="{{ route('dokumen.show', ['siswa' => $siswa, 'field' => 'foto_kk']) }}" target="_blank" class="flex-1 flex flex-col items-center justify-center p-4 rounded-xl border border-gray-200 bg-white hover:bg-gray-50 hover:border-primary-300 transition-colors group">
+                            <a href="{{ route('dokumen.show', ['siswa' => $siswa, 'field' => 'foto_kk']) }}" target="_blank" class="flex flex-col items-center justify-center p-4 rounded-xl border border-gray-200 bg-white hover:bg-gray-50 hover:border-primary-300 transition-colors group">
                                 <i data-lucide="file-text" class="w-8 h-8 text-gray-400 group-hover:text-primary-600 mb-2 transition-colors"></i>
-                                <span class="text-sm font-medium text-gray-700 group-hover:text-primary-700">Kartu Keluarga</span>
+                                <span class="text-xs font-medium text-gray-700 group-hover:text-primary-700 text-center">Kartu Keluarga</span>
                             </a>
                             @endif
 
                             @if($siswa->foto_akta)
-                            <a href="{{ route('dokumen.show', ['siswa' => $siswa, 'field' => 'foto_akta']) }}" target="_blank" class="flex-1 flex flex-col items-center justify-center p-4 rounded-xl border border-gray-200 bg-white hover:bg-gray-50 hover:border-primary-300 transition-colors group">
+                            <a href="{{ route('dokumen.show', ['siswa' => $siswa, 'field' => 'foto_akta']) }}" target="_blank" class="flex flex-col items-center justify-center p-4 rounded-xl border border-gray-200 bg-white hover:bg-gray-50 hover:border-primary-300 transition-colors group">
                                 <i data-lucide="file-badge-2" class="w-8 h-8 text-gray-400 group-hover:text-primary-600 mb-2 transition-colors"></i>
-                                <span class="text-sm font-medium text-gray-700 group-hover:text-primary-700">Akta Kelahiran</span>
+                                <span class="text-xs font-medium text-gray-700 group-hover:text-primary-700 text-center">Akta Kelahiran</span>
                             </a>
+                            @endif
+
+                            @if($siswa->tinggal_bersama === 'orang_tua')
+                                @if($siswa->foto_ktp_ayah)
+                                <a href="{{ route('dokumen.show', ['siswa' => $siswa, 'field' => 'foto_ktp_ayah']) }}" target="_blank" class="flex flex-col items-center justify-center p-4 rounded-xl border border-gray-200 bg-white hover:bg-gray-50 hover:border-primary-300 transition-colors group">
+                                    <i data-lucide="file-digit" class="w-8 h-8 text-gray-400 group-hover:text-primary-600 mb-2 transition-colors"></i>
+                                    <span class="text-xs font-medium text-gray-700 group-hover:text-primary-700 text-center">KTP Ayah</span>
+                                </a>
+                                @endif
+                                @if($siswa->foto_ktp_ibu)
+                                <a href="{{ route('dokumen.show', ['siswa' => $siswa, 'field' => 'foto_ktp_ibu']) }}" target="_blank" class="flex flex-col items-center justify-center p-4 rounded-xl border border-gray-200 bg-white hover:bg-gray-50 hover:border-primary-300 transition-colors group">
+                                    <i data-lucide="file-digit" class="w-8 h-8 text-gray-400 group-hover:text-primary-600 mb-2 transition-colors"></i>
+                                    <span class="text-xs font-medium text-gray-700 group-hover:text-primary-700 text-center">KTP Ibu</span>
+                                </a>
+                                @endif
+                            @elseif($siswa->tinggal_bersama === 'wali')
+                                @if($siswa->foto_ktp_wali)
+                                <a href="{{ route('dokumen.show', ['siswa' => $siswa, 'field' => 'foto_ktp_wali']) }}" target="_blank" class="flex flex-col items-center justify-center p-4 rounded-xl border border-gray-200 bg-white hover:bg-gray-50 hover:border-primary-300 transition-colors group">
+                                    <i data-lucide="file-digit" class="w-8 h-8 text-gray-400 group-hover:text-primary-600 mb-2 transition-colors"></i>
+                                    <span class="text-xs font-medium text-gray-700 group-hover:text-primary-700 text-center">KTP Wali</span>
+                                </a>
+                                @endif
                             @endif
                         </div>
                     </div>

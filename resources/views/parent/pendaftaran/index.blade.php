@@ -54,7 +54,34 @@
                         Kuota: {{ $p->kuota }} Siswa (Sisa Kuota: {{ $p->sisa_kuota }} - Ditutup {{ \Carbon\Carbon::parse($p->tanggal_selesai)->translatedFormat('d F Y') }})
                     </div>
                 </div>
-                <div class="mt-auto pt-4">
+                @php
+                    $calc = app(\App\Services\StudentGroupRecommendationService::class)->calculate($siswa->tanggal_lahir, $p->tahun_ajaran);
+                    $recText = match($calc['kelompok_rekomendasi']) {
+                        'A' => 'Kelompok A',
+                        'B' => 'Kelompok B',
+                        default => 'Perlu Konfirmasi Admin',
+                    };
+                    $recBadgeColor = match($calc['kelompok_rekomendasi']) {
+                        'A' => 'bg-blue-50 text-blue-700 dark:bg-blue-500/10 dark:text-blue-400',
+                        'B' => 'bg-indigo-50 text-indigo-700 dark:bg-indigo-500/10 dark:text-indigo-400',
+                        default => 'bg-amber-50 text-amber-700 dark:bg-amber-500/10 dark:text-amber-400',
+                    };
+                @endphp
+                <div class="mb-4 bg-gray-50 dark:bg-[#232333]/50 p-3 rounded-lg border border-gray-100 dark:border-gray-800 text-xs space-y-1">
+                    <div class="flex justify-between">
+                        <span class="text-[#a1b0cb]">Tanggal Lahir:</span>
+                        <span class="font-medium text-[#566a7f] dark:text-[#d5d5e2]">{{ \Carbon\Carbon::parse($siswa->tanggal_lahir)->translatedFormat('d F Y') }}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-[#a1b0cb]">Usia per 1 Juli {{ explode('/', $p->tahun_ajaran)[0] }}:</span>
+                        <span class="font-medium text-[#566a7f] dark:text-[#d5d5e2]">{{ $calc['usia_manusia'] }} ({{ $calc['usia_bulan'] }} bln)</span>
+                    </div>
+                    <div class="flex justify-between items-center pt-1 border-t border-dashed border-gray-200 dark:border-gray-700">
+                        <span class="text-[#a1b0cb]">Rekomendasi Kelompok:</span>
+                        <span class="px-2 py-0.5 rounded font-semibold {{ $recBadgeColor }}">{{ $recText }}</span>
+                    </div>
+                </div>
+                <div class="mt-auto pt-2">
                     @if($p->status === 'buka')
                         @if($isAccepted)
                             <button disabled class="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-[#f5f5f9] dark:bg-[#232333] text-[#a1b0cb] font-semibold rounded-md cursor-not-allowed text-sm"><i data-lucide="check" class="w-4 h-4 flex-shrink-0"></i> Anak Sudah Diterima</button>

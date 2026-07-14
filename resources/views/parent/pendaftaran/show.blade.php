@@ -57,6 +57,42 @@
                     {{ $siswa->nama }} sudah memiliki pendaftaran aktif. Pantau prosesnya pada halaman status pendaftaran.
                 </div>
             @elseif($pendaftaran->is_bisa_dipilih)
+                @php
+                    $calc = app(\App\Services\StudentGroupRecommendationService::class)->calculate($siswa->tanggal_lahir, $pendaftaran->tahun_ajaran);
+                    $recText = match($calc['kelompok_rekomendasi']) {
+                        'A' => 'Kelompok A',
+                        'B' => 'Kelompok B',
+                        default => 'Perlu Konfirmasi Admin',
+                    };
+                    $recBadgeColor = match($calc['kelompok_rekomendasi']) {
+                        'A' => 'bg-blue-50 text-blue-700 dark:bg-blue-500/10 dark:text-blue-400',
+                        'B' => 'bg-indigo-50 text-indigo-700 dark:bg-indigo-500/10 dark:text-indigo-400',
+                        default => 'bg-amber-50 text-amber-700 dark:bg-amber-500/10 dark:text-amber-400',
+                    };
+                @endphp
+                <div class="mb-5 bg-[#f5f5f9] dark:bg-[#232333] p-4 rounded-lg border border-[#d9dee3] dark:border-[#434463] text-sm space-y-2">
+                    <h4 class="font-bold text-[#566a7f] dark:text-[#d5d5e2] flex items-center gap-2"><i data-lucide="info" class="w-4 h-4 text-[#696cff]"></i> Preview Kriteria Usia Calon Siswa</h4>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 text-xs">
+                        <div>
+                            <span class="text-[#a1b0cb] block">Tanggal Lahir:</span>
+                            <span class="font-semibold text-[#566a7f] dark:text-[#d5d5e2]">{{ \Carbon\Carbon::parse($siswa->tanggal_lahir)->translatedFormat('d F Y') }}</span>
+                        </div>
+                        <div>
+                            <span class="text-[#a1b0cb] block">Tanggal Acuan (1 Juli {{ explode('/', $pendaftaran->tahun_ajaran)[0] }}):</span>
+                            <span class="font-semibold text-[#566a7f] dark:text-[#d5d5e2]">{{ \Carbon\Carbon::parse($calc['tanggal_acuan'])->translatedFormat('d F Y') }}</span>
+                        </div>
+                        <div>
+                            <span class="text-[#a1b0cb] block">Usia Saat Acuan:</span>
+                            <span class="font-semibold text-[#566a7f] dark:text-[#d5d5e2]">{{ $calc['usia_manusia'] }} ({{ $calc['usia_bulan'] }} bulan)</span>
+                        </div>
+                        <div>
+                            <span class="text-[#a1b0cb] block">Rekomendasi Kelompok:</span>
+                            <span class="inline-block mt-0.5 px-2 py-0.5 rounded font-semibold {{ $recBadgeColor }}">{{ $recText }}</span>
+                        </div>
+                    </div>
+                    <p class="text-xs text-gray-500 mt-2 font-medium italic">* Rekomendasi kelompok ini merupakan perhitungan otomatis berdasarkan tanggal lahir. Pihak sekolah (Admin) akan mengonfirmasi kelompok final setelah observasi.</p>
+                </div>
+
                 <form action="{{ route('parent.siswa.pendaftaran.daftar', ['siswa' => $siswa, 'pendaftaran' => $pendaftaran]) }}" method="POST" class="space-y-4">
                     @csrf
                     <label for="data_declaration" class="flex cursor-pointer items-start gap-3 text-sm leading-6 text-[#697a8d] dark:text-[#a1b0cb]">

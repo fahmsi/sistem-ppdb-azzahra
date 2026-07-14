@@ -222,8 +222,6 @@ class SiswaController extends Controller
             "Super admin menghapus permanen data siswa: {$siswa->nama}"
         );
 
-        $this->deleteStoredDocuments($siswa);
-
         $siswa->forceDelete();
 
         return redirect()->route('admin.siswa.trash')
@@ -273,6 +271,18 @@ class SiswaController extends Controller
 
         if ($siswa->foto_akta) {
             Storage::disk('local')->delete($siswa->foto_akta);
+        }
+
+        if ($siswa->foto_ktp_ayah) {
+            Storage::disk('local')->delete($siswa->foto_ktp_ayah);
+        }
+
+        if ($siswa->foto_ktp_ibu) {
+            Storage::disk('local')->delete($siswa->foto_ktp_ibu);
+        }
+
+        if ($siswa->foto_ktp_wali) {
+            Storage::disk('local')->delete($siswa->foto_ktp_wali);
         }
     }
 

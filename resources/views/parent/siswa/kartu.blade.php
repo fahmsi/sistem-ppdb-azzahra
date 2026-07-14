@@ -99,6 +99,35 @@
                                     {{ \Carbon\Carbon::parse($siswa->tanggal_lahir)->translatedFormat('d F Y') }}
                                 </td>
                             </tr>
+                            <tr class="border-b border-gray-100">
+                                <th class="py-3 px-2 text-sm font-semibold text-gray-500">Usia (per 1 Juli)</th>
+                                <td class="py-3 px-2 font-medium text-gray-800">
+                                    @if($registration->usia_bulan_saat_acuan !== null)
+                                        @php
+                                            $years = (int) floor($registration->usia_bulan_saat_acuan / 12);
+                                            $remainingMonths = (int) ($registration->usia_bulan_saat_acuan % 12);
+                                        @endphp
+                                        {{ $years }} tahun {{ $remainingMonths }} bulan
+                                    @else
+                                        -
+                                    @endif
+                                </td>
+                            </tr>
+                            <tr class="border-b border-gray-100">
+                                <th class="py-3 px-2 text-sm font-semibold text-gray-500">Kelompok Belajar</th>
+                                <td class="py-3 px-2 font-bold text-primary-700">
+                                    Kelompok {{ $registration->kelompok_final ?? $registration->kelompok_rekomendasi ?? 'Perlu Konfirmasi' }}
+                                </td>
+                            </tr>
+                            <tr class="border-b border-gray-100">
+                                <th class="py-3 px-2 text-sm font-semibold text-gray-500">Tinggal Bersama</th>
+                                <td class="py-3 px-2 font-medium text-gray-800">
+                                    {{ $siswa->tinggal_bersama === 'wali' ? 'Wali' : 'Orang Tua' }}
+                                    @if($siswa->tinggal_bersama === 'wali')
+                                        ({{ $siswa->nama_wali }})
+                                    @endif
+                                </td>
+                            </tr>
                             <tr>
                                 <th class="py-3 px-2 text-sm font-semibold text-gray-500">Status Validasi</th>
                                 <td class="py-3 px-2">

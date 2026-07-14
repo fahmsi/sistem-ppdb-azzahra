@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Storage;
 
 class Siswa extends Model
 {
@@ -18,6 +19,10 @@ class Siswa extends Model
     public const INPUT_SOURCE_ONLINE = 'online';
 
     public const INPUT_SOURCE_MANUAL_ADMIN = 'manual_admin';
+
+    public const TINGGAL_BERSAMA_ORANG_TUA = 'orang_tua';
+
+    public const TINGGAL_BERSAMA_WALI = 'wali';
 
     /**
      * The attributes that are mass assignable.
@@ -64,10 +69,29 @@ class Siswa extends Model
         'foto',
         'foto_kk',
         'foto_akta',
+        'tinggal_bersama',
+        'nama_wali',
+        'nik_wali',
+        'hubungan_wali',
+        'no_telpon_wali',
+        'foto_ktp_ayah',
+        'foto_ktp_ibu',
+        'foto_ktp_wali',
         'created_by_admin_id',
         'input_source',
         'deleted_by',
         'deleted_reason',
+    ];
+
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
+    protected $casts = [
+        'tanggal_lahir' => 'date',
+        'tanggal_lahir_ayah' => 'date',
+        'tanggal_lahir_ibu' => 'date',
     ];
 
     /**
@@ -113,5 +137,51 @@ class Siswa extends Model
             'siswa_id',
             'pendaftaran_id'
         )->withPivot('no_pendaftaran', 'status', 'notifikasi')->withTimestamps();
+    }
+
+    /**
+     * Boot the model.
+     */
+    protected static function booted()
+    {
+        static::forceDeleted(function (Siswa $siswa) {
+            foreach (['foto', 'foto_kk', 'foto_akta', 'foto_ktp_ayah', 'foto_ktp_ibu', 'foto_ktp_wali'] as $field) {
+                if ($siswa->{$field}) {
+                    $disk = ($field === 'foto') ? 'public' : 'local';
+                    Storage::disk($disk)->delete($siswa->{$field});
+                }
+            }
+        });
+
+        static::updated(function (Siswa $siswa) {
+            if ($siswa->wasChanged('tanggal_lahir')) {
+                // Find registrations with status pending, menunggu_verifikasi, perlu_revisi
+                $details = $siswa->pendaftaranDetails()
+                    ->whereIn('status', [
+                        PendaftaranDetail::STATUS_PENDING,
+                        PendaftaranDetail::STATUS_MENUNGGU_VERIFIKASI,
+                        PendaftaranDetail::STATUS_PERLU_REVISI,
+                    ])
+                    ->get();
+
+                if ($details->isNotEmpty()) {
+                    $service = app(\App\Services\StudentGroupRecommendationService::class);
+                    foreach ($details as $detail) {
+                        $detail->load('pendaftaran');
+                        if ($detail->pendaftaran) {
+                            $calc = $service->calculate($siswa->tanggal_lahir, $detail->pendaftaran->tahun_ajaran);
+                            $detail->update([
+                                'tanggal_acuan_usia' => $calc['tanggal_acuan'],
+                                'usia_bulan_saat_acuan' => $calc['usia_bulan'],
+                                'kelompok_rekomendasi' => $calc['kelompok_rekomendasi'],
+                                'kelompok_final' => null,
+                                'kelompok_ditetapkan_oleh' => null,
+                                'kelompok_ditetapkan_at' => null,
+                            ]);
+                        }
+                    }
+                }
+            }
+        });
     }
 }

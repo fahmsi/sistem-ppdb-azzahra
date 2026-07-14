@@ -23,18 +23,37 @@ class PendaftaranDetail extends Model
 
     public const STATUS_PERLU_REVISI = 'perlu_revisi';
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var list<string>
-     */
     protected $fillable = [
         'siswa_id',
         'pendaftaran_id',
         'no_pendaftaran',
         'status',
         'notifikasi',
+        'tanggal_acuan_usia',
+        'usia_bulan_saat_acuan',
+        'kelompok_rekomendasi',
+        'kelompok_final',
+        'kelompok_ditetapkan_oleh',
+        'kelompok_ditetapkan_at',
     ];
+
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
+    protected $casts = [
+        'tanggal_acuan_usia' => 'date',
+        'kelompok_ditetapkan_at' => 'datetime',
+    ];
+
+    /**
+     * User who set the final group.
+     */
+    public function kelompokDitetapkanOleh(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'kelompok_ditetapkan_oleh');
+    }
 
     /**
      * The Siswa this detail belongs to.
