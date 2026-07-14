@@ -425,6 +425,37 @@
                                         <h5 class="mb-1 text-sm font-medium text-gray-500 dark:text-[#a1b0cb]">Nama Anak</h5>
                                         <p class="font-medium text-gray-900 dark:text-[#d5d5e2]">{{ $reg->siswa->nama ?? '-' }}</p>
                                     </div>
+                                    <div>
+                                        <h5 class="mb-1 text-sm font-medium text-gray-500 dark:text-[#a1b0cb]">Usia Saat Acuan</h5>
+                                        <p class="font-medium text-gray-900 dark:text-[#d5d5e2]">
+                                            @if($reg->usia_bulan_saat_acuan !== null)
+                                                @php
+                                                    $years = (int) floor($reg->usia_bulan_saat_acuan / 12);
+                                                    $remainingMonths = (int) ($reg->usia_bulan_saat_acuan % 12);
+                                                    $ageStr = "{$years} tahun {$remainingMonths} bulan";
+                                                    $recGroup = match($reg->kelompok_rekomendasi) {
+                                                        'A' => 'Kelompok A',
+                                                        'B' => 'Kelompok B',
+                                                        default => 'Perlu Konfirmasi',
+                                                    };
+                                                @endphp
+                                                {{ $ageStr }} (per 1 Juli {{ \Carbon\Carbon::parse($reg->tanggal_acuan_usia)->format('Y') }})
+                                                <span class="inline-block ml-2 px-2 py-0.5 rounded text-xs font-semibold bg-blue-50 text-blue-700 dark:bg-blue-500/10 dark:text-blue-400">Rekomendasi: {{ $recGroup }}</span>
+                                            @else
+                                                -
+                                            @endif
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <h5 class="mb-1 text-sm font-medium text-gray-500 dark:text-[#a1b0cb]">Kelompok Final (Ditetapkan Sekolah)</h5>
+                                        <p class="font-medium text-gray-900 dark:text-[#d5d5e2]">
+                                            @if($reg->kelompok_final)
+                                                <span class="inline-block px-3 py-1 rounded-md text-sm font-bold bg-green-50 text-green-700 dark:bg-green-500/10 dark:text-green-400">Kelompok {{ $reg->kelompok_final }}</span>
+                                            @else
+                                                <span class="inline-block px-3 py-1 rounded-md text-sm font-medium bg-amber-50 text-amber-700 dark:bg-amber-500/10 dark:text-amber-400">Menunggu Observasi / Verifikasi Admin</span>
+                                            @endif
+                                        </p>
+                                    </div>
                                 </div>
 
                                 @if($reg->notifikasi)

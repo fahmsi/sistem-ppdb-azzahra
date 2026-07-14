@@ -189,14 +189,31 @@
                 </div>
             </div>
 
-            <!-- Section 3: Data Orang Tua -->
+            <!-- Section 3: Data Orang Tua / Wali -->
             <div class="mb-12">
                 <h3 class="text-lg font-semibold text-gray-800 border-b border-gray-200 pb-3 mb-6 flex items-center gap-2">
-                    <i data-lucide="users" class="w-5 h-5 text-primary-600"></i> 3. Data Orang Tua
+                    <i data-lucide="users" class="w-5 h-5 text-primary-600"></i> 3. Data Orang Tua / Wali
                 </h3>
 
+                <div class="mb-6 bg-primary-50/50 p-5 rounded-xl border border-primary-100 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-800 mb-1">Anak Tinggal Bersama <span class="text-red-500">*</span></label>
+                        <p class="text-xs text-gray-500">Tentukan apakah anak tinggal bersama orang tua kandung atau wali.</p>
+                    </div>
+                    <div class="flex items-center gap-6">
+                        <label class="inline-flex items-center cursor-pointer">
+                            <input type="radio" name="tinggal_bersama" value="orang_tua" {{ old('tinggal_bersama', 'orang_tua') === 'orang_tua' ? 'checked' : '' }} class="form-radio text-primary-600 focus:ring-primary-500 h-5 w-5">
+                            <span class="ml-2 text-sm font-medium text-gray-700">Orang Tua</span>
+                        </label>
+                        <label class="inline-flex items-center cursor-pointer">
+                            <input type="radio" name="tinggal_bersama" value="wali" {{ old('tinggal_bersama') === 'wali' ? 'checked' : '' }} class="form-radio text-primary-600 focus:ring-primary-500 h-5 w-5">
+                            <span class="ml-2 text-sm font-medium text-gray-700">Wali</span>
+                        </label>
+                    </div>
+                    @error('tinggal_bersama') <p class="mt-1 text-sm text-red-500">{{ $message }}</p> @enderror
+                </div>
+
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
-                    
                     <!-- KK Info -->
                     <div class="md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6 bg-gray-50 p-5 rounded-xl border border-gray-200 mb-4">
                         <div>
@@ -211,7 +228,10 @@
                             @error('kepala_keluarga') <p class="mt-1 text-sm text-red-500">{{ $message }}</p> @enderror
                         </div>
                     </div>
+                </div>
 
+                <!-- Section Orang Tua (Ayah & Ibu) -->
+                <div id="section-orang-tua" class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6 mt-6">
                     <!-- Ayah -->
                     <div class="space-y-5 bg-white p-5 rounded-xl border border-gray-100 shadow-sm">
                         <h4 class="font-medium text-primary-800 flex items-center gap-2 pb-2 border-b border-gray-100"><i data-lucide="user" class="w-4 h-4 text-primary-500"></i> Data Ayah</h4>
@@ -373,6 +393,32 @@
                             </select>
                             <input type="text" name="penghasilan_ibu_lainnya" value="{{ old('penghasilan_ibu_lainnya') }}" class="hidden mt-2 w-full rounded-lg border-gray-300 focus:ring-primary-500 focus:border-primary-500" placeholder="Sebutkan penghasilan ibu lainnya...">
                             @error('penghasilan_ibu') <p class="mt-1 text-sm text-red-500">{{ $message }}</p> @enderror
+                    </div>
+                </div>
+
+                <!-- Section Wali -->
+                <div id="section-wali" class="mt-6 space-y-5 bg-white p-5 rounded-xl border border-gray-100 shadow-sm" style="display: none;">
+                    <h4 class="font-medium text-primary-800 flex items-center gap-2 pb-2 border-b border-gray-100"><i data-lucide="user-check" class="w-4 h-4 text-primary-500"></i> Identitas Wali Anak</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm text-gray-700 mb-1">Nama Wali <span class="text-red-500">*</span></label>
+                            <input type="text" name="nama_wali" value="{{ old('nama_wali') }}" class="w-full rounded-lg border-gray-300 focus:ring-primary-500 focus:border-primary-500 @error('nama_wali') border-red-500 @enderror">
+                            @error('nama_wali') <p class="mt-1 text-sm text-red-500">{{ $message }}</p> @enderror
+                        </div>
+                        <div>
+                            <label class="block text-sm text-gray-700 mb-1">NIK Wali <span class="text-red-500">*</span></label>
+                            <input type="text" name="nik_wali" id="nik_wali" value="{{ old('nik_wali') }}" maxlength="16" class="w-full rounded-lg border-gray-300 focus:ring-primary-500 focus:border-primary-500 @error('nik_wali') border-red-500 @enderror">
+                            @error('nik_wali') <p class="mt-1 text-sm text-red-500">{{ $message }}</p> @enderror
+                        </div>
+                        <div>
+                            <label class="block text-sm text-gray-700 mb-1">Hubungan dengan Anak <span class="text-red-500">*</span></label>
+                            <input type="text" name="hubungan_wali" value="{{ old('hubungan_wali') }}" placeholder="Contoh: Paman, Bibi, Kakek" class="w-full rounded-lg border-gray-300 focus:ring-primary-500 focus:border-primary-500 @error('hubungan_wali') border-red-500 @enderror">
+                            @error('hubungan_wali') <p class="mt-1 text-sm text-red-500">{{ $message }}</p> @enderror
+                        </div>
+                        <div>
+                            <label class="block text-sm text-gray-700 mb-1">Nomor WhatsApp Wali <span class="text-red-500">*</span></label>
+                            <input type="text" name="no_telpon_wali" value="{{ old('no_telpon_wali') }}" placeholder="Contoh: 08123456789" class="w-full rounded-lg border-gray-300 focus:ring-primary-500 focus:border-primary-500 @error('no_telpon_wali') border-red-500 @enderror">
+                            @error('no_telpon_wali') <p class="mt-1 text-sm text-red-500">{{ $message }}</p> @enderror
                         </div>
                     </div>
                 </div>
@@ -422,6 +468,45 @@
                             <p id="preview-akta" class="text-xs font-semibold text-secondary-600 mt-3 truncate"></p>
                         </div>
                         @error('foto_akta') <p class="mt-1 text-sm text-red-500">{{ $message }}</p> @enderror
+                    </div>
+
+                    <!-- KTP Ayah -->
+                    <div class="ktp-orang-tua-field">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Foto KTP Ayah <span class="text-red-500">*</span></label>
+                        <div class="relative border-2 border-dashed border-gray-300 rounded-xl bg-gray-50 hover:bg-gray-100 hover:border-primary-400 transition-colors cursor-pointer group p-6 text-center">
+                            <input type="file" name="foto_ktp_ayah" accept="image/jpeg,image/png,image/jpg" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" onchange="previewFile(this, 'preview-ktp-ayah')">
+                            <i data-lucide="file-digit" class="w-10 h-10 text-gray-400 mx-auto mb-3 group-hover:text-primary-500 transition-colors"></i>
+                            <p class="text-sm font-medium text-primary-600">Klik atau Drop file</p>
+                            <p class="text-xs text-gray-500 mt-1">Format: JPG, PNG (Max 2MB)</p>
+                            <p id="preview-ktp-ayah" class="text-xs font-semibold text-secondary-600 mt-3 truncate"></p>
+                        </div>
+                        @error('foto_ktp_ayah') <p class="mt-1 text-sm text-red-500">{{ $message }}</p> @enderror
+                    </div>
+
+                    <!-- KTP Ibu -->
+                    <div class="ktp-orang-tua-field">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Foto KTP Ibu <span class="text-red-500">*</span></label>
+                        <div class="relative border-2 border-dashed border-gray-300 rounded-xl bg-gray-50 hover:bg-gray-100 hover:border-primary-400 transition-colors cursor-pointer group p-6 text-center">
+                            <input type="file" name="foto_ktp_ibu" accept="image/jpeg,image/png,image/jpg" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" onchange="previewFile(this, 'preview-ktp-ibu')">
+                            <i data-lucide="file-digit" class="w-10 h-10 text-gray-400 mx-auto mb-3 group-hover:text-primary-500 transition-colors"></i>
+                            <p class="text-sm font-medium text-primary-600">Klik atau Drop file</p>
+                            <p class="text-xs text-gray-500 mt-1">Format: JPG, PNG (Max 2MB)</p>
+                            <p id="preview-ktp-ibu" class="text-xs font-semibold text-secondary-600 mt-3 truncate"></p>
+                        </div>
+                        @error('foto_ktp_ibu') <p class="mt-1 text-sm text-red-500">{{ $message }}</p> @enderror
+                    </div>
+
+                    <!-- KTP Wali -->
+                    <div class="ktp-wali-field" style="display: none;">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Foto KTP Wali <span class="text-red-500">*</span></label>
+                        <div class="relative border-2 border-dashed border-gray-300 rounded-xl bg-gray-50 hover:bg-gray-100 hover:border-primary-400 transition-colors cursor-pointer group p-6 text-center">
+                            <input type="file" name="foto_ktp_wali" accept="image/jpeg,image/png,image/jpg" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" onchange="previewFile(this, 'preview-ktp-wali')">
+                            <i data-lucide="file-digit" class="w-10 h-10 text-gray-400 mx-auto mb-3 group-hover:text-primary-500 transition-colors"></i>
+                            <p class="text-sm font-medium text-primary-600">Klik atau Drop file</p>
+                            <p class="text-xs text-gray-500 mt-1">Format: JPG, PNG (Max 2MB)</p>
+                            <p id="preview-ktp-wali" class="text-xs font-semibold text-secondary-600 mt-3 truncate"></p>
+                        </div>
+                        @error('foto_ktp_wali') <p class="mt-1 text-sm text-red-500">{{ $message }}</p> @enderror
                     </div>
                 </div>
             </div>
@@ -605,6 +690,35 @@
                 }
             }
         });
+        // =============================================
+        // Living Arrangements (Tinggal Bersama) Toggle
+        // =============================================
+        const radioOrangTua = document.querySelector('input[name="tinggal_bersama"][value="orang_tua"]');
+        const radioWali = document.querySelector('input[name="tinggal_bersama"][value="wali"]');
+        const sectionOrangTua = document.getElementById('section-orang-tua');
+        const sectionWali = document.getElementById('section-wali');
+        const ktpOrangTuaFields = document.querySelectorAll('.ktp-orang-tua-field');
+        const ktpWaliField = document.querySelector('.ktp-wali-field');
+
+        function toggleTinggalBersama() {
+            const isOrangTua = radioOrangTua && radioOrangTua.checked;
+            if (isOrangTua) {
+                if (sectionOrangTua) sectionOrangTua.style.display = 'grid';
+                if (sectionWali) sectionWali.style.display = 'none';
+                ktpOrangTuaFields.forEach(el => el.style.display = 'block');
+                if (ktpWaliField) ktpWaliField.style.display = 'none';
+            } else {
+                if (sectionOrangTua) sectionOrangTua.style.display = 'none';
+                if (sectionWali) sectionWali.style.display = 'block';
+                ktpOrangTuaFields.forEach(el => el.style.display = 'none');
+                if (ktpWaliField) ktpWaliField.style.display = 'block';
+            }
+        }
+
+        if (radioOrangTua) radioOrangTua.addEventListener('change', toggleTinggalBersama);
+        if (radioWali) radioWali.addEventListener('change', toggleTinggalBersama);
+
+        toggleTinggalBersama(); // run on load
     });
 </script>
 @endsection

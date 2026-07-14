@@ -4,11 +4,11 @@ namespace App\Http\Requests\Concerns;
 
 trait SiswaValidationRules
 {
-    protected function siswaRules(bool $documentsRequired): array
+    protected function siswaRules(bool $documentsRequired, bool $isStore = true): array
     {
         $documentPresence = $documentsRequired ? 'required' : 'nullable';
 
-        return [
+        $rules = [
             'nama' => ['required', 'string', 'max:255'],
             'nama_panggilan' => ['required', 'string', 'max:50'],
             'nisn' => ['nullable', 'string', 'max:20'],
@@ -47,7 +47,77 @@ trait SiswaValidationRules
             'foto' => [$documentPresence, 'image', 'mimes:jpg,jpeg,png', 'max:2048'],
             'foto_kk' => [$documentPresence, 'image', 'mimes:jpg,jpeg,png', 'max:2048'],
             'foto_akta' => [$documentPresence, 'image', 'mimes:jpg,jpeg,png', 'max:2048'],
+            'tinggal_bersama' => ['required', 'in:orang_tua,wali'],
         ];
+
+        // Conditional guardian details based on tinggal_bersama
+        if ($this->input('tinggal_bersama') === 'wali') {
+            $rules['nama_wali'] = ['required', 'string', 'max:255'];
+            $rules['nik_wali'] = ['required', 'numeric', 'digits:16'];
+            $rules['hubungan_wali'] = ['required', 'string', 'max:100'];
+            $rules['no_telpon_wali'] = ['required', 'string', 'max:20'];
+        } else {
+            $rules['nama_wali'] = ['nullable', 'string', 'max:255'];
+            $rules['nik_wali'] = ['nullable', 'numeric', 'digits:16'];
+            $rules['hubungan_wali'] = ['nullable', 'string', 'max:100'];
+            $rules['no_telpon_wali'] = ['nullable', 'string', 'max:20'];
+        }
+
+        // KTP Ayah
+        $ktpAyahRules = ['image', 'mimes:jpg,jpeg,png', 'max:2048'];
+        if ($this->input('tinggal_bersama') === 'orang_tua') {
+            if ($isStore) {
+                $ktpAyahRules[] = 'required';
+            } else {
+                $siswa = $this->route('siswa');
+                if (is_numeric($siswa)) {
+                    $siswa = \App\Models\Siswa::find($siswa);
+                }
+                $hasExisting = $siswa && $siswa->foto_ktp_ayah && $siswa->tinggal_bersama === 'orang_tua';
+                $ktpAyahRules[] = $hasExisting ? 'nullable' : 'required';
+            }
+        } else {
+            $ktpAyahRules[] = 'nullable';
+        }
+        $rules['foto_ktp_ayah'] = $ktpAyahRules;
+
+        // KTP Ibu
+        $ktpIbuRules = ['image', 'mimes:jpg,jpeg,png', 'max:2048'];
+        if ($this->input('tinggal_bersama') === 'orang_tua') {
+            if ($isStore) {
+                $ktpIbuRules[] = 'required';
+            } else {
+                $siswa = $this->route('siswa');
+                if (is_numeric($siswa)) {
+                    $siswa = \App\Models\Siswa::find($siswa);
+                }
+                $hasExisting = $siswa && $siswa->foto_ktp_ibu && $siswa->tinggal_bersama === 'orang_tua';
+                $ktpIbuRules[] = $hasExisting ? 'nullable' : 'required';
+            }
+        } else {
+            $ktpIbuRules[] = 'nullable';
+        }
+        $rules['foto_ktp_ibu'] = $ktpIbuRules;
+
+        // KTP Wali
+        $ktpWaliRules = ['image', 'mimes:jpg,jpeg,png', 'max:2048'];
+        if ($this->input('tinggal_bersama') === 'wali') {
+            if ($isStore) {
+                $ktpWaliRules[] = 'required';
+            } else {
+                $siswa = $this->route('siswa');
+                if (is_numeric($siswa)) {
+                    $siswa = \App\Models\Siswa::find($siswa);
+                }
+                $hasExisting = $siswa && $siswa->foto_ktp_wali && $siswa->tinggal_bersama === 'wali';
+                $ktpWaliRules[] = $hasExisting ? 'nullable' : 'required';
+            }
+        } else {
+            $ktpWaliRules[] = 'nullable';
+        }
+        $rules['foto_ktp_wali'] = $ktpWaliRules;
+
+        return $rules;
     }
 
     protected function siswaAttributes(): array
@@ -79,6 +149,14 @@ trait SiswaValidationRules
             'foto' => 'foto anak',
             'foto_kk' => 'foto Kartu Keluarga',
             'foto_akta' => 'foto akta kelahiran',
+            'tinggal_bersama' => 'tinggal bersama',
+            'nama_wali' => 'nama wali',
+            'nik_wali' => 'NIK wali',
+            'hubungan_wali' => 'hubungan wali',
+            'no_telpon_wali' => 'nomor telepon wali',
+            'foto_ktp_ayah' => 'foto KTP ayah',
+            'foto_ktp_ibu' => 'foto KTP ibu',
+            'foto_ktp_wali' => 'foto KTP wali',
         ];
     }
 
@@ -149,6 +227,28 @@ trait SiswaValidationRules
             'foto_akta.image' => 'File akta kelahiran harus berupa gambar (JPG/PNG).',
             'foto_akta.mimes' => 'Format foto akta harus JPG atau PNG.',
             'foto_akta.max' => 'Ukuran foto akta terlalu besar (maks. 2 MB). Coba foto ulang atau perkecil ukuran file.',
+
+            // Living together and Wali
+            'tinggal_bersama.required' => 'Mohon pilih dengan siapa anak tinggal.',
+            'tinggal_bersama.in' => 'Pilihan tinggal bersama tidak valid.',
+            'nama_wali.required' => 'Mohon isi nama lengkap wali anak.',
+            'nik_wali.required' => 'Mohon isi NIK wali (16 digit sesuai KTP).',
+            'nik_wali.numeric' => 'NIK wali hanya boleh berisi angka.',
+            'nik_wali.digits' => 'NIK wali harus tepat 16 digit. Cek kembali KTP wali.',
+            'hubungan_wali.required' => 'Mohon isi hubungan wali dengan anak.',
+            'no_telpon_wali.required' => 'Mohon isi nomor telepon/WhatsApp wali yang bisa dihubungi.',
+            'foto_ktp_ayah.required' => 'Mohon unggah foto KTP ayah kandung.',
+            'foto_ktp_ayah.image' => 'File KTP ayah harus berupa gambar (JPG/PNG).',
+            'foto_ktp_ayah.mimes' => 'Format foto KTP ayah harus JPG atau PNG.',
+            'foto_ktp_ayah.max' => 'Ukuran foto KTP ayah terlalu besar (maks. 2 MB).',
+            'foto_ktp_ibu.required' => 'Mohon unggah foto KTP ibu kandung.',
+            'foto_ktp_ibu.image' => 'File KTP ibu harus berupa gambar (JPG/PNG).',
+            'foto_ktp_ibu.mimes' => 'Format foto KTP ibu harus JPG atau PNG.',
+            'foto_ktp_ibu.max' => 'Ukuran foto KTP ibu terlalu besar (maks. 2 MB).',
+            'foto_ktp_wali.required' => 'Mohon unggah foto KTP wali.',
+            'foto_ktp_wali.image' => 'File KTP wali harus berupa gambar (JPG/PNG).',
+            'foto_ktp_wali.mimes' => 'Format foto KTP wali harus JPG atau PNG.',
+            'foto_ktp_wali.max' => 'Ukuran foto KTP wali terlalu besar (maks. 2 MB).',
         ];
     }
 }

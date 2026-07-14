@@ -11,6 +11,7 @@ use App\Support\AuthorizesParentSiswa;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
 class SiswaController extends Controller
@@ -55,6 +56,17 @@ class SiswaController extends Controller
         $validated['foto_kk'] = $request->file('foto_kk')->store('siswa/kk', 'local');
         $validated['foto_akta'] = $request->file('foto_akta')->store('siswa/akta', 'local');
 
+        // Handle conditional KTP uploads
+        if ($validated['tinggal_bersama'] === 'orang_tua') {
+            $validated['foto_ktp_ayah'] = $request->file('foto_ktp_ayah')->store('siswa/ktp-ayah', 'local');
+            $validated['foto_ktp_ibu'] = $request->file('foto_ktp_ibu')->store('siswa/ktp-ibu', 'local');
+            $validated['foto_ktp_wali'] = null;
+        } else {
+            $validated['foto_ktp_ayah'] = null;
+            $validated['foto_ktp_ibu'] = null;
+            $validated['foto_ktp_wali'] = $request->file('foto_ktp_wali')->store('siswa/ktp-wali', 'local');
+        }
+
         // Link to authenticated user
         $validated['user_id'] = Auth::id();
         $validated['input_source'] = Siswa::INPUT_SOURCE_ONLINE;
@@ -97,33 +109,86 @@ class SiswaController extends Controller
         $this->authorizeParentSiswa($siswa);
 
         $validated = $request->validated();
+        $oldTinggalBersama = $siswa->tinggal_bersama;
 
-        // Handle optional file uploads — replace old file when new one is provided
-        foreach (['foto', 'foto_kk', 'foto_akta'] as $field) {
-            if ($request->hasFile($field)) {
-                // Delete old file
-                if ($siswa->{$field}) {
-                    $disk = $field === 'foto' ? 'public' : 'local';
-                    Storage::disk($disk)->delete($siswa->{$field});
+        $filesToDelete = [];
+        $newFilesToCleanUp = [];
+
+        try {
+            DB::transaction(function () use ($request, $siswa, &$validated, &$filesToDelete, &$newFilesToCleanUp, $oldTinggalBersama) {
+                // Handle optional file uploads — replace old file when new one is provided
+                foreach (['foto', 'foto_kk', 'foto_akta', 'foto_ktp_ayah', 'foto_ktp_ibu', 'foto_ktp_wali'] as $field) {
+                    if ($request->hasFile($field)) {
+                        $storePath = match ($field) {
+                            'foto' => 'siswa/foto',
+                            'foto_kk' => 'siswa/kk',
+                            'foto_akta' => 'siswa/akta',
+                            'foto_ktp_ayah' => 'siswa/ktp-ayah',
+                            'foto_ktp_ibu' => 'siswa/ktp-ibu',
+                            'foto_ktp_wali' => 'siswa/ktp-wali',
+                        };
+                        $disk = $field === 'foto' ? 'public' : 'local';
+
+                        // Store new file first
+                        $newPath = $request->file($field)->store($storePath, $disk);
+                        $newFilesToCleanUp[] = ['disk' => $disk, 'path' => $newPath];
+
+                        if ($siswa->{$field}) {
+                            $filesToDelete[] = ['disk' => $disk, 'path' => $siswa->{$field}];
+                        }
+
+                        $validated[$field] = $newPath;
+                    } else {
+                        unset($validated[$field]);
+                    }
                 }
-                $storePath = match ($field) {
-                    'foto' => 'siswa/foto',
-                    'foto_kk' => 'siswa/kk',
-                    'foto_akta' => 'siswa/akta',
-                };
-                $disk = $field === 'foto' ? 'public' : 'local';
-                $validated[$field] = $request->file($field)->store($storePath, $disk);
-            } else {
-                unset($validated[$field]);
+
+                $targetTinggalBersama = $validated['tinggal_bersama'] ?? $siswa->tinggal_bersama;
+                if ($oldTinggalBersama !== $targetTinggalBersama) {
+                    if ($targetTinggalBersama === 'wali') {
+                        // Queue deletion of KTP Ayah & Ibu
+                        if ($siswa->foto_ktp_ayah) {
+                            $filesToDelete[] = ['disk' => 'local', 'path' => $siswa->foto_ktp_ayah];
+                        }
+                        if ($siswa->foto_ktp_ibu) {
+                            $filesToDelete[] = ['disk' => 'local', 'path' => $siswa->foto_ktp_ibu];
+                        }
+                        $validated['foto_ktp_ayah'] = null;
+                        $validated['foto_ktp_ibu'] = null;
+                    } else {
+                        // Queue deletion of KTP Wali
+                        if ($siswa->foto_ktp_wali) {
+                            $filesToDelete[] = ['disk' => 'local', 'path' => $siswa->foto_ktp_wali];
+                        }
+                        $validated['foto_ktp_wali'] = null;
+                        $validated['nama_wali'] = null;
+                        $validated['nik_wali'] = null;
+                        $validated['hubungan_wali'] = null;
+                        $validated['no_telpon_wali'] = null;
+                    }
+                }
+
+                $siswa->update($validated);
+
+                // If there's a registration with status 'perlu_revisi', set it back to 'menunggu_verifikasi'
+                $siswa->pendaftaranDetails()
+                    ->where('status', \App\Models\PendaftaranDetail::STATUS_PERLU_REVISI)
+                    ->update(['status' => \App\Models\PendaftaranDetail::STATUS_MENUNGGU_VERIFIKASI]);
+
+                // Only delete old files after successful transaction commit
+                DB::afterCommit(function () use ($filesToDelete) {
+                    foreach ($filesToDelete as $file) {
+                        Storage::disk($file['disk'])->delete($file['path']);
+                    }
+                });
+            });
+        } catch (\Throwable $e) {
+            // Delete newly uploaded files since update failed
+            foreach ($newFilesToCleanUp as $file) {
+                Storage::disk($file['disk'])->delete($file['path']);
             }
+            throw $e;
         }
-
-        $siswa->update($validated);
-
-        // If there's a registration with status 'perlu_revisi', set it back to 'menunggu_verifikasi'
-        $siswa->pendaftaranDetails()
-            ->where('status', \App\Models\PendaftaranDetail::STATUS_PERLU_REVISI)
-            ->update(['status' => \App\Models\PendaftaranDetail::STATUS_MENUNGGU_VERIFIKASI]);
 
         return redirect()->route('parent.siswa.pendaftaran.status', $siswa)
             ->with('success', 'Data anak berhasil diperbarui. Status telah dikembalikan ke Menunggu Verifikasi.');
@@ -145,16 +210,13 @@ class SiswaController extends Controller
             return back()->with('error', 'Tidak dapat menghapus data anak karena masih ada pendaftaran aktif.');
         }
 
-        // Delete associated files
-        if ($siswa->foto) Storage::disk('public')->delete($siswa->foto);
-        if ($siswa->foto_kk) Storage::disk('local')->delete($siswa->foto_kk);
-        if ($siswa->foto_akta) Storage::disk('local')->delete($siswa->foto_akta);
-
         $nama = $siswa->nama;
 
-        // Delete all rejected registrations
-        $siswa->pendaftaranDetails()->delete();
-        $siswa->forceDelete();
+        // Delete all rejected registrations inside transaction
+        DB::transaction(function () use ($siswa) {
+            $siswa->pendaftaranDetails()->delete();
+            $siswa->forceDelete(); // triggers static::forceDeleted file cleanup event
+        });
 
         ActivityLog::log('deleted', null, "Orang tua menghapus data anak: {$nama}");
 

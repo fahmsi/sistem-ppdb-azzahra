@@ -261,4 +261,24 @@ class VerifikasiController extends Controller
         return Excel::download(new VerifikasiExport, $filenameBase . '.xlsx');
     }
 
+    public function setKelompok(Request $request, PendaftaranDetail $detail): RedirectResponse
+    {
+        $validated = $request->validate([
+            'kelompok_final' => ['required', 'in:A,B'],
+        ]);
+
+        $detail->update([
+            'kelompok_final' => $validated['kelompok_final'],
+            'kelompok_ditetapkan_oleh' => auth()->id(),
+            'kelompok_ditetapkan_at' => now(),
+        ]);
+
+        ActivityLog::log(
+            'group_assigned',
+            $detail,
+            "Admin menetapkan Kelompok final " . $validated['kelompok_final'] . " untuk pendaftaran " . $detail->nomor_pendaftaran
+        );
+
+        return back()->with('success', 'Kelompok final berhasil ditetapkan menjadi Kelompok ' . $validated['kelompok_final'] . '.');
+    }
 }

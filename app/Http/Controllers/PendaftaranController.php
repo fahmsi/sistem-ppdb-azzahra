@@ -127,11 +127,18 @@ class PendaftaranController extends Controller
                     throw new RuntimeException('Anak Anda sudah terdaftar di gelombang ini.');
                 }
 
+                $recommendationService = app(\App\Services\StudentGroupRecommendationService::class);
+                $calc = $recommendationService->calculate($siswa->tanggal_lahir, $lockedPendaftaran->tahun_ajaran);
+
                 $detail = PendaftaranDetail::create([
                     'siswa_id' => $siswa->id,
                     'pendaftaran_id' => $lockedPendaftaran->id,
                     'status' => PendaftaranDetail::STATUS_PENDING,
                     'notifikasi' => null,
+                    'tanggal_acuan_usia' => $calc['tanggal_acuan'],
+                    'usia_bulan_saat_acuan' => $calc['usia_bulan'],
+                    'kelompok_rekomendasi' => $calc['kelompok_rekomendasi'],
+                    'kelompok_final' => null,
                 ]);
 
                 $detail->update([

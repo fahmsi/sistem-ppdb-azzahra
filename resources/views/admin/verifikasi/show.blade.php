@@ -185,6 +185,32 @@
                             </div>
 
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                                @if($detail->siswa->tinggal_bersama === 'wali')
+                                    <div class="bg-primary-50/50 dark:bg-primary-500/5 p-4 rounded-lg border border-primary-100 dark:border-primary-500/20 space-y-2 sm:col-span-2 text-sm">
+                                        <h4 class="font-bold text-primary-800 dark:text-primary-400 flex items-center gap-1.5 border-b border-primary-100 dark:border-primary-500/10 pb-1.5 mb-2">
+                                            <i data-lucide="user-check" class="w-3.5 h-3.5"></i> Data Wali Anak (Tinggal Bersama Wali)
+                                        </h4>
+                                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-2 text-xs">
+                                            <div class="flex justify-between border-b border-gray-50 dark:border-gray-800 pb-1">
+                                                <span class="text-gray-500">Nama Wali</span>
+                                                <span class="font-semibold text-gray-900 dark:text-[#e7e7ff]">{{ $detail->siswa->nama_wali ?: '-' }}</span>
+                                            </div>
+                                            <div class="flex justify-between border-b border-gray-50 dark:border-gray-800 pb-1">
+                                                <span class="text-gray-500">NIK Wali</span>
+                                                <span class="font-medium font-mono text-gray-900 dark:text-[#e7e7ff]">{{ $detail->siswa->nik_wali ?: '-' }}</span>
+                                            </div>
+                                            <div class="flex justify-between border-b border-gray-50 dark:border-gray-800 pb-1">
+                                                <span class="text-gray-500">Hubungan Wali</span>
+                                                <span class="font-medium text-gray-900 dark:text-[#e7e7ff]">{{ $detail->siswa->hubungan_wali ?: '-' }}</span>
+                                            </div>
+                                            <div class="flex justify-between border-b border-gray-50 dark:border-gray-800 pb-1">
+                                                <span class="text-gray-500">Telepon Wali</span>
+                                                <span class="font-medium text-gray-900 dark:text-[#e7e7ff]">{{ $detail->siswa->no_telpon_wali ?: '-' }}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endif
+
                                 <!-- Ayah -->
                                 <div class="bg-white dark:bg-[#2b2c40] p-4 rounded-lg border border-gray-150 dark:border-[#434463] space-y-2">
                                     <h4 class="font-bold text-[#696cff] flex items-center gap-1.5 border-b border-gray-100 dark:border-[#434463]/80 pb-1.5 mb-2">
@@ -341,6 +367,57 @@
                             </span>
                         @endif
                     </div>
+
+                    <!-- KTP Ayah / Ibu or Wali conditionally -->
+                    @if($detail->siswa->tinggal_bersama === 'orang_tua')
+                        <!-- KTP Ayah -->
+                        <div class="flex flex-col items-center rounded-lg border border-[#d9dee3] p-4 text-center transition-colors hover:border-[#696cff] hover:bg-[#f5f5f9] dark:border-[#434463] dark:hover:bg-[#232333] {{ $detail->siswa->foto_ktp_ayah ? 'border-emerald-200 dark:border-emerald-500/20' : '' }}">
+                            <i data-lucide="file-digit" class="w-12 h-12 text-[#a1b0cb] mb-3"></i>
+                            <h4 class="font-medium text-[#566a7f] dark:text-[#d5d5e2] mb-1">KTP Ayah</h4>
+                            <p class="text-xs text-[#a1b0cb] mb-4 font-mono">Pastikan NIK Ayah cocok</p>
+                            @if($detail->siswa->foto_ktp_ayah)
+                                <a href="{{ route('dokumen.show', ['siswa' => $detail->siswa, 'field' => 'foto_ktp_ayah']) }}" onclick="openLightbox(this.href); event.preventDefault();" class="inline-flex w-full cursor-pointer items-center justify-center gap-2 rounded-md bg-[#e7e7ff] px-3 py-2 text-sm font-medium text-[#696cff] transition-colors duration-200 hover:bg-[#d4d5ff] dark:bg-[#696cff]/20 dark:hover:bg-[#696cff]/30">
+                                    <i data-lucide="zoom-in" class="w-4 h-4"></i> Perbesar Dokumen
+                                </a>
+                            @else
+                                <span class="inline-flex w-full items-center justify-center gap-2 rounded-md bg-red-50 text-red-700 px-3 py-2 text-sm font-medium border border-red-100 dark:bg-red-500/10 dark:text-red-400 dark:border-red-500/20">
+                                    Tidak Tersedia
+                                </span>
+                            @endif
+                        </div>
+
+                        <!-- KTP Ibu -->
+                        <div class="flex flex-col items-center rounded-lg border border-[#d9dee3] p-4 text-center transition-colors hover:border-[#696cff] hover:bg-[#f5f5f9] dark:border-[#434463] dark:hover:bg-[#232333] {{ $detail->siswa->foto_ktp_ibu ? 'border-emerald-200 dark:border-emerald-500/20' : '' }}">
+                            <i data-lucide="file-digit" class="w-12 h-12 text-[#a1b0cb] mb-3"></i>
+                            <h4 class="font-medium text-[#566a7f] dark:text-[#d5d5e2] mb-1">KTP Ibu</h4>
+                            <p class="text-xs text-[#a1b0cb] mb-4 font-mono">Pastikan NIK Ibu cocok</p>
+                            @if($detail->siswa->foto_ktp_ibu)
+                                <a href="{{ route('dokumen.show', ['siswa' => $detail->siswa, 'field' => 'foto_ktp_ibu']) }}" onclick="openLightbox(this.href); event.preventDefault();" class="inline-flex w-full cursor-pointer items-center justify-center gap-2 rounded-md bg-[#e7e7ff] px-3 py-2 text-sm font-medium text-[#696cff] transition-colors duration-200 hover:bg-[#d4d5ff] dark:bg-[#696cff]/20 dark:hover:bg-[#696cff]/30">
+                                    <i data-lucide="zoom-in" class="w-4 h-4"></i> Perbesar Dokumen
+                                </a>
+                            @else
+                                <span class="inline-flex w-full items-center justify-center gap-2 rounded-md bg-red-50 text-red-700 px-3 py-2 text-sm font-medium border border-red-100 dark:bg-red-500/10 dark:text-red-400 dark:border-red-500/20">
+                                    Tidak Tersedia
+                                </span>
+                            @endif
+                        </div>
+                    @elseif($detail->siswa->tinggal_bersama === 'wali')
+                        <!-- KTP Wali -->
+                        <div class="flex flex-col items-center rounded-lg border border-[#d9dee3] p-4 text-center transition-colors hover:border-[#696cff] hover:bg-[#f5f5f9] dark:border-[#434463] dark:hover:bg-[#232333] {{ $detail->siswa->foto_ktp_wali ? 'border-emerald-200 dark:border-emerald-500/20' : '' }}">
+                            <i data-lucide="file-digit" class="w-12 h-12 text-[#a1b0cb] mb-3"></i>
+                            <h4 class="font-medium text-[#566a7f] dark:text-[#d5d5e2] mb-1">KTP Wali</h4>
+                            <p class="text-xs text-[#a1b0cb] mb-4 font-mono">Pastikan NIK Wali cocok</p>
+                            @if($detail->siswa->foto_ktp_wali)
+                                <a href="{{ route('dokumen.show', ['siswa' => $detail->siswa, 'field' => 'foto_ktp_wali']) }}" onclick="openLightbox(this.href); event.preventDefault();" class="inline-flex w-full cursor-pointer items-center justify-center gap-2 rounded-md bg-[#e7e7ff] px-3 py-2 text-sm font-medium text-[#696cff] transition-colors duration-200 hover:bg-[#d4d5ff] dark:bg-[#696cff]/20 dark:hover:bg-[#696cff]/30">
+                                    <i data-lucide="zoom-in" class="w-4 h-4"></i> Perbesar Dokumen
+                                </a>
+                            @else
+                                <span class="inline-flex w-full items-center justify-center gap-2 rounded-md bg-red-50 text-red-700 px-3 py-2 text-sm font-medium border border-red-100 dark:bg-red-500/10 dark:text-red-400 dark:border-red-500/20">
+                                    Tidak Tersedia
+                                </span>
+                            @endif
+                        </div>
+                    @endif
                 </div>
             </div>
 
@@ -426,8 +503,67 @@
         </div>
 
         <!-- Right Column: Aksi Verifikasi -->
-        <div class="space-y-6 relative">
-            <div class="overflow-hidden rounded-lg border border-[#d9dee3] bg-white shadow-sneat dark:border-[#434463] dark:bg-[#2b2c40] dark:shadow-sneat-dark lg:sticky lg:top-6">
+        <div class="space-y-6 relative lg:sticky lg:top-6">
+            <!-- Kelompok Siswa Confirmation Card -->
+            <div class="overflow-hidden rounded-lg border border-[#d9dee3] bg-white shadow-sneat dark:border-[#434463] dark:bg-[#2b2c40] dark:shadow-sneat-dark">
+                <div class="bg-[#2b2c40] dark:bg-[#232333] px-6 py-4 border-b border-[#434463] flex items-center gap-2">
+                    <i data-lucide="tag" class="w-5 h-5 text-[#a1b0cb]"></i>
+                    <h3 class="font-heading font-semibold text-white">Penetapan Kelompok</h3>
+                </div>
+                <div class="p-4 sm:p-6 text-sm space-y-4">
+                    <div class="bg-gray-50 dark:bg-[#232333]/50 p-3.5 rounded-lg space-y-2 text-xs">
+                        <div class="flex justify-between">
+                            <span class="text-gray-500">Usia Calon Siswa:</span>
+                            <span class="font-semibold text-gray-900 dark:text-[#e7e7ff]">
+                                @if($detail->usia_bulan_saat_acuan !== null)
+                                    @php
+                                        $years = (int) floor($detail->usia_bulan_saat_acuan / 12);
+                                        $remainingMonths = (int) ($detail->usia_bulan_saat_acuan % 12);
+                                    @endphp
+                                    {{ $years }} tahun {{ $remainingMonths }} bulan ({{ $detail->usia_bulan_saat_acuan }} bln)
+                                @else
+                                    -
+                                @endif
+                            </span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-500">Tanggal Acuan (1 Juli):</span>
+                            <span class="font-semibold text-gray-900 dark:text-[#e7e7ff]">{{ $detail->tanggal_acuan_usia ? \Carbon\Carbon::parse($detail->tanggal_acuan_usia)->translatedFormat('d F Y') : '-' }}</span>
+                        </div>
+                        <div class="flex justify-between items-center pt-1 border-t border-dashed border-gray-200 dark:border-gray-700">
+                            <span class="text-gray-500">Rekomendasi Kelompok:</span>
+                            <span class="px-2 py-0.5 rounded font-semibold text-xs {{ $detail->kelompok_rekomendasi === 'A' ? 'bg-blue-50 text-blue-700 dark:bg-blue-500/10 dark:text-blue-400' : ($detail->kelompok_rekomendasi === 'B' ? 'bg-indigo-50 text-indigo-700 dark:bg-indigo-500/10 dark:text-indigo-400' : 'bg-amber-50 text-amber-700 dark:bg-amber-500/10 dark:text-amber-400') }}">
+                                {{ $detail->kelompok_rekomendasi ? 'Kelompok ' . $detail->kelompok_rekomendasi : 'Perlu Konfirmasi' }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <form action="{{ route('admin.verifikasi.kelompok', $detail->id) }}" method="POST" class="space-y-3">
+                        @csrf
+                        @method('PATCH')
+                        <div>
+                            <label class="block text-xs font-semibold text-[#697a8d] dark:text-[#a1b0cb] uppercase tracking-wider mb-1">Pilih Kelompok Final</label>
+                            <select name="kelompok_final" required class="sneat-input">
+                                <option value="">-- Pilih Kelompok --</option>
+                                <option value="A" {{ $detail->kelompok_final === 'A' ? 'selected' : '' }}>Kelompok A (Usia 4 - 5 Tahun)</option>
+                                <option value="B" {{ $detail->kelompok_final === 'B' ? 'selected' : '' }}>Kelompok B (Usia 5 - 7 Tahun)</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="w-full flex justify-center items-center gap-2 py-2 px-4 bg-primary-600 hover:bg-primary-700 text-white font-medium rounded-lg transition-colors text-xs">
+                            <i data-lucide="check-circle" class="w-4 h-4"></i> Tetapkan Kelompok Final
+                        </button>
+                    </form>
+
+                    @if($detail->kelompok_final)
+                        <div class="mt-4 pt-4 border-t border-gray-100 dark:border-[#434463] text-xs space-y-1 text-gray-500">
+                            <p>Ditetapkan oleh: <span class="font-medium text-gray-800 dark:text-gray-200">{{ $detail->kelompokDitetapkanOleh->name ?? 'Admin' }}</span></p>
+                            <p>Pada: <span class="font-medium text-gray-800 dark:text-gray-200">{{ $detail->kelompok_ditetapkan_at?->translatedFormat('d F Y, H:i') }} WIB</span></p>
+                        </div>
+                    @endif
+                </div>
+            </div>
+
+            <div class="overflow-hidden rounded-lg border border-[#d9dee3] bg-white shadow-sneat dark:border-[#434463] dark:bg-[#2b2c40] dark:shadow-sneat-dark">
                 <div class="bg-[#2b2c40] dark:bg-[#232333] px-6 py-4 border-b border-[#434463] flex items-center gap-2">
                     <i data-lucide="check-square" class="w-5 h-5 text-[#a1b0cb]"></i>
                     <h3 class="font-heading font-semibold text-white">Aksi Verifikasi</h3>

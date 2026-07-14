@@ -19,6 +19,9 @@
                 <th>Nama Anak</th>
                 <th>Wali</th>
                 <th>Gelombang</th>
+                <th>Usia (1 Juli)</th>
+                <th>Rekomendasi</th>
+                <th>Final</th>
                 <th>Status</th>
             </tr>
         </thead>
@@ -29,6 +32,9 @@
                     <td>{{ $it->siswa->nama ?? '-' }}</td>
                     <td>{{ $it->siswa?->user?->name ?? '-' }}</td>
                     <td>{{ $it->pendaftaran->gelombang ?? '-' }}</td>
+                    <td>{{ $it->usia_bulan_saat_acuan !== null ? ((int) floor($it->usia_bulan_saat_acuan / 12)) . ' th ' . ($it->usia_bulan_saat_acuan % 12) . ' bln' : '-' }}</td>
+                    <td>{{ $it->kelompok_rekomendasi ?? '-' }}</td>
+                    <td>{{ $it->kelompok_final ?? '-' }}</td>
                     <td>{{ $it->status }}</td>
                 </tr>
             @endforeach

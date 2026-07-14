@@ -109,7 +109,13 @@ class ProfileController extends Controller
             ->push($user->avatar)
             ->filter()
             ->values();
-        $localPaths = $siswas->flatMap(fn ($siswa) => [$siswa->foto_kk, $siswa->foto_akta])
+        $localPaths = $siswas->flatMap(fn ($siswa) => [
+            $siswa->foto_kk,
+            $siswa->foto_akta,
+            $siswa->foto_ktp_ayah,
+            $siswa->foto_ktp_ibu,
+            $siswa->foto_ktp_wali,
+        ])
             ->filter()
             ->values();
 

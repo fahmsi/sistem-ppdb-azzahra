@@ -376,8 +376,11 @@ function validSiswaPayload(string $name): array
         'pendidikan_ibu' => 'S1',
         'pekerjaan_ibu' => 'Ibu Rumah Tangga',
         'penghasilan_ibu' => '1-3 Juta',
+        'tinggal_bersama' => 'orang_tua',
         'foto' => UploadedFile::fake()->image($name.'-foto.jpg'),
         'foto_kk' => UploadedFile::fake()->image($name.'-kk.jpg'),
         'foto_akta' => UploadedFile::fake()->image($name.'-akta.jpg'),
+        'foto_ktp_ayah' => UploadedFile::fake()->image($name.'-ktp-ayah.jpg'),
+        'foto_ktp_ibu' => UploadedFile::fake()->image($name.'-ktp-ibu.jpg'),
     ];
 }
