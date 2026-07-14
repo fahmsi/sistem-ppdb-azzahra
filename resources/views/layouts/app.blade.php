@@ -162,30 +162,10 @@
                     <span class="menu-text ml-3 transition-opacity duration-300">Dashboard</span>
                 </a>
 
-                @if(auth()->user()->siswa)
-                    <a href="{{ route('parent.siswa.show', auth()->user()->siswa->id) }}"
-                        class="sidebar-menu-link flex items-center px-6 py-2.5 mx-3 rounded-lg overflow-hidden whitespace-nowrap {{ request()->routeIs('parent.siswa.*') ? 'active bg-[#696cff] text-white' : 'text-[#697a8d] hover:bg-gray-100 dark:hover:bg-[#232333]' }}">
-                        <i data-lucide="user" class="w-5 h-5 flex-shrink-0"></i>
-                        <span class="menu-text ml-3 transition-opacity duration-300">Data Anak</span>
-                    </a>
-                @else
-                    <a href="{{ route('parent.siswa.create') }}"
-                        class="sidebar-menu-link flex items-center px-6 py-2.5 mx-3 rounded-lg overflow-hidden whitespace-nowrap {{ request()->routeIs('parent.siswa.*') ? 'active bg-[#696cff] text-white' : 'text-[#697a8d] hover:bg-gray-100 dark:hover:bg-[#232333]' }}">
-                        <i data-lucide="user-plus" class="w-5 h-5 flex-shrink-0"></i>
-                        <span class="menu-text ml-3 transition-opacity duration-300">Lengkapi Data Anak</span>
-                    </a>
-                @endif
-
-                <a href="{{ route('parent.pendaftaran.index') }}"
-                    class="sidebar-menu-link flex items-center px-6 py-2.5 mx-3 rounded-lg overflow-hidden whitespace-nowrap {{ request()->routeIs('parent.pendaftaran.index') || request()->routeIs('parent.pendaftaran.show') ? 'active bg-[#696cff] text-white' : 'text-[#697a8d] hover:bg-gray-100 dark:hover:bg-[#232333]' }}">
-                    <i data-lucide="clipboard-list" class="w-5 h-5 flex-shrink-0"></i>
-                    <span class="menu-text ml-3 transition-opacity duration-300">Daftar Gelombang</span>
-                </a>
-
-                <a href="{{ route('parent.pendaftaran.status') }}"
-                    class="sidebar-menu-link flex items-center px-6 py-2.5 mx-3 rounded-lg overflow-hidden whitespace-nowrap {{ request()->routeIs('parent.pendaftaran.status') ? 'active bg-[#696cff] text-white' : 'text-[#697a8d] hover:bg-gray-100 dark:hover:bg-[#232333]' }}">
-                    <i data-lucide="activity" class="w-5 h-5 flex-shrink-0"></i>
-                    <span class="menu-text ml-3 transition-opacity duration-300">Status Pendaftaran</span>
+                <a href="{{ route('parent.siswa.index') }}"
+                    class="sidebar-menu-link flex items-center px-6 py-2.5 mx-3 rounded-lg overflow-hidden whitespace-nowrap {{ request()->routeIs('parent.siswa.*') ? 'active bg-[#696cff] text-white' : 'text-[#697a8d] hover:bg-gray-100 dark:hover:bg-[#232333]' }}">
+                    <i data-lucide="users" class="w-5 h-5 flex-shrink-0"></i>
+                    <span class="menu-text ml-3 transition-opacity duration-300">Anak Saya</span>
                 </a>
             @endif
         </nav>
@@ -495,9 +475,9 @@
                                                 class="flex items-center gap-2 text-sm text-[#566a7f] dark:text-[#d5d5e2] hover:text-[#696cff] transition-colors"><i
                                                     data-lucide="layout-dashboard" class="w-4 h-4"></i> Dashboard Saya</a>
                                         </li>
-                                        <li><a href="{{ route('parent.pendaftaran.index') }}"
+                                        <li><a href="{{ route('parent.siswa.index') }}"
                                                 class="flex items-center gap-2 text-sm text-[#566a7f] dark:text-[#d5d5e2] hover:text-[#696cff] transition-colors"><i
-                                                    data-lucide="clipboard-list" class="w-4 h-4"></i> Daftar Gelombang</a>
+                                                    data-lucide="users" class="w-4 h-4"></i> Anak Saya</a>
                                         </li>
                                     </ul>
                                 </div>
@@ -507,10 +487,10 @@
                                     <ul class="space-y-3">
                                         <li><a href="{{ route('parent.siswa.create') }}"
                                                 class="flex items-center gap-2 text-sm text-[#566a7f] dark:text-[#d5d5e2] hover:text-[#696cff] transition-colors"><i
-                                                    data-lucide="user" class="w-4 h-4"></i> Lengkapi Data Anak</a></li>
-                                        <li><a href="{{ route('parent.pendaftaran.status') }}"
+                                                    data-lucide="user-plus" class="w-4 h-4"></i> Tambah Anak</a></li>
+                                        <li><a href="{{ route('parent.siswa.index') }}"
                                                 class="flex items-center gap-2 text-sm text-[#566a7f] dark:text-[#d5d5e2] hover:text-[#696cff] transition-colors"><i
-                                                    data-lucide="activity" class="w-4 h-4"></i> Status Pendaftaran</a></li>
+                                                    data-lucide="activity" class="w-4 h-4"></i> Status per Anak</a></li>
                                     </ul>
                                 </div>
                             @endif
@@ -531,7 +511,7 @@
     @if(auth()->check() && auth()->user()->isParent())
         @php
             $adminWhatsapp = preg_replace('/[^0-9]/', '', (string) config('spmb.admin_whatsapp', ''));
-            $helpWaMessage = "Assalamu'alaikum Admin PAUD Az-Zahra, saya ingin menanyakan jadwal atau arahan observasi/wawancara untuk calon siswa atas nama " . (auth()->user()->siswa ? auth()->user()->siswa->nama : '...');
+            $helpWaMessage = "Assalamu'alaikum Admin PAUD Az-Zahra, saya ingin menanyakan proses pendaftaran anak saya.";
             $helpWaUrl = $adminWhatsapp ? 'https://wa.me/'.$adminWhatsapp.'?text='.urlencode($helpWaMessage) : '#';
         @endphp
         @if($adminWhatsapp)

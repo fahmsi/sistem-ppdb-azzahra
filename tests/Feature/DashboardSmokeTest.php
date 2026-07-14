@@ -85,13 +85,13 @@ test('parent dashboard registration pages and every registration status render',
     ]);
 
     $this->actingAs($parent)->get(route('parent.dashboard'))->assertOk();
-    $this->actingAs($parent)->get(route('parent.pendaftaran.index'))->assertOk();
+    $this->actingAs($parent)->get(route('parent.siswa.pendaftaran.index', $siswa))->assertOk();
     $this->actingAs($parent)
-        ->get(route('parent.pendaftaran.show', $availablePeriod))
+        ->get(route('parent.siswa.pendaftaran.show', ['siswa' => $siswa, 'pendaftaran' => $availablePeriod]))
         ->assertOk()
         ->assertSee($availablePeriod->gelombang);
     $this->actingAs($parent)
-        ->get(route('parent.pendaftaran.status'))
+        ->get(route('parent.siswa.pendaftaran.status', $siswa))
         ->assertOk()
         ->assertSee('Menunggu Verifikasi Admin')
         ->assertSee('Perlu Revisi Dokumen')
@@ -186,12 +186,12 @@ test('registration card remains unavailable until registration is accepted', fun
     ]);
 
     $this->actingAs($parent)
-        ->get(route('parent.siswa.kartu'))
+        ->get(route('parent.siswa.pendaftaran.kartu', ['siswa' => $siswa, 'detail' => $detail]))
         ->assertForbidden();
 
     $detail->update(['status' => PendaftaranDetail::STATUS_DITERIMA]);
 
     $this->actingAs($parent)
-        ->get(route('parent.siswa.kartu'))
+        ->get(route('parent.siswa.pendaftaran.kartu', ['siswa' => $siswa, 'detail' => $detail]))
         ->assertOk();
 });
