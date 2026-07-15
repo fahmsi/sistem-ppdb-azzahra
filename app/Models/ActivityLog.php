@@ -60,16 +60,16 @@ class ActivityLog extends Model
         $request = request();
 
         return static::create([
-            'user_id'      => $user?->id,
-            'user_name'    => $user?->name ?? 'System',
-            'action'       => $action,
-            'target_type'  => $target ? get_class($target) : null,
-            'target_id'    => $target?->getKey(),
+            'user_id' => $user?->id,
+            'user_name' => $user?->name ?? 'System',
+            'action' => $action,
+            'target_type' => $target ? get_class($target) : null,
+            'target_id' => $target?->getKey(),
             'target_label' => $target ? ($target->nama ?? $target->name ?? $target->title ?? "#{$target->getKey()}") : null,
-            'description'  => $description,
-            'properties'   => $properties,
-            'ip_address'   => $request?->ip(),
-            'user_agent'   => $request?->userAgent(),
+            'description' => $description,
+            'properties' => $properties,
+            'ip_address' => $request?->ip(),
+            'user_agent' => $request?->userAgent(),
         ]);
     }
 
@@ -79,21 +79,27 @@ class ActivityLog extends Model
     public function getActionLabelAttribute(): string
     {
         return match ($this->action) {
-            'created'  => 'Membuat',
-            'updated'  => 'Mengubah',
-            'deleted'  => 'Menghapus',
+            'created' => 'Membuat',
+            'updated' => 'Mengubah',
+            'deleted' => 'Menghapus',
             'soft_deleted' => 'Menghapus Sementara',
             'restored' => 'Memulihkan',
             'force_deleted' => 'Menghapus Permanen',
             'payment_uploaded' => 'Upload Pembayaran',
             'payment_reuploaded' => 'Upload Ulang Pembayaran',
-            'login'    => 'Login',
-            'logout'   => 'Logout',
+            'login' => 'Login',
+            'logout' => 'Logout',
             'verified' => 'Memverifikasi',
             'accepted' => 'Menerima',
             'rejected' => 'Menolak',
             'revision' => 'Minta Revisi',
-            default    => ucfirst($this->action),
+            'administration_completed' => 'Administrasi Lengkap',
+            'observation_scheduled' => 'Jadwal Observasi',
+            'observation_attended' => 'Hadir Observasi',
+            'observation_no_show' => 'Tidak Hadir Observasi',
+            'observation_rescheduled' => 'Jadwal Ulang Observasi',
+            'observation_completed' => 'Observasi Selesai',
+            default => ucfirst($this->action),
         };
     }
 
@@ -102,17 +108,17 @@ class ActivityLog extends Model
      */
     public function getTargetTypeLabelAttribute(): string
     {
-        if (!$this->target_type) {
+        if (! $this->target_type) {
             return '-';
         }
 
         return match ($this->target_type) {
-            'App\Models\User'              => 'User',
-            'App\Models\Siswa'             => 'Data Siswa',
-            'App\Models\Pendaftaran'       => 'Gelombang',
+            'App\Models\User' => 'User',
+            'App\Models\Siswa' => 'Data Siswa',
+            'App\Models\Pendaftaran' => 'Gelombang',
             'App\Models\PendaftaranDetail' => 'Pendaftaran',
-            'App\Models\Pembayaran'        => 'Pembayaran',
-            'App\Models\Setting'           => 'Pengaturan',
+            'App\Models\Pembayaran' => 'Pembayaran',
+            'App\Models\Setting' => 'Pengaturan',
             default => class_basename($this->target_type),
         };
     }
@@ -135,6 +141,10 @@ class ActivityLog extends Model
             'verified', 'accepted' => 'bg-emerald-100 text-emerald-700 border border-emerald-200 dark:bg-emerald-500/15 dark:text-emerald-300 dark:border-emerald-400/20',
             'rejected' => 'bg-red-100 text-red-700 border border-red-200 dark:bg-red-500/15 dark:text-red-300 dark:border-red-400/20',
             'revision' => 'bg-orange-100 text-orange-700 border border-orange-200 dark:bg-orange-500/15 dark:text-orange-300 dark:border-orange-400/20',
+            'administration_completed' => 'bg-teal-100 text-teal-700 border border-teal-200 dark:bg-teal-500/15 dark:text-teal-300 dark:border-teal-400/20',
+            'observation_scheduled', 'observation_rescheduled' => 'bg-indigo-100 text-indigo-700 border border-indigo-200 dark:bg-indigo-500/15 dark:text-indigo-300 dark:border-indigo-400/20',
+            'observation_attended', 'observation_completed' => 'bg-emerald-100 text-emerald-700 border border-emerald-200 dark:bg-emerald-500/15 dark:text-emerald-300 dark:border-emerald-400/20',
+            'observation_no_show' => 'bg-red-100 text-red-700 border border-red-200 dark:bg-red-500/15 dark:text-red-300 dark:border-red-400/20',
             default => 'bg-gray-100 text-gray-700 border border-gray-200 dark:bg-slate-500/15 dark:text-slate-300 dark:border-slate-400/20',
         };
     }

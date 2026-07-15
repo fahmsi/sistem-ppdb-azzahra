@@ -66,9 +66,17 @@
                                         <span class="inline-flex items-center gap-1.5 rounded-full bg-yellow-100 px-3 py-1.5 text-sm font-semibold text-yellow-700 dark:bg-yellow-500/15 dark:text-yellow-300">
                                             <i data-lucide="search" class="w-4 h-4"></i> Menunggu Verifikasi Berkas
                                         </span>
+                                    @elseif($reg->status === 'administrasi_lengkap')
+                                        <span class="inline-flex items-center gap-1.5 rounded-full border border-teal-200 bg-teal-100 px-3 py-1.5 text-sm font-semibold text-teal-700 dark:border-teal-500/25 dark:bg-teal-500/15 dark:text-teal-300">
+                                            <i data-lucide="file-check" class="w-4 h-4"></i> Administrasi Lengkap – Menunggu Jadwal Observasi
+                                        </span>
+                                    @elseif($reg->status === 'menunggu_keputusan')
+                                        <span class="inline-flex items-center gap-1.5 rounded-full border border-indigo-200 bg-indigo-100 px-3 py-1.5 text-sm font-semibold text-indigo-700 dark:border-indigo-500/25 dark:bg-indigo-500/15 dark:text-indigo-300">
+                                            <i data-lucide="clock" class="w-4 h-4"></i> Menunggu Keputusan Sekolah
+                                        </span>
                                     @elseif($reg->status === 'diterima')
                                         <span class="inline-flex items-center gap-1.5 rounded-full border border-secondary-200 bg-secondary-100 px-3 py-1.5 text-sm font-semibold text-secondary-700 dark:border-secondary-500/25 dark:bg-secondary-500/15 dark:text-secondary-300">
-                                            <i data-lucide="check-circle" class="w-4 h-4"></i> Berkas Terverifikasi – Lanjut Observasi
+                                            <i data-lucide="check-circle" class="w-4 h-4"></i> Diterima
                                         </span>
                                     @elseif($reg->status === 'ditolak')
                                         <span class="inline-flex items-center gap-1.5 rounded-full border border-red-200 bg-red-100 px-3 py-1.5 text-sm font-semibold text-red-700 dark:border-red-500/25 dark:bg-red-500/15 dark:text-red-300">
@@ -102,9 +110,13 @@
                                             $step2 = 'completed';
                                         }
                                         
-                                        // Step 3: Observasi & Wawancara
+                                        // Step 3: Observasi
                                         if (in_array($reg->status, ['pending', 'menunggu_verifikasi', 'perlu_revisi'])) {
                                             $step3 = 'upcoming';
+                                        } elseif ($reg->status === 'administrasi_lengkap') {
+                                            $step3 = 'active';
+                                        } elseif ($reg->status === 'menunggu_keputusan') {
+                                            $step3 = 'completed';
                                         } elseif ($reg->status === 'ditolak') {
                                             $step3 = 'failed';
                                         } else {
@@ -116,7 +128,7 @@
                                         }
                                         
                                         // Step 4: Daftar Ulang
-                                        if ($reg->status !== 'diterima' && !$isPaymentLunas) {
+                                        if (!in_array($reg->status, ['diterima', 'menunggu_keputusan']) && !$isPaymentLunas) {
                                             $step4 = 'upcoming';
                                         } else {
                                             if (!$payment) {
@@ -465,6 +477,39 @@
                                         </h5>
                                         <p class="text-sm">{{ $reg->notifikasi }}</p>
                                     </div>
+                                @endif
+
+                                {{-- Observation Schedule Card (parent view — no internal notes) --}}
+                                @if(in_array($reg->status, ['administrasi_lengkap', 'menunggu_keputusan']))
+                                    @php $obsLatest = $reg->observasiTerbaru ?? null; @endphp
+                                    @if($obsLatest)
+                                    <div class="mt-6 rounded-xl border border-indigo-200 bg-indigo-50 p-4 dark:border-indigo-500/20 dark:bg-indigo-500/10 sm:p-5">
+                                        <h5 class="mb-3 flex items-center gap-2 text-base font-bold text-indigo-800 dark:text-indigo-300">
+                                            <i data-lucide="calendar-check" class="w-5 h-5 text-indigo-600"></i>
+                                            Jadwal Observasi (Percobaan #{{ $obsLatest->attempt_number }})
+                                        </h5>
+                                        <p class="font-semibold text-gray-900 dark:text-[#d5d5e2]">
+                                            {{ $obsLatest->scheduled_at->locale('id')->isoFormat('dddd, D MMMM YYYY [pukul] HH:mm') }}
+                                        </p>
+                                        @if($obsLatest->status === 'tidak_hadir')
+                                        <div class="mt-3 rounded-lg bg-red-500/10 border border-red-500/20 p-3">
+                                            <p class="text-xs text-red-700 dark:text-red-300">Tidak hadir pada jadwal ini. Hubungi sekolah jika ingin menjadwalkan ulang.</p>
+                                        </div>
+                                        @elseif($obsLatest->status === 'selesai')
+                                        <div class="mt-3 rounded-lg bg-teal-500/10 border border-teal-500/20 p-3">
+                                            <p class="text-xs text-teal-700 dark:text-teal-300"><i data-lucide="check-circle" class="w-3.5 h-3.5 inline mr-1"></i>Observasi selesai. Menunggu keputusan sekolah.</p>
+                                        </div>
+                                        @else
+                                        <div class="mt-3 rounded-lg bg-blue-500/10 border border-blue-500/20 p-3">
+                                            <p class="text-xs text-blue-700 dark:text-blue-300"><i data-lucide="info" class="w-3.5 h-3.5 inline mr-1"></i>Hadir bersama anak pada waktu di atas di PAUD Az-Zahra.</p>
+                                        </div>
+                                        @endif
+                                    </div>
+                                    @else
+                                    <div class="mt-6 rounded-xl border border-teal-200 bg-teal-50 p-4 dark:border-teal-500/20 dark:bg-teal-500/10 sm:p-5">
+                                        <p class="text-sm text-teal-800 dark:text-teal-300 font-medium">Berkas administrasi lengkap. Pihak sekolah akan menghubungi Anda untuk menetapkan jadwal observasi.</p>
+                                    </div>
+                                    @endif
                                 @endif
 
                                 @if($reg->status === 'diterima')

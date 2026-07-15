@@ -14,6 +14,8 @@
         'perlu_revisi' => 'Perlu Revisi Data',
         'ditolak' => 'Pendaftaran Ditolak',
         'diterima' => 'Berkas Terverifikasi - Lanjut Observasi',
+        'administrasi_lengkap' => 'Administrasi Lengkap',
+        'menunggu_keputusan' => 'Menunggu Keputusan',
     ];
     $statusClasses = [
         'pending' => 'bg-gray-100 text-gray-700 dark:bg-[#434463] dark:text-[#d5d5e2]',
@@ -21,6 +23,8 @@
         'perlu_revisi' => 'bg-orange-50 text-orange-700 dark:bg-orange-500/10 dark:text-orange-300',
         'ditolak' => 'bg-red-50 text-red-700 dark:bg-red-500/10 dark:text-red-300',
         'diterima' => 'bg-emerald-50 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-300',
+        'administrasi_lengkap' => 'bg-teal-50 text-teal-700 dark:bg-teal-500/10 dark:text-teal-300',
+        'menunggu_keputusan' => 'bg-indigo-50 text-indigo-700 dark:bg-indigo-500/10 dark:text-indigo-300',
     ];
 @endphp
 
@@ -101,6 +105,12 @@
                                             <span class="text-xs text-[#a1b0cb]">{{ $latestRegistration->pendaftaran?->gelombang ?? '-' }}</span>
                                         </div>
                                         <p class="mt-2 text-xs text-[#a1b0cb]">No. Pendaftaran: <span class="font-semibold text-[#566a7f] dark:text-[#d5d5e2]">{{ $latestRegistration->nomor_pendaftaran }}</span></p>
+                                        @if($latestRegistration->observasiTerbaru)
+                                            <p class="mt-2 text-xs text-[#a1b0cb] flex items-center gap-1.5">
+                                                <i data-lucide="calendar" class="w-3.5 h-3.5 text-indigo-500"></i>
+                                                <span>Jadwal Observasi: <b>{{ $latestRegistration->observasiTerbaru->scheduled_at->locale('id')->isoFormat('D MMM YYYY, HH:mm') }}</b></span>
+                                            </p>
+                                        @endif
                                     </div>
                                     <a href="{{ route('parent.siswa.pendaftaran.status', $siswa) }}" class="sneat-btn-secondary justify-center whitespace-nowrap">
                                         <i data-lucide="activity" class="h-4 w-4"></i>

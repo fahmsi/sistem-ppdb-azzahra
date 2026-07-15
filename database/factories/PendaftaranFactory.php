@@ -6,7 +6,7 @@ use App\Models\Pendaftaran;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Pendaftaran>
+ * @extends Factory<Pendaftaran>
  */
 class PendaftaranFactory extends Factory
 {
@@ -21,14 +21,16 @@ class PendaftaranFactory extends Factory
     {
         $mulai = fake()->dateTimeBetween('now', '+3 months');
         $selesai = (clone $mulai)->modify('+30 days');
+        $mpls = (clone $selesai)->modify('+14 days');
 
         return [
             'tahun_ajaran' => '2026/2027',
-            'gelombang' => 'Gelombang ' . fake()->randomElement(['1', '2', '3']),
+            'gelombang' => 'Gelombang '.fake()->randomElement(['1', '2', '3']),
             'kuota' => fake()->numberBetween(20, 50),
             'status' => fake()->randomElement(['buka', 'tutup']),
             'tanggal_mulai' => $mulai->format('Y-m-d'),
             'tanggal_selesai' => $selesai->format('Y-m-d'),
+            'tanggal_mpls' => $mpls->format('Y-m-d'),
             'gambar' => null,
         ];
     }

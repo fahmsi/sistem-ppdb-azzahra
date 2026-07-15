@@ -1,15 +1,17 @@
 <?php
 
-use App\Http\Controllers\Admin\AdminManageController;
+use App\Http\Controllers\AchievementImageController;
 use App\Http\Controllers\Admin\AchievementController;
+use App\Http\Controllers\Admin\AdminManageController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\GalleryController;
+use App\Http\Controllers\Admin\ObservasiController;
 use App\Http\Controllers\Admin\PaymentSettingController;
 use App\Http\Controllers\Admin\PembayaranController;
 use App\Http\Controllers\Admin\PendaftaranManageController;
 use App\Http\Controllers\Admin\SettingController;
-use App\Http\Controllers\Admin\VerifikasiController;
 use App\Http\Controllers\Admin\TestimonialController;
+use App\Http\Controllers\Admin\VerifikasiController;
 use App\Http\Controllers\Auth\ConfirmablePasswordController;
 use App\Http\Controllers\Auth\EmailVerificationNotificationController;
 use App\Http\Controllers\Auth\EmailVerificationPromptController;
@@ -17,7 +19,6 @@ use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\VerifyEmailController;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\AchievementImageController;
 use App\Http\Controllers\DokumenController;
 use App\Http\Controllers\GalleryImageController;
 use App\Http\Controllers\ParentDashboardController;
@@ -101,10 +102,11 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'updateProfile'])->name('profile.update');
     Route::put('/password', [ProfileController::class, 'updatePassword'])->name('password.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    
+
     // Notifications
     Route::post('/notifications/mark-all-read', function () {
         auth()->user()->unreadNotifications->markAsRead();
+
         return back();
     })->name('notifications.markAllRead');
 
@@ -181,14 +183,25 @@ Route::middleware('auth')->group(function () {
         Route::get('/verifikasi', [VerifikasiController::class, 'index'])->name('verifikasi.index');
         // Route Export Verifikasi (define before parameterized routes to avoid conflicts)
         Route::get('/verifikasi/export', [VerifikasiController::class, 'export'])->name('verifikasi.export');
+        Route::post('/verifikasi/bulk-update', [VerifikasiController::class, 'bulkUpdate'])->name('verifikasi.bulkUpdate');
         Route::get('/verifikasi/{detail}', [VerifikasiController::class, 'show'])->name('verifikasi.show');
         Route::patch('/verifikasi/{detail}/start', [VerifikasiController::class, 'startVerifikasi'])->name('verifikasi.start');
-        Route::patch('/verifikasi/{detail}/terima', [VerifikasiController::class, 'terima'])->name('verifikasi.terima');
-        Route::patch('/verifikasi/{detail}/tolak', [VerifikasiController::class, 'tolak'])->name('verifikasi.tolak');
         Route::patch('/verifikasi/{detail}/revisi', [VerifikasiController::class, 'revisi'])->name('verifikasi.revisi');
         Route::patch('/verifikasi/{detail}/kelompok', [VerifikasiController::class, 'setKelompok'])->name('verifikasi.kelompok');
         Route::delete('/verifikasi/{detail}', [VerifikasiController::class, 'destroy'])->name('verifikasi.destroy');
         Route::patch('/pembayaran/{pembayaran}/verify', [VerifikasiController::class, 'verifyPembayaran'])->name('pembayaran.verify');
+
+        // Administrasi Lengkap
+        Route::post('/verifikasi/{detail}/administrasi-lengkap', [VerifikasiController::class, 'administrasiLengkap'])->name('verifikasi.administrasi-lengkap');
+
+        // Observasi routes (scoped to detail)
+        Route::post('/verifikasi/{detail}/observasi', [ObservasiController::class, 'store'])->name('verifikasi.observasi.store');
+
+        // Observasi routes (individual observation record)
+        Route::patch('/observasi/{observasi}/hadir', [ObservasiController::class, 'hadir'])->name('observasi.hadir');
+        Route::patch('/observasi/{observasi}/tidak-hadir', [ObservasiController::class, 'tidakHadir'])->name('observasi.tidak-hadir');
+        Route::post('/observasi/{observasi}/jadwal-ulang', [ObservasiController::class, 'jadwalUlang'])->name('observasi.jadwal-ulang');
+        Route::patch('/observasi/{observasi}/selesai', [ObservasiController::class, 'selesai'])->name('observasi.selesai');
 
         // Route Export Siswa (Letakkan sebelum resource siswa)
         Route::get('/siswa/create', [App\Http\Controllers\Admin\SiswaController::class, 'create'])->name('siswa.create');

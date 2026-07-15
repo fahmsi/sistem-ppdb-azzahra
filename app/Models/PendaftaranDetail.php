@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class PendaftaranDetail extends Model
@@ -22,6 +23,10 @@ class PendaftaranDetail extends Model
     public const STATUS_DITOLAK = 'ditolak';
 
     public const STATUS_PERLU_REVISI = 'perlu_revisi';
+
+    public const STATUS_ADMINISTRASI_LENGKAP = 'administrasi_lengkap';
+
+    public const STATUS_MENUNGGU_KEPUTUSAN = 'menunggu_keputusan';
 
     protected $fillable = [
         'siswa_id',
@@ -46,6 +51,22 @@ class PendaftaranDetail extends Model
         'tanggal_acuan_usia' => 'date',
         'kelompok_ditetapkan_at' => 'datetime',
     ];
+
+    /**
+     * All observation attempts for this registration.
+     */
+    public function observasis(): HasMany
+    {
+        return $this->hasMany(Observasi::class, 'pendaftaran_detail_id');
+    }
+
+    /**
+     * The latest/most recent observation attempt.
+     */
+    public function observasiTerbaru(): HasOne
+    {
+        return $this->hasOne(Observasi::class, 'pendaftaran_detail_id')->latestOfMany();
+    }
 
     /**
      * User who set the final group.
@@ -111,5 +132,36 @@ class PendaftaranDetail extends Model
     public function isPerluRevisi(): bool
     {
         return $this->status === self::STATUS_PERLU_REVISI;
+    }
+
+    /**
+     * Check if administration documents are complete.
+     */
+    public function isAdministrasiLengkap(): bool
+    {
+        return $this->status === self::STATUS_ADMINISTRASI_LENGKAP;
+    }
+
+    /**
+     * Check if registration is awaiting school decision.
+     */
+    public function isMenungguKeputusan(): bool
+    {
+        return $this->status === self::STATUS_MENUNGGU_KEPUTUSAN;
+    }
+
+    /**
+     * Check if the registration is in an active non-final state
+     * (admin verification or observation stages).
+     */
+    public function isActive(): bool
+    {
+        return in_array($this->status, [
+            self::STATUS_PENDING,
+            self::STATUS_MENUNGGU_VERIFIKASI,
+            self::STATUS_PERLU_REVISI,
+            self::STATUS_ADMINISTRASI_LENGKAP,
+            self::STATUS_MENUNGGU_KEPUTUSAN,
+        ], true);
     }
 }
