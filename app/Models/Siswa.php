@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Services\StudentGroupRecommendationService;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -165,7 +166,7 @@ class Siswa extends Model
                     ->get();
 
                 if ($details->isNotEmpty()) {
-                    $service = app(\App\Services\StudentGroupRecommendationService::class);
+                    $service = app(StudentGroupRecommendationService::class);
                     foreach ($details as $detail) {
                         $detail->load('pendaftaran');
                         if ($detail->pendaftaran) {

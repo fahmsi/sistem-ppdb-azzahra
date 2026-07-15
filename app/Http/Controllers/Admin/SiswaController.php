@@ -7,8 +7,9 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\AdminStoreSiswaRequest;
 use App\Models\ActivityLog;
 use App\Models\Siswa;
-use Illuminate\Http\RedirectResponse;
+use Barryvdh\DomPDF\Facade;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Schema;
@@ -235,21 +236,22 @@ class SiswaController extends Controller
         $filenameBase = 'data_siswa_azzahra';
 
         if ($type === 'csv') {
-            return Excel::download(new SiswaExport, $filenameBase . '.csv', \Maatwebsite\Excel\Excel::CSV);
+            return Excel::download(new SiswaExport, $filenameBase.'.csv', \Maatwebsite\Excel\Excel::CSV);
         }
 
         if ($type === 'pdf') {
-            if (class_exists(\Barryvdh\DomPDF\Facade::class) || app()->bound('dompdf')) {
+            if (class_exists(Facade::class) || app()->bound('dompdf')) {
                 $siswas = Siswa::with('user')->get();
                 $pdf = app('dompdf.wrapper');
                 $pdf->loadView('admin.siswa.export_pdf', compact('siswas'));
-                return $pdf->download($filenameBase . '.pdf');
+
+                return $pdf->download($filenameBase.'.pdf');
             }
 
             return back()->with('error', 'PDF export requires barryvdh/laravel-dompdf. Run: composer require barryvdh/laravel-dompdf');
         }
 
-        return Excel::download(new SiswaExport, $filenameBase . '.xlsx');
+        return Excel::download(new SiswaExport, $filenameBase.'.xlsx');
     }
 
     private function inputSourceLabel(Siswa $siswa): string

@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\PaymentSetting;
 use App\Models\Pendaftaran;
 use App\Models\PendaftaranDetail;
-use App\Models\PaymentSetting;
 use App\Models\Siswa;
+use App\Services\StudentGroupRecommendationService;
 use App\Support\AuthorizesParentSiswa;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -31,11 +32,21 @@ class PendaftaranController extends Controller
             });
 
         $isAccepted = $siswa->pendaftaranDetails()
-            ->where('status', PendaftaranDetail::STATUS_DITERIMA)
+            ->where(function ($q) {
+                $q->where('keputusan_status', PendaftaranDetail::KEPUTUSAN_DITERIMA)
+                    ->orWhere('status', PendaftaranDetail::STATUS_DITERIMA);
+            })
             ->exists();
 
         $hasActiveRegistration = $siswa->pendaftaranDetails()
             ->whereNotIn('status', [PendaftaranDetail::STATUS_DITOLAK])
+            ->where(function ($q) {
+                $q->whereNull('keputusan_status')
+                    ->orWhereNotIn('keputusan_status', [
+                        PendaftaranDetail::KEPUTUSAN_TIDAK_DITERIMA,
+                        PendaftaranDetail::KEPUTUSAN_MENGUNDURKAN_DIRI,
+                    ]);
+            })
             ->exists();
 
         return view('parent.pendaftaran.index', compact('pendaftarans', 'siswa', 'isAccepted', 'hasActiveRegistration'));
@@ -54,6 +65,13 @@ class PendaftaranController extends Controller
 
         $hasActiveRegistration = $siswa->pendaftaranDetails()
             ->whereNotIn('status', [PendaftaranDetail::STATUS_DITOLAK])
+            ->where(function ($q) {
+                $q->whereNull('keputusan_status')
+                    ->orWhereNotIn('keputusan_status', [
+                        PendaftaranDetail::KEPUTUSAN_TIDAK_DITERIMA,
+                        PendaftaranDetail::KEPUTUSAN_MENGUNDURKAN_DIRI,
+                    ]);
+            })
             ->exists();
 
         return view('parent.pendaftaran.show', compact(
@@ -99,7 +117,10 @@ class PendaftaranController extends Controller
 
                 $isAccepted = PendaftaranDetail::query()
                     ->where('siswa_id', $siswa->id)
-                    ->where('status', PendaftaranDetail::STATUS_DITERIMA)
+                    ->where(function ($q) {
+                        $q->where('keputusan_status', PendaftaranDetail::KEPUTUSAN_DITERIMA)
+                            ->orWhere('status', PendaftaranDetail::STATUS_DITERIMA);
+                    })
                     ->lockForUpdate()
                     ->first();
 
@@ -110,6 +131,13 @@ class PendaftaranController extends Controller
                 $hasActiveRegistration = PendaftaranDetail::query()
                     ->where('siswa_id', $siswa->id)
                     ->whereNotIn('status', [PendaftaranDetail::STATUS_DITOLAK])
+                    ->where(function ($q) {
+                        $q->whereNull('keputusan_status')
+                            ->orWhereNotIn('keputusan_status', [
+                                PendaftaranDetail::KEPUTUSAN_TIDAK_DITERIMA,
+                                PendaftaranDetail::KEPUTUSAN_MENGUNDURKAN_DIRI,
+                            ]);
+                    })
                     ->lockForUpdate()
                     ->first();
 
@@ -127,7 +155,7 @@ class PendaftaranController extends Controller
                     throw new RuntimeException('Anak Anda sudah terdaftar di gelombang ini.');
                 }
 
-                $recommendationService = app(\App\Services\StudentGroupRecommendationService::class);
+                $recommendationService = app(StudentGroupRecommendationService::class);
                 $calc = $recommendationService->calculate($siswa->tanggal_lahir, $lockedPendaftaran->tahun_ajaran);
 
                 $detail = PendaftaranDetail::create([

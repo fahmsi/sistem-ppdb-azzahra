@@ -125,7 +125,7 @@ return new class extends Migration
             Schema::table('spmb_siswa', function (Blueprint $table) {
                 $table->dropForeign(['user_id']);
             });
-        } catch (\Throwable) {
+        } catch (Throwable) {
             //
         }
     }

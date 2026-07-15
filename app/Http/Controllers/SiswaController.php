@@ -10,8 +10,8 @@ use App\Models\Siswa;
 use App\Support\AuthorizesParentSiswa;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 class SiswaController extends Controller
@@ -172,8 +172,8 @@ class SiswaController extends Controller
 
                 // If there's a registration with status 'perlu_revisi', set it back to 'menunggu_verifikasi'
                 $siswa->pendaftaranDetails()
-                    ->where('status', \App\Models\PendaftaranDetail::STATUS_PERLU_REVISI)
-                    ->update(['status' => \App\Models\PendaftaranDetail::STATUS_MENUNGGU_VERIFIKASI]);
+                    ->where('status', PendaftaranDetail::STATUS_PERLU_REVISI)
+                    ->update(['status' => PendaftaranDetail::STATUS_MENUNGGU_VERIFIKASI]);
 
                 // Only delete old files after successful transaction commit
                 DB::afterCommit(function () use ($filesToDelete) {
@@ -201,13 +201,11 @@ class SiswaController extends Controller
     {
         $this->authorizeParentSiswa($siswa);
 
-        // Check if there are any non-rejected registrations
-        $activeRegistrations = $siswa->pendaftaranDetails()
-            ->whereNotIn('status', ['ditolak'])
-            ->count();
+        // Check if there is any registration history or decision history
+        $hasHistory = $siswa->pendaftaranDetails()->exists();
 
-        if ($activeRegistrations > 0) {
-            return back()->with('error', 'Tidak dapat menghapus data anak karena masih ada pendaftaran aktif.');
+        if ($hasHistory) {
+            return back()->with('error', 'Tidak dapat menghapus data anak karena masih ada riwayat pendaftaran atau keputusan sekolah.');
         }
 
         $nama = $siswa->nama;
@@ -232,10 +230,20 @@ class SiswaController extends Controller
         $this->authorizeParentSiswa($siswa);
         abort_unless($detail->siswa_id === $siswa->id, 404);
 
-        $registration = $detail->load('pendaftaran');
+        $registration = $detail->load(['pendaftaran', 'pembayaran']);
 
-        if ($registration->status !== PendaftaranDetail::STATUS_DITERIMA) {
-            abort(403, 'Belum ada pendaftaran yang diterima untuk dicetak kartunya.');
+        // Untuk sementara, sampai PR final endpoint:
+        // kartu hanya boleh diakses jika:
+        // - keputusan diterima;
+        // - pembayaran ada;
+        // - pembayaran status lunas.
+        // Tambahkan komentar bahwa PR berikutnya akan mengganti gate ini dengan final_status = siswa_resmi_terdaftar.
+        $isLunas = $registration->pembayaran?->isLunas();
+        if (! $registration->isKeputusanDiterima()
+            || ! $registration->pembayaran
+            || ! $isLunas
+        ) {
+            abort(403, 'Akses ditolak. Kartu pendaftaran hanya tersedia setelah calon siswa diterima dan pembayaran lunas.');
         }
 
         return view('parent.siswa.kartu', compact('siswa', 'registration'));

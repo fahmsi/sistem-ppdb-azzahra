@@ -16,10 +16,12 @@ class PendaftaranDetail extends Model
      */
     public const STATUS_PENDING = 'pending';
 
+    /** @deprecated Use keputusan_status instead for new logic */
     public const STATUS_DITERIMA = 'diterima';
 
     public const STATUS_MENUNGGU_VERIFIKASI = 'menunggu_verifikasi';
 
+    /** @deprecated Use keputusan_status instead for new logic */
     public const STATUS_DITOLAK = 'ditolak';
 
     public const STATUS_PERLU_REVISI = 'perlu_revisi';
@@ -27,6 +29,17 @@ class PendaftaranDetail extends Model
     public const STATUS_ADMINISTRASI_LENGKAP = 'administrasi_lengkap';
 
     public const STATUS_MENUNGGU_KEPUTUSAN = 'menunggu_keputusan';
+
+    public const STATUS_KEPUTUSAN_SELESAI = 'keputusan_selesai';
+
+    // Decision status snapshot constants
+    public const KEPUTUSAN_DITERIMA = 'diterima';
+
+    public const KEPUTUSAN_TIDAK_DITERIMA = 'tidak_diterima';
+
+    public const KEPUTUSAN_PERLU_TINDAK_LANJUT = 'perlu_tindak_lanjut';
+
+    public const KEPUTUSAN_MENGUNDURKAN_DIRI = 'mengundurkan_diri';
 
     protected $fillable = [
         'siswa_id',
@@ -40,6 +53,11 @@ class PendaftaranDetail extends Model
         'kelompok_final',
         'kelompok_ditetapkan_oleh',
         'kelompok_ditetapkan_at',
+        'keputusan_status',
+        'keputusan_catatan',
+        'keputusan_alasan',
+        'keputusan_diputuskan_oleh',
+        'keputusan_diputuskan_at',
     ];
 
     /**
@@ -50,6 +68,7 @@ class PendaftaranDetail extends Model
     protected $casts = [
         'tanggal_acuan_usia' => 'date',
         'kelompok_ditetapkan_at' => 'datetime',
+        'keputusan_diputuskan_at' => 'datetime',
     ];
 
     /**
@@ -111,7 +130,8 @@ class PendaftaranDetail extends Model
     }
 
     /**
-     * Check if registration was accepted.
+     * @deprecated Legacy compatibility only – do not use in new runtime flows.
+     * Checks the old process-status column value 'diterima'.
      */
     public function isDiterima(): bool
     {
@@ -119,7 +139,8 @@ class PendaftaranDetail extends Model
     }
 
     /**
-     * Check if registration was rejected.
+     * @deprecated Legacy compatibility only – do not use in new runtime flows.
+     * Checks the old process-status column value 'ditolak'.
      */
     public function isDitolak(): bool
     {
@@ -151,17 +172,81 @@ class PendaftaranDetail extends Model
     }
 
     /**
+     * User who decided the admission.
+     */
+    public function keputusanDiputuskanOleh(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'keputusan_diputuskan_oleh');
+    }
+
+    /**
+     * History of admission decisions.
+     */
+    public function keputusanHistories(): HasMany
+    {
+        return $this->hasMany(KeputusanPendaftaran::class, 'pendaftaran_detail_id');
+    }
+
+    /**
+     * The latest decision history.
+     */
+    public function keputusanTerbaru(): HasOne
+    {
+        return $this->hasOne(KeputusanPendaftaran::class, 'pendaftaran_detail_id')->latestOfMany();
+    }
+
+    public function hasDecision(): bool
+    {
+        return ! empty($this->keputusan_status);
+    }
+
+    /**
+     * True only when ALL three decision columns are set and the decision is 'diterima'.
+     * Does NOT fall back to the legacy status column.
+     */
+    public function isKeputusanDiterima(): bool
+    {
+        return $this->status === self::STATUS_KEPUTUSAN_SELESAI
+            && $this->keputusan_status === self::KEPUTUSAN_DITERIMA
+            && $this->keputusan_diputuskan_at !== null;
+    }
+
+    /**
+     * True only when ALL three decision columns are set and the decision is 'tidak_diterima'.
+     * Does NOT fall back to the legacy status column.
+     */
+    public function isKeputusanTidakDiterima(): bool
+    {
+        return $this->status === self::STATUS_KEPUTUSAN_SELESAI
+            && $this->keputusan_status === self::KEPUTUSAN_TIDAK_DITERIMA
+            && $this->keputusan_diputuskan_at !== null;
+    }
+
+    public function isPerluTindakLanjut(): bool
+    {
+        return $this->keputusan_status === self::KEPUTUSAN_PERLU_TINDAK_LANJUT;
+    }
+
+    public function isMengundurkanDiri(): bool
+    {
+        return $this->keputusan_status === self::KEPUTUSAN_MENGUNDURKAN_DIRI;
+    }
+
+    public function isKeputusanFinal(): bool
+    {
+        return in_array($this->keputusan_status, [
+            self::KEPUTUSAN_DITERIMA,
+            self::KEPUTUSAN_TIDAK_DITERIMA,
+            self::KEPUTUSAN_MENGUNDURKAN_DIRI,
+        ], true);
+    }
+
+    /**
      * Check if the registration is in an active non-final state
-     * (admin verification or observation stages).
+     * (admin verification, observation, or follow-up stages).
      */
     public function isActive(): bool
     {
-        return in_array($this->status, [
-            self::STATUS_PENDING,
-            self::STATUS_MENUNGGU_VERIFIKASI,
-            self::STATUS_PERLU_REVISI,
-            self::STATUS_ADMINISTRASI_LENGKAP,
-            self::STATUS_MENUNGGU_KEPUTUSAN,
-        ], true);
+        return $this->status !== self::STATUS_KEPUTUSAN_SELESAI;
     }
 }

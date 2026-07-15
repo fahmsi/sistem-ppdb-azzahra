@@ -7,7 +7,6 @@ use App\Models\ActivityLog;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
@@ -69,19 +68,19 @@ class AdminManageController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $validated = $request->validate([
-            'name'     => ['required', 'string', 'min:3', 'max:255'],
-            'email'    => ['required', 'email:rfc,dns', 'unique:users,email'],
+            'name' => ['required', 'string', 'min:3', 'max:255'],
+            'email' => ['required', 'email:rfc,dns', 'unique:users,email'],
             'no_telpon' => ['nullable', 'string', 'max:20'],
             'password' => ['required', 'min:8', 'confirmed'],
-            'role'     => ['required', Rule::in(['admin', 'super_admin'])],
+            'role' => ['required', Rule::in(['admin', 'super_admin'])],
         ]);
 
         $user = User::create([
-            'name'     => $validated['name'],
-            'email'    => $validated['email'],
+            'name' => $validated['name'],
+            'email' => $validated['email'],
             'no_telpon' => $validated['no_telpon'] ?? null,
             'password' => $validated['password'],
-            'role'     => $validated['role'],
+            'role' => $validated['role'],
         ]);
 
         ActivityLog::log('created', $user, "Membuat akun admin baru: {$user->name}");
@@ -95,7 +94,7 @@ class AdminManageController extends Controller
      */
     public function edit(User $user): View
     {
-        abort_if(!in_array($user->role, ['admin', 'super_admin']), 404);
+        abort_if(! in_array($user->role, ['admin', 'super_admin']), 404);
 
         return view('admin.kelola-admin.edit', compact('user'));
     }
@@ -105,14 +104,14 @@ class AdminManageController extends Controller
      */
     public function update(Request $request, User $user): RedirectResponse
     {
-        abort_if(!in_array($user->role, ['admin', 'super_admin']), 404);
+        abort_if(! in_array($user->role, ['admin', 'super_admin']), 404);
 
         $validated = $request->validate([
-            'name'     => ['required', 'string', 'min:3', 'max:255'],
-            'email'    => ['required', 'email:rfc,dns', Rule::unique('users')->ignore($user->id)],
+            'name' => ['required', 'string', 'min:3', 'max:255'],
+            'email' => ['required', 'email:rfc,dns', Rule::unique('users')->ignore($user->id)],
             'no_telpon' => ['nullable', 'string', 'max:20'],
             'password' => ['nullable', 'min:8', 'confirmed'],
-            'role'     => ['required', Rule::in(['admin', 'super_admin'])],
+            'role' => ['required', Rule::in(['admin', 'super_admin'])],
         ]);
 
         if ($user->role === 'super_admin' && $validated['role'] !== 'super_admin' && $this->activeSuperAdminCount() <= 1) {
@@ -121,12 +120,12 @@ class AdminManageController extends Controller
                 ->withErrors(['role' => 'Super admin terakhir tidak boleh diubah menjadi admin.']);
         }
 
-        $user->name  = $validated['name'];
+        $user->name = $validated['name'];
         $user->email = $validated['email'];
         $user->no_telpon = $validated['no_telpon'] ?? null;
-        $user->role  = $validated['role'];
+        $user->role = $validated['role'];
 
-        if (!empty($validated['password'])) {
+        if (! empty($validated['password'])) {
             $user->password = $validated['password'];
         }
 
@@ -143,7 +142,7 @@ class AdminManageController extends Controller
      */
     public function suspend(Request $request, User $user): RedirectResponse
     {
-        abort_if(!in_array($user->role, ['admin', 'super_admin']), 404);
+        abort_if(! in_array($user->role, ['admin', 'super_admin']), 404);
 
         if ($user->id === auth()->id()) {
             return back()->with('error', 'Anda tidak dapat suspend akun sendiri.');
@@ -174,7 +173,7 @@ class AdminManageController extends Controller
      */
     public function unsuspend(User $user): RedirectResponse
     {
-        abort_if(!in_array($user->role, ['admin', 'super_admin']), 404);
+        abort_if(! in_array($user->role, ['admin', 'super_admin']), 404);
 
         if ($user->id === auth()->id()) {
             return back()->with('error', 'Anda tidak dapat mengubah status akun sendiri.');
@@ -197,7 +196,7 @@ class AdminManageController extends Controller
      */
     public function destroy(User $user): RedirectResponse
     {
-        abort_if(!in_array($user->role, ['admin', 'super_admin']), 404);
+        abort_if(! in_array($user->role, ['admin', 'super_admin']), 404);
 
         // Prevent deleting self
         if ($user->id === auth()->id()) {

@@ -1,9 +1,9 @@
 <?php
 
+use App\Models\PaymentSetting;
 use App\Models\Pembayaran;
 use App\Models\Pendaftaran;
 use App\Models\PendaftaranDetail;
-use App\Models\PaymentSetting;
 use App\Models\Siswa;
 use App\Models\User;
 use Illuminate\Http\UploadedFile;
@@ -129,7 +129,9 @@ test('status and payment remain tied to the selected child registration detail',
     $secondDetail = PendaftaranDetail::create([
         'siswa_id' => $second->id,
         'pendaftaran_id' => $period->id,
-        'status' => PendaftaranDetail::STATUS_DITERIMA,
+        'status' => PendaftaranDetail::STATUS_KEPUTUSAN_SELESAI,
+        'keputusan_status' => PendaftaranDetail::KEPUTUSAN_DITERIMA,
+        'keputusan_diputuskan_at' => now(),
         'notifikasi' => 'ONLY_SECOND_CHILD',
     ]);
 
@@ -170,7 +172,16 @@ test('registration card requires the selected child and matching accepted detail
     $detail = PendaftaranDetail::create([
         'siswa_id' => $second->id,
         'pendaftaran_id' => $period->id,
-        'status' => PendaftaranDetail::STATUS_DITERIMA,
+        'status' => PendaftaranDetail::STATUS_KEPUTUSAN_SELESAI,
+        'keputusan_status' => PendaftaranDetail::KEPUTUSAN_DITERIMA,
+        'keputusan_diputuskan_at' => now(),
+    ]);
+
+    Pembayaran::create([
+        'pendaftaran_detail_id' => $detail->id,
+        'jumlah' => 100000,
+        'bukti_bayar' => 'bukti.png',
+        'status' => Pembayaran::STATUS_LUNAS,
     ]);
 
     $this->actingAs($parent)
@@ -195,12 +206,16 @@ test('nested child URLs reject mismatched registration details and foreign payme
     $secondDetail = PendaftaranDetail::create([
         'siswa_id' => $second->id,
         'pendaftaran_id' => $period->id,
-        'status' => PendaftaranDetail::STATUS_DITERIMA,
+        'status' => PendaftaranDetail::STATUS_KEPUTUSAN_SELESAI,
+        'keputusan_status' => PendaftaranDetail::KEPUTUSAN_DITERIMA,
+        'keputusan_diputuskan_at' => now(),
     ]);
     $otherDetail = PendaftaranDetail::create([
         'siswa_id' => $otherChild->id,
         'pendaftaran_id' => $period->id,
-        'status' => PendaftaranDetail::STATUS_DITERIMA,
+        'status' => PendaftaranDetail::STATUS_KEPUTUSAN_SELESAI,
+        'keputusan_status' => PendaftaranDetail::KEPUTUSAN_DITERIMA,
+        'keputusan_diputuskan_at' => now(),
     ]);
     $secondPayment = Pembayaran::create([
         'pendaftaran_detail_id' => $secondDetail->id,

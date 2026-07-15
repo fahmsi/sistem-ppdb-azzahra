@@ -1,9 +1,9 @@
 <?php
 
+use App\Models\PaymentSetting;
 use App\Models\Pembayaran;
 use App\Models\Pendaftaran;
 use App\Models\PendaftaranDetail;
-use App\Models\PaymentSetting;
 use App\Models\Siswa;
 use App\Models\User;
 use Illuminate\Http\UploadedFile;
@@ -109,7 +109,9 @@ test('payment upload uses the amount configured by admin and can be verified', f
     $detail = PendaftaranDetail::create([
         'siswa_id' => $siswa->id,
         'pendaftaran_id' => $period->id,
-        'status' => PendaftaranDetail::STATUS_DITERIMA,
+        'status' => PendaftaranDetail::STATUS_KEPUTUSAN_SELESAI,
+        'keputusan_status' => PendaftaranDetail::KEPUTUSAN_DITERIMA,
+        'keputusan_diputuskan_at' => now(),
     ]);
 
     PaymentSetting::create([
@@ -161,7 +163,9 @@ test('payment upload is rejected until admin configuration exists', function () 
     $detail = PendaftaranDetail::create([
         'siswa_id' => $siswa->id,
         'pendaftaran_id' => Pendaftaran::factory()->create()->id,
-        'status' => PendaftaranDetail::STATUS_DITERIMA,
+        'status' => PendaftaranDetail::STATUS_KEPUTUSAN_SELESAI,
+        'keputusan_status' => PendaftaranDetail::KEPUTUSAN_DITERIMA,
+        'keputusan_diputuskan_at' => now(),
     ]);
 
     $this->actingAs($parent)
@@ -189,7 +193,17 @@ test('registration card remains unavailable until registration is accepted', fun
         ->get(route('parent.siswa.pendaftaran.kartu', ['siswa' => $siswa, 'detail' => $detail]))
         ->assertForbidden();
 
-    $detail->update(['status' => PendaftaranDetail::STATUS_DITERIMA]);
+    $detail->update([
+        'status' => PendaftaranDetail::STATUS_KEPUTUSAN_SELESAI,
+        'keputusan_status' => PendaftaranDetail::KEPUTUSAN_DITERIMA,
+        'keputusan_diputuskan_at' => now(),
+    ]);
+    Pembayaran::create([
+        'pendaftaran_detail_id' => $detail->id,
+        'jumlah' => 100000,
+        'bukti_bayar' => 'bukti.png',
+        'status' => Pembayaran::STATUS_LUNAS,
+    ]);
 
     $this->actingAs($parent)
         ->get(route('parent.siswa.pendaftaran.kartu', ['siswa' => $siswa, 'detail' => $detail]))

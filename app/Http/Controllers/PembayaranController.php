@@ -3,11 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\ActivityLog;
-use App\Models\PendaftaranDetail;
-use App\Models\Pembayaran;
 use App\Models\PaymentSetting;
+use App\Models\Pembayaran;
+use App\Models\PendaftaranDetail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 class PembayaranController extends Controller
@@ -19,7 +20,7 @@ class PembayaranController extends Controller
     {
         $detail->loadMissing('siswa', 'pembayaran');
 
-        if ($detail->siswa?->user_id !== auth()->id() || $detail->status !== PendaftaranDetail::STATUS_DITERIMA) {
+        if ($detail->siswa?->user_id !== auth()->id() || ! $detail->isKeputusanDiterima()) {
             abort(403, 'Akses ditolak.');
         }
 
@@ -38,23 +39,32 @@ class PembayaranController extends Controller
         ]);
 
         $isReupload = (bool) $detail->pembayaran;
-
-        // Delete old proof if it exists
-        if ($detail->pembayaran && $detail->pembayaran->bukti_bayar) {
-            Storage::disk('local')->delete($detail->pembayaran->bukti_bayar);
-        }
-
+        $oldPath = $detail->pembayaran?->bukti_bayar;
         $buktiBayarPath = $request->file('bukti_bayar')->store('pembayaran', 'local');
 
-        Pembayaran::updateOrCreate(
-            ['pendaftaran_detail_id' => $detail->id],
-            [
-                'jumlah' => $jumlah,
-                'bukti_bayar' => $buktiBayarPath,
-                'status' => Pembayaran::STATUS_MENUNGGU_VERIFIKASI,
-                'catatan_admin' => null, // reset notes on re-upload
-            ]
-        );
+        try {
+            DB::transaction(function () use ($detail, $jumlah, $buktiBayarPath, $oldPath) {
+                Pembayaran::updateOrCreate(
+                    ['pendaftaran_detail_id' => $detail->id],
+                    [
+                        'jumlah' => $jumlah,
+                        'bukti_bayar' => $buktiBayarPath,
+                        'status' => Pembayaran::STATUS_MENUNGGU_VERIFIKASI,
+                        'catatan_admin' => null, // reset notes on re-upload
+                    ]
+                );
+
+                DB::afterCommit(function () use ($oldPath, $buktiBayarPath) {
+                    if ($oldPath && $oldPath !== $buktiBayarPath) {
+                        Storage::disk('local')->delete($oldPath);
+                    }
+                });
+            });
+        } catch (\Throwable $e) {
+            // Clean up newly uploaded file on database failure
+            Storage::disk('local')->delete($buktiBayarPath);
+            throw $e;
+        }
 
         ActivityLog::log(
             $isReupload ? 'payment_reuploaded' : 'payment_uploaded',
@@ -79,8 +89,11 @@ class PembayaranController extends Controller
             abort(403, 'Akses ditolak.');
         }
 
-        if (!$detail->pembayaran || ! $detail->pembayaran->isLunas()) {
-            abort(403, 'Bukti bayar belum diverifikasi.');
+        if (! $detail->isKeputusanDiterima()
+            || ! $detail->pembayaran
+            || ! $detail->pembayaran->isLunas()
+        ) {
+            abort(403, 'Akses ditolak.');
         }
 
         return view('parent.pembayaran.receipt', compact('detail'));

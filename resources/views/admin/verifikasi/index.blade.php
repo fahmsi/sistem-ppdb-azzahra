@@ -30,9 +30,16 @@
                 <option value="menunggu_verifikasi" {{ request('status') == 'menunggu_verifikasi' ? 'selected' : '' }}>Menunggu Verifikasi</option>
                 <option value="administrasi_lengkap" {{ request('status') == 'administrasi_lengkap' ? 'selected' : '' }}>Administrasi Lengkap</option>
                 <option value="menunggu_keputusan" {{ request('status') == 'menunggu_keputusan' ? 'selected' : '' }}>Menunggu Keputusan</option>
-                <option value="diterima" {{ request('status') == 'diterima' ? 'selected' : '' }}>Diterima</option>
-                <option value="ditolak" {{ request('status') == 'ditolak' ? 'selected' : '' }}>Ditolak</option>
+                <option value="keputusan_selesai" {{ request('status') == 'keputusan_selesai' ? 'selected' : '' }}>Keputusan Selesai</option>
                 <option value="perlu_revisi" {{ request('status') == 'perlu_revisi' ? 'selected' : '' }}>Perlu Revisi</option>
+            </select>
+
+            <select name="keputusan_status" class="sneat-input h-10 sm:w-48">
+                <option value="">Semua Keputusan</option>
+                <option value="diterima" {{ request('keputusan_status') == 'diterima' ? 'selected' : '' }}>Diterima</option>
+                <option value="tidak_diterima" {{ request('keputusan_status') == 'tidak_diterima' ? 'selected' : '' }}>Tidak Diterima</option>
+                <option value="perlu_tindak_lanjut" {{ request('keputusan_status') == 'perlu_tindak_lanjut' ? 'selected' : '' }}>Perlu Tindak Lanjut</option>
+                <option value="mengundurkan_diri" {{ request('keputusan_status') == 'mengundurkan_diri' ? 'selected' : '' }}>Mengundurkan Diri</option>
             </select>
 
             <button type="submit" class="sneat-btn-primary h-10 admin-table-action-btn">
@@ -96,13 +103,25 @@
                             @elseif($reg->status === 'administrasi_lengkap')
                                 <span class="sneat-badge bg-teal-50 dark:bg-teal-500/10 text-teal-600 dark:text-teal-400 border border-teal-200 dark:border-teal-500/20">Administrasi Lengkap</span>
                             @elseif($reg->status === 'menunggu_keputusan')
-                                <span class="sneat-badge bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-500/20">Menunggu Keputusan Sekolah</span>
-                            @elseif($reg->status === 'diterima')
-                                <span class="sneat-badge bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-500/20">Diterima</span>
-                            @elseif($reg->status === 'ditolak')
-                                <span class="sneat-badge bg-red-50 dark:bg-red-500/10 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-500/20">Pendaftaran Ditolak</span>
+                                <span class="sneat-badge bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-500/20">Menunggu Keputusan</span>
+                            @elseif($reg->status === 'keputusan_selesai')
+                                <span class="sneat-badge bg-purple-50 dark:bg-purple-500/10 text-purple-600 dark:text-purple-400 border border-purple-200 dark:border-purple-500/20">Keputusan Selesai</span>
                             @elseif($reg->status === 'perlu_revisi')
                                 <span class="sneat-badge bg-orange-50 dark:bg-orange-500/10 text-orange-600 dark:text-orange-400 border border-orange-200 dark:border-orange-500/20">Perlu Revisi Data</span>
+                            @endif
+
+                            @if($reg->keputusan_status)
+                                <div class="mt-1">
+                                    @if($reg->keputusan_status === 'diterima')
+                                        <span class="sneat-badge bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-500/20">Diterima</span>
+                                    @elseif($reg->keputusan_status === 'tidak_diterima')
+                                        <span class="sneat-badge bg-red-50 dark:bg-red-500/10 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-500/20">Tidak Diterima</span>
+                                    @elseif($reg->keputusan_status === 'perlu_tindak_lanjut')
+                                        <span class="sneat-badge bg-orange-50 dark:bg-orange-500/10 text-orange-600 dark:text-orange-400 border border-orange-200 dark:border-orange-500/20">Perlu Tindak Lanjut</span>
+                                    @elseif($reg->keputusan_status === 'mengundurkan_diri')
+                                        <span class="sneat-badge bg-gray-50 dark:bg-gray-500/10 text-gray-600 dark:text-gray-400 border border-gray-200 dark:border-gray-500/20">Mengundurkan Diri</span>
+                                    @endif
+                                </div>
                             @endif
                         </td>
                         <td class="text-center admin-table-actions-cell">
