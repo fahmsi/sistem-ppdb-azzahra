@@ -22,7 +22,9 @@
                 <th>Usia (1 Juli)</th>
                 <th>Rekomendasi</th>
                 <th>Final</th>
-                <th>Status</th>
+                <th>Status Adm</th>
+                <th>Keputusan</th>
+                <th>Diputuskan Oleh</th>
             </tr>
         </thead>
         <tbody>
@@ -35,7 +37,9 @@
                     <td>{{ $it->usia_bulan_saat_acuan !== null ? ((int) floor($it->usia_bulan_saat_acuan / 12)) . ' th ' . ($it->usia_bulan_saat_acuan % 12) . ' bln' : '-' }}</td>
                     <td>{{ $it->kelompok_rekomendasi ?? '-' }}</td>
                     <td>{{ $it->kelompok_final ?? '-' }}</td>
-                    <td>{{ $it->status }}</td>
+                    <td>{{ ucwords(str_replace('_', ' ', $it->status)) }}</td>
+                    <td>{{ $it->keputusan_status ? ucwords(str_replace('_', ' ', $it->keputusan_status)) : '-' }}</td>
+                    <td>{{ $it->keputusanDiputuskanOleh?->name ?? '-' }}</td>
                 </tr>
             @endforeach
         </tbody>

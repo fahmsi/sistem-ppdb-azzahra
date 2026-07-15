@@ -30,11 +30,29 @@
             @elseif($detail->status === 'menunggu_verifikasi')
                 <span class="sneat-badge bg-amber-50 dark:bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-200 dark:border-amber-500/20">Menunggu Verifikasi Berkas</span>
             @elseif($detail->status === 'diterima')
-                <span class="sneat-badge bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-500/20">Berkas Terverifikasi – Lanjut Observasi</span>
+                <span class="sneat-badge bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-500/20">Berkas Terverifikasi – Lanjut Observasi (Legacy)</span>
             @elseif($detail->status === 'ditolak')
-                <span class="sneat-badge bg-red-50 dark:bg-red-500/10 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-500/20">Pendaftaran Ditolak</span>
+                <span class="sneat-badge bg-red-50 dark:bg-red-500/10 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-500/20">Pendaftaran Ditolak (Legacy)</span>
             @elseif($detail->status === 'perlu_revisi')
                 <span class="sneat-badge bg-orange-50 dark:bg-orange-500/10 text-orange-600 dark:text-orange-400 border border-orange-200 dark:border-orange-500/20">Perlu Revisi Data</span>
+            @elseif($detail->status === 'administrasi_lengkap')
+                <span class="sneat-badge bg-teal-50 dark:bg-teal-500/10 text-teal-600 dark:text-teal-400 border border-teal-200 dark:border-teal-500/20">Administrasi Lengkap</span>
+            @elseif($detail->status === 'menunggu_keputusan')
+                <span class="sneat-badge bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-500/20">Menunggu Keputusan</span>
+            @elseif($detail->status === 'keputusan_selesai')
+                <span class="sneat-badge bg-gray-50 dark:bg-gray-500/10 text-gray-600 dark:text-gray-400 border border-gray-200 dark:border-gray-500/20">Keputusan Selesai</span>
+            @endif
+
+            @if($detail->keputusan_status)
+                @if($detail->keputusan_status === 'diterima')
+                    <span class="sneat-badge bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-500/20">Diterima</span>
+                @elseif($detail->keputusan_status === 'tidak_diterima')
+                    <span class="sneat-badge bg-red-50 dark:bg-red-500/10 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-500/20">Tidak Diterima</span>
+                @elseif($detail->keputusan_status === 'perlu_tindak_lanjut')
+                    <span class="sneat-badge bg-orange-50 dark:bg-orange-500/10 text-orange-600 dark:text-orange-400 border border-orange-200 dark:border-orange-500/20">Perlu Tindak Lanjut</span>
+                @elseif($detail->keputusan_status === 'mengundurkan_diri')
+                    <span class="sneat-badge bg-gray-50 dark:bg-gray-500/10 text-gray-600 dark:text-gray-400 border border-gray-200 dark:border-gray-500/20">Mengundurkan Diri</span>
+                @endif
             @endif
         </div>
     </div>
@@ -980,6 +998,219 @@
         </div>
     </div>
 </div>
+@endif
+
+{{-- ======================================================= --}}
+{{-- KEPUTUSAN SEKOLAH SECTION --}}
+{{-- ======================================================= --}}
+@if(in_array($detail->status, ['administrasi_lengkap', 'menunggu_keputusan', 'keputusan_selesai']))
+<div class="max-w-7xl mx-auto mt-6">
+    <div class="bg-white dark:bg-[#2b2c40] rounded-lg shadow-sneat dark:shadow-sneat-dark border border-[#d9dee3] dark:border-[#434463] overflow-hidden">
+        <div class="bg-indigo-50 dark:bg-indigo-500/10 px-6 py-4 border-b border-[#d9dee3] dark:border-[#434463] flex items-center gap-2">
+            <i data-lucide="shield-check" class="w-5 h-5 text-indigo-600"></i>
+            <h3 class="font-heading font-semibold text-[#566a7f] dark:text-[#d5d5e2]">Keputusan Penerimaan Sekolah</h3>
+        </div>
+
+        <div class="p-6 space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Info Summary -->
+                <div class="space-y-4">
+                    <div class="flex justify-between items-center py-2 border-b border-gray-100 dark:border-[#434463]">
+                        <span class="text-sm text-gray-500">Status Proses PPDB:</span>
+                        <span class="text-sm font-semibold text-gray-700 dark:text-[#d5d5e2]">{{ ucwords(str_replace('_', ' ', $detail->status)) }}</span>
+                    </div>
+                    <div class="flex justify-between items-center py-2 border-b border-gray-100 dark:border-[#434463]">
+                        <span class="text-sm text-gray-500">Keputusan Saat Ini:</span>
+                        @if($detail->keputusan_status)
+                            @if($detail->keputusan_status === 'diterima')
+                                <span class="sneat-badge bg-emerald-50 text-emerald-600 border border-emerald-200">DITERIMA</span>
+                            @elseif($detail->keputusan_status === 'tidak_diterima')
+                                <span class="sneat-badge bg-red-50 text-red-600 border border-red-200">TIDAK DITERIMA</span>
+                            @elseif($detail->keputusan_status === 'perlu_tindak_lanjut')
+                                <span class="sneat-badge bg-orange-50 text-orange-600 border border-orange-200">PERLU TINDAK LANJUT</span>
+                            @elseif($detail->keputusan_status === 'mengundurkan_diri')
+                                <span class="sneat-badge bg-gray-50 text-gray-600 border border-gray-200">MENGUNDURKAN DIRI</span>
+                            @endif
+                        @else
+                            <span class="text-sm text-gray-400">Belum diputuskan</span>
+                        @endif
+                    </div>
+                    <div class="flex justify-between items-center py-2 border-b border-gray-100 dark:border-[#434463]">
+                        <span class="text-sm text-gray-500">Rekomendasi Kelompok (Sistem):</span>
+                        <span class="text-sm font-semibold text-gray-700 dark:text-[#d5d5e2]">Kelompok {{ $detail->kelompok_rekomendasi ?? '-' }}</span>
+                    </div>
+                    <div class="flex justify-between items-center py-2 border-b border-gray-100 dark:border-[#434463]">
+                        <span class="text-sm text-gray-500">Kelompok Final:</span>
+                        <span class="text-sm font-semibold text-gray-700 dark:text-[#d5d5e2]">
+                            @if($detail->kelompok_final)
+                                Kelompok {{ $detail->kelompok_final }}
+                            @else
+                                <span class="text-gray-400">Belum ditentukan</span>
+                            @endif
+                        </span>
+                    </div>
+                    @if($detail->keputusan_diputuskan_oleh)
+                    <div class="flex justify-between items-center py-2 border-b border-gray-100 dark:border-[#434463]">
+                        <span class="text-sm text-gray-500">Diputuskan Oleh:</span>
+                        <span class="text-sm text-gray-700 dark:text-[#d5d5e2]">{{ $detail->keputusanDiputuskanOleh?->name ?? '-' }}</span>
+                    </div>
+                    <div class="flex justify-between items-center py-2 border-b border-gray-100 dark:border-[#434463]">
+                        <span class="text-sm text-gray-500">Waktu Keputusan:</span>
+                        <span class="text-sm text-gray-700 dark:text-[#d5d5e2]">{{ $detail->keputusan_diputuskan_at?->format('d/m/Y H:i') }}</span>
+                    </div>
+                    @endif
+                </div>
+
+                <!-- Form or Decision Summary -->
+                <div>
+                    @php
+                        $latestObs = $detail->observasiTerbaru;
+                        $allowDecision = !$detail->isKeputusanFinal();
+
+                        // Condition check for Diterima/Tidak Diterima/Perlu Tindak Lanjut
+                        $canStandard = ($detail->status === 'menunggu_keputusan' && $latestObs && $latestObs->status === 'selesai');
+                        // Condition check for Mengundurkan Diri
+                        $cond1 = ($detail->status === 'menunggu_keputusan' && $latestObs && $latestObs->status === 'selesai');
+                        $cond2 = false;
+                        if ($latestObs && $latestObs->status === 'tidak_hadir' && $detail->pendaftaran?->tanggal_mpls) {
+                            $deadline = \Carbon\Carbon::parse($detail->pendaftaran->tanggal_mpls)->subDays(3)->endOfDay();
+                            if (now()->greaterThan($deadline)) {
+                                $cond2 = true;
+                            }
+                        }
+                        $canWithdrawn = $cond1 || $cond2;
+                    @endphp
+
+                    @if($allowDecision && ($canStandard || $canWithdrawn))
+                        <form action="{{ route('admin.verifikasi.keputusan.store', $detail->id) }}" method="POST" class="space-y-4">
+                            @csrf
+                            <div>
+                                <label class="block text-sm font-semibold text-[#566a7f] dark:text-[#d5d5e2] mb-1">Pilih Keputusan:</label>
+                                <select name="keputusan_status" id="keputusan_status_select" class="sneat-input" onchange="toggleDecisionInputs()">
+                                    <option value="">-- Pilih Keputusan --</option>
+                                    @if($canStandard)
+                                        <option value="diterima" {{ old('keputusan_status') == 'diterima' ? 'selected' : '' }}>Diterima</option>
+                                        <option value="tidak_diterima" {{ old('keputusan_status') == 'tidak_diterima' ? 'selected' : '' }}>Tidak Diterima</option>
+                                        <option value="perlu_tindak_lanjut" {{ old('keputusan_status') == 'perlu_tindak_lanjut' ? 'selected' : '' }}>Perlu Tindak Lanjut</option>
+                                    @endif
+                                    @if($canWithdrawn)
+                                        <option value="mengundurkan_diri" {{ old('keputusan_status') == 'mengundurkan_diri' ? 'selected' : '' }}>Mengundurkan Diri</option>
+                                    @endif
+                                </select>
+                            </div>
+
+                            <div id="catatan_keputusan_wrapper">
+                                <label class="block text-sm font-semibold text-[#566a7f] dark:text-[#d5d5e2] mb-1">Catatan Keputusan (Ditampilkan ke Wali Murid):</label>
+                                <textarea name="keputusan_catatan" rows="3" class="sneat-input" placeholder="Masukkan catatan untuk orang tua...">{{ old('keputusan_catatan') }}</textarea>
+                            </div>
+
+                            <div id="alasan_keputusan_wrapper" class="hidden">
+                                <label class="block text-sm font-semibold text-[#566a7f] dark:text-[#d5d5e2] mb-1">Alasan Keputusan (Wajib untuk selain Diterima):</label>
+                                <textarea name="keputusan_alasan" id="keputusan_alasan" rows="3" class="sneat-input" placeholder="Masukkan alasan keputusan...">{{ old('keputusan_alasan') }}</textarea>
+                            </div>
+
+                            <div class="p-3 rounded bg-amber-50 dark:bg-amber-500/5 border border-amber-200 dark:border-amber-500/20">
+                                <p class="text-xs text-amber-700 dark:text-amber-400">
+                                    <i data-lucide="alert-triangle" class="w-4 h-4 inline mr-1 text-amber-600"></i>
+                                    <strong>Perhatian:</strong> Keputusan <em>Diterima</em>, <em>Tidak Diterima</em>, dan <em>Mengundurkan Diri</em> bersifat <strong>final</strong> dan tidak dapat diubah kembali. Keputusan <em>Diterima</em> akan membuka tahap pembayaran bagi orang tua.
+                                </p>
+                            </div>
+
+                            <button type="submit" class="w-full py-2.5 px-4 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg shadow transition-colors">
+                                Simpan Keputusan
+                            </button>
+                        </form>
+                    @else
+                        <div class="p-4 rounded-lg bg-gray-50 dark:bg-[#232333] border border-gray-200 dark:border-[#434463] text-center">
+                            @if($detail->isKeputusanFinal())
+                                <p class="text-sm font-bold text-gray-700 dark:text-[#d5d5e2]">Keputusan Final Telah Ditetapkan</p>
+                                <p class="text-xs text-gray-500 mt-2">Keputusan untuk pendaftaran ini adalah <strong>{{ strtoupper(str_replace('_', ' ', $detail->keputusan_status)) }}</strong> dan tidak dapat diubah.</p>
+                                @if($detail->keputusan_catatan)
+                                    <div class="mt-3 text-left p-3 bg-white dark:bg-[#2b2c40] rounded border border-gray-100 dark:border-[#434463]">
+                                        <p class="text-xs font-semibold text-gray-600">Catatan:</p>
+                                        <p class="text-xs text-gray-700 dark:text-[#d5d5e2]">{{ $detail->keputusan_catatan }}</p>
+                                    </div>
+                                @endif
+                                @if($detail->keputusan_alasan)
+                                    <div class="mt-2 text-left p-3 bg-white dark:bg-[#2b2c40] rounded border border-gray-100 dark:border-[#434463]">
+                                        <p class="text-xs font-semibold text-gray-600">Alasan:</p>
+                                        <p class="text-xs text-gray-700 dark:text-[#d5d5e2]">{{ $detail->keputusan_alasan }}</p>
+                                    </div>
+                                @endif
+                            @else
+                                <p class="text-sm text-gray-500">Keputusan belum dapat dilakukan. Pastikan hasil observasi terbaru berstatus selesai.</p>
+                            @endif
+                        </div>
+                    @endif
+                </div>
+            </div>
+
+            <!-- Decision History -->
+            @if($detail->keputusanHistories->isNotEmpty())
+            <div class="pt-4 border-t border-gray-100 dark:border-[#434463]">
+                <h4 class="font-semibold text-sm text-[#566a7f] dark:text-[#d5d5e2] mb-3 flex items-center gap-2">
+                    <i data-lucide="history" class="w-4 h-4"></i> Histori Keputusan Sekolah
+                </h4>
+                <div class="flow-root">
+                    <ul role="list" class="-mb-8">
+                        @foreach($detail->keputusanHistories as $histIdx => $hist)
+                        <li>
+                            <div class="relative pb-8">
+                                @if($histIdx < $detail->keputusanHistories->count() - 1)
+                                <span class="absolute left-4 top-4 -ml-px h-full w-0.5 bg-gray-200 dark:bg-[#434463]" aria-hidden="true"></span>
+                                @endif
+                                <div class="relative flex space-x-3">
+                                    <div>
+                                        <span class="h-8 w-8 rounded-full bg-indigo-50 dark:bg-indigo-500/10 flex items-center justify-center ring-8 ring-white dark:ring-[#2b2c40]">
+                                            <i data-lucide="hash" class="w-4 h-4 text-indigo-600"></i>
+                                        </span>
+                                    </div>
+                                    <div class="flex-1 min-w-0 pt-1.5">
+                                        <p class="text-xs font-medium text-gray-600 dark:text-[#a1b0cb]">
+                                            Keputusan: <span class="font-bold text-gray-800 dark:text-[#d5d5e2]">{{ ucwords(str_replace('_', ' ', $hist->status)) }}</span>
+                                            oleh {{ $hist->decidedBy?->name ?? 'System' }} pada {{ $hist->decided_at?->format('d/m/Y H:i') }}
+                                        </p>
+                                        @if($hist->catatan)
+                                        <p class="text-xs text-gray-500 mt-1">Catatan: "{{ $hist->catatan }}"</p>
+                                        @endif
+                                        @if($hist->alasan)
+                                        <p class="text-xs text-gray-500 mt-0.5">Alasan: "{{ $hist->alasan }}"</p>
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        @endforeach
+                    </ul>
+                </div>
+            </div>
+            @endif
+        </div>
+    </div>
+</div>
+
+<script>
+    function toggleDecisionInputs() {
+        const select = document.getElementById('keputusan_status_select');
+        const alasanWrapper = document.getElementById('alasan_keputusan_wrapper');
+        const alasanInput = document.getElementById('keputusan_alasan');
+
+        if (select && select.value && select.value !== 'diterima') {
+            alasanWrapper.classList.remove('hidden');
+            alasanInput.setAttribute('required', 'required');
+        } else if (alasanWrapper) {
+            alasanWrapper.classList.add('hidden');
+            alasanInput.removeAttribute('required');
+        }
+    }
+
+    // Run on load to set correct visibility if validation failed and returned old input
+    document.addEventListener('DOMContentLoaded', function() {
+        if (document.getElementById('keputusan_status_select')) {
+            toggleDecisionInputs();
+        }
+    });
+</script>
 @endif
 
 <!-- Hidden Form: Revisi -->>

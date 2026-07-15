@@ -22,8 +22,8 @@ class DashboardController extends Controller
             'total_pendaftar' => PendaftaranDetail::count(),
             'pending' => PendaftaranDetail::where('status', PendaftaranDetail::STATUS_PENDING)->count(),
             'menunggu_verifikasi' => PendaftaranDetail::where('status', PendaftaranDetail::STATUS_MENUNGGU_VERIFIKASI)->count(),
-            'diterima' => PendaftaranDetail::where('status', PendaftaranDetail::STATUS_DITERIMA)->count(),
-            'ditolak' => PendaftaranDetail::where('status', PendaftaranDetail::STATUS_DITOLAK)->count(),
+            'diterima' => PendaftaranDetail::where('keputusan_status', PendaftaranDetail::KEPUTUSAN_DITERIMA)->count(),
+            'ditolak' => PendaftaranDetail::where('keputusan_status', PendaftaranDetail::KEPUTUSAN_TIDAK_DITERIMA)->count(),
             'perlu_revisi' => PendaftaranDetail::where('status', PendaftaranDetail::STATUS_PERLU_REVISI)->count(),
             'total_users' => User::where('role', 'parent')->count(),
             'gelombang_aktif' => Pendaftaran::open()->count(),
@@ -61,9 +61,9 @@ class DashboardController extends Controller
         $statusData = [
             'Pending' => $rawStatuses['pending'] ?? 0,
             'Menunggu' => $rawStatuses['menunggu_verifikasi'] ?? 0,
-            'Diterima' => $rawStatuses['diterima'] ?? 0,
-            'Ditolak' => $rawStatuses['ditolak'] ?? 0,
             'Revisi' => $rawStatuses['perlu_revisi'] ?? 0,
+            'Diterima' => PendaftaranDetail::where('keputusan_status', PendaftaranDetail::KEPUTUSAN_DITERIMA)->count(),
+            'Tidak Diterima' => PendaftaranDetail::where('keputusan_status', PendaftaranDetail::KEPUTUSAN_TIDAK_DITERIMA)->count(),
         ];
         $chartStatus = [
             'labels' => array_keys($statusData),
@@ -80,11 +80,11 @@ class DashboardController extends Controller
         ];
 
         return view('admin.dashboard', compact(
-            'stats', 
-            'recentRegistrations', 
-            'recentLogs', 
-            'chartGender', 
-            'chartStatus', 
+            'stats',
+            'recentRegistrations',
+            'recentLogs',
+            'chartGender',
+            'chartStatus',
             'chartGelombang'
         ));
     }

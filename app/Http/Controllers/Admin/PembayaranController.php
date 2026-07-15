@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Exports\PembayaranExport;
 use App\Http\Controllers\Controller;
 use App\Models\Pembayaran;
+use Barryvdh\DomPDF\Facade;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Maatwebsite\Excel\Facades\Excel;
@@ -37,20 +38,21 @@ class PembayaranController extends Controller
         $filenameBase = 'rekap_pembayaran_azzahra';
 
         if ($type === 'csv') {
-            return Excel::download(new PembayaranExport, $filenameBase . '.csv', \Maatwebsite\Excel\Excel::CSV);
+            return Excel::download(new PembayaranExport, $filenameBase.'.csv', \Maatwebsite\Excel\Excel::CSV);
         }
 
         if ($type === 'pdf') {
-            if (class_exists(\Barryvdh\DomPDF\Facade::class) || app()->bound('dompdf')) {
+            if (class_exists(Facade::class) || app()->bound('dompdf')) {
                 $items = Pembayaran::with(['pendaftaranDetail.siswa.user', 'pendaftaranDetail.pendaftaran'])->get();
                 $pdf = app('dompdf.wrapper');
                 $pdf->loadView('admin.pembayaran.export_pdf', compact('items'));
-                return $pdf->download($filenameBase . '.pdf');
+
+                return $pdf->download($filenameBase.'.pdf');
             }
 
             return back()->with('error', 'PDF export requires barryvdh/laravel-dompdf. Run: composer require barryvdh/laravel-dompdf');
         }
 
-        return Excel::download(new PembayaranExport, $filenameBase . '.xlsx');
+        return Excel::download(new PembayaranExport, $filenameBase.'.xlsx');
     }
 }

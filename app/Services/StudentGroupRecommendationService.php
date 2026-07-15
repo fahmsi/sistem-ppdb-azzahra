@@ -9,8 +9,7 @@ class StudentGroupRecommendationService
     /**
      * Calculate age at reference date (1 July of year 1 of the academic year) and recommend a group.
      *
-     * @param string|\DateTimeInterface $birthDate
-     * @param string $tahunAjaran YYYY/YYYY (e.g. 2026/2027)
+     * @param  string  $tahunAjaran  YYYY/YYYY (e.g. 2026/2027)
      * @return array{
      *     tanggal_acuan: string,
      *     usia_bulan: int,

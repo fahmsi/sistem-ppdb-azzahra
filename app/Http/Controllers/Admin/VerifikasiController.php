@@ -59,6 +59,11 @@ class VerifikasiController extends Controller
             $query->where('status', $request->status);
         }
 
+        // Filter by keputusan_status
+        if ($request->filled('keputusan_status')) {
+            $query->where('keputusan_status', $request->keputusan_status);
+        }
+
         $registrations = $query->latest()->paginate(20);
         $pendaftarans = Pendaftaran::orderBy('tahun_ajaran', 'desc')->get();
 
@@ -160,9 +165,6 @@ class VerifikasiController extends Controller
         return back()->with('success', count($validated['detail_ids']).' pendaftaran berhasil diperbarui.');
     }
 
-    /**
-     * Verify payment proof uploaded by parent.
-     */
     public function verifyPembayaran(Request $request, Pembayaran $pembayaran): RedirectResponse
     {
         $validated = $request->validate([
@@ -170,12 +172,17 @@ class VerifikasiController extends Controller
             'catatan_admin' => ['nullable', 'required_if:status,'.Pembayaran::STATUS_DITOLAK, 'string', 'max:500'],
         ]);
 
+        $pembayaran->loadMissing('pendaftaranDetail');
+        $detail = $pembayaran->pendaftaranDetail;
+
+        if (! $detail || ! $detail->isKeputusanDiterima()) {
+            return back()->with('error', 'Pembayaran hanya dapat diverifikasi untuk calon siswa dengan keputusan Diterima.');
+        }
+
         $pembayaran->update([
             'status' => $validated['status'],
             'catatan_admin' => $validated['status'] === Pembayaran::STATUS_DITOLAK ? $validated['catatan_admin'] : null,
         ]);
-
-        $pembayaran->loadMissing('pendaftaranDetail');
 
         ActivityLog::log(
             $validated['status'] === Pembayaran::STATUS_LUNAS ? 'verified' : 'rejected',
@@ -216,7 +223,7 @@ class VerifikasiController extends Controller
 
         if ($type === 'pdf') {
             if (class_exists(Facade::class) || app()->bound('dompdf')) {
-                $items = PendaftaranDetail::with(['siswa.user', 'pendaftaran'])->get();
+                $items = PendaftaranDetail::with(['siswa.user', 'pendaftaran', 'keputusanDiputuskanOleh'])->get();
                 $pdf = app('dompdf.wrapper');
                 $pdf->loadView('admin.verifikasi.export_pdf', compact('items'));
 

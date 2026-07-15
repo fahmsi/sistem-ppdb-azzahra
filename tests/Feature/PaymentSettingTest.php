@@ -1,9 +1,8 @@
 <?php
 
-use App\Models\ActivityLog;
+use App\Models\PaymentSetting;
 use App\Models\Pendaftaran;
 use App\Models\PendaftaranDetail;
-use App\Models\PaymentSetting;
 use App\Models\Siswa;
 use App\Models\User;
 use Illuminate\Http\UploadedFile;
@@ -186,6 +185,8 @@ function createAcceptedRegistrationForPaymentSettingTest(User $parent): Pendafta
     return PendaftaranDetail::create([
         'siswa_id' => $siswa->id,
         'pendaftaran_id' => $pendaftaran->id,
-        'status' => PendaftaranDetail::STATUS_DITERIMA,
+        'status' => PendaftaranDetail::STATUS_KEPUTUSAN_SELESAI,
+        'keputusan_status' => PendaftaranDetail::KEPUTUSAN_DITERIMA,
+        'keputusan_diputuskan_at' => now(),
     ]);
 }

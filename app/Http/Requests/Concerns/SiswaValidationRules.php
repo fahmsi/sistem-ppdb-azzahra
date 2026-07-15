@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests\Concerns;
 
+use App\Models\Siswa;
+
 trait SiswaValidationRules
 {
     protected function siswaRules(bool $documentsRequired, bool $isStore = true): array
@@ -71,7 +73,7 @@ trait SiswaValidationRules
             } else {
                 $siswa = $this->route('siswa');
                 if (is_numeric($siswa)) {
-                    $siswa = \App\Models\Siswa::find($siswa);
+                    $siswa = Siswa::find($siswa);
                 }
                 $hasExisting = $siswa && $siswa->foto_ktp_ayah && $siswa->tinggal_bersama === 'orang_tua';
                 $ktpAyahRules[] = $hasExisting ? 'nullable' : 'required';
@@ -89,7 +91,7 @@ trait SiswaValidationRules
             } else {
                 $siswa = $this->route('siswa');
                 if (is_numeric($siswa)) {
-                    $siswa = \App\Models\Siswa::find($siswa);
+                    $siswa = Siswa::find($siswa);
                 }
                 $hasExisting = $siswa && $siswa->foto_ktp_ibu && $siswa->tinggal_bersama === 'orang_tua';
                 $ktpIbuRules[] = $hasExisting ? 'nullable' : 'required';
@@ -107,7 +109,7 @@ trait SiswaValidationRules
             } else {
                 $siswa = $this->route('siswa');
                 if (is_numeric($siswa)) {
-                    $siswa = \App\Models\Siswa::find($siswa);
+                    $siswa = Siswa::find($siswa);
                 }
                 $hasExisting = $siswa && $siswa->foto_ktp_wali && $siswa->tinggal_bersama === 'wali';
                 $ktpWaliRules[] = $hasExisting ? 'nullable' : 'required';

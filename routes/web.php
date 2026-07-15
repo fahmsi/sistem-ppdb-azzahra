@@ -3,6 +3,7 @@
 use App\Http\Controllers\AchievementImageController;
 use App\Http\Controllers\Admin\AchievementController;
 use App\Http\Controllers\Admin\AdminManageController;
+use App\Http\Controllers\Admin\AdmissionDecisionController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\GalleryController;
 use App\Http\Controllers\Admin\ObservasiController;
@@ -189,6 +190,7 @@ Route::middleware('auth')->group(function () {
         Route::patch('/verifikasi/{detail}/revisi', [VerifikasiController::class, 'revisi'])->name('verifikasi.revisi');
         Route::patch('/verifikasi/{detail}/kelompok', [VerifikasiController::class, 'setKelompok'])->name('verifikasi.kelompok');
         Route::delete('/verifikasi/{detail}', [VerifikasiController::class, 'destroy'])->name('verifikasi.destroy');
+        Route::post('/verifikasi/{detail}/keputusan', [AdmissionDecisionController::class, 'store'])->name('verifikasi.keputusan.store');
         Route::patch('/pembayaran/{pembayaran}/verify', [VerifikasiController::class, 'verifyPembayaran'])->name('pembayaran.verify');
 
         // Administrasi Lengkap

@@ -35,14 +35,14 @@ class TestimonialController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $validated = $request->validate([
-            'name'    => 'required|string|max:255',
-            'rating'  => 'required|integer|min:1|max:5',
+            'name' => 'required|string|max:255',
+            'rating' => 'required|integer|min:1|max:5',
             'content' => 'required|string|max:1000',
         ]);
 
         Testimonial::create($validated);
 
-        ActivityLog::log('created', null, 'Menambahkan testimoni baru dari "' . $validated['name'] . '"');
+        ActivityLog::log('created', null, 'Menambahkan testimoni baru dari "'.$validated['name'].'"');
 
         return redirect()->route('admin.testimonials.index')
             ->with('success', 'Testimoni berhasil ditambahkan.');
@@ -62,14 +62,14 @@ class TestimonialController extends Controller
     public function update(Request $request, Testimonial $testimonial): RedirectResponse
     {
         $validated = $request->validate([
-            'name'    => 'required|string|max:255',
-            'rating'  => 'required|integer|min:1|max:5',
+            'name' => 'required|string|max:255',
+            'rating' => 'required|integer|min:1|max:5',
             'content' => 'required|string|max:1000',
         ]);
 
         $testimonial->update($validated);
 
-        ActivityLog::log('updated', null, 'Memperbarui testimoni dari "' . $validated['name'] . '"');
+        ActivityLog::log('updated', null, 'Memperbarui testimoni dari "'.$validated['name'].'"');
 
         return redirect()->route('admin.testimonials.index')
             ->with('success', 'Testimoni berhasil diperbarui.');
@@ -83,7 +83,7 @@ class TestimonialController extends Controller
         $name = $testimonial->name;
         $testimonial->delete();
 
-        ActivityLog::log('deleted', null, 'Menghapus testimoni dari "' . $name . '"');
+        ActivityLog::log('deleted', null, 'Menghapus testimoni dari "'.$name.'"');
 
         return redirect()->route('admin.testimonials.index')
             ->with('success', 'Testimoni berhasil dihapus.');
