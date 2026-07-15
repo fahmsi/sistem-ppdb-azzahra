@@ -455,13 +455,13 @@
                                             <div class="flex justify-between items-center">
                                                 <span class="text-gray-500 dark:text-gray-400">Status Verifikasi</span>
                                                 @if($detail->status === 'pending')
-                                                    <span class="px-2.5 py-0.5 rounded bg-gray-100 text-gray-700 border border-gray-200 text-xs font-bold uppercase">Pending</span>
+                                                    <span class="px-2.5 py-0.5 rounded bg-gray-100 text-gray-700 border border-gray-200 text-xs font-bold uppercase">Pendaftaran Tercatat</span>
                                                 @elseif($detail->status === 'menunggu_verifikasi')
-                                                    <span class="px-2.5 py-0.5 rounded bg-amber-50 text-amber-700 border border-amber-200 text-xs font-bold uppercase dark:bg-amber-500/10 dark:text-amber-400 dark:border-amber-500/20">Menunggu Verifikasi Berkas</span>
+                                                    <span class="px-2.5 py-0.5 rounded bg-amber-50 text-amber-700 border border-amber-200 text-xs font-bold uppercase dark:bg-amber-500/10 dark:text-amber-400 dark:border-amber-500/20">Menunggu Verifikasi Administrasi</span>
                                                 @elseif($detail->status === 'diterima')
-                                                    <span class="px-2.5 py-0.5 rounded bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-bold uppercase dark:bg-emerald-500/10 dark:text-emerald-400 dark:border-emerald-500/20">Berkas Terverifikasi – Lanjut Observasi</span>
+                                                    <span class="px-2.5 py-0.5 rounded bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-bold uppercase dark:bg-emerald-500/10 dark:text-emerald-400 dark:border-emerald-500/20">Administrasi Lengkap (Data Legacy)</span>
                                                 @elseif($detail->status === 'ditolak')
-                                                    <span class="px-2.5 py-0.5 rounded bg-red-50 text-red-700 border border-red-200 text-xs font-bold uppercase dark:bg-red-500/10 dark:text-red-400 dark:border-red-500/20">Pendaftaran Ditolak</span>
+                                                    <span class="px-2.5 py-0.5 rounded bg-red-50 text-red-700 border border-red-200 text-xs font-bold uppercase dark:bg-red-500/10 dark:text-red-400 dark:border-red-500/20">Pendaftaran Tidak Dilanjutkan (Data Legacy)</span>
                                                 @elseif($detail->status === 'perlu_revisi')
                                                     <span class="px-2.5 py-0.5 rounded bg-orange-50 text-orange-700 border border-orange-200 text-xs font-bold uppercase dark:bg-orange-500/10 dark:text-orange-400 dark:border-orange-500/20">Perlu Revisi Data</span>
                                                 @endif

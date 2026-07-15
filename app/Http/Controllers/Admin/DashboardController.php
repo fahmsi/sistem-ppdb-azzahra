@@ -66,7 +66,7 @@ class DashboardController extends Controller
             ->toArray();
 
         $statusData = [
-            'Pending' => $rawStatuses['pending'] ?? 0,
+            'Pendaftaran Tercatat' => $rawStatuses['pending'] ?? 0,
             'Menunggu' => $rawStatuses['menunggu_verifikasi'] ?? 0,
             'Revisi' => $rawStatuses['perlu_revisi'] ?? 0,
             'Diterima' => PendaftaranDetail::where('keputusan_status', PendaftaranDetail::KEPUTUSAN_DITERIMA)->count(),

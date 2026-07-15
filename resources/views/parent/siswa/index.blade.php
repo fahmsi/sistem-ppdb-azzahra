@@ -33,20 +33,6 @@
             @foreach($siswas as $siswa)
                 @php
                     $latestRegistration = $siswa->pendaftaranDetails->first();
-                    $statusLabels = [
-                        'pending' => 'Pending',
-                        'menunggu_verifikasi' => 'Menunggu Verifikasi',
-                        'perlu_revisi' => 'Perlu Revisi',
-                        'ditolak' => 'Ditolak',
-                        'diterima' => 'Berkas Terverifikasi',
-                    ];
-                    $statusClasses = [
-                        'pending' => 'bg-gray-100 text-gray-700 dark:bg-[#434463] dark:text-[#d5d5e2]',
-                        'menunggu_verifikasi' => 'bg-amber-50 text-amber-700 dark:bg-amber-500/10 dark:text-amber-300',
-                        'perlu_revisi' => 'bg-orange-50 text-orange-700 dark:bg-orange-500/10 dark:text-orange-300',
-                        'ditolak' => 'bg-red-50 text-red-700 dark:bg-red-500/10 dark:text-red-300',
-                        'diterima' => 'bg-emerald-50 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-300',
-                    ];
                 @endphp
                 <article class="flex flex-col rounded-lg border border-[#d9dee3] bg-white p-5 shadow-sneat dark:border-[#434463] dark:bg-[#2b2c40] dark:shadow-sneat-dark">
                     <div class="flex items-start gap-4">
@@ -62,29 +48,7 @@
                         <p class="text-xs font-semibold uppercase tracking-wide text-[#a1b0cb]">Status Pendaftaran Terbaru</p>
                         @if($latestRegistration)
                             <div class="mt-2 flex flex-wrap items-center gap-2">
-                                @if($latestRegistration->keputusan_status)
-                                    @php
-                                        $decisionLabels = [
-                                            'diterima' => 'Diterima',
-                                            'tidak_diterima' => 'Tidak Diterima',
-                                            'perlu_tindak_lanjut' => 'Perlu Tindak Lanjut',
-                                            'mengundurkan_diri' => 'Mengundurkan Diri',
-                                        ];
-                                        $decisionClasses = [
-                                            'diterima' => 'bg-emerald-50 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-300',
-                                            'tidak_diterima' => 'bg-red-50 text-red-700 dark:bg-red-500/10 dark:text-red-300',
-                                            'perlu_tindak_lanjut' => 'bg-orange-50 text-orange-700 dark:bg-orange-500/10 dark:text-orange-300',
-                                            'mengundurkan_diri' => 'bg-gray-100 text-gray-700 dark:bg-[#434463] dark:text-[#d5d5e2]',
-                                        ];
-                                    @endphp
-                                    <span class="rounded-full px-2.5 py-1 text-xs font-semibold {{ $decisionClasses[$latestRegistration->keputusan_status] ?? 'bg-gray-100 text-gray-700' }}">
-                                        {{ $decisionLabels[$latestRegistration->keputusan_status] ?? ucfirst(str_replace('_', ' ', $latestRegistration->keputusan_status)) }}
-                                    </span>
-                                @else
-                                    <span class="rounded-full px-2.5 py-1 text-xs font-semibold {{ $statusClasses[$latestRegistration->status] ?? 'bg-gray-100 text-gray-700' }}">
-                                        {{ $statusLabels[$latestRegistration->status] ?? str($latestRegistration->status)->replace('_', ' ')->title() }}
-                                    </span>
-                                @endif
+                                <x-spmb.status-badge :presentation="\App\Support\SpmbStatusPresenter::primary($latestRegistration)" />
                                 <span class="text-xs text-[#a1b0cb]">{{ $latestRegistration->pendaftaran?->gelombang ?? 'Gelombang tidak tersedia' }}</span>
                             </div>
                         @else

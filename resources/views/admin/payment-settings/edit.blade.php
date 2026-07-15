@@ -11,7 +11,7 @@
                 <i data-lucide="landmark" class="h-5 w-5 text-[#696cff]"></i>
                 Konfigurasi Pembayaran
             </h2>
-            <p class="mt-1 text-sm text-[#697a8d] dark:text-[#a1b0cb]">Informasi ini ditampilkan kepada wali murid setelah pendaftaran diterima.</p>
+            <p class="mt-1 text-sm text-[#697a8d] dark:text-[#a1b0cb]">Informasi ini ditampilkan kepada Orang Tua/Wali setelah calon siswa dinyatakan diterima.</p>
         </div>
         <span class="inline-flex w-fit items-center gap-2 rounded-full px-3 py-1.5 text-xs font-bold {{ $paymentSetting ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-400' : 'bg-amber-100 text-amber-700 dark:bg-amber-500/15 dark:text-amber-400' }}">
             <i data-lucide="{{ $paymentSetting ? 'circle-check' : 'circle-alert' }}" class="h-3.5 w-3.5"></i>
@@ -103,7 +103,7 @@
                         <div class="flex min-h-48 flex-col items-center justify-center text-[#a1b0cb]">
                             <i data-lucide="image-off" class="h-10 w-10"></i>
                             <p class="mt-2 text-sm font-medium">Belum ada QRIS</p>
-                            <p class="mt-1 text-xs">Bagian QRIS tidak akan tampil kepada wali murid.</p>
+                            <p class="mt-1 text-xs">Bagian QRIS tidak akan tampil kepada Orang Tua/Wali.</p>
                         </div>
                     @endif
                 </div>

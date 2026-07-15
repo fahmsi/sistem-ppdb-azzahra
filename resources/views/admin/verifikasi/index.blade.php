@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('title', 'Data Pendaftar & Verifikasi')
-@section('header_title', 'Verifikasi Pendaftar')
+@section('header_title', 'Verifikasi dan Observasi')
 
 @section('content')
 <div class="admin-table-card">
@@ -75,7 +75,7 @@
                     <th>Tgl Daftar</th>
                     <th>No. Pendaftaran</th>
                     <th>Nama Anak</th>
-                    <th>Wali Murid</th>
+                    <th>Orang Tua/Wali</th>
                     <th>Gelombang</th>
                     <th>Status</th>
                     <th class="text-center">Aksi</th>
@@ -96,32 +96,9 @@
                         </td>
                         <td>{{ $reg->pendaftaran->gelombang ?? '-' }}</td>
                         <td>
-                            @if($reg->status === 'pending')
-                                <span class="sneat-badge bg-[#f5f5f9] dark:bg-[#232333] text-[#697a8d] dark:text-[#a1b0cb] border border-[#d9dee3] dark:border-[#434463]">Pending</span>
-                            @elseif($reg->status === 'menunggu_verifikasi')
-                                <span class="sneat-badge bg-amber-50 dark:bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-200 dark:border-amber-500/20">Menunggu Verifikasi Berkas</span>
-                            @elseif($reg->status === 'administrasi_lengkap')
-                                <span class="sneat-badge bg-teal-50 dark:bg-teal-500/10 text-teal-600 dark:text-teal-400 border border-teal-200 dark:border-teal-500/20">Administrasi Lengkap</span>
-                            @elseif($reg->status === 'menunggu_keputusan')
-                                <span class="sneat-badge bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-500/20">Menunggu Keputusan</span>
-                            @elseif($reg->status === 'keputusan_selesai')
-                                <span class="sneat-badge bg-purple-50 dark:bg-purple-500/10 text-purple-600 dark:text-purple-400 border border-purple-200 dark:border-purple-500/20">Keputusan Selesai</span>
-                            @elseif($reg->status === 'perlu_revisi')
-                                <span class="sneat-badge bg-orange-50 dark:bg-orange-500/10 text-orange-600 dark:text-orange-400 border border-orange-200 dark:border-orange-500/20">Perlu Revisi Data</span>
-                            @endif
-
+                            <x-spmb.status-badge :presentation="\App\Support\SpmbStatusPresenter::process($reg->status)" />
                             @if($reg->keputusan_status)
-                                <div class="mt-1">
-                                    @if($reg->keputusan_status === 'diterima')
-                                        <span class="sneat-badge bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-500/20">Diterima</span>
-                                    @elseif($reg->keputusan_status === 'tidak_diterima')
-                                        <span class="sneat-badge bg-red-50 dark:bg-red-500/10 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-500/20">Tidak Diterima</span>
-                                    @elseif($reg->keputusan_status === 'perlu_tindak_lanjut')
-                                        <span class="sneat-badge bg-orange-50 dark:bg-orange-500/10 text-orange-600 dark:text-orange-400 border border-orange-200 dark:border-orange-500/20">Perlu Tindak Lanjut</span>
-                                    @elseif($reg->keputusan_status === 'mengundurkan_diri')
-                                        <span class="sneat-badge bg-gray-50 dark:bg-gray-500/10 text-gray-600 dark:text-gray-400 border border-gray-200 dark:border-gray-500/20">Mengundurkan Diri</span>
-                                    @endif
-                                </div>
+                                <x-spmb.status-badge :presentation="\App\Support\SpmbStatusPresenter::decision($reg->keputusan_status)" class="mt-1" />
                             @endif
                         </td>
                         <td class="text-center admin-table-actions-cell">
@@ -142,7 +119,9 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="7" class="px-6 py-10 text-center text-[#a1b0cb]">Belum ada data.</td>
+                        <td colspan="7" class="px-6 py-10 text-center text-[#a1b0cb]">
+                            {{ request()->hasAny(['search', 'pendaftaran_id', 'status', 'keputusan_status']) ? 'Tidak ada calon siswa yang cocok dengan pencarian atau filter.' : 'Belum ada pendaftaran yang perlu diverifikasi.' }}
+                        </td>
                     </tr>
                 @endforelse
             </tbody>

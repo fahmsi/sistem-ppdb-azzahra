@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
-@section('title', 'Rekap Pembayaran')
-@section('header_title', 'Rekap Pembayaran')
+@section('title', 'Pembayaran Daftar Ulang')
+@section('header_title', 'Pembayaran')
 
 @section('content')
 <div class="admin-table-card">
@@ -63,16 +63,13 @@
                         <td class="font-semibold text-[#566a7f] dark:text-[#d5d5e2]">{{ $pembayaran->pendaftaranDetail->nomor_pendaftaran ?? '-' }}</td>
                         <td class="font-medium text-[#566a7f] dark:text-[#d5d5e2]">{{ $pembayaran->pendaftaranDetail->siswa->nama ?? '-' }}</td>
                         <td>{{ $pembayaran->pendaftaranDetail->pendaftaran->gelombang ?? '-' }}</td>
-                        <td><div class="text-xs">{{ ucwords(str_replace('_', ' ', $pembayaran->pendaftaranDetail?->keputusan_status ?? '-')) }}</div><div class="mt-1 text-xs text-[#a1b0cb]">{{ ucwords(str_replace('_', ' ', $pembayaran->pendaftaranDetail?->final_status ?? '-')) }}</div></td>
+                        <td>
+                            <div class="text-xs font-semibold text-[#566a7f] dark:text-[#d5d5e2]">{{ \App\Support\SpmbStatusPresenter::decision($pembayaran->pendaftaranDetail?->keputusan_status)['label'] }}</div>
+                            <div class="mt-1 text-xs text-[#a1b0cb]">{{ \App\Support\SpmbStatusPresenter::final($pembayaran->pendaftaranDetail?->final_status)['label'] }}</div>
+                        </td>
                         <td class="font-semibold text-[#566a7f] dark:text-[#d5d5e2]">{{ number_format($pembayaran->jumlah, 0, ',', '.') }}</td>
                         <td>
-                            @if(in_array($pembayaran->status, ['pending', 'menunggu_verifikasi'], true))
-                                <span class="sneat-badge bg-amber-50 dark:bg-amber-500/10 text-amber-600 dark:text-amber-400">Menunggu Verifikasi</span>
-                            @elseif($pembayaran->status === 'lunas')
-                                <span class="sneat-badge bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">Lunas</span>
-                            @else
-                                <span class="sneat-badge bg-red-50 dark:bg-red-500/10 text-red-600 dark:text-red-400">Ditolak</span>
-                            @endif
+                            <x-spmb.status-badge :presentation="\App\Support\SpmbStatusPresenter::payment($pembayaran->status)" />
                         </td>
                         <td class="text-xs">{{ $pembayaran->verifiedBy?->name ?? '-' }}<br><span class="text-[#a1b0cb]">{{ $pembayaran->verified_at?->format('d/m/Y H:i') ?? '-' }}</span></td>
                         <td class="text-center admin-table-actions-cell">
@@ -83,7 +80,7 @@
                     </tr>
                 @empty
                     <tr data-payment-empty>
-                        <td colspan="9" class="px-4 py-8 text-center text-[#a1b0cb]">Belum ada data.</td>
+                        <td colspan="9" class="px-4 py-8 text-center text-[#a1b0cb]">{{ request('status') ? 'Tidak ada pembayaran pada filter status ini.' : 'Belum ada bukti pembayaran daftar ulang.' }}</td>
                     </tr>
                 @endforelse
             </tbody>

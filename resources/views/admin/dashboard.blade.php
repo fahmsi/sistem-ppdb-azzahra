@@ -171,7 +171,7 @@
                             </td>
                             <td class="whitespace-nowrap">
                                 @if($reg->status === 'pending')
-                                    <span class="sneat-badge bg-[#f5f5f9] dark:bg-[#232333] text-[#697a8d] dark:text-[#a1b0cb]">Pending</span>
+                                    <span class="sneat-badge bg-[#f5f5f9] dark:bg-[#232333] text-[#697a8d] dark:text-[#a1b0cb]">Pendaftaran Tercatat</span>
                                 @elseif($reg->status === 'menunggu_verifikasi')
                                     <span class="sneat-badge bg-amber-50 dark:bg-amber-500/10 text-amber-600 dark:text-amber-400">Verifikasi</span>
                                 @elseif($reg->status === 'diterima')
