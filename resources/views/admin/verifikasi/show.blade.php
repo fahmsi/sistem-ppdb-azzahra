@@ -474,6 +474,7 @@
                     </div>
 
                     <div class="border-t border-[#d9dee3] pt-6 dark:border-[#434463] md:border-l md:border-t-0 md:pl-6 md:pt-0">
+                        @if(! $isPaymentLunas && $payment->bukti_bayar && $detail->isKeputusanDiterima() && $detail->isFinalDalamProses())
                         <form action="{{ route('admin.pembayaran.verify', $payment->id) }}" method="POST" class="space-y-4">
                             @csrf
                             @method('PATCH')
@@ -492,18 +493,43 @@
                                 <textarea name="catatan_admin" rows="3" class="sneat-input" placeholder="Contoh: Bukti buram, nominal tidak sesuai...">{{ $payment->catatan_admin }}</textarea>
                             </div>
 
-                            @if($isPaymentLunas)
-                                <button type="button" disabled class="w-full inline-flex items-center gap-2 justify-center py-2.5 px-4 rounded-md text-sm font-medium transition-all bg-gray-100 dark:bg-[#434463] text-gray-400 dark:text-gray-500 cursor-not-allowed">
-                                    <i data-lucide="check-circle" class="w-4 h-4"></i> Pembayaran Sudah Disetujui
-                                </button>
-                            @else
-                                <button type="submit" class="w-full sneat-btn-primary justify-center py-2.5">
-                                    <i data-lucide="save" class="w-4 h-4"></i> Simpan Verifikasi Bayar
-                                </button>
-                            @endif
+                            <button type="submit" class="w-full sneat-btn-primary justify-center py-2.5">
+                                <i data-lucide="save" class="w-4 h-4"></i> Simpan Verifikasi Bayar
+                            </button>
                         </form>
+                        @else
+                            <p class="rounded-lg bg-gray-50 p-3 text-sm text-gray-500 dark:bg-[#232333]">Pembayaran berada pada status terminal atau belum memenuhi syarat verifikasi.</p>
+                        @endif
                     </div>
                 </div>
+            </div>
+
+            <div class="mt-6 rounded-lg border border-[#d9dee3] bg-white p-6 shadow-sneat dark:border-[#434463] dark:bg-[#2b2c40]">
+                <h3 class="font-heading font-semibold text-[#566a7f] dark:text-[#d5d5e2]">Status Akhir Daftar Ulang</h3>
+                <div class="mt-4 grid gap-3 text-sm sm:grid-cols-2">
+                    <p>Status: <strong>{{ ucwords(str_replace('_', ' ', $detail->final_status)) }}</strong></p>
+                    <p>Ditentukan oleh: <strong>{{ $detail->finalDitetapkanOleh?->name ?? '-' }}</strong></p>
+                    <p>Waktu: <strong>{{ $detail->final_ditetapkan_at?->format('d/m/Y H:i') ?? '-' }}</strong></p>
+                    <p>Verifier pembayaran: <strong>{{ $detail->pembayaran?->verifiedBy?->name ?? '-' }}</strong></p>
+                </div>
+                @if($detail->isKeputusanDiterima() && $detail->isFinalDalamProses() && ! $detail->pembayaran?->isLunas())
+                    <form action="{{ route('admin.verifikasi.final.tidak-dilanjutkan', $detail) }}" method="POST" class="mt-5 space-y-3 border-t border-[#d9dee3] pt-5 dark:border-[#434463]">
+                        @csrf
+                        <textarea name="final_alasan" required maxlength="2000" rows="2" class="sneat-input" placeholder="Alasan pendaftaran tidak dilanjutkan"></textarea>
+                        <textarea name="final_catatan" maxlength="2000" rows="2" class="sneat-input" placeholder="Catatan internal (opsional)"></textarea>
+                        <button class="rounded-md bg-red-600 px-4 py-2 text-sm font-semibold text-white hover:bg-red-700">Pendaftaran Tidak Dilanjutkan</button>
+                    </form>
+                @endif
+                @if($detail->finalisasiHistories->isNotEmpty())
+                    <ul class="mt-4 space-y-1 border-t border-[#d9dee3] pt-4 text-xs text-[#697a8d] dark:border-[#434463]">
+                        @foreach($detail->finalisasiHistories as $history)
+                            <li>{{ $history->finalized_at->format('d/m/Y H:i') }} — {{ ucwords(str_replace('_', ' ', $history->to_status)) }} ({{ $history->finalizedBy?->name ?? '-' }})</li>
+                        @endforeach
+                    </ul>
+                @endif
+                @if($detail->isSiswaResmiTerdaftar())
+                    <div class="mt-4 rounded bg-emerald-50 p-3 text-sm text-emerald-800">Siswa resmi terdaftar. MPLS: {{ $detail->pendaftaran?->tanggal_mpls?->format('d/m/Y') ?? '-' }} {{ $detail->pendaftaran?->lokasi_mpls ? 'di '.$detail->pendaftaran->lokasi_mpls : '' }}. KBM: {{ $detail->pendaftaran?->tanggal_mulai_kbm?->format('d/m/Y') ?? '-' }}.</div>
+                @endif
             </div>
 
             <script>

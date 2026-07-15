@@ -49,8 +49,10 @@
                     <th>No. Pendaftaran</th>
                     <th>Nama Siswa</th>
                     <th>Gelombang</th>
+                    <th>Keputusan / Status Akhir</th>
                     <th>Jumlah (Rp)</th>
                     <th>Status</th>
+                    <th>Verifier</th>
                     <th class="text-center">Aksi</th>
                 </tr>
             </thead>
@@ -61,6 +63,7 @@
                         <td class="font-semibold text-[#566a7f] dark:text-[#d5d5e2]">{{ $pembayaran->pendaftaranDetail->nomor_pendaftaran ?? '-' }}</td>
                         <td class="font-medium text-[#566a7f] dark:text-[#d5d5e2]">{{ $pembayaran->pendaftaranDetail->siswa->nama ?? '-' }}</td>
                         <td>{{ $pembayaran->pendaftaranDetail->pendaftaran->gelombang ?? '-' }}</td>
+                        <td><div class="text-xs">{{ ucwords(str_replace('_', ' ', $pembayaran->pendaftaranDetail?->keputusan_status ?? '-')) }}</div><div class="mt-1 text-xs text-[#a1b0cb]">{{ ucwords(str_replace('_', ' ', $pembayaran->pendaftaranDetail?->final_status ?? '-')) }}</div></td>
                         <td class="font-semibold text-[#566a7f] dark:text-[#d5d5e2]">{{ number_format($pembayaran->jumlah, 0, ',', '.') }}</td>
                         <td>
                             @if(in_array($pembayaran->status, ['pending', 'menunggu_verifikasi'], true))
@@ -71,6 +74,7 @@
                                 <span class="sneat-badge bg-red-50 dark:bg-red-500/10 text-red-600 dark:text-red-400">Ditolak</span>
                             @endif
                         </td>
+                        <td class="text-xs">{{ $pembayaran->verifiedBy?->name ?? '-' }}<br><span class="text-[#a1b0cb]">{{ $pembayaran->verified_at?->format('d/m/Y H:i') ?? '-' }}</span></td>
                         <td class="text-center admin-table-actions-cell">
                             <a href="{{ route('admin.verifikasi.show', $pembayaran->pendaftaranDetail->id) }}" class="inline-flex items-center gap-1 rounded-md bg-[#e7e7ff] px-3 py-1.5 text-xs font-medium text-[#696cff] transition-colors hover:bg-[#696cff] hover:text-white dark:bg-[#696cff]/20">
                                 <i data-lucide="eye" class="w-4 h-4"></i> Cek & Verifikasi
@@ -79,7 +83,7 @@
                     </tr>
                 @empty
                     <tr data-payment-empty>
-                        <td colspan="7" class="px-4 py-8 text-center text-[#a1b0cb]">Belum ada data.</td>
+                        <td colspan="9" class="px-4 py-8 text-center text-[#a1b0cb]">Belum ada data.</td>
                     </tr>
                 @endforelse
             </tbody>
@@ -118,7 +122,7 @@ document.addEventListener('DOMContentLoaded', function() {
         var emptyRow = paymentBody.querySelector('[data-payment-empty]');
         var noResultRow = document.createElement('tr');
         noResultRow.className = 'hidden';
-        noResultRow.innerHTML = '<td colspan="7" class="px-4 py-8 text-center text-[#a1b0cb]">Tidak ada data pembayaran yang cocok.</td>';
+        noResultRow.innerHTML = '<td colspan="9" class="px-4 py-8 text-center text-[#a1b0cb]">Tidak ada data pembayaran yang cocok.</td>';
         paymentBody.appendChild(noResultRow);
 
         paymentSearch.addEventListener('input', function() {

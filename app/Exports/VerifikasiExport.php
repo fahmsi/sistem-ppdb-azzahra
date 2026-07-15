@@ -33,10 +33,11 @@ class VerifikasiExport implements FromCollection, WithHeadings, WithMapping
             'Status Administrasi',
             'Status Observasi',
             'Jadwal Observasi',
-            'Catatan Admin',
             'Keputusan Status',
             'Tanggal Keputusan',
             'Diputuskan Oleh',
+            'Status Akhir',
+            'Tanggal Finalisasi',
             'Tanggal Upload',
         ];
     }
@@ -71,10 +72,11 @@ class VerifikasiExport implements FromCollection, WithHeadings, WithMapping
             $statusFormatted,
             $observasiStatus,
             $jadwalObservasi,
-            $detail->catatan ?? '-',
             $keputusanStatus,
             $tanggalKeputusan,
             $diputuskanOleh,
+            $detail->final_status ? ucwords(str_replace('_', ' ', $detail->final_status)) : '-',
+            $detail->final_ditetapkan_at?->format('d/m/Y H:i') ?? '-',
             $detail->created_at ? $detail->created_at->format('d/m/Y H:i').' WIB' : '-',
         ];
     }

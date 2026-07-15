@@ -42,7 +42,7 @@
                     <a href="{{ route('login') }}" class="inline-flex h-10 items-center justify-center rounded-full px-3.5 text-sm font-semibold text-slate-600 transition-[background-color,color] duration-200 hover:bg-slate-100 hover:text-primary-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500">
                         Masuk
                     </a>
-                    <a href="{{ route('register') }}" class="inline-flex h-10 items-center justify-center gap-2 rounded-full bg-primary-600 px-4 text-sm font-bold text-white shadow-sm shadow-primary-600/20 transition-[background-color,box-shadow] duration-200 hover:bg-primary-700 hover:shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2">
+                    <a href="{{ route('register') }}" class="inline-flex h-10 items-center justify-center gap-2 rounded-2xl bg-primary-600 px-4 text-sm font-bold text-white shadow-sm shadow-primary-600/20 transition-[background-color,box-shadow] duration-200 hover:bg-primary-700 hover:shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2">
                         <i data-lucide="user-plus" class="h-4 w-4" aria-hidden="true"></i>
                         Daftar
                     </a>

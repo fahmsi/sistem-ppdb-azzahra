@@ -232,18 +232,8 @@ class SiswaController extends Controller
 
         $registration = $detail->load(['pendaftaran', 'pembayaran']);
 
-        // Untuk sementara, sampai PR final endpoint:
-        // kartu hanya boleh diakses jika:
-        // - keputusan diterima;
-        // - pembayaran ada;
-        // - pembayaran status lunas.
-        // Tambahkan komentar bahwa PR berikutnya akan mengganti gate ini dengan final_status = siswa_resmi_terdaftar.
-        $isLunas = $registration->pembayaran?->isLunas();
-        if (! $registration->isKeputusanDiterima()
-            || ! $registration->pembayaran
-            || ! $isLunas
-        ) {
-            abort(403, 'Akses ditolak. Kartu pendaftaran hanya tersedia setelah calon siswa diterima dan pembayaran lunas.');
+        if (! $registration->canPrintOfficialCard()) {
+            abort(403, 'Akses ditolak. Kartu hanya tersedia bagi siswa resmi terdaftar.');
         }
 
         return view('parent.siswa.kartu', compact('siswa', 'registration'));

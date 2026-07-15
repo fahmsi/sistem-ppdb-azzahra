@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cetak Kartu Bukti Pendaftaran - Sistem Penerimaan Murid Baru (SPMB)</title>
+    <title>Kartu Bukti Siswa Resmi Terdaftar - Sistem Penerimaan Murid Baru (SPMB)</title>
     
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -51,8 +51,8 @@
                     <img src="{{ asset('images/azzahra_logo.png') }}" alt="Logo PAUD Az-Zahra" class="w-12 h-12 object-contain">
                 </div>
                 <div>
-                    <h1 class="text-2xl font-heading font-bold uppercase tracking-wider">Kartu Pendaftaran SPMB</h1>
-                    <p class="text-primary-100 text-sm">PAUD Al Qur'an Az-Zahra - Tahun Ajaran 2026/2027</p>
+                    <h1 class="text-2xl font-heading font-bold uppercase tracking-wider">Kartu Bukti Siswa Resmi Terdaftar</h1>
+                    <p class="text-primary-100 text-sm">PAUD Al Qur'an Az-Zahra - Tahun Ajaran {{ $registration->pendaftaran?->tahun_ajaran }}</p>
                 </div>
             </div>
         </div>
@@ -93,46 +93,19 @@
                                 </td>
                             </tr>
                             <tr class="border-b border-gray-100">
-                                <th class="py-3 px-2 text-sm font-semibold text-gray-500">Tempat, Tanggal Lahir</th>
-                                <td class="py-3 px-2 font-medium text-gray-800">
-                                    {{ $siswa->tempat_lahir }}, 
-                                    {{ \Carbon\Carbon::parse($siswa->tanggal_lahir)->translatedFormat('d F Y') }}
-                                </td>
-                            </tr>
-                            <tr class="border-b border-gray-100">
-                                <th class="py-3 px-2 text-sm font-semibold text-gray-500">Usia (per 1 Juli)</th>
-                                <td class="py-3 px-2 font-medium text-gray-800">
-                                    @if($registration->usia_bulan_saat_acuan !== null)
-                                        @php
-                                            $years = (int) floor($registration->usia_bulan_saat_acuan / 12);
-                                            $remainingMonths = (int) ($registration->usia_bulan_saat_acuan % 12);
-                                        @endphp
-                                        {{ $years }} tahun {{ $remainingMonths }} bulan
-                                    @else
-                                        -
-                                    @endif
-                                </td>
-                            </tr>
-                            <tr class="border-b border-gray-100">
                                 <th class="py-3 px-2 text-sm font-semibold text-gray-500">Kelompok Belajar</th>
                                 <td class="py-3 px-2 font-bold text-primary-700">
                                     Kelompok {{ $registration->kelompok_final ?? $registration->kelompok_rekomendasi ?? 'Perlu Konfirmasi' }}
                                 </td>
                             </tr>
-                            <tr class="border-b border-gray-100">
-                                <th class="py-3 px-2 text-sm font-semibold text-gray-500">Tinggal Bersama</th>
-                                <td class="py-3 px-2 font-medium text-gray-800">
-                                    {{ $siswa->tinggal_bersama === 'wali' ? 'Wali' : 'Orang Tua' }}
-                                    @if($siswa->tinggal_bersama === 'wali')
-                                        ({{ $siswa->nama_wali }})
-                                    @endif
-                                </td>
-                            </tr>
+                            <tr class="border-b border-gray-100"><th class="py-3 px-2 text-sm font-semibold text-gray-500">Tanggal Finalisasi</th><td class="py-3 px-2 font-medium text-gray-800">{{ $registration->final_ditetapkan_at?->translatedFormat('d F Y, H:i') }} WIB</td></tr>
+                            @if($registration->pendaftaran?->tanggal_mpls)<tr class="border-b border-gray-100"><th class="py-3 px-2 text-sm font-semibold text-gray-500">MPLS</th><td class="py-3 px-2 font-medium text-gray-800">{{ $registration->pendaftaran->tanggal_mpls->translatedFormat('d F Y') }}{{ $registration->pendaftaran->lokasi_mpls ? ' — '.$registration->pendaftaran->lokasi_mpls : '' }}</td></tr>@endif
+                            @if($registration->pendaftaran?->tanggal_mulai_kbm)<tr class="border-b border-gray-100"><th class="py-3 px-2 text-sm font-semibold text-gray-500">Mulai KBM</th><td class="py-3 px-2 font-medium text-gray-800">{{ $registration->pendaftaran->tanggal_mulai_kbm->translatedFormat('d F Y') }}</td></tr>@endif
                             <tr>
                                 <th class="py-3 px-2 text-sm font-semibold text-gray-500">Status Validasi</th>
                                 <td class="py-3 px-2">
                                     <span class="inline-block px-3 py-1 bg-secondary-100 text-secondary-800 font-bold text-xs border border-secondary-300 uppercase tracking-widest">
-                                        DITERIMA
+                                        SISWA RESMI TERDAFTAR
                                     </span>
                                 </td>
                             </tr>
@@ -145,9 +118,8 @@
             <div class="mt-10 pt-4 border-t-2 border-dashed border-gray-300">
                 <h4 class="font-bold text-gray-800 text-sm mb-2">Catatan Penting:</h4>
                 <ul class="list-disc list-inside text-xs text-gray-600 space-y-1">
-                    <li>Kartu ini adalah bukti sah pendaftaran SPMB PAUD Al Qur'an Az-Zahra.</li>
-                    <li>Harap dibawa saat proses daftar ulang dan pengukuran seragam.</li>
-                    <li>Pastikan semua berkas fisik asli (KK, Akta Kelahiran) juga dibawa untuk verifikasi akhir.</li>
+                    <li>Kartu ini adalah bukti siswa resmi terdaftar pada PAUD Al Qur'an Az-Zahra.</li>
+                    <li>Kartu ini bukan NIS, kartu pelajar permanen, maupun bukti Dapodik.</li>
                 </ul>
             </div>
         </div>

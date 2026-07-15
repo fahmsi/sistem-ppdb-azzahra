@@ -632,6 +632,7 @@ test('36. Allows parent receipt download when accepted and payment lunas', funct
         'bukti_bayar' => 'pembayaran/dummy.jpg',
         'status' => Pembayaran::STATUS_LUNAS,
     ]);
+    $detail->update(['final_status' => PendaftaranDetail::FINAL_SISWA_RESMI_TERDAFTAR, 'final_ditetapkan_at' => now()]);
 
     $response = $this->actingAs($parent)->get(route('parent.pembayaran.receipt', $detail->id));
     $response->assertOk();
@@ -669,6 +670,7 @@ test('38. Allows parent ID card printing when accepted and payment lunas', funct
         'bukti_bayar' => 'pembayaran/dummy.jpg',
         'status' => Pembayaran::STATUS_LUNAS,
     ]);
+    $detail->update(['final_status' => PendaftaranDetail::FINAL_SISWA_RESMI_TERDAFTAR, 'final_ditetapkan_at' => now()]);
 
     $response = $this->actingAs($parent)->get(route('parent.siswa.pendaftaran.kartu', ['siswa' => $siswa->id, 'detail' => $detail->id]));
     $response->assertOk();
@@ -726,7 +728,7 @@ test('41. Decisions store snapshotted reasons for non-accepted decisions', funct
         ->and($detail->keputusan_catatan)->toBe('Hubungi panitia jika ada pertanyaan');
 });
 
-test('42. Decisions history is cascaded on pendaftaran detail deletion', function () {
+test('42. Decisions history protects pendaftaran detail from deletion', function () {
     $admin = User::factory()->create(['role' => 'admin']);
     $detail = createPR4Detail(['kelompok_final' => 'A']);
     completeObservation($detail);
@@ -737,11 +739,10 @@ test('42. Decisions history is cascaded on pendaftaran detail deletion', functio
 
     expect(KeputusanPendaftaran::where('pendaftaran_detail_id', $detail->id)->count())->toBe(1);
 
-    // Admin deletes registration detail (which should trigger cascade on DB foreign keys)
-    $this->actingAs($admin)->delete(route('admin.verifikasi.destroy', $detail->id));
+    $this->actingAs($admin)->delete(route('admin.verifikasi.destroy', $detail->id))->assertSessionHas('error');
 
-    expect(PendaftaranDetail::whereKey($detail->id)->exists())->toBeFalse();
-    expect(KeputusanPendaftaran::where('pendaftaran_detail_id', $detail->id)->count())->toBe(0);
+    expect(PendaftaranDetail::whereKey($detail->id)->exists())->toBeTrue();
+    expect(KeputusanPendaftaran::where('pendaftaran_detail_id', $detail->id)->count())->toBe(1);
 });
 
 test('43. Dashboard status count reflects keputusan_status instead of legacy status', function () {
@@ -988,6 +989,7 @@ test('51. Kartu and receipt require accepted decision and lunas payment', functi
         'bukti_bayar' => 'proof.png',
         'status' => Pembayaran::STATUS_LUNAS,
     ]);
+    $detailD->update(['final_status' => PendaftaranDetail::FINAL_SISWA_RESMI_TERDAFTAR, 'final_ditetapkan_at' => now()]);
 
     $this->actingAs($parent)->get(route('parent.siswa.pendaftaran.kartu', ['siswa' => $siswa->id, 'detail' => $detailD->id]))
         ->assertOk();
@@ -1021,6 +1023,7 @@ test('52. Parent with multiple children data is completely isolated', function (
         'bukti_bayar' => 'proof.png',
         'status' => Pembayaran::STATUS_LUNAS,
     ]);
+    $detailA->update(['final_status' => PendaftaranDetail::FINAL_SISWA_RESMI_TERDAFTAR, 'final_ditetapkan_at' => now()]);
 
     $this->actingAs($parent)->get(route('parent.siswa.pendaftaran.kartu', ['siswa' => $childA->id, 'detail' => $detailA->id]))
         ->assertOk();

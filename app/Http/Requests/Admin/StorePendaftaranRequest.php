@@ -45,7 +45,14 @@ class StorePendaftaranRequest extends FormRequest
             'status' => ['required', 'in:buka,tutup'],
             'tanggal_mulai' => ['required', 'date'],
             'tanggal_selesai' => ['required', 'date', 'after_or_equal:tanggal_mulai'],
-            'tanggal_mpls' => ['nullable', 'date', 'after:tanggal_selesai'],
+            'tanggal_mpls' => ['required', 'date', 'after:tanggal_selesai'],
+            'jam_mpls_mulai' => ['nullable', 'date_format:H:i'],
+            'jam_mpls_selesai' => ['nullable', 'date_format:H:i', 'after:jam_mpls_mulai'],
+            'lokasi_mpls' => ['nullable', 'string', 'max:255'],
+            'informasi_mpls' => ['nullable', 'string', 'max:2000'],
+            'tanggal_mulai_kbm' => ['nullable', 'date', 'after_or_equal:tanggal_mpls'],
+            'jam_masuk_kbm' => ['nullable', 'date_format:H:i'],
+            'informasi_kbm' => ['nullable', 'string', 'max:2000'],
             'gambar' => ['nullable', 'image', 'mimes:jpg,jpeg,png', 'max:2048'],
         ];
     }

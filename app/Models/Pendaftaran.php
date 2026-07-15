@@ -27,6 +27,13 @@ class Pendaftaran extends Model
         'tanggal_mulai',
         'tanggal_selesai',
         'tanggal_mpls',
+        'jam_mpls_mulai',
+        'jam_mpls_selesai',
+        'lokasi_mpls',
+        'informasi_mpls',
+        'tanggal_mulai_kbm',
+        'jam_masuk_kbm',
+        'informasi_kbm',
         'gambar',
     ];
 
@@ -41,6 +48,7 @@ class Pendaftaran extends Model
             'tanggal_mulai' => 'date',
             'tanggal_selesai' => 'date',
             'tanggal_mpls' => 'date',
+            'tanggal_mulai_kbm' => 'date',
             'kuota' => 'integer',
         ];
     }
