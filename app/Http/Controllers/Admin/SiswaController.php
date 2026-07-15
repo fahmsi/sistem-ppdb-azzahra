@@ -85,7 +85,7 @@ class SiswaController extends Controller
             'pageTitle' => 'Tambah Data Siswa Manual',
             'headerTitle' => 'Tambah Data Siswa',
             'formHeading' => 'Tambah Biodata Siswa',
-            'formDescription' => 'Isi data siswa secara manual. Data ini boleh belum terhubung dengan akun wali murid.',
+            'formDescription' => 'Isi data siswa secara manual. Data ini boleh belum terhubung dengan akun Orang Tua/Wali.',
             'formAction' => route('admin.siswa.store'),
             'cancelUrl' => route('admin.siswa.index'),
             'cancelText' => 'Batal',

@@ -178,7 +178,7 @@ class PendaftaranController extends Controller
         }
 
         return redirect()->route('parent.siswa.pendaftaran.status', $siswa)
-            ->with('success', 'Pendaftaran berhasil! Status: menunggu verifikasi.');
+            ->with('success', "Pendaftaran {$siswa->nama} berhasil dicatat dan akan masuk ke tahap Verifikasi Administrasi.");
     }
 
     /**
@@ -188,7 +188,7 @@ class PendaftaranController extends Controller
     {
         $this->authorizeParentSiswa($siswa);
 
-        $registrations = PendaftaranDetail::with(['siswa', 'pendaftaran', 'pembayaran'])
+        $registrations = PendaftaranDetail::with(['siswa', 'pendaftaran', 'pembayaran', 'observasiTerbaru'])
             ->where('siswa_id', $siswa->id)
             ->latest()
             ->get();

@@ -140,7 +140,7 @@ class VerifikasiController extends Controller
         $waMessage = "Assalamu'alaikum. Ada update status pendaftaran di PAUD Az-Zahra.\n\nStatus: ".strtoupper($detail->status)."\nCatatan: ".$detail->notifikasi;
         $this->whatsApp->send($phone, $waMessage);
 
-        return back()->with('success', 'Status diubah menjadi Perlu Revisi. Notifikasi dikirim ke wali murid.');
+        return back()->with('success', 'Pendaftaran ditandai Perlu Perbaikan Data. Orang Tua/Wali telah menerima arahan perbaikan.');
     }
 
     /**

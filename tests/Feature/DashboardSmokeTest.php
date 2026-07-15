@@ -93,10 +93,10 @@ test('parent dashboard registration pages and every registration status render',
     $this->actingAs($parent)
         ->get(route('parent.siswa.pendaftaran.status', $siswa))
         ->assertOk()
-        ->assertSee('Menunggu Verifikasi Admin')
-        ->assertSee('Perlu Revisi Dokumen')
-        ->assertSee('Diterima')
-        ->assertSee('Ditolak');
+        ->assertSee('Menunggu Verifikasi Administrasi')
+        ->assertSee('Perlu Perbaikan Data')
+        ->assertSee('Administrasi Lengkap')
+        ->assertSee('Pendaftaran Tidak Dilanjutkan');
 });
 
 test('payment upload uses the amount configured by admin and can be verified', function () {
@@ -141,7 +141,7 @@ test('payment upload uses the amount configured by admin and can be verified', f
     $this->actingAs($admin)
         ->get(route('admin.verifikasi.show', $detail))
         ->assertOk()
-        ->assertSee('Bukti Daftar Ulang (Pembayaran)')
+        ->assertSee('Pembayaran Daftar Ulang')
         ->assertSee('Simpan Verifikasi Bayar');
     $this->actingAs($admin)
         ->patch(route('admin.pembayaran.verify', $payment), ['status' => Pembayaran::STATUS_LUNAS])

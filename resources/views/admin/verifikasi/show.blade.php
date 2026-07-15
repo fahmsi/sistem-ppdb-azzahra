@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('title', 'Detail & Verifikasi Pendaftaran')
-@section('header_title', 'Verifikasi Dokumen Pendaftar')
+@section('header_title', 'Verifikasi dan Observasi')
 
 @section('content')
 <!-- Fancybox CSS -->
@@ -26,13 +26,13 @@
         <div class="flex flex-wrap items-center gap-2 sm:gap-3">
             <span class="text-sm font-medium text-[#697a8d] dark:text-[#a1b0cb]">Status Saat Ini:</span>
             @if($detail->status === 'pending')
-                <span class="sneat-badge bg-[#f5f5f9] dark:bg-[#232333] text-[#697a8d] dark:text-[#a1b0cb] border border-[#d9dee3] dark:border-[#434463]">Pending</span>
+                <span class="sneat-badge bg-[#f5f5f9] dark:bg-[#232333] text-[#697a8d] dark:text-[#a1b0cb] border border-[#d9dee3] dark:border-[#434463]">Pendaftaran Tercatat</span>
             @elseif($detail->status === 'menunggu_verifikasi')
-                <span class="sneat-badge bg-amber-50 dark:bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-200 dark:border-amber-500/20">Menunggu Verifikasi Berkas</span>
+                <span class="sneat-badge bg-amber-50 dark:bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-200 dark:border-amber-500/20">Menunggu Verifikasi Administrasi</span>
             @elseif($detail->status === 'diterima')
-                <span class="sneat-badge bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-500/20">Berkas Terverifikasi – Lanjut Observasi (Legacy)</span>
+                <span class="sneat-badge bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-500/20">Administrasi Lengkap (Data Legacy)</span>
             @elseif($detail->status === 'ditolak')
-                <span class="sneat-badge bg-red-50 dark:bg-red-500/10 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-500/20">Pendaftaran Ditolak (Legacy)</span>
+                <span class="sneat-badge bg-red-50 dark:bg-red-500/10 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-500/20">Pendaftaran Tidak Dilanjutkan (Data Legacy)</span>
             @elseif($detail->status === 'perlu_revisi')
                 <span class="sneat-badge bg-orange-50 dark:bg-orange-500/10 text-orange-600 dark:text-orange-400 border border-orange-200 dark:border-orange-500/20">Perlu Revisi Data</span>
             @elseif($detail->status === 'administrasi_lengkap')
@@ -57,6 +57,14 @@
         </div>
     </div>
 
+    <nav class="mb-6 overflow-x-auto rounded-lg border border-[#d9dee3] bg-white p-3 shadow-sneat dark:border-[#434463] dark:bg-[#2b2c40]" aria-label="Bagian detail verifikasi">
+        <div class="flex min-w-max gap-2 text-xs font-semibold">
+            @foreach(['ringkasan' => 'Ringkasan', 'data-anak' => 'Data Anak', 'dokumen' => 'Dokumen', 'kelompok' => 'Kelompok', 'administrasi' => 'Verifikasi Administrasi', 'observasi' => 'Observasi', 'keputusan' => 'Keputusan', 'pembayaran' => 'Pembayaran', 'finalisasi' => 'Finalisasi', 'riwayat' => 'Riwayat Audit'] as $anchor => $label)
+                <a href="#{{ $anchor }}" class="rounded-md px-3 py-2 text-[#697a8d] hover:bg-[#e7e7ff] hover:text-[#696cff] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#696cff] dark:text-[#a1b0cb] dark:hover:bg-[#696cff]/20">{{ $label }}</a>
+            @endforeach
+        </div>
+    </nav>
+
     <!-- Split View Layout -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
@@ -68,7 +76,7 @@
                 <div class="bg-[#e7e7ff] dark:bg-[#696cff]/20 px-6 py-4 border-b border-[#d9dee3] dark:border-[#434463] flex flex-wrap items-center justify-between gap-4">
                     <div class="flex items-center gap-2">
                         <i data-lucide="user" class="w-5 h-5 text-[#696cff]"></i>
-                        <h3 class="font-heading font-semibold text-[#566a7f] dark:text-[#d5d5e2]">Profil Calon Siswa</h3>
+                        <h3 id="ringkasan" class="scroll-mt-24 font-heading font-semibold text-[#566a7f] dark:text-[#d5d5e2]">Ringkasan Pendaftaran dan Data Anak</h3>
                     </div>
                     <a href="{{ route('admin.siswa.show', $detail->siswa->id) }}" target="_blank" class="inline-flex items-center gap-1.5 px-3 py-1 bg-white hover:bg-gray-50 border border-gray-200 dark:bg-[#2b2c40] dark:hover:bg-[#434463] dark:border-[#434463] text-xs font-semibold text-[#696cff] rounded transition-colors">
                         <i data-lucide="external-link" class="w-3.5 h-3.5"></i> Detail Lengkap Siswa
@@ -98,7 +106,7 @@
                     <!-- Navigation Tabs -->
                     <div class="flex border-b border-[#d9dee3] dark:border-[#434463] mb-5 overflow-x-auto scrollbar-none gap-2">
                         <button type="button" onclick="switchVerificationTab('tab-data-anak')" id="btn-tab-data-anak" class="verification-tab-btn px-4 py-2 text-xs font-bold uppercase tracking-wider border-b-2 border-[#696cff] text-[#696cff] focus:outline-none transition-colors whitespace-nowrap">
-                            Data Anak
+                            <span id="data-anak" class="scroll-mt-24">Data Anak</span>
                         </button>
                         <button type="button" onclick="switchVerificationTab('tab-alamat')" id="btn-tab-alamat" class="verification-tab-btn px-4 py-2 text-xs font-bold uppercase tracking-wider border-b-2 border-transparent text-[#697a8d] dark:text-[#a1b0cb] hover:text-[#696cff] focus:outline-none transition-colors whitespace-nowrap">
                             Alamat & Kontak
@@ -350,7 +358,7 @@
             <div class="bg-white dark:bg-[#2b2c40] rounded-lg shadow-sneat dark:shadow-sneat-dark border border-[#d9dee3] dark:border-[#434463] overflow-hidden">
                 <div class="bg-[#e7e7ff] dark:bg-[#696cff]/20 px-6 py-4 border-b border-[#d9dee3] dark:border-[#434463] flex items-center gap-2">
                     <i data-lucide="folder-open" class="w-5 h-5 text-[#696cff]"></i>
-                    <h3 class="font-heading font-semibold text-[#566a7f] dark:text-[#d5d5e2]">Berkas Lampiran</h3>
+                    <h3 id="dokumen" class="scroll-mt-24 font-heading font-semibold text-[#566a7f] dark:text-[#d5d5e2]">Dokumen Pendaftaran</h3>
                 </div>
                 <div class="grid grid-cols-1 gap-4 p-4 sm:grid-cols-2 sm:p-6">
 
@@ -445,7 +453,7 @@
                 <div class="flex flex-col items-start justify-between gap-3 border-b border-blue-100 bg-blue-50 px-4 py-4 dark:border-blue-500/20 dark:bg-blue-500/10 sm:flex-row sm:items-center sm:px-6">
                     <div class="flex items-center gap-2">
                         <i data-lucide="credit-card" class="w-5 h-5 text-blue-600 dark:text-blue-400"></i>
-                        <h3 class="font-heading font-semibold text-blue-900 dark:text-blue-300">Bukti Daftar Ulang (Pembayaran)</h3>
+                        <h3 id="pembayaran" class="scroll-mt-24 font-heading font-semibold text-blue-900 dark:text-blue-300">Pembayaran Daftar Ulang</h3>
                     </div>
                     @if($isPaymentLunas)
                         <span class="px-3 py-1 bg-secondary-100 text-secondary-800 text-xs font-bold rounded-full">LUNAS</span>
@@ -505,7 +513,7 @@
             </div>
 
             <div class="mt-6 rounded-lg border border-[#d9dee3] bg-white p-6 shadow-sneat dark:border-[#434463] dark:bg-[#2b2c40]">
-                <h3 class="font-heading font-semibold text-[#566a7f] dark:text-[#d5d5e2]">Status Akhir Daftar Ulang</h3>
+                <h3 id="finalisasi" class="scroll-mt-24 font-heading font-semibold text-[#566a7f] dark:text-[#d5d5e2]">Finalisasi Pendaftaran</h3>
                 <div class="mt-4 grid gap-3 text-sm sm:grid-cols-2">
                     <p>Status: <strong>{{ ucwords(str_replace('_', ' ', $detail->final_status)) }}</strong></p>
                     <p>Ditentukan oleh: <strong>{{ $detail->finalDitetapkanOleh?->name ?? '-' }}</strong></p>
@@ -552,7 +560,7 @@
             <div class="overflow-hidden rounded-lg border border-[#d9dee3] bg-white shadow-sneat dark:border-[#434463] dark:bg-[#2b2c40] dark:shadow-sneat-dark">
                 <div class="bg-[#2b2c40] dark:bg-[#232333] px-6 py-4 border-b border-[#434463] flex items-center gap-2">
                     <i data-lucide="tag" class="w-5 h-5 text-[#a1b0cb]"></i>
-                    <h3 class="font-heading font-semibold text-white">Penetapan Kelompok</h3>
+                    <h3 id="kelompok" class="scroll-mt-24 font-heading font-semibold text-white">Penetapan Kelompok</h3>
                 </div>
                 <div class="p-4 sm:p-6 text-sm space-y-4">
                     <div class="bg-gray-50 dark:bg-[#232333]/50 p-3.5 rounded-lg space-y-2 text-xs">
@@ -582,6 +590,7 @@
                         </div>
                     </div>
 
+                    @if($detail->isFinalDalamProses())
                     <form action="{{ route('admin.verifikasi.kelompok', $detail->id) }}" method="POST" class="space-y-3">
                         @csrf
                         @method('PATCH')
@@ -597,6 +606,9 @@
                             <i data-lucide="check-circle" class="w-4 h-4"></i> Tetapkan Kelompok Final
                         </button>
                     </form>
+                    @else
+                        <p class="rounded-lg bg-slate-50 p-3 text-xs text-slate-500 dark:bg-slate-500/10 dark:text-slate-300">Kelompok tidak dapat diubah setelah pendaftaran mencapai status akhir.</p>
+                    @endif
 
                     @if($detail->kelompok_final)
                         <div class="mt-4 pt-4 border-t border-gray-100 dark:border-[#434463] text-xs space-y-1 text-gray-500">
@@ -610,12 +622,12 @@
             <div class="overflow-hidden rounded-lg border border-[#d9dee3] bg-white shadow-sneat dark:border-[#434463] dark:bg-[#2b2c40] dark:shadow-sneat-dark">
                 <div class="bg-[#2b2c40] dark:bg-[#232333] px-6 py-4 border-b border-[#434463] flex items-center gap-2">
                     <i data-lucide="check-square" class="w-5 h-5 text-[#a1b0cb]"></i>
-                    <h3 class="font-heading font-semibold text-white">Aksi Verifikasi</h3>
+                    <h3 id="administrasi" class="scroll-mt-24 font-heading font-semibold text-white">Verifikasi Administrasi</h3>
                 </div>
 
                 <div class="p-4 sm:p-6">
                     <!-- Checklist Dokumen (Only if not final) -->
-                    @if($detail->status !== 'diterima' && $detail->status !== 'ditolak')
+                    @if($detail->isFinalDalamProses() && $detail->status !== 'diterima' && $detail->status !== 'ditolak')
                         <div class="mb-5 p-4 rounded-lg bg-slate-50 dark:bg-[#232333] border border-[#d9dee3] dark:border-[#434463]">
                             <h4 class="text-sm font-semibold text-[#566a7f] dark:text-[#d5d5e2] mb-3 flex items-center gap-1.5">
                                 <i data-lucide="list-checks" class="w-4 h-4 text-[#696cff]"></i>
@@ -685,7 +697,13 @@
 
 
 
-                    @if(in_array($detail->status, ['diterima', 'administrasi_lengkap', 'menunggu_keputusan']))
+                    @if($detail->isFinalTerminal())
+                        <div class="rounded-lg border border-slate-200 bg-slate-50 p-4 text-center dark:border-slate-500/30 dark:bg-slate-500/10">
+                            <i data-lucide="lock-keyhole" class="mx-auto h-7 w-7 text-slate-500" aria-hidden="true"></i>
+                            <p class="mt-2 text-sm font-semibold text-slate-700 dark:text-slate-200">Pendaftaran sudah berada pada status akhir.</p>
+                            <p class="mt-1 text-xs text-slate-500 dark:text-slate-300">Aksi perubahan administrasi tidak tersedia.</p>
+                        </div>
+                    @elseif(in_array($detail->status, ['diterima', 'administrasi_lengkap', 'menunggu_keputusan']))
                         {{-- Post-verification stage — show status badge --}}
                         <div class="text-center py-4">
                             @if($detail->status === 'administrasi_lengkap')
@@ -714,8 +732,8 @@
                             <div class="w-14 h-14 mx-auto rounded-full bg-red-100 flex items-center justify-center mb-3">
                                 <i data-lucide="x-circle" class="w-8 h-8 text-red-600"></i>
                             </div>
-                            <span class="inline-flex items-center px-4 py-2 rounded-full text-xs font-bold bg-red-100 text-red-700 border border-red-200">PENDAFTARAN DITOLAK</span>
-                            <p class="text-xs text-[#a1b0cb] mt-3">Pendaftaran ini sudah ditolak.</p>
+                            <span class="inline-flex items-center px-4 py-2 rounded-full text-xs font-bold bg-red-100 text-red-700 border border-red-200">PENDAFTARAN TIDAK DILANJUTKAN</span>
+                            <p class="text-xs text-[#a1b0cb] mt-3">Data legacy ini tidak dilanjutkan ke tahap berikutnya.</p>
                         </div>
 
                     @elseif($detail->status === 'pending')
@@ -737,7 +755,7 @@
                             <div>
                                 <label class="block text-sm font-medium text-[#566a7f] dark:text-[#d5d5e2] mb-1">Catatan / Alasan Revisi</label>
                                 <textarea id="notifikasi" name="notifikasi" rows="4" class="sneat-input" placeholder="Wajib diisi jika meminta revisi..."></textarea>
-                                <p class="text-xs text-[#a1b0cb] mt-1">Catatan ini akan dilihat oleh Wali Murid.</p>
+                                <p class="text-xs text-[#a1b0cb] mt-1">Catatan ini akan dilihat oleh Orang Tua/Wali.</p>
                             </div>
 
                             <div class="flex flex-col gap-3 pt-2">
@@ -771,7 +789,7 @@
     <div class="bg-white dark:bg-[#2b2c40] rounded-lg shadow-sneat dark:shadow-sneat-dark border border-[#d9dee3] dark:border-[#434463] overflow-hidden">
         <div class="bg-indigo-50 dark:bg-indigo-500/10 px-6 py-4 border-b border-[#d9dee3] dark:border-[#434463] flex items-center gap-2">
             <i data-lucide="calendar-check" class="w-5 h-5 text-indigo-600"></i>
-            <h3 class="font-heading font-semibold text-[#566a7f] dark:text-[#d5d5e2]">Jadwal & Histori Observasi</h3>
+            <h3 id="observasi" class="scroll-mt-24 font-heading font-semibold text-[#566a7f] dark:text-[#d5d5e2]">Observasi</h3>
         </div>
 
         <div class="p-6 space-y-6">
@@ -1034,7 +1052,7 @@
     <div class="bg-white dark:bg-[#2b2c40] rounded-lg shadow-sneat dark:shadow-sneat-dark border border-[#d9dee3] dark:border-[#434463] overflow-hidden">
         <div class="bg-indigo-50 dark:bg-indigo-500/10 px-6 py-4 border-b border-[#d9dee3] dark:border-[#434463] flex items-center gap-2">
             <i data-lucide="shield-check" class="w-5 h-5 text-indigo-600"></i>
-            <h3 class="font-heading font-semibold text-[#566a7f] dark:text-[#d5d5e2]">Keputusan Penerimaan Sekolah</h3>
+            <h3 id="keputusan" class="scroll-mt-24 font-heading font-semibold text-[#566a7f] dark:text-[#d5d5e2]">Keputusan Sekolah</h3>
         </div>
 
         <div class="p-6 space-y-6">
@@ -1042,7 +1060,7 @@
                 <!-- Info Summary -->
                 <div class="space-y-4">
                     <div class="flex justify-between items-center py-2 border-b border-gray-100 dark:border-[#434463]">
-                        <span class="text-sm text-gray-500">Status Proses PPDB:</span>
+                        <span class="text-sm text-gray-500">Status Proses SPMB:</span>
                         <span class="text-sm font-semibold text-gray-700 dark:text-[#d5d5e2]">{{ ucwords(str_replace('_', ' ', $detail->status)) }}</span>
                     </div>
                     <div class="flex justify-between items-center py-2 border-b border-gray-100 dark:border-[#434463]">
@@ -1126,7 +1144,7 @@
                             </div>
 
                             <div id="catatan_keputusan_wrapper">
-                                <label class="block text-sm font-semibold text-[#566a7f] dark:text-[#d5d5e2] mb-1">Catatan Keputusan (Ditampilkan ke Wali Murid):</label>
+                                <label class="block text-sm font-semibold text-[#566a7f] dark:text-[#d5d5e2] mb-1">Catatan Internal Keputusan:</label>
                                 <textarea name="keputusan_catatan" rows="3" class="sneat-input" placeholder="Masukkan catatan untuk orang tua...">{{ old('keputusan_catatan') }}</textarea>
                             </div>
 
@@ -1175,7 +1193,7 @@
             @if($detail->keputusanHistories->isNotEmpty())
             <div class="pt-4 border-t border-gray-100 dark:border-[#434463]">
                 <h4 class="font-semibold text-sm text-[#566a7f] dark:text-[#d5d5e2] mb-3 flex items-center gap-2">
-                    <i data-lucide="history" class="w-4 h-4"></i> Histori Keputusan Sekolah
+                    <i data-lucide="history" class="w-4 h-4"></i> <span id="riwayat" class="scroll-mt-24">Riwayat Audit Keputusan</span>
                 </h4>
                 <div class="flow-root">
                     <ul role="list" class="-mb-8">

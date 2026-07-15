@@ -53,7 +53,7 @@
                         @elseif($user->isAdmin())
                             Administrator
                         @else
-                            Wali Murid
+                            Orang Tua/Wali
                         @endif
                     </span>
 
@@ -390,7 +390,7 @@
                             </li>
                             <li class="flex items-center gap-2 text-blue-700 dark:text-blue-300">
                                 <i data-lucide="check" class="w-3.5 h-3.5 text-emerald-500 flex-shrink-0"></i>
-                                <span>Memantau rekap pembayaran masuk dari wali murid.</span>
+                                <span>Memantau pembayaran masuk dari Orang Tua/Wali.</span>
                             </li>
                         </ul>
                     </div>

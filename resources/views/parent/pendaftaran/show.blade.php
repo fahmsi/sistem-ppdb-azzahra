@@ -47,7 +47,7 @@
                             'ditolak' => 'Pendaftaran Ditolak',
                             'diterima' => 'Berkas Terverifikasi – Lanjut Observasi',
                         ];
-                        $displayStatus = $statusNames[$existingDetail->status] ?? str($existingDetail->status)->replace('_', ' ')->title();
+                        $displayStatus = \App\Support\SpmbStatusPresenter::primary($existingDetail)['label'];
                     @endphp
                     {{ $siswa->nama }} sudah terdaftar pada gelombang ini dengan status <strong>{{ $displayStatus }}</strong>.
                     <a href="{{ route('parent.siswa.pendaftaran.status', $siswa) }}" class="mt-2 block font-semibold underline">Lihat status pendaftaran</a>

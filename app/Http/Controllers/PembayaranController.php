@@ -73,11 +73,11 @@ class PembayaranController extends Controller
             $isReupload ? 'payment_reuploaded' : 'payment_uploaded',
             $detail,
             $isReupload
-                ? "Wali murid mengunggah ulang bukti pembayaran daftar ulang: {$detail->nomor_pendaftaran}"
-                : "Wali murid mengunggah bukti pembayaran daftar ulang: {$detail->nomor_pendaftaran}"
+                ? "Orang Tua/Wali mengunggah ulang bukti pembayaran daftar ulang: {$detail->nomor_pendaftaran}"
+                : "Orang Tua/Wali mengunggah bukti pembayaran daftar ulang: {$detail->nomor_pendaftaran}"
         );
 
-        return back()->with('success', 'Bukti pembayaran berhasil diunggah. Silakan hubungi admin untuk konfirmasi pembayaran agar proses daftar ulang dapat segera diverifikasi.');
+        return back()->with('success', 'Bukti pembayaran Ananda berhasil diunggah dan sedang menunggu verifikasi admin.');
     }
 
     /**
