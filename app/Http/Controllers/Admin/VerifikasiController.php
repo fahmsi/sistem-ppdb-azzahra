@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Admin;
 use App\Exports\VerifikasiExport;
 use App\Http\Controllers\Controller;
 use App\Models\ActivityLog;
-use App\Models\Pembayaran;
 use App\Models\Pendaftaran;
 use App\Models\PendaftaranDetail;
 use App\Notifications\AdministrasiLengkapNotification;
@@ -16,7 +15,6 @@ use Barryvdh\DomPDF\Facade;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Schema;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -78,7 +76,9 @@ class VerifikasiController extends Controller
         $detail->load([
             'siswa.user',
             'pendaftaran',
-            'pembayaran',
+            'pembayaran.verifiedBy',
+            'finalDitetapkanOleh',
+            'finalisasiHistories.finalizedBy',
             'observasis.scheduledBy',
             'observasis.observedBy',
             'observasis.rescheduledBy',
@@ -165,49 +165,24 @@ class VerifikasiController extends Controller
         return back()->with('success', count($validated['detail_ids']).' pendaftaran berhasil diperbarui.');
     }
 
-    public function verifyPembayaran(Request $request, Pembayaran $pembayaran): RedirectResponse
-    {
-        $validated = $request->validate([
-            'status' => ['required', 'in:'.Pembayaran::STATUS_LUNAS.','.Pembayaran::STATUS_DITOLAK],
-            'catatan_admin' => ['nullable', 'required_if:status,'.Pembayaran::STATUS_DITOLAK, 'string', 'max:500'],
-        ]);
-
-        $pembayaran->loadMissing('pendaftaranDetail');
-        $detail = $pembayaran->pendaftaranDetail;
-
-        if (! $detail || ! $detail->isKeputusanDiterima()) {
-            return back()->with('error', 'Pembayaran hanya dapat diverifikasi untuk calon siswa dengan keputusan Diterima.');
-        }
-
-        $pembayaran->update([
-            'status' => $validated['status'],
-            'catatan_admin' => $validated['status'] === Pembayaran::STATUS_DITOLAK ? $validated['catatan_admin'] : null,
-        ]);
-
-        ActivityLog::log(
-            $validated['status'] === Pembayaran::STATUS_LUNAS ? 'verified' : 'rejected',
-            $pembayaran,
-            $validated['status'] === Pembayaran::STATUS_LUNAS
-                ? "Pembayaran {$pembayaran->pendaftaranDetail?->nomor_pendaftaran} diverifikasi."
-                : "Pembayaran {$pembayaran->pendaftaranDetail?->nomor_pendaftaran} ditolak."
-        );
-
-        $statusText = $validated['status'] === Pembayaran::STATUS_LUNAS ? 'Lunas / Diterima' : 'Ditolak / Perlu Revisi';
-
-        return back()->with('success', 'Status pembayaran berhasil diperbarui menjadi: '.$statusText);
-    }
-
     /**
      * Delete a registration detail.
      */
     public function destroy(PendaftaranDetail $detail): RedirectResponse
     {
-        // Optionally delete associated payment proof files here if needed
-        if ($detail->pembayaran && $detail->pembayaran->bukti_bayar) {
-            Storage::disk('local')->delete($detail->pembayaran->bukti_bayar);
-        }
+        $deleted = false;
+        \Illuminate\Support\Facades\DB::transaction(function () use ($detail, &$deleted) {
+            $locked = PendaftaranDetail::whereKey($detail->id)->lockForUpdate()->firstOrFail();
+            if (! $locked->isPending() || $locked->observasis()->exists() || $locked->keputusanHistories()->exists() || $locked->finalisasiHistories()->exists() || $locked->pembayaran()->exists() || ! $locked->isFinalDalamProses()) {
+                return;
+            }
+            $locked->delete();
+            $deleted = true;
+        });
 
-        $detail->delete();
+        if (! $deleted) {
+            return back()->with('error', 'Pendaftaran tidak dapat dihapus karena sudah memiliki proses atau riwayat audit.');
+        }
 
         return back()->with('success', 'Data pendaftaran berhasil dihapus secara permanen.');
     }
@@ -223,7 +198,7 @@ class VerifikasiController extends Controller
 
         if ($type === 'pdf') {
             if (class_exists(Facade::class) || app()->bound('dompdf')) {
-                $items = PendaftaranDetail::with(['siswa.user', 'pendaftaran', 'keputusanDiputuskanOleh'])->get();
+                $items = PendaftaranDetail::with(['siswa.user', 'pendaftaran', 'keputusanDiputuskanOleh', 'finalDitetapkanOleh'])->get();
                 $pdf = app('dompdf.wrapper');
                 $pdf->loadView('admin.verifikasi.export_pdf', compact('items'));
 

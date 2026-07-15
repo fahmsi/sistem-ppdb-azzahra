@@ -204,6 +204,7 @@ test('registration card remains unavailable until registration is accepted', fun
         'bukti_bayar' => 'bukti.png',
         'status' => Pembayaran::STATUS_LUNAS,
     ]);
+    $detail->update(['final_status' => PendaftaranDetail::FINAL_SISWA_RESMI_TERDAFTAR, 'final_ditetapkan_at' => now()]);
 
     $this->actingAs($parent)
         ->get(route('parent.siswa.pendaftaran.kartu', ['siswa' => $siswa, 'detail' => $detail]))

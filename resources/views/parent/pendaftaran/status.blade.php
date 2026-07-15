@@ -549,7 +549,17 @@
                                     @endif
                                 @endif
 
-                                @if($reg->isKeputusanDiterima())
+                                @if($reg->isSiswaResmiTerdaftar())
+                                    <div class="rounded-lg border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-800 dark:border-emerald-500/20 dark:bg-emerald-500/10 dark:text-emerald-200">
+                                        <p class="font-bold">Siswa Resmi Terdaftar</p>
+                                        @if($reg->pendaftaran?->tanggal_mpls)<p class="mt-1">MPLS: {{ $reg->pendaftaran->tanggal_mpls->translatedFormat('d F Y') }}{{ $reg->pendaftaran->lokasi_mpls ? ' — '.$reg->pendaftaran->lokasi_mpls : '' }}</p>@endif
+                                        @if($reg->pendaftaran?->tanggal_mulai_kbm)<p>Mulai KBM: {{ $reg->pendaftaran->tanggal_mulai_kbm->translatedFormat('d F Y') }}</p>@endif
+                                    </div>
+                                @elseif($reg->isPendaftaranTidakDilanjutkan())
+                                    <div class="rounded-lg border border-gray-200 bg-gray-50 p-4 text-sm text-gray-700 dark:border-gray-500/20 dark:bg-gray-500/10 dark:text-gray-300">Pendaftaran Tidak Dilanjutkan{{ $reg->final_alasan ? ': '.$reg->final_alasan : '' }}</div>
+                                @elseif($reg->isFinalMengundurkanDiri())
+                                    <div class="rounded-lg border border-gray-200 bg-gray-50 p-4 text-sm text-gray-700 dark:border-gray-500/20 dark:bg-gray-500/10 dark:text-gray-300">Status: Mengundurkan Diri</div>
+                                @elseif($reg->isKeputusanDiterima())
                                     <div class="mt-6 rounded-xl border border-emerald-200 bg-emerald-50 p-4 dark:border-emerald-500/20 dark:bg-emerald-500/10 sm:p-5">
                                         @if(!$payment)
                                             <h5 class="mb-3 flex items-center gap-2 text-base font-bold text-emerald-800 dark:text-emerald-300">
@@ -617,7 +627,7 @@
                                     </div>
                                 @endif
 
-                                @if($reg->isKeputusanDiterima())
+                                @if($reg->isSiswaResmiTerdaftar())
                                     <div class="relative z-10 mt-6 flex flex-wrap gap-3 border-t border-gray-100 pt-6 dark:border-[#434463]">
                                         <a href="{{ route('parent.siswa.pendaftaran.kartu', ['siswa' => $siswa, 'detail' => $reg]) }}" target="_blank" class="inline-flex w-full cursor-pointer items-center justify-center gap-2 rounded-lg bg-secondary-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-secondary-700 sm:w-auto">
                                             <i data-lucide="printer" class="w-4 h-4"></i> Cetak Kartu Pendaftaran
@@ -637,6 +647,14 @@
                                             </span>
                                         @endif
                                     </div>
+                                @elseif($reg->canSubmitPayment())
+                                    <div class="relative z-10 mt-6 flex flex-wrap gap-3 border-t border-gray-100 pt-6 dark:border-[#434463]">
+                                        @if(!$payment || $isPaymentRejected)
+                                            <button type="button" onclick="document.getElementById('modalPayment-{{ $reg->id }}').classList.remove('hidden')" class="inline-flex w-full cursor-pointer items-center justify-center gap-2 rounded-lg border border-primary-600 bg-white px-4 py-2 text-sm font-medium text-primary-600 shadow-sm transition-colors hover:bg-primary-50 dark:bg-[#2b2c40] dark:hover:bg-[#696cff]/10 sm:w-auto"><i data-lucide="upload" class="w-4 h-4"></i>{{ $payment ? 'Upload Ulang Bukti Pembayaran' : 'Upload Bukti Pembayaran' }}</button>
+                                        @else
+                                            <span class="inline-flex w-full items-center justify-center gap-2 rounded-lg border border-yellow-200 bg-yellow-50 px-4 py-2 text-sm font-medium text-yellow-700 dark:border-yellow-500/20 dark:bg-yellow-500/10 dark:text-yellow-300 sm:w-auto"><i data-lucide="clock" class="w-4 h-4"></i>Menunggu Verifikasi Pembayaran</span>
+                                        @endif
+                                    </div>
                                 @elseif($reg->status === 'perlu_revisi')
                                     <div class="relative z-10 mt-6 flex gap-4 border-t border-gray-100 pt-6 dark:border-[#434463]">
                                         <a href="{{ route('parent.siswa.edit', $reg->siswa_id) }}" class="inline-flex w-full cursor-pointer items-center justify-center gap-2 rounded-lg bg-orange-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-orange-700 sm:w-auto">
@@ -647,7 +665,7 @@
                             </div>
                         </div>
 
-                        @if($reg->isKeputusanDiterima() && (!$payment || $isPaymentRejected))
+                        @if($reg->canSubmitPayment() && (!$payment || $isPaymentRejected))
                             <div id="modalPayment-{{ $reg->id }}" class="fixed inset-0 z-[100] hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
                                 <div class="fixed inset-0 bg-gray-900 bg-opacity-75 transition-opacity" onclick="document.getElementById('modalPayment-{{ $reg->id }}').classList.add('hidden')"></div>
                                 <div class="fixed inset-0 z-10 overflow-y-auto">

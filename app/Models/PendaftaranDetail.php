@@ -41,6 +41,11 @@ class PendaftaranDetail extends Model
 
     public const KEPUTUSAN_MENGUNDURKAN_DIRI = 'mengundurkan_diri';
 
+    public const FINAL_DALAM_PROSES = 'dalam_proses';
+    public const FINAL_SISWA_RESMI_TERDAFTAR = 'siswa_resmi_terdaftar';
+    public const FINAL_PENDAFTARAN_TIDAK_DILANJUTKAN = 'pendaftaran_tidak_dilanjutkan';
+    public const FINAL_MENGUNDURKAN_DIRI = 'mengundurkan_diri';
+
     protected $fillable = [
         'siswa_id',
         'pendaftaran_id',
@@ -58,6 +63,11 @@ class PendaftaranDetail extends Model
         'keputusan_alasan',
         'keputusan_diputuskan_oleh',
         'keputusan_diputuskan_at',
+        'final_status',
+        'final_alasan',
+        'final_catatan',
+        'final_ditetapkan_oleh',
+        'final_ditetapkan_at',
     ];
 
     /**
@@ -69,7 +79,15 @@ class PendaftaranDetail extends Model
         'tanggal_acuan_usia' => 'date',
         'kelompok_ditetapkan_at' => 'datetime',
         'keputusan_diputuskan_at' => 'datetime',
+        'final_ditetapkan_at' => 'datetime',
     ];
+
+    protected static function booted(): void
+    {
+        static::creating(function (self $detail): void {
+            $detail->final_status ??= self::FINAL_DALAM_PROSES;
+        });
+    }
 
     /**
      * All observation attempts for this registration.
@@ -195,6 +213,21 @@ class PendaftaranDetail extends Model
         return $this->hasOne(KeputusanPendaftaran::class, 'pendaftaran_detail_id')->latestOfMany();
     }
 
+    public function finalDitetapkanOleh(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'final_ditetapkan_oleh');
+    }
+
+    public function finalisasiHistories(): HasMany
+    {
+        return $this->hasMany(FinalisasiPendaftaran::class, 'pendaftaran_detail_id');
+    }
+
+    public function finalisasiTerbaru(): HasOne
+    {
+        return $this->hasOne(FinalisasiPendaftaran::class, 'pendaftaran_detail_id')->latestOfMany('finalized_at');
+    }
+
     public function hasDecision(): bool
     {
         return ! empty($this->keputusan_status);
@@ -241,12 +274,36 @@ class PendaftaranDetail extends Model
         ], true);
     }
 
+    public function isFinalDalamProses(): bool { return $this->final_status === self::FINAL_DALAM_PROSES; }
+
+    public function isSiswaResmiTerdaftar(): bool
+    {
+        return $this->final_status === self::FINAL_SISWA_RESMI_TERDAFTAR
+            && $this->final_ditetapkan_at !== null
+            && $this->isKeputusanDiterima()
+            && $this->pembayaran?->isLunas();
+    }
+
+    public function isPendaftaranTidakDilanjutkan(): bool { return $this->final_status === self::FINAL_PENDAFTARAN_TIDAK_DILANJUTKAN; }
+    public function isFinalMengundurkanDiri(): bool { return $this->final_status === self::FINAL_MENGUNDURKAN_DIRI; }
+    public function isFinalTerminal(): bool { return ! $this->isFinalDalamProses(); }
+
+    public function canSubmitPayment(): bool
+    {
+        return $this->isKeputusanDiterima()
+            && $this->isFinalDalamProses()
+            && ! $this->isSiswaResmiTerdaftar()
+            && ! $this->pembayaran?->isLunas();
+    }
+
+    public function canPrintOfficialCard(): bool { return $this->isSiswaResmiTerdaftar(); }
+
     /**
      * Check if the registration is in an active non-final state
      * (admin verification, observation, or follow-up stages).
      */
     public function isActive(): bool
     {
-        return $this->status !== self::STATUS_KEPUTUSAN_SELESAI;
+        return $this->isFinalDalamProses();
     }
 }

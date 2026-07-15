@@ -183,6 +183,7 @@ test('registration card requires the selected child and matching accepted detail
         'bukti_bayar' => 'bukti.png',
         'status' => Pembayaran::STATUS_LUNAS,
     ]);
+    $detail->update(['final_status' => PendaftaranDetail::FINAL_SISWA_RESMI_TERDAFTAR, 'final_ditetapkan_at' => now()]);
 
     $this->actingAs($parent)
         ->get(route('parent.siswa.pendaftaran.kartu', ['siswa' => $first, 'detail' => $detail]))

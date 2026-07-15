@@ -50,6 +50,19 @@
                     @error('status') <p class="mt-1 text-xs text-red-500">{{ $message }}</p> @enderror
                 </div>
             </div>
+            <div class="border-t border-[#d9dee3] pt-6 dark:border-[#434463]">
+                <h3 class="mb-4 font-heading text-base font-semibold text-[#566a7f] dark:text-[#d5d5e2]">Informasi MPLS dan Awal KBM</h3>
+                <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+                    <div><label class="mb-1 block text-sm font-medium text-[#566a7f] dark:text-[#d5d5e2]">Tanggal MPLS <span class="text-red-500">*</span></label><input type="date" name="tanggal_mpls" value="{{ old('tanggal_mpls', $pendaftaran->tanggal_mpls?->format('Y-m-d')) }}" class="sneat-input @error('tanggal_mpls') !border-red-500 @enderror">@error('tanggal_mpls') <p class="mt-1 text-xs text-red-500">{{ $message }}</p> @enderror</div>
+                    <div><label class="mb-1 block text-sm font-medium text-[#566a7f] dark:text-[#d5d5e2]">Lokasi MPLS</label><input name="lokasi_mpls" value="{{ old('lokasi_mpls', $pendaftaran->lokasi_mpls) }}" class="sneat-input"></div>
+                    <div><label class="mb-1 block text-sm font-medium text-[#566a7f] dark:text-[#d5d5e2]">Jam MPLS Mulai</label><input type="time" name="jam_mpls_mulai" value="{{ old('jam_mpls_mulai', $pendaftaran->jam_mpls_mulai) }}" class="sneat-input"></div>
+                    <div><label class="mb-1 block text-sm font-medium text-[#566a7f] dark:text-[#d5d5e2]">Jam MPLS Selesai</label><input type="time" name="jam_mpls_selesai" value="{{ old('jam_mpls_selesai', $pendaftaran->jam_mpls_selesai) }}" class="sneat-input">@error('jam_mpls_selesai') <p class="mt-1 text-xs text-red-500">{{ $message }}</p> @enderror</div>
+                    <div><label class="mb-1 block text-sm font-medium text-[#566a7f] dark:text-[#d5d5e2]">Tanggal Mulai KBM</label><input type="date" name="tanggal_mulai_kbm" value="{{ old('tanggal_mulai_kbm', $pendaftaran->tanggal_mulai_kbm?->format('Y-m-d')) }}" class="sneat-input">@error('tanggal_mulai_kbm') <p class="mt-1 text-xs text-red-500">{{ $message }}</p> @enderror</div>
+                    <div><label class="mb-1 block text-sm font-medium text-[#566a7f] dark:text-[#d5d5e2]">Jam Masuk KBM</label><input type="time" name="jam_masuk_kbm" value="{{ old('jam_masuk_kbm', $pendaftaran->jam_masuk_kbm) }}" class="sneat-input"></div>
+                    <div class="sm:col-span-2"><label class="mb-1 block text-sm font-medium text-[#566a7f] dark:text-[#d5d5e2]">Informasi MPLS</label><textarea name="informasi_mpls" rows="2" class="sneat-input">{{ old('informasi_mpls', $pendaftaran->informasi_mpls) }}</textarea></div>
+                    <div class="sm:col-span-2"><label class="mb-1 block text-sm font-medium text-[#566a7f] dark:text-[#d5d5e2]">Informasi KBM</label><textarea name="informasi_kbm" rows="2" class="sneat-input">{{ old('informasi_kbm', $pendaftaran->informasi_kbm) }}</textarea></div>
+                </div>
+            </div>
             <div>
                 <label class="block text-sm font-medium text-[#566a7f] dark:text-[#d5d5e2] mb-2">Ganti Banner Gambar (Opsional)</label>
                 @if($pendaftaran->gambar)

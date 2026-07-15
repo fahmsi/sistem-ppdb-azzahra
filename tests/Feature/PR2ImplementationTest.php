@@ -85,6 +85,7 @@ test('7. accepts valid sequential YYYY/YYYY format', function () {
         'status' => 'buka',
         'tanggal_mulai' => '2026-01-01',
         'tanggal_selesai' => '2026-02-01',
+        'tanggal_mpls' => '2026-02-02',
     ]);
 
     $response->assertSessionHasNoErrors();

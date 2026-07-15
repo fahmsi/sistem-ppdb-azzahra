@@ -7,6 +7,7 @@ use App\Http\Requests\Admin\StoreAdmissionDecisionRequest;
 use App\Models\ActivityLog;
 use App\Models\PendaftaranDetail;
 use App\Notifications\KeputusanPendaftaranNotification;
+use App\Notifications\FinalEnrollmentNotification;
 use App\Services\AdmissionDecisionService;
 use App\Services\WhatsAppNotificationService;
 use Illuminate\Http\RedirectResponse;
@@ -55,7 +56,11 @@ class AdmissionDecisionController extends Controller
             $updatedDetail->loadMissing('siswa.user');
             $parent = $updatedDetail->siswa?->user;
             if ($parent) {
-                $parent->notify(new KeputusanPendaftaranNotification($updatedDetail));
+                if ($updatedDetail->isPendaftaranTidakDilanjutkan()) {
+                    $parent->notify(new FinalEnrollmentNotification($updatedDetail, 'enrollment_discontinued'));
+                } else {
+                    $parent->notify(new KeputusanPendaftaranNotification($updatedDetail));
+                }
             }
 
             // 3. Best-effort WhatsApp Notification (wrapped in try-catch)

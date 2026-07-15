@@ -20,12 +20,8 @@ class PembayaranController extends Controller
     {
         $detail->loadMissing('siswa', 'pembayaran');
 
-        if ($detail->siswa?->user_id !== auth()->id() || ! $detail->isKeputusanDiterima()) {
+        if ($detail->siswa?->user_id !== auth()->id() || ! $detail->canSubmitPayment()) {
             abort(403, 'Akses ditolak.');
-        }
-
-        if ($detail->pembayaran?->isLunas()) {
-            return back()->with('error', 'Pembayaran daftar ulang sudah diverifikasi dan tidak dapat diunggah ulang.');
         }
 
         $jumlah = (int) round((float) PaymentSetting::current()?->amount);
@@ -44,13 +40,20 @@ class PembayaranController extends Controller
 
         try {
             DB::transaction(function () use ($detail, $jumlah, $buktiBayarPath, $oldPath) {
+                $lockedDetail = PendaftaranDetail::whereKey($detail->id)->lockForUpdate()->firstOrFail();
+                $lockedDetail->load('pembayaran');
+                if (! $lockedDetail->canSubmitPayment()) {
+                    throw new \RuntimeException('Pembayaran daftar ulang tidak dapat diunggah pada status saat ini.');
+                }
                 Pembayaran::updateOrCreate(
                     ['pendaftaran_detail_id' => $detail->id],
                     [
                         'jumlah' => $jumlah,
                         'bukti_bayar' => $buktiBayarPath,
                         'status' => Pembayaran::STATUS_MENUNGGU_VERIFIKASI,
-                        'catatan_admin' => null, // reset notes on re-upload
+                        'catatan_admin' => null,
+                        'verified_by' => null,
+                        'verified_at' => null,
                     ]
                 );
 
@@ -82,14 +85,14 @@ class PembayaranController extends Controller
      */
     public function receipt(PendaftaranDetail $detail)
     {
-        $detail->load(['siswa', 'pendaftaran', 'pembayaran']);
+        $detail->load(['siswa.user', 'pendaftaran', 'pembayaran.verifiedBy']);
 
         // Authorization
         if ($detail->siswa?->user_id !== auth()->id()) {
             abort(403, 'Akses ditolak.');
         }
 
-        if (! $detail->isKeputusanDiterima()
+        if (! $detail->isSiswaResmiTerdaftar()
             || ! $detail->pembayaran
             || ! $detail->pembayaran->isLunas()
         ) {

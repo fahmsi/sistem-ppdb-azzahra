@@ -118,7 +118,18 @@
                                     </a>
                                 </div>
 
-                                @if($latestRegistration->isKeputusanDiterima())
+                                @if($latestRegistration->isSiswaResmiTerdaftar())
+                                    <div class="mt-4 rounded-lg border border-emerald-100 bg-emerald-50 p-4 dark:border-emerald-500/20 dark:bg-emerald-500/10">
+                                        <p class="text-sm font-semibold text-emerald-700 dark:text-emerald-300">Siswa Resmi Terdaftar</p>
+                                        @if($latestRegistration->pendaftaran?->tanggal_mpls)<p class="mt-2 text-xs text-emerald-800 dark:text-emerald-200">MPLS: {{ $latestRegistration->pendaftaran->tanggal_mpls->translatedFormat('d F Y') }}{{ $latestRegistration->pendaftaran->lokasi_mpls ? ' — '.$latestRegistration->pendaftaran->lokasi_mpls : '' }}</p>@endif
+                                        @if($latestRegistration->pendaftaran?->tanggal_mulai_kbm)<p class="mt-1 text-xs text-emerald-800 dark:text-emerald-200">Mulai KBM: {{ $latestRegistration->pendaftaran->tanggal_mulai_kbm->translatedFormat('d F Y') }}</p>@endif
+                                        <div class="mt-4 flex flex-wrap gap-2"><a href="{{ route('parent.siswa.pendaftaran.kartu', ['siswa' => $siswa, 'detail' => $latestRegistration]) }}" target="_blank" class="inline-flex items-center gap-2 rounded-md bg-emerald-600 px-4 py-2 text-sm font-medium text-white"><i data-lucide="printer" class="h-4 w-4"></i>Cetak Kartu</a><a href="{{ route('parent.pembayaran.receipt', $latestRegistration) }}" target="_blank" class="inline-flex items-center gap-2 rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white"><i data-lucide="file-text" class="h-4 w-4"></i>Cetak Kuitansi</a></div>
+                                    </div>
+                                @elseif($latestRegistration->isPendaftaranTidakDilanjutkan())
+                                    <div class="mt-4 rounded-lg border border-gray-200 bg-gray-50 p-4 text-sm text-gray-700 dark:border-gray-500/20 dark:bg-gray-500/10 dark:text-gray-300">Pendaftaran Tidak Dilanjutkan{{ $latestRegistration->final_alasan ? ': '.$latestRegistration->final_alasan : '' }}</div>
+                                @elseif($latestRegistration->isFinalMengundurkanDiri())
+                                    <div class="mt-4 rounded-lg border border-gray-200 bg-gray-50 p-4 text-sm text-gray-700 dark:border-gray-500/20 dark:bg-gray-500/10 dark:text-gray-300">Status: Mengundurkan Diri</div>
+                                @elseif($latestRegistration->isKeputusanDiterima())
                                     <div class="mt-4 rounded-lg border border-emerald-100 bg-emerald-50 p-4 dark:border-emerald-500/20 dark:bg-emerald-500/10">
                                         @if(!$payment)
                                             <p class="text-sm text-[#697a8d] dark:text-[#d5d5e2]">Berkas sudah terverifikasi dan Ananda dinyatakan <strong>Diterima</strong>. Silakan melakukan pembayaran daftar ulang.</p>

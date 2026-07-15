@@ -12,6 +12,8 @@ use RuntimeException;
 
 class AdmissionDecisionService
 {
+    public function __construct(private readonly FinalEnrollmentService $finalEnrollment) {}
+
     /**
      * Make an admission decision.
      */
@@ -111,7 +113,13 @@ class AdmissionDecisionService
                 'decided_at' => now(),
             ]);
 
-            return $lockedDetail;
+            if ($status === PendaftaranDetail::KEPUTUSAN_TIDAK_DITERIMA) {
+                $lockedDetail = $this->finalEnrollment->transition($lockedDetail, PendaftaranDetail::FINAL_PENDAFTARAN_TIDAK_DILANJUTKAN, FinalEnrollmentService::SOURCE_ADMISSION_DECISION, $decidedByUserId, $alasan);
+            } elseif ($status === PendaftaranDetail::KEPUTUSAN_MENGUNDURKAN_DIRI) {
+                $lockedDetail = $this->finalEnrollment->transition($lockedDetail, PendaftaranDetail::FINAL_MENGUNDURKAN_DIRI, FinalEnrollmentService::SOURCE_ADMISSION_DECISION, $decidedByUserId, $alasan);
+            }
+
+            return $lockedDetail->fresh();
         });
     }
 }
