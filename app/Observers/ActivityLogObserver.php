@@ -20,7 +20,7 @@ class ActivityLogObserver
         ActivityLog::log(
             'created',
             $model,
-            class_basename($model) . ' baru telah dibuat.'
+            class_basename($model).' baru telah dibuat.'
         );
     }
 
@@ -42,6 +42,19 @@ class ActivityLogObserver
         unset($changes['password'], $changes['updated_at'], $changes['remember_token']);
         unset($original['password'], $original['updated_at'], $original['remember_token']);
 
+        // Remove sensitive observation notes and details
+        $sensitiveKeys = [
+            'catatan_wawancara_orang_tua',
+            'catatan_aktivitas_anak',
+            'catatan_kesiapan_anak',
+            'membutuhkan_dukungan_khusus',
+            'catatan_kebutuhan_dukungan_khusus',
+            'catatan_sekolah',
+        ];
+        foreach ($sensitiveKeys as $key) {
+            unset($changes[$key], $original[$key]);
+        }
+
         if (empty($changes)) {
             return;
         }
@@ -49,7 +62,7 @@ class ActivityLogObserver
         ActivityLog::log(
             'updated',
             $model,
-            class_basename($model) . ' telah diperbarui.',
+            class_basename($model).' telah diperbarui.',
             ['old' => $original, 'new' => $changes]
         );
     }
@@ -66,7 +79,7 @@ class ActivityLogObserver
         ActivityLog::log(
             'deleted',
             $model,
-            class_basename($model) . ' telah dihapus.'
+            class_basename($model).' telah dihapus.'
         );
     }
 }

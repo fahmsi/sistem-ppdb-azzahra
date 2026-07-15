@@ -641,32 +641,38 @@
 
 
 
-                    @if($detail->status === 'diterima' || $detail->status === 'ditolak')
-                        {{-- Final status reached — show badge only --}}
+                    @if(in_array($detail->status, ['diterima', 'administrasi_lengkap', 'menunggu_keputusan']))
+                        {{-- Post-verification stage — show status badge --}}
                         <div class="text-center py-4">
-                            @if($detail->status === 'diterima')
+                            @if($detail->status === 'administrasi_lengkap')
+                                <div class="w-14 h-14 mx-auto rounded-full bg-teal-100 flex items-center justify-center mb-3">
+                                    <i data-lucide="file-check" class="w-8 h-8 text-teal-600"></i>
+                                </div>
+                                <span class="inline-flex items-center px-4 py-2 rounded-full text-xs font-bold bg-teal-100 text-teal-700 border border-teal-200">ADMINISTRASI LENGKAP</span>
+                                <p class="text-xs text-[#a1b0cb] mt-3">Berkas administrasi telah diverifikasi. Jadwal observasi dapat dibuat di bawah.</p>
+                            @elseif($detail->status === 'menunggu_keputusan')
+                                <div class="w-14 h-14 mx-auto rounded-full bg-indigo-100 flex items-center justify-center mb-3">
+                                    <i data-lucide="clock" class="w-8 h-8 text-indigo-600"></i>
+                                </div>
+                                <span class="inline-flex items-center px-4 py-2 rounded-full text-xs font-bold bg-indigo-100 text-indigo-700 border border-indigo-200">MENUNGGU KEPUTUSAN</span>
+                                <p class="text-xs text-[#a1b0cb] mt-3">Observasi selesai. Menunggu keputusan penerimaan dari pihak sekolah.</p>
+                            @elseif($detail->status === 'diterima')
+                                {{-- Legacy: kept for compatibility --}}
                                 <div class="w-14 h-14 mx-auto rounded-full bg-secondary-100 flex items-center justify-center mb-3">
                                     <i data-lucide="check-circle" class="w-8 h-8 text-secondary-600"></i>
                                 </div>
-                                <span class="inline-flex items-center px-4 py-2 rounded-full text-xs font-bold bg-secondary-100 text-secondary-700 border border-secondary-200">BERKAS TERVERIFIKASI – LANJUT OBSERVASI</span>
-                                <p class="text-xs text-[#a1b0cb] mt-3">Berkas pendaftaran telah diverifikasi. Calon siswa diarahkan untuk observasi/wawancara di sekolah.</p>
-                            @else
-                                <div class="w-14 h-14 mx-auto rounded-full bg-red-100 flex items-center justify-center mb-3">
-                                    <i data-lucide="x-circle" class="w-8 h-8 text-red-600"></i>
-                                </div>
-                                <span class="inline-flex items-center px-4 py-2 rounded-full text-xs font-bold bg-red-100 text-red-700 border border-red-200">PENDAFTARAN DITOLAK</span>
-                                <p class="text-xs text-[#a1b0cb] mt-3">Pendaftaran ini sudah ditolak.</p>
+                                <span class="inline-flex items-center px-4 py-2 rounded-full text-xs font-bold bg-secondary-100 text-secondary-700 border border-secondary-200">DITERIMA</span>
                             @endif
                         </div>
 
-                        {{-- Also hide payment verification if already lunas --}}
-                        @if($payment && $isPaymentLunas)
-                            <div class="mt-4 pt-4 border-t border-[#d9dee3] dark:border-[#434463] text-center">
-                                <span class="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-bold bg-secondary-100 text-secondary-700">
-                                    <i data-lucide="check" class="w-4 h-4"></i> Pembayaran Lunas
-                                </span>
+                    @elseif($detail->status === 'ditolak')
+                        <div class="text-center py-4">
+                            <div class="w-14 h-14 mx-auto rounded-full bg-red-100 flex items-center justify-center mb-3">
+                                <i data-lucide="x-circle" class="w-8 h-8 text-red-600"></i>
                             </div>
-                        @endif
+                            <span class="inline-flex items-center px-4 py-2 rounded-full text-xs font-bold bg-red-100 text-red-700 border border-red-200">PENDAFTARAN DITOLAK</span>
+                            <p class="text-xs text-[#a1b0cb] mt-3">Pendaftaran ini sudah ditolak.</p>
+                        </div>
 
                     @elseif($detail->status === 'pending')
                         <div class="text-center pb-4 border-b border-[#d9dee3] dark:border-[#434463] mb-4">
@@ -680,30 +686,28 @@
                                 <i data-lucide="play-circle" class="w-4 h-4"></i> Mulai Verifikasi
                             </button>
                         </form>
+
                     @else
-                        <!-- Form for Terima / Tolak -->
+                        {{-- menunggu_verifikasi or perlu_revisi — show admin action panel --}}
                         <div class="space-y-4">
                             <div>
-                                <label class="block text-sm font-medium text-[#566a7f] dark:text-[#d5d5e2] mb-1">Catatan Tambahan / Alasan</label>
-                                <textarea id="notifikasi" name="notifikasi" rows="4" class="sneat-input" placeholder="Opsional jika diterima. Wajib diisi jika ditolak / minta revisi..."></textarea>
+                                <label class="block text-sm font-medium text-[#566a7f] dark:text-[#d5d5e2] mb-1">Catatan / Alasan Revisi</label>
+                                <textarea id="notifikasi" name="notifikasi" rows="4" class="sneat-input" placeholder="Wajib diisi jika meminta revisi..."></textarea>
                                 <p class="text-xs text-[#a1b0cb] mt-1">Catatan ini akan dilihat oleh Wali Murid.</p>
                             </div>
 
-                            <p class="text-xs text-blue-600 dark:text-blue-400 bg-blue-500/10 p-2.5 rounded-lg border border-blue-500/20 mb-1">
-                                <i data-lucide="info" class="w-3.5 h-3.5 inline mr-1"></i> Setelah berkas disetujui, orang tua/wali diarahkan untuk datang ke sekolah bersama calon siswa pada tahap observasi/wawancara sebelum proses daftar ulang.
-                            </p>
-
                             <div class="flex flex-col gap-3 pt-2">
-                                <button type="button" onclick="handleTerima()" class="w-full flex justify-center items-center gap-2 py-3 px-4 bg-secondary-600 hover:bg-secondary-700 text-white font-semibold rounded-lg shadow-sm transition-colors">
-                                    <i data-lucide="check" class="w-5 h-5"></i> Setujui Berkas & Lanjut Observasi
-                                </button>
+                                {{-- PRIMARY: Nyatakan Administrasi Lengkap --}}
+                                <form id="formAdministrasiLengkap" action="{{ route('admin.verifikasi.administrasi-lengkap', $detail->id) }}" method="POST">
+                                    @csrf
+                                    <button type="button" onclick="handleAdministrasiLengkap()" class="w-full flex justify-center items-center gap-2 py-3 px-4 bg-teal-600 hover:bg-teal-700 text-white font-semibold rounded-lg shadow-sm transition-colors">
+                                        <i data-lucide="file-check" class="w-5 h-5"></i> Nyatakan Administrasi Lengkap
+                                    </button>
+                                </form>
 
+                                {{-- Minta Revisi --}}
                                 <button type="button" onclick="handleRevisi()" class="flex w-full items-center justify-center gap-2 rounded-lg border border-orange-200 bg-white px-4 py-3 font-semibold text-orange-600 transition-colors hover:bg-orange-50 dark:border-orange-500/30 dark:bg-[#2b2c40] dark:text-orange-400 dark:hover:bg-orange-500/10">
                                     <i data-lucide="edit-3" class="w-5 h-5"></i> Minta Revisi Dokumen
-                                </button>
-
-                                <button type="button" onclick="handleTolak()" class="flex w-full items-center justify-center gap-2 rounded-lg border border-red-200 bg-white px-4 py-3 font-semibold text-red-600 transition-colors hover:bg-red-50 dark:border-red-500/30 dark:bg-[#2b2c40] dark:text-red-400 dark:hover:bg-red-500/10">
-                                    <i data-lucide="x" class="w-5 h-5"></i> Tolak Pendaftaran
                                 </button>
                             </div>
                         </div>
@@ -715,19 +719,270 @@
     </div>
 </div>
 
-<!-- Hidden Forms -->
-<form id="formTerima" action="{{ route('admin.verifikasi.terima', $detail->id) }}" method="POST" style="display: none;">
-    @csrf
-    @method('PATCH')
-    <input type="hidden" id="hiddenNotifikasiTerima" name="notifikasi" value="">
-</form>
+{{-- ======================================================= --}}
+{{-- OBSERVATION SECTION (show when administrasi_lengkap+) --}}
+{{-- ======================================================= --}}
+@if(in_array($detail->status, ['administrasi_lengkap', 'menunggu_keputusan']))
+<div class="max-w-7xl mx-auto mt-6">
+    <div class="bg-white dark:bg-[#2b2c40] rounded-lg shadow-sneat dark:shadow-sneat-dark border border-[#d9dee3] dark:border-[#434463] overflow-hidden">
+        <div class="bg-indigo-50 dark:bg-indigo-500/10 px-6 py-4 border-b border-[#d9dee3] dark:border-[#434463] flex items-center gap-2">
+            <i data-lucide="calendar-check" class="w-5 h-5 text-indigo-600"></i>
+            <h3 class="font-heading font-semibold text-[#566a7f] dark:text-[#d5d5e2]">Jadwal & Histori Observasi</h3>
+        </div>
 
-<form id="formTolak" action="{{ route('admin.verifikasi.tolak', $detail->id) }}" method="POST" style="display: none;">
-    @csrf
-    @method('PATCH')
-    <input type="hidden" id="hiddenNotifikasiTolak" name="notifikasi" value="">
-</form>
+        <div class="p-6 space-y-6">
 
+            {{-- Histori Observasi --}}
+            @if($detail->observasis->isNotEmpty())
+            <div>
+                <h4 class="font-semibold text-sm text-[#566a7f] dark:text-[#d5d5e2] mb-3 flex items-center gap-2">
+                    <i data-lucide="history" class="w-4 h-4"></i> Histori Percobaan Observasi
+                </h4>
+                <div class="space-y-3">
+                    @foreach($detail->observasis->sortByDesc('attempt_number') as $obs)
+                    <div class="rounded-lg border border-[#d9dee3] dark:border-[#434463] p-4 {{ $obs->status === 'selesai' ? 'bg-emerald-50 dark:bg-emerald-500/5' : ($obs->status === 'tidak_hadir' ? 'bg-red-50 dark:bg-red-500/5' : 'bg-[#f5f5f9] dark:bg-[#232333]') }}">
+                        <div class="flex flex-wrap items-start justify-between gap-3">
+                            <div class="space-y-1">
+                                <div class="flex items-center gap-2">
+                                    <span class="text-xs font-bold text-[#697a8d] dark:text-[#a1b0cb] uppercase tracking-wider">Percobaan #{{ $obs->attempt_number }}</span>
+                                    @php
+                                        $statusBadge = match($obs->status) {
+                                            'dijadwalkan' => 'bg-blue-100 text-blue-700 dark:bg-blue-500/15 dark:text-blue-300',
+                                            'hadir' => 'bg-emerald-100 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300',
+                                            'tidak_hadir' => 'bg-red-100 text-red-700 dark:bg-red-500/15 dark:text-red-300',
+                                            'dijadwalkan_ulang' => 'bg-orange-100 text-orange-700 dark:bg-orange-500/15 dark:text-orange-300',
+                                            'selesai' => 'bg-teal-100 text-teal-700 dark:bg-teal-500/15 dark:text-teal-300',
+                                            default => 'bg-gray-100 text-gray-700',
+                                        };
+                                        $statusLabel = match($obs->status) {
+                                            'dijadwalkan' => 'Dijadwalkan',
+                                            'hadir' => 'Hadir',
+                                            'tidak_hadir' => 'Tidak Hadir',
+                                            'dijadwalkan_ulang' => 'Dijadwalkan Ulang',
+                                            'selesai' => 'Selesai',
+                                            'dibatalkan' => 'Dibatalkan',
+                                            default => ucfirst($obs->status),
+                                        };
+                                    @endphp
+                                    <span class="px-2 py-0.5 rounded-full text-xs font-bold {{ $statusBadge }}">{{ $statusLabel }}</span>
+                                </div>
+                                <p class="text-sm font-semibold text-[#566a7f] dark:text-[#d5d5e2]">
+                                    <i data-lucide="calendar" class="w-3.5 h-3.5 inline mr-1"></i>
+                                    {{ $obs->scheduled_at->locale('id')->isoFormat('dddd, D MMMM YYYY [pukul] HH:mm') }}
+                                </p>
+                                @if($obs->attended_at)
+                                <p class="text-xs text-[#697a8d] dark:text-[#a1b0cb]">
+                                    Hadir: {{ $obs->attended_at->format('d/m/Y H:i') }}
+                                </p>
+                                @endif
+                                @if($obs->completed_at)
+                                <p class="text-xs text-[#697a8d] dark:text-[#a1b0cb]">
+                                    Selesai: {{ $obs->completed_at->format('d/m/Y H:i') }}
+                                    @if($obs->observedBy) • Observer: {{ $obs->observedBy->name }} @endif
+                                </p>
+                                @endif
+                                @if($obs->scheduledBy)
+                                <p class="text-xs text-[#a1b0cb]">Dijadwalkan oleh: {{ $obs->scheduledBy->name }}</p>
+                                @endif
+                                @if($obs->reschedule_reason)
+                                <p class="text-xs text-orange-600 dark:text-orange-400 mt-1">
+                                    <i data-lucide="alert-circle" class="w-3.5 h-3.5 inline mr-1"></i>
+                                    Alasan penjadwalan ulang: {{ $obs->reschedule_reason }}
+                                </p>
+                                @endif
+                            </div>
+
+                            {{-- Action buttons for this observation --}}
+                            @if($obs->status === 'dijadwalkan' && $detail->observasiTerbaru?->id === $obs->id)
+                            <div class="flex flex-wrap gap-2">
+                                <form action="{{ route('admin.observasi.hadir', $obs->id) }}" method="POST" class="inline">
+                                    @csrf @method('PATCH')
+                                    <button type="submit" class="px-3 py-1.5 text-xs font-semibold rounded-md bg-emerald-600 hover:bg-emerald-700 text-white transition-colors">
+                                        <i data-lucide="check" class="w-3.5 h-3.5 inline mr-1"></i>Hadir
+                                    </button>
+                                </form>
+                                <form action="{{ route('admin.observasi.tidak-hadir', $obs->id) }}" method="POST" class="inline">
+                                    @csrf @method('PATCH')
+                                    <button type="submit" class="px-3 py-1.5 text-xs font-semibold rounded-md bg-red-500 hover:bg-red-600 text-white transition-colors">
+                                        <i data-lucide="x" class="w-3.5 h-3.5 inline mr-1"></i>Tidak Hadir
+                                    </button>
+                                </form>
+                            </div>
+                            @elseif($obs->status === 'hadir' && $detail->observasiTerbaru?->id === $obs->id)
+                            <div>
+                                <button type="button" onclick="document.getElementById('formSelesai').classList.toggle('hidden')"
+                                    class="px-3 py-1.5 text-xs font-semibold rounded-md bg-teal-600 hover:bg-teal-700 text-white transition-colors">
+                                    <i data-lucide="clipboard-check" class="w-3.5 h-3.5 inline mr-1"></i>Catat Hasil
+                                </button>
+                            </div>
+                            @elseif($obs->status === 'tidak_hadir' && $detail->observasiTerbaru?->id === $obs->id)
+                            <div>
+                                @if(!$isPastDeadline)
+                                <button type="button" onclick="document.getElementById('formJadwalUlang').classList.toggle('hidden')"
+                                    class="px-3 py-1.5 text-xs font-semibold rounded-md bg-orange-500 hover:bg-orange-600 text-white transition-colors">
+                                    <i data-lucide="refresh-cw" class="w-3.5 h-3.5 inline mr-1"></i>Jadwal Ulang
+                                </button>
+                                @else
+                                <span class="px-3 py-1.5 text-xs font-semibold rounded-md bg-gray-200 text-gray-500 dark:bg-gray-700 dark:text-gray-400">
+                                    Batas Jadwal Ulang Terlewat
+                                </span>
+                                @endif
+                            </div>
+                            @endif
+                        </div>
+                    </div>
+                    @endforeach
+                </div>
+            </div>
+            @endif
+
+            {{-- H-3 MPLS Deadline Info --}}
+            @if($rescheduleDeadline)
+            <div class="rounded-lg p-3 {{ $isPastDeadline ? 'bg-red-50 dark:bg-red-500/5 border border-red-200 dark:border-red-500/20' : 'bg-amber-50 dark:bg-amber-500/5 border border-amber-200 dark:border-amber-500/20' }}">
+                <p class="text-xs font-medium {{ $isPastDeadline ? 'text-red-700 dark:text-red-400' : 'text-amber-700 dark:text-amber-400' }}">
+                    <i data-lucide="alert-triangle" class="w-3.5 h-3.5 inline mr-1"></i>
+                    Batas penjadwalan ulang: <strong>{{ $rescheduleDeadline->locale('id')->isoFormat('dddd, D MMMM YYYY') }}</strong>
+                    @if($isPastDeadline)
+                        — <strong>Batas telah terlewat.</strong>
+                    @else
+                        (H-3 sebelum MPLS {{ $detail->pendaftaran->tanggal_mpls->format('d/m/Y') }})
+                    @endif
+                </p>
+            </div>
+            @endif
+
+            {{-- Form: Buat Jadwal Observasi (if no active/completed observation) --}}
+            @php
+                $hasActiveObs = $detail->observasis->whereIn('status', ['dijadwalkan', 'hadir'])->isNotEmpty();
+                $hasCompletedObs = $detail->observasis->where('status', 'selesai')->isNotEmpty();
+                $canScheduleNew = !$hasActiveObs && !$hasCompletedObs && $detail->status === 'administrasi_lengkap';
+            @endphp
+
+            @if($canScheduleNew)
+            <div>
+                <h4 class="font-semibold text-sm text-[#566a7f] dark:text-[#d5d5e2] mb-3 flex items-center gap-2">
+                    <i data-lucide="calendar-plus" class="w-4 h-4"></i> Buat Jadwal Observasi
+                </h4>
+                <form action="{{ route('admin.verifikasi.observasi.store', $detail->id) }}" method="POST" class="space-y-3">
+                    @csrf
+                    <div>
+                        <label class="block text-xs font-medium text-[#697a8d] mb-1">Tanggal & Waktu Observasi <span class="text-red-500">*</span></label>
+                        <input type="datetime-local" name="scheduled_at" required
+                            min="{{ now()->addHour()->format('Y-m-d\TH:i') }}"
+                            @if($detail->pendaftaran->tanggal_mpls) max="{{ $detail->pendaftaran->tanggal_mpls->format('Y-m-d') }}" @endif
+                            class="sneat-input">
+                        @if($detail->pendaftaran->tanggal_mpls)
+                        <p class="text-xs text-[#a1b0cb] mt-1">Harus sebelum MPLS: {{ $detail->pendaftaran->tanggal_mpls->format('d/m/Y') }}</p>
+                        @endif
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-[#697a8d] mb-1">Catatan Jadwal <span class="text-[#a1b0cb]">(opsional)</span></label>
+                        <textarea name="catatan_jadwal" rows="2" class="sneat-input" placeholder="Catatan internal..."></textarea>
+                    </div>
+                    <button type="submit" class="w-full flex justify-center items-center gap-2 py-2.5 px-4 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg transition-colors">
+                        <i data-lucide="calendar-plus" class="w-4 h-4"></i> Jadwalkan Observasi
+                    </button>
+                </form>
+            </div>
+            @endif
+
+            {{-- Form: Catat Hasil Observasi --}}
+            @php $latestObs = $detail->observasiTerbaru; @endphp
+            @if($latestObs && $latestObs->canBeCompleted())
+            <div id="formSelesai" class="{{ session('errors') ? '' : 'hidden' }}">
+                <h4 class="font-semibold text-sm text-[#566a7f] dark:text-[#d5d5e2] mb-3 flex items-center gap-2">
+                    <i data-lucide="clipboard-check" class="w-4 h-4"></i> Catat Hasil Observasi (Percobaan #{{ $latestObs->attempt_number }})
+                </h4>
+                <form action="{{ route('admin.observasi.selesai', $latestObs->id) }}" method="POST" class="space-y-4">
+                    @csrf @method('PATCH')
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-medium text-[#697a8d] mb-1">Tinggi Badan (cm) <span class="text-red-500">*</span></label>
+                            <input type="number" name="tinggi_badan_cm" step="0.1" min="30" max="200" class="sneat-input" placeholder="mis: 105.5" value="{{ old('tinggi_badan_cm') }}">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-[#697a8d] mb-1">Berat Badan (kg) <span class="text-red-500">*</span></label>
+                            <input type="number" name="berat_badan_kg" step="0.1" min="5" max="100" class="sneat-input" placeholder="mis: 17.2" value="{{ old('berat_badan_kg') }}">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-[#697a8d] mb-1">Catatan Wawancara Orang Tua <span class="text-red-500">*</span></label>
+                        <textarea name="catatan_wawancara_orang_tua" rows="3" class="sneat-input" required placeholder="Catatan dari wawancara dengan orang tua...">{{ old('catatan_wawancara_orang_tua') }}</textarea>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-[#697a8d] mb-1">Catatan Aktivitas Anak <span class="text-red-500">*</span></label>
+                        <textarea name="catatan_aktivitas_anak" rows="3" class="sneat-input" required placeholder="Catatan pengamatan aktivitas anak...">{{ old('catatan_aktivitas_anak') }}</textarea>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-[#697a8d] mb-1">Catatan Kesiapan Anak <span class="text-red-500">*</span></label>
+                        <textarea name="catatan_kesiapan_anak" rows="3" class="sneat-input" required placeholder="Catatan penilaian kesiapan anak...">{{ old('catatan_kesiapan_anak') }}</textarea>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-[#697a8d] mb-2">Kebutuhan Dukungan Khusus <span class="text-red-500">*</span></label>
+                        <div class="flex items-center gap-4">
+                            <label class="flex items-center gap-2 cursor-pointer">
+                                <input type="radio" name="membutuhkan_dukungan_khusus" value="1" class="text-[#696cff]" {{ old('membutuhkan_dukungan_khusus') == '1' ? 'checked' : '' }} onchange="document.getElementById('catatanDukungan').classList.remove('hidden')">
+                                <span class="text-sm text-[#566a7f] dark:text-[#d5d5e2]">Ya</span>
+                            </label>
+                            <label class="flex items-center gap-2 cursor-pointer">
+                                <input type="radio" name="membutuhkan_dukungan_khusus" value="0" class="text-[#696cff]" {{ old('membutuhkan_dukungan_khusus') == '0' ? 'checked' : '' }} onchange="document.getElementById('catatanDukungan').classList.add('hidden')">
+                                <span class="text-sm text-[#566a7f] dark:text-[#d5d5e2]">Tidak</span>
+                            </label>
+                        </div>
+                        <div id="catatanDukungan" class="{{ old('membutuhkan_dukungan_khusus') == '1' ? '' : 'hidden' }} mt-2">
+                            <label class="block text-xs font-medium text-[#697a8d] mb-1">Catatan Kebutuhan Dukungan Khusus <span class="text-red-500">*</span></label>
+                            <textarea name="catatan_kebutuhan_dukungan_khusus" rows="2" class="sneat-input" placeholder="Jelaskan kebutuhan dukungan khusus...">{{ old('catatan_kebutuhan_dukungan_khusus') }}</textarea>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-[#697a8d] mb-1">Catatan Internal Sekolah <span class="text-[#a1b0cb]">(opsional)</span></label>
+                        <textarea name="catatan_sekolah" rows="2" class="sneat-input" placeholder="Catatan untuk internal sekolah (tidak ditampilkan ke orang tua)...">{{ old('catatan_sekolah') }}</textarea>
+                    </div>
+                    <div class="p-3 rounded-lg bg-amber-50 dark:bg-amber-500/5 border border-amber-200 dark:border-amber-500/20">
+                        <p class="text-xs text-amber-700 dark:text-amber-400">
+                            <i data-lucide="info" class="w-3.5 h-3.5 inline mr-1"></i>
+                            Menyimpan hasil observasi akan mengubah status pendaftaran menjadi <strong>Menunggu Keputusan Sekolah</strong>. Catatan internal tidak akan ditampilkan ke orang tua.
+                        </p>
+                    </div>
+                    <button type="submit" class="w-full flex justify-center items-center gap-2 py-2.5 px-4 bg-teal-600 hover:bg-teal-700 text-white font-medium rounded-lg transition-colors">
+                        <i data-lucide="save" class="w-4 h-4"></i> Simpan Hasil Observasi
+                    </button>
+                </form>
+            </div>
+            @endif
+
+            {{-- Form: Jadwal Ulang --}}
+            @if($latestObs && $latestObs->canBeRescheduled() && !$isPastDeadline)
+            <div id="formJadwalUlang" class="{{ session('errors') ? '' : 'hidden' }}">
+                <h4 class="font-semibold text-sm text-[#566a7f] dark:text-[#d5d5e2] mb-3 flex items-center gap-2">
+                    <i data-lucide="refresh-cw" class="w-4 h-4"></i> Jadwalkan Ulang Observasi
+                </h4>
+                <form action="{{ route('admin.observasi.jadwal-ulang', $latestObs->id) }}" method="POST" class="space-y-3">
+                    @csrf
+                    <div>
+                        <label class="block text-xs font-medium text-[#697a8d] mb-1">Tanggal & Waktu Baru <span class="text-red-500">*</span></label>
+                        <input type="datetime-local" name="scheduled_at" required
+                            min="{{ now()->addHour()->format('Y-m-d\TH:i') }}"
+                            @if($detail->pendaftaran->tanggal_mpls) max="{{ $detail->pendaftaran->tanggal_mpls->format('Y-m-d') }}" @endif
+                            class="sneat-input">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-[#697a8d] mb-1">Alasan Penjadwalan Ulang <span class="text-red-500">*</span></label>
+                        <textarea name="reschedule_reason" rows="2" class="sneat-input" required placeholder="Jelaskan alasan penjadwalan ulang..."></textarea>
+                    </div>
+                    <button type="submit" class="w-full flex justify-center items-center gap-2 py-2.5 px-4 bg-orange-500 hover:bg-orange-600 text-white font-medium rounded-lg transition-colors">
+                        <i data-lucide="refresh-cw" class="w-4 h-4"></i> Konfirmasi Jadwal Ulang
+                    </button>
+                </form>
+            </div>
+            @endif
+
+        </div>
+    </div>
+</div>
+@endif
+
+<!-- Hidden Form: Revisi -->>
 <form id="formRevisi" action="{{ route('admin.verifikasi.revisi', $detail->id) }}" method="POST" style="display: none;">
     @csrf
     @method('PATCH')
@@ -735,52 +990,19 @@
 </form>
 
 <script>
-    async function handleTerima() {
-        const notifikasi = document.getElementById('notifikasi').value;
-
+    async function handleAdministrasiLengkap() {
         const result = await Swal.fire({
-            title: 'Konfirmasi Persetujuan',
-            html: `Apakah Anda yakin dokumen pendaftar atas nama <b>{{ $detail->siswa->nama }}</b> sudah valid dan lengkap? Tindakan ini akan mengarahkan orang tua ke tahap <span class="font-bold text-[#696cff]">Observasi & Wawancara di Sekolah</span>.`,
+            title: 'Konfirmasi Administrasi Lengkap',
+            html: `Apakah Anda yakin dokumen pendaftar atas nama <b>{{ $detail->siswa->nama }}</b> sudah valid dan lengkap?<br><br>Tindakan ini akan mengubah status menjadi <span class="font-bold text-teal-600">Administrasi Lengkap</span> dan orang tua akan menerima notifikasi untuk tahap penjadwalan observasi.`,
             icon: 'success',
             showCancelButton: true,
-            confirmButtonText: 'Ya, Setujui Berkas',
+            confirmButtonText: 'Ya, Nyatakan Lengkap',
             cancelButtonText: 'Batal',
-            confirmButtonColor: '#2dce89',
+            confirmButtonColor: '#0d9488',
         });
 
         if (result.isConfirmed) {
-            document.getElementById('hiddenNotifikasiTerima').value = notifikasi;
-            document.getElementById('formTerima').submit();
-        }
-    }
-
-    async function handleTolak() {
-        const notifikasi = document.getElementById('notifikasi').value;
-
-        if (!notifikasi.trim()) {
-            Swal.fire({
-                title: 'Catatan Diperlukan',
-                text: 'Harap isi "Catatan Tambahan / Alasan" sebelum menolak pendaftaran.',
-                icon: 'warning',
-                confirmButtonColor: '#696cff',
-            });
-            document.getElementById('notifikasi').focus();
-            return;
-        }
-
-        const result = await Swal.fire({
-            title: 'Konfirmasi Penolakan',
-            text: 'Anda akan menolak pendaftar ini secara permanen. Pastikan alasan sudah jelas di catatan.',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonText: 'Ya, Tolak Pendaftaran',
-            cancelButtonText: 'Batal',
-            confirmButtonColor: '#dc2626',
-        });
-
-        if (result.isConfirmed) {
-            document.getElementById('hiddenNotifikasiTolak').value = notifikasi;
-            document.getElementById('formTolak').submit();
+            document.getElementById('formAdministrasiLengkap').submit();
         }
     }
 
@@ -790,7 +1012,7 @@
         if (!notifikasi.trim()) {
             Swal.fire({
                 title: 'Catatan Diperlukan',
-                text: 'Harap isi "Catatan Tambahan / Alasan" dengan detail (contoh: berkas KK kurang jelas) sebelum meminta revisi.',
+                text: 'Harap isi "Catatan / Alasan Revisi" sebelum meminta revisi.',
                 icon: 'warning',
                 confirmButtonColor: '#696cff',
             });
@@ -814,6 +1036,9 @@
         }
     }
 </script>
+
+
+
 
 <!-- Fancybox JS -->
 <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js"></script>

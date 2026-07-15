@@ -15,7 +15,7 @@ class VerifikasiExport implements FromCollection, WithHeadings, WithMapping
     public function collection()
     {
         // Memuat relasi siswa (beserta user/wali) dan pendaftaran (gelombang)
-        return PendaftaranDetail::with(['siswa.user', 'pendaftaran'])->get();
+        return PendaftaranDetail::with(['siswa.user', 'pendaftaran', 'observasiTerbaru'])->get();
     }
 
     public function headings(): array
@@ -30,7 +30,9 @@ class VerifikasiExport implements FromCollection, WithHeadings, WithMapping
             'Usia (Bulan) Saat 1 Juli',
             'Rekomendasi Kelompok',
             'Kelompok Final',
-            'Status Dokumen',
+            'Status Administrasi',
+            'Status Observasi',
+            'Jadwal Observasi',
             'Catatan Admin',
             'Tanggal Upload',
         ];
@@ -46,6 +48,9 @@ class VerifikasiExport implements FromCollection, WithHeadings, WithMapping
 
         // Memformat status agar lebih rapi (misal: perlu_revisi -> Perlu Revisi)
         $statusFormatted = ucwords(str_replace('_', ' ', $detail->status));
+        $observasi = $detail->observasiTerbaru;
+        $observasiStatus = $observasi ? ucwords(str_replace('_', ' ', $observasi->status)) : '-';
+        $jadwalObservasi = $observasi?->scheduled_at?->format('d/m/Y H:i') ?? '-';
 
         return [
             $no,
@@ -58,6 +63,8 @@ class VerifikasiExport implements FromCollection, WithHeadings, WithMapping
             $detail->kelompok_rekomendasi ?? '-',
             $detail->kelompok_final ?? '-',
             $statusFormatted,
+            $observasiStatus,
+            $jadwalObservasi,
             $detail->catatan ?? '-',
             $detail->created_at ? $detail->created_at->format('d/m/Y H:i').' WIB' : '-',
         ];

@@ -14,7 +14,7 @@ class ParentDashboardController extends Controller
             ->siswas()
             ->with([
                 'pendaftaranDetails' => fn ($query) => $query
-                    ->with(['pendaftaran', 'pembayaran'])
+                    ->with(['pendaftaran', 'pembayaran', 'observasiTerbaru'])
                     ->latest(),
             ])
             ->latest()
