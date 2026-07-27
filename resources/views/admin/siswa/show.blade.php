@@ -198,7 +198,7 @@
                         <i data-lucide="users" class="w-4 h-4 text-[#696cff]"></i> Data Keluarga & Orang Tua / Wali
                     </h3>
 
-                    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
                         <div class="bg-white dark:bg-[#2b2c40] rounded-xl p-4 border border-[#d9dee3] dark:border-[#434463]">
                             <div class="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">Nomor Kartu Keluarga (KK)</div>
                             <div class="font-semibold text-gray-950 dark:text-[#e7e7ff] font-mono text-sm">{{ $siswa->no_kk ?: '-' }}</div>
@@ -208,110 +208,80 @@
                             <div class="font-semibold text-gray-950 dark:text-[#e7e7ff] text-sm">{{ $siswa->kepala_keluarga ?: '-' }}</div>
                         </div>
                         <div class="bg-white dark:bg-[#2b2c40] rounded-xl p-4 border border-[#d9dee3] dark:border-[#434463]">
-                            <div class="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">Tinggal Bersama</div>
-                            <span class="inline-block mt-1 px-2.5 py-0.5 text-xs font-semibold rounded bg-primary-50 text-primary-700 dark:bg-primary-500/10 dark:text-primary-400 border border-primary-200">
-                                {{ $siswa->tinggal_bersama === 'wali' ? 'Wali' : 'Orang Tua' }}
-                            </span>
-                        </div>
-                        <div class="bg-white dark:bg-[#2b2c40] rounded-xl p-4 border border-[#d9dee3] dark:border-[#434463]">
                             <div class="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">Akun Wali (Pendaftar)</div>
                             <div class="font-semibold text-gray-950 dark:text-[#e7e7ff] text-sm">
                                 @if($siswa->user)
-                                    {{ $siswa->user->name }}
+                                    {{ $siswa->user->name }} ({{ $siswa->user->email }})
                                 @else
-                                    <span class="text-gray-400 italic">Manual Admin</span>
+                                    <span class="text-gray-400 italic">Daftar Manual Admin (Tidak Terhubung Akun)</span>
                                 @endif
                             </div>
                         </div>
                     </div>
 
-                    @if($siswa->tinggal_bersama === 'wali')
-                        <div class="bg-white dark:bg-[#2b2c40] rounded-xl p-5 border border-[#d9dee3] dark:border-[#434463] space-y-3 max-w-xl text-sm">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 text-sm">
+                        <!-- Ayah -->
+                        <div class="bg-white dark:bg-[#2b2c40] rounded-xl p-5 border border-[#d9dee3] dark:border-[#434463] space-y-3">
                             <h4 class="font-bold text-[#696cff] flex items-center gap-1.5 border-b border-gray-100 dark:border-[#434463] pb-2">
-                                <i data-lucide="user-check" class="w-4 h-4"></i> Data Wali Anak
+                                <i data-lucide="user" class="w-4 h-4"></i> Data Ayah Kandung
                             </h4>
                             <div class="flex justify-between">
-                                <span class="text-gray-500 dark:text-gray-400">Nama Wali</span>
-                                <span class="font-semibold text-gray-900 dark:text-[#e7e7ff]">{{ $siswa->nama_wali ?: '-' }}</span>
+                                <span class="text-gray-500 dark:text-gray-400">Nama Lengkap</span>
+                                <span class="font-semibold text-gray-900 dark:text-[#e7e7ff]">{{ $siswa->nama_ayah ?: '-' }}</span>
                             </div>
                             <div class="flex justify-between">
-                                <span class="text-gray-500 dark:text-gray-400">NIK Wali</span>
-                                <span class="font-medium text-gray-900 dark:text-[#e7e7ff] font-mono">{{ $siswa->nik_wali ?: '-' }}</span>
+                                <span class="text-gray-500 dark:text-gray-400">NIK Ayah</span>
+                                <span class="font-medium text-gray-900 dark:text-[#e7e7ff] font-mono">{{ $siswa->nik_ayah ?: '-' }}</span>
                             </div>
                             <div class="flex justify-between">
-                                <span class="text-gray-500 dark:text-gray-400">Hubungan Wali</span>
-                                <span class="font-medium text-gray-900 dark:text-[#e7e7ff]">{{ $siswa->hubungan_wali ?: '-' }}</span>
+                                <span class="text-gray-500 dark:text-gray-400">Tanggal Lahir Ayah</span>
+                                <span class="font-medium text-gray-900 dark:text-[#e7e7ff]">{{ $siswa->tanggal_lahir_ayah ? \Carbon\Carbon::parse($siswa->tanggal_lahir_ayah)->translatedFormat('d F Y') : '-' }}</span>
                             </div>
                             <div class="flex justify-between">
-                                <span class="text-gray-500 dark:text-gray-400">No. Telepon Wali</span>
-                                <span class="font-medium text-gray-900 dark:text-[#e7e7ff]">{{ $siswa->no_telpon_wali ?: '-' }}</span>
+                                <span class="text-gray-500 dark:text-gray-400">Pendidikan Terakhir</span>
+                                <span class="font-medium text-gray-900 dark:text-[#e7e7ff]">{{ $siswa->pendidikan_ayah ?: '-' }}</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-500 dark:text-gray-400">Pekerjaan</span>
+                                <span class="font-medium text-gray-900 dark:text-[#e7e7ff]">{{ $siswa->pekerjaan_ayah ?: '-' }}</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-500 dark:text-gray-400">Estimasi Penghasilan</span>
+                                <span class="font-medium text-gray-900 dark:text-[#e7e7ff] text-right">{{ $siswa->penghasilan_ayah ?: '-' }}</span>
                             </div>
                         </div>
-                    @else
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 text-sm">
-                            <!-- Ayah -->
-                            <div class="bg-white dark:bg-[#2b2c40] rounded-xl p-5 border border-[#d9dee3] dark:border-[#434463] space-y-3">
-                                <h4 class="font-bold text-[#696cff] flex items-center gap-1.5 border-b border-gray-100 dark:border-[#434463] pb-2">
-                                    <i data-lucide="user" class="w-4 h-4"></i> Data Ayah Kandung
-                                </h4>
-                                <div class="flex justify-between">
-                                    <span class="text-gray-500 dark:text-gray-400">Nama Lengkap</span>
-                                    <span class="font-semibold text-gray-900 dark:text-[#e7e7ff]">{{ $siswa->nama_ayah ?: '-' }}</span>
-                                </div>
-                                <div class="flex justify-between">
-                                    <span class="text-gray-500 dark:text-gray-400">NIK Ayah</span>
-                                    <span class="font-medium text-gray-900 dark:text-[#e7e7ff] font-mono">{{ $siswa->nik_ayah ?: '-' }}</span>
-                                </div>
-                                <div class="flex justify-between">
-                                    <span class="text-gray-500 dark:text-gray-400">Tanggal Lahir Ayah</span>
-                                    <span class="font-medium text-gray-900 dark:text-[#e7e7ff]">{{ $siswa->tanggal_lahir_ayah ? \Carbon\Carbon::parse($siswa->tanggal_lahir_ayah)->translatedFormat('d F Y') : '-' }}</span>
-                                </div>
-                                <div class="flex justify-between">
-                                    <span class="text-gray-500 dark:text-gray-400">Pendidikan Terakhir</span>
-                                    <span class="font-medium text-gray-900 dark:text-[#e7e7ff]">{{ $siswa->pendidikan_ayah ?: '-' }}</span>
-                                </div>
-                                <div class="flex justify-between">
-                                    <span class="text-gray-500 dark:text-gray-400">Pekerjaan</span>
-                                    <span class="font-medium text-gray-900 dark:text-[#e7e7ff]">{{ $siswa->pekerjaan_ayah ?: '-' }}</span>
-                                </div>
-                                <div class="flex justify-between">
-                                    <span class="text-gray-500 dark:text-gray-400">Estimasi Penghasilan</span>
-                                    <span class="font-medium text-gray-900 dark:text-[#e7e7ff] text-right">{{ $siswa->penghasilan_ayah ?: '-' }}</span>
-                                </div>
-                            </div>
 
-                            <!-- Ibu -->
-                            <div class="bg-white dark:bg-[#2b2c40] rounded-xl p-5 border border-[#d9dee3] dark:border-[#434463] space-y-3">
-                                <h4 class="font-bold text-[#696cff] flex items-center gap-1.5 border-b border-gray-100 dark:border-[#434463] pb-2">
-                                    <i data-lucide="user" class="w-4 h-4"></i> Data Ibu Kandung
-                                </h4>
-                                <div class="flex justify-between">
-                                    <span class="text-gray-500 dark:text-gray-400">Nama Lengkap</span>
-                                    <span class="font-semibold text-gray-900 dark:text-[#e7e7ff]">{{ $siswa->nama_ibu ?: '-' }}</span>
-                                </div>
-                                <div class="flex justify-between">
-                                    <span class="text-gray-500 dark:text-gray-400">NIK Ibu</span>
-                                    <span class="font-medium text-gray-900 dark:text-[#e7e7ff] font-mono">{{ $siswa->nik_ibu ?: '-' }}</span>
-                                </div>
-                                <div class="flex justify-between">
-                                    <span class="text-gray-500 dark:text-gray-400">Tanggal Lahir Ibu</span>
-                                    <span class="font-medium text-gray-900 dark:text-[#e7e7ff]">{{ $siswa->tanggal_lahir_ibu ? \Carbon\Carbon::parse($siswa->tanggal_lahir_ibu)->translatedFormat('d F Y') : '-' }}</span>
-                                </div>
-                                <div class="flex justify-between">
-                                    <span class="text-gray-500 dark:text-gray-400">Pendidikan Terakhir</span>
-                                    <span class="font-medium text-gray-900 dark:text-[#e7e7ff]">{{ $siswa->pendidikan_ibu ?: '-' }}</span>
-                                </div>
-                                <div class="flex justify-between">
-                                    <span class="text-gray-500 dark:text-gray-400">Pekerjaan</span>
-                                    <span class="font-medium text-gray-900 dark:text-[#e7e7ff]">{{ $siswa->pekerjaan_ibu ?: '-' }}</span>
-                                </div>
-                                <div class="flex justify-between">
-                                    <span class="text-gray-500 dark:text-gray-400">Estimasi Penghasilan</span>
-                                    <span class="font-medium text-gray-900 dark:text-[#e7e7ff] text-right">{{ $siswa->penghasilan_ibu ?: '-' }}</span>
-                                </div>
+                        <!-- Ibu -->
+                        <div class="bg-white dark:bg-[#2b2c40] rounded-xl p-5 border border-[#d9dee3] dark:border-[#434463] space-y-3">
+                            <h4 class="font-bold text-[#696cff] flex items-center gap-1.5 border-b border-gray-100 dark:border-[#434463] pb-2">
+                                <i data-lucide="user" class="w-4 h-4"></i> Data Ibu Kandung
+                            </h4>
+                            <div class="flex justify-between">
+                                <span class="text-gray-500 dark:text-gray-400">Nama Lengkap</span>
+                                <span class="font-semibold text-gray-900 dark:text-[#e7e7ff]">{{ $siswa->nama_ibu ?: '-' }}</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-500 dark:text-gray-400">NIK Ibu</span>
+                                <span class="font-medium text-gray-900 dark:text-[#e7e7ff] font-mono">{{ $siswa->nik_ibu ?: '-' }}</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-500 dark:text-gray-400">Tanggal Lahir Ibu</span>
+                                <span class="font-medium text-gray-900 dark:text-[#e7e7ff]">{{ $siswa->tanggal_lahir_ibu ? \Carbon\Carbon::parse($siswa->tanggal_lahir_ibu)->translatedFormat('d F Y') : '-' }}</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-500 dark:text-gray-400">Pendidikan Terakhir</span>
+                                <span class="font-medium text-gray-900 dark:text-[#e7e7ff]">{{ $siswa->pendidikan_ibu ?: '-' }}</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-500 dark:text-gray-400">Pekerjaan</span>
+                                <span class="font-medium text-gray-900 dark:text-[#e7e7ff]">{{ $siswa->pekerjaan_ibu ?: '-' }}</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-500 dark:text-gray-400">Estimasi Penghasilan</span>
+                                <span class="font-medium text-gray-900 dark:text-[#e7e7ff] text-right">{{ $siswa->penghasilan_ibu ?: '-' }}</span>
                             </div>
                         </div>
-                    @endif
+                    </div>
                 </div>
 
                 <!-- Section 4: Dokumen Pendukung -->
@@ -319,7 +289,7 @@
                     <h3 class="text-base font-semibold text-gray-900 dark:text-[#e7e7ff] mb-4 flex items-center gap-2 border-b border-[#d9dee3] dark:border-[#434463] pb-2">
                         <i data-lucide="folder-open" class="w-4 h-4 text-[#696cff]"></i> Berkas & Dokumen Pendukung
                     </h3>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                         <!-- Pas Foto -->
                         <div class="flex flex-col items-center justify-center p-5 rounded-xl border bg-white dark:bg-[#2b2c40] {{ $siswa->foto ? 'border-emerald-200 dark:border-emerald-500/20' : 'border-[#d9dee3] dark:border-[#434463]' }}">
                             <div class="p-3 rounded-full bg-emerald-50 dark:bg-emerald-500/10 mb-3">
@@ -370,49 +340,6 @@
                                 <span class="mt-3 text-xs text-gray-400">Belum diupload</span>
                             @endif
                         </div>
-
-                        <!-- Conditional KTP files -->
-                        @if($siswa->tinggal_bersama === 'wali')
-                            <div class="flex flex-col items-center justify-center p-5 rounded-xl border bg-white dark:bg-[#2b2c40] {{ $siswa->foto_ktp_wali ? 'border-emerald-200 dark:border-emerald-500/20' : 'border-[#d9dee3] dark:border-[#434463]' }}">
-                                <div class="p-3 rounded-full bg-emerald-50 dark:bg-emerald-500/10 mb-3">
-                                    <i data-lucide="file-digit" class="w-6 h-6 text-emerald-600 dark:text-emerald-400"></i>
-                                </div>
-                                <span class="text-sm font-semibold text-gray-700 dark:text-[#e7e7ff] mb-1">KTP Wali</span>
-                                @if($siswa->foto_ktp_wali)
-                                    <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-400 uppercase">Tersedia</span>
-                                    <a href="{{ route('dokumen.show', ['siswa' => $siswa, 'field' => 'foto_ktp_wali']) }}" target="_blank" class="mt-3 text-xs font-bold text-[#696cff] hover:underline flex items-center gap-1">
-                                        <i data-lucide="eye" class="w-3.5 h-3.5"></i> Lihat / Unduh
-                                    </a>
-                                @else
-                                    <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-red-100 text-red-700 dark:bg-red-500/20 dark:text-red-400 uppercase">Tidak Ada</span>
-                                    <span class="mt-3 text-xs text-gray-400">Belum diupload</span>
-                                @endif
-                            </div>
-                        @else
-                            <div class="flex flex-col items-center justify-center p-5 rounded-xl border bg-white dark:bg-[#2b2c40] {{ $siswa->foto_ktp_ayah && $siswa->foto_ktp_ibu ? 'border-emerald-200 dark:border-emerald-500/20' : 'border-[#d9dee3] dark:border-[#434463]' }} space-y-1">
-                                <div class="p-2 rounded-full bg-emerald-50 dark:bg-emerald-500/10 mb-1">
-                                    <i data-lucide="file-digit" class="w-5 h-5 text-emerald-600 dark:text-emerald-400"></i>
-                                </div>
-                                <span class="text-xs font-semibold text-gray-700 dark:text-[#e7e7ff] text-center">KTP Ayah & Ibu</span>
-                                <div class="flex flex-col gap-1 items-center">
-                                    @if($siswa->foto_ktp_ayah)
-                                        <a href="{{ route('dokumen.show', ['siswa' => $siswa, 'field' => 'foto_ktp_ayah']) }}" target="_blank" class="text-[11px] font-bold text-[#696cff] hover:underline flex items-center gap-0.5">
-                                            <i data-lucide="eye" class="w-3 h-3"></i> KTP Ayah
-                                        </a>
-                                    @else
-                                        <span class="text-[10px] text-red-500 font-semibold">KTP Ayah Kosong</span>
-                                    @endif
-
-                                    @if($siswa->foto_ktp_ibu)
-                                        <a href="{{ route('dokumen.show', ['siswa' => $siswa, 'field' => 'foto_ktp_ibu']) }}" target="_blank" class="text-[11px] font-bold text-[#696cff] hover:underline flex items-center gap-0.5">
-                                            <i data-lucide="eye" class="w-3 h-3"></i> KTP Ibu
-                                        </a>
-                                    @else
-                                        <span class="text-[10px] text-red-500 font-semibold">KTP Ibu Kosong</span>
-                                    @endif
-                                </div>
-                            </div>
-                        @endif
                     </div>
                 </div>
 
@@ -455,13 +382,13 @@
                                             <div class="flex justify-between items-center">
                                                 <span class="text-gray-500 dark:text-gray-400">Status Verifikasi</span>
                                                 @if($detail->status === 'pending')
-                                                    <span class="px-2.5 py-0.5 rounded bg-gray-100 text-gray-700 border border-gray-200 text-xs font-bold uppercase">Pendaftaran Tercatat</span>
+                                                    <span class="px-2.5 py-0.5 rounded bg-gray-100 text-gray-700 border border-gray-200 text-xs font-bold uppercase">Pending</span>
                                                 @elseif($detail->status === 'menunggu_verifikasi')
-                                                    <span class="px-2.5 py-0.5 rounded bg-amber-50 text-amber-700 border border-amber-200 text-xs font-bold uppercase dark:bg-amber-500/10 dark:text-amber-400 dark:border-amber-500/20">Menunggu Verifikasi Administrasi</span>
+                                                    <span class="px-2.5 py-0.5 rounded bg-amber-50 text-amber-700 border border-amber-200 text-xs font-bold uppercase dark:bg-amber-500/10 dark:text-amber-400 dark:border-amber-500/20">Menunggu Verifikasi Berkas</span>
                                                 @elseif($detail->status === 'diterima')
-                                                    <span class="px-2.5 py-0.5 rounded bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-bold uppercase dark:bg-emerald-500/10 dark:text-emerald-400 dark:border-emerald-500/20">Administrasi Lengkap (Data Legacy)</span>
+                                                    <span class="px-2.5 py-0.5 rounded bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-bold uppercase dark:bg-emerald-500/10 dark:text-emerald-400 dark:border-emerald-500/20">Berkas Terverifikasi – Lanjut Observasi</span>
                                                 @elseif($detail->status === 'ditolak')
-                                                    <span class="px-2.5 py-0.5 rounded bg-red-50 text-red-700 border border-red-200 text-xs font-bold uppercase dark:bg-red-500/10 dark:text-red-400 dark:border-red-500/20">Pendaftaran Tidak Dilanjutkan (Data Legacy)</span>
+                                                    <span class="px-2.5 py-0.5 rounded bg-red-50 text-red-700 border border-red-200 text-xs font-bold uppercase dark:bg-red-500/10 dark:text-red-400 dark:border-red-500/20">Pendaftaran Ditolak</span>
                                                 @elseif($detail->status === 'perlu_revisi')
                                                     <span class="px-2.5 py-0.5 rounded bg-orange-50 text-orange-700 border border-orange-200 text-xs font-bold uppercase dark:bg-orange-500/10 dark:text-orange-400 dark:border-orange-500/20">Perlu Revisi Data</span>
                                                 @endif

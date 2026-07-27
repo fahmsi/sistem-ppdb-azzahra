@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('title', 'Data Pendaftar & Verifikasi')
-@section('header_title', 'Verifikasi dan Observasi')
+@section('header_title', 'Verifikasi Pendaftar')
 
 @section('content')
 <div class="admin-table-card">
@@ -28,18 +28,9 @@
                 <option value="">Semua Status</option>
                 <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Pending</option>
                 <option value="menunggu_verifikasi" {{ request('status') == 'menunggu_verifikasi' ? 'selected' : '' }}>Menunggu Verifikasi</option>
-                <option value="administrasi_lengkap" {{ request('status') == 'administrasi_lengkap' ? 'selected' : '' }}>Administrasi Lengkap</option>
-                <option value="menunggu_keputusan" {{ request('status') == 'menunggu_keputusan' ? 'selected' : '' }}>Menunggu Keputusan</option>
-                <option value="keputusan_selesai" {{ request('status') == 'keputusan_selesai' ? 'selected' : '' }}>Keputusan Selesai</option>
+                <option value="diterima" {{ request('status') == 'diterima' ? 'selected' : '' }}>Diterima</option>
+                <option value="ditolak" {{ request('status') == 'ditolak' ? 'selected' : '' }}>Ditolak</option>
                 <option value="perlu_revisi" {{ request('status') == 'perlu_revisi' ? 'selected' : '' }}>Perlu Revisi</option>
-            </select>
-
-            <select name="keputusan_status" class="sneat-input h-10 sm:w-48">
-                <option value="">Semua Keputusan</option>
-                <option value="diterima" {{ request('keputusan_status') == 'diterima' ? 'selected' : '' }}>Diterima</option>
-                <option value="tidak_diterima" {{ request('keputusan_status') == 'tidak_diterima' ? 'selected' : '' }}>Tidak Diterima</option>
-                <option value="perlu_tindak_lanjut" {{ request('keputusan_status') == 'perlu_tindak_lanjut' ? 'selected' : '' }}>Perlu Tindak Lanjut</option>
-                <option value="mengundurkan_diri" {{ request('keputusan_status') == 'mengundurkan_diri' ? 'selected' : '' }}>Mengundurkan Diri</option>
             </select>
 
             <button type="submit" class="sneat-btn-primary h-10 admin-table-action-btn">
@@ -75,7 +66,7 @@
                     <th>Tgl Daftar</th>
                     <th>No. Pendaftaran</th>
                     <th>Nama Anak</th>
-                    <th>Orang Tua/Wali</th>
+                    <th>Wali Murid</th>
                     <th>Gelombang</th>
                     <th>Status</th>
                     <th class="text-center">Aksi</th>
@@ -96,9 +87,16 @@
                         </td>
                         <td>{{ $reg->pendaftaran->gelombang ?? '-' }}</td>
                         <td>
-                            <x-spmb.status-badge :presentation="\App\Support\SpmbStatusPresenter::process($reg->status)" />
-                            @if($reg->keputusan_status)
-                                <x-spmb.status-badge :presentation="\App\Support\SpmbStatusPresenter::decision($reg->keputusan_status)" class="mt-1" />
+                            @if($reg->status === 'pending')
+                                <span class="sneat-badge bg-[#f5f5f9] dark:bg-[#232333] text-[#697a8d] dark:text-[#a1b0cb] border border-[#d9dee3] dark:border-[#434463]">Pending</span>
+                            @elseif($reg->status === 'menunggu_verifikasi')
+                                <span class="sneat-badge bg-amber-50 dark:bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-200 dark:border-amber-500/20">Menunggu Verifikasi Berkas</span>
+                            @elseif($reg->status === 'diterima')
+                                <span class="sneat-badge bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-500/20">Berkas Terverifikasi – Lanjut Observasi</span>
+                            @elseif($reg->status === 'ditolak')
+                                <span class="sneat-badge bg-red-50 dark:bg-red-500/10 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-500/20">Pendaftaran Ditolak</span>
+                            @elseif($reg->status === 'perlu_revisi')
+                                <span class="sneat-badge bg-orange-50 dark:bg-orange-500/10 text-orange-600 dark:text-orange-400 border border-orange-200 dark:border-orange-500/20">Perlu Revisi Data</span>
                             @endif
                         </td>
                         <td class="text-center admin-table-actions-cell">
@@ -119,9 +117,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="7" class="px-6 py-10 text-center text-[#a1b0cb]">
-                            {{ request()->hasAny(['search', 'pendaftaran_id', 'status', 'keputusan_status']) ? 'Tidak ada calon siswa yang cocok dengan pencarian atau filter.' : 'Belum ada pendaftaran yang perlu diverifikasi.' }}
-                        </td>
+                        <td colspan="7" class="px-6 py-10 text-center text-[#a1b0cb]">Belum ada data.</td>
                     </tr>
                 @endforelse
             </tbody>

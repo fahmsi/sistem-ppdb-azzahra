@@ -53,7 +53,7 @@
                         @elseif($user->isAdmin())
                             Administrator
                         @else
-                            Orang Tua/Wali
+                            Wali Murid
                         @endif
                     </span>
 
@@ -87,10 +87,10 @@
                                 <span class="text-[#a1b0cb] flex items-center gap-2">
                                     <i data-lucide="smile" class="w-4 h-4 text-[#696cff]"></i> Anak Terdaftar
                                 </span>
-                                @if($user->siswas->isNotEmpty())
+                                @if($user->siswa)
                                     <span class="text-emerald-600 dark:text-emerald-400 font-semibold text-xs flex items-center gap-1 bg-emerald-50 dark:bg-emerald-500/10 px-2 py-0.5 rounded">
                                         <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-                                        {{ $user->siswas->count() }} anak
+                                        {{ Str::limit($user->siswa->nama, 15) }}
                                     </span>
                                 @else
                                     <span class="text-amber-600 dark:text-amber-400 font-semibold text-xs flex items-center gap-1 bg-amber-50 dark:bg-amber-500/10 px-2 py-0.5 rounded">
@@ -99,19 +99,6 @@
                                     </span>
                                 @endif
                             </div>
-                            @if($user->siswas->isNotEmpty())
-                                <div class="rounded-lg bg-[#f5f5f9] p-3 text-xs text-[#566a7f] dark:bg-[#232333] dark:text-[#d5d5e2]">
-                                    <p class="mb-2 font-semibold text-[#a1b0cb]">Daftar Anak</p>
-                                    <ul class="space-y-1">
-                                        @foreach($user->siswas as $siswa)
-                                            <li class="flex items-center gap-2">
-                                                <span class="h-1.5 w-1.5 rounded-full bg-[#696cff]"></span>
-                                                <span>{{ $siswa->nama }}</span>
-                                            </li>
-                                        @endforeach
-                                    </ul>
-                                </div>
-                            @endif
                         @endif
                     </div>
                 </div>
@@ -390,7 +377,7 @@
                             </li>
                             <li class="flex items-center gap-2 text-blue-700 dark:text-blue-300">
                                 <i data-lucide="check" class="w-3.5 h-3.5 text-emerald-500 flex-shrink-0"></i>
-                                <span>Memantau pembayaran masuk dari Orang Tua/Wali.</span>
+                                <span>Memantau rekap pembayaran masuk dari wali murid.</span>
                             </li>
                         </ul>
                     </div>

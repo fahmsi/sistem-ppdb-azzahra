@@ -39,10 +39,10 @@
         <div class="flex shrink-0 items-center gap-1.5 sm:gap-2">
             @guest
                 <div class="hidden items-center gap-1.5 md:flex">
-                    <a href="{{ route('login') }}" class="inline-flex h-10 items-center justify-center rounded-full px-3.5 text-sm font-semibold text-slate-600 transition-[background-color,color] duration-200 hover:bg-slate-100 hover:text-primary-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500">
+                    <a href="{{ route('login') }}" class="rounded-full px-3 py-2 text-sm font-semibold text-slate-600 transition-colors hover:bg-slate-100 hover:text-primary-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500">
                         Masuk
                     </a>
-                    <a href="{{ route('register') }}" class="inline-flex h-10 items-center justify-center gap-2 rounded-2xl bg-primary-600 px-4 text-sm font-bold text-white shadow-sm shadow-primary-600/20 transition-[background-color,box-shadow] duration-200 hover:bg-primary-700 hover:shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2">
+                    <a href="{{ route('register') }}" class="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-primary-600 to-primary-500 px-4 py-2.5 text-sm font-bold text-white shadow-md shadow-primary-600/20 transition-all duration-200 hover:-translate-y-0.5 hover:from-primary-700 hover:to-primary-600 hover:shadow-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2">
                         <i data-lucide="user-plus" class="h-4 w-4" aria-hidden="true"></i>
                         Daftar
                     </a>

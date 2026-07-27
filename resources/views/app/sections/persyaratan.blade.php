@@ -22,16 +22,10 @@
 
             @php
                 $requirements = [
-                    "Pas Foto Anak (pas foto terbaru)",
                     "Dokumen Kartu Keluarga (KK)",
                     "Dokumen Akta Kelahiran",
-                    "Persyaratan Dokumen Identitas sesuai kondisi tinggal:",
-                    "• Tinggal bersama Orang Tua: Foto KTP Ayah dan KTP Ibu",
-                    "• Tinggal bersama Wali: Foto KTP Wali dan Data Identitas Wali",
-                    "Kriteria Usia Nonadministratif (per 1 Juli tahun ajaran):",
-                    "• Kelompok A: usia 4 sampai kurang dari 5 tahun",
-                    "• Kelompok B: usia 5 sampai kurang dari 7 tahun",
-                    "• Usia di luar rentang di atas akan dikonfirmasi pihak sekolah (tidak otomatis ditolak)",
+                    "Dokumen KTP Orang Tua/Wali",
+                    "Pas Foto Anak",
                     "Mengisi formulir pendaftaran online di Aplikasi SPMB",
                     "Mengikuti observasi/wawancara calon siswa di sekolah sesuai jadwal",
                 ];

@@ -66,12 +66,9 @@
                     <td>{{ $detail->siswa?->user?->name ?? '-' }}</td>
                 </tr>
                 <tr>
-                    <th>Diverifikasi Pada</th>
-                    <td>{{ $detail->pembayaran->verified_at?->translatedFormat('d F Y, H:i') }} WIB</td>
+                    <th>Tanggal Bayar</th>
+                    <td>{{ $detail->pembayaran->updated_at->translatedFormat('d F Y') }}</td>
                 </tr>
-                @if($detail->pembayaran->verifiedBy)
-                <tr><th>Diverifikasi Oleh</th><td>{{ $detail->pembayaran->verifiedBy->name }}</td></tr>
-                @endif
                 <tr>
                     <th>Status</th>
                     <td><span class="status-badge">LUNAS — TERVERIFIKASI</span></td>

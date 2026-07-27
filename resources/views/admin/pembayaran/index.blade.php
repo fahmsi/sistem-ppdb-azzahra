@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
-@section('title', 'Pembayaran Daftar Ulang')
-@section('header_title', 'Pembayaran')
+@section('title', 'Rekap Pembayaran')
+@section('header_title', 'Rekap Pembayaran')
 
 @section('content')
 <div class="admin-table-card">
@@ -49,10 +49,8 @@
                     <th>No. Pendaftaran</th>
                     <th>Nama Siswa</th>
                     <th>Gelombang</th>
-                    <th>Keputusan / Status Akhir</th>
                     <th>Jumlah (Rp)</th>
                     <th>Status</th>
-                    <th>Verifier</th>
                     <th class="text-center">Aksi</th>
                 </tr>
             </thead>
@@ -63,15 +61,16 @@
                         <td class="font-semibold text-[#566a7f] dark:text-[#d5d5e2]">{{ $pembayaran->pendaftaranDetail->nomor_pendaftaran ?? '-' }}</td>
                         <td class="font-medium text-[#566a7f] dark:text-[#d5d5e2]">{{ $pembayaran->pendaftaranDetail->siswa->nama ?? '-' }}</td>
                         <td>{{ $pembayaran->pendaftaranDetail->pendaftaran->gelombang ?? '-' }}</td>
-                        <td>
-                            <div class="text-xs font-semibold text-[#566a7f] dark:text-[#d5d5e2]">{{ \App\Support\SpmbStatusPresenter::decision($pembayaran->pendaftaranDetail?->keputusan_status)['label'] }}</div>
-                            <div class="mt-1 text-xs text-[#a1b0cb]">{{ \App\Support\SpmbStatusPresenter::final($pembayaran->pendaftaranDetail?->final_status)['label'] }}</div>
-                        </td>
                         <td class="font-semibold text-[#566a7f] dark:text-[#d5d5e2]">{{ number_format($pembayaran->jumlah, 0, ',', '.') }}</td>
                         <td>
-                            <x-spmb.status-badge :presentation="\App\Support\SpmbStatusPresenter::payment($pembayaran->status)" />
+                            @if(in_array($pembayaran->status, ['pending', 'menunggu_verifikasi'], true))
+                                <span class="sneat-badge bg-amber-50 dark:bg-amber-500/10 text-amber-600 dark:text-amber-400">Menunggu Verifikasi</span>
+                            @elseif($pembayaran->status === 'lunas')
+                                <span class="sneat-badge bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">Lunas</span>
+                            @else
+                                <span class="sneat-badge bg-red-50 dark:bg-red-500/10 text-red-600 dark:text-red-400">Ditolak</span>
+                            @endif
                         </td>
-                        <td class="text-xs">{{ $pembayaran->verifiedBy?->name ?? '-' }}<br><span class="text-[#a1b0cb]">{{ $pembayaran->verified_at?->format('d/m/Y H:i') ?? '-' }}</span></td>
                         <td class="text-center admin-table-actions-cell">
                             <a href="{{ route('admin.verifikasi.show', $pembayaran->pendaftaranDetail->id) }}" class="inline-flex items-center gap-1 rounded-md bg-[#e7e7ff] px-3 py-1.5 text-xs font-medium text-[#696cff] transition-colors hover:bg-[#696cff] hover:text-white dark:bg-[#696cff]/20">
                                 <i data-lucide="eye" class="w-4 h-4"></i> Cek & Verifikasi
@@ -80,7 +79,7 @@
                     </tr>
                 @empty
                     <tr data-payment-empty>
-                        <td colspan="9" class="px-4 py-8 text-center text-[#a1b0cb]">{{ request('status') ? 'Tidak ada pembayaran pada filter status ini.' : 'Belum ada bukti pembayaran daftar ulang.' }}</td>
+                        <td colspan="7" class="px-4 py-8 text-center text-[#a1b0cb]">Belum ada data.</td>
                     </tr>
                 @endforelse
             </tbody>
@@ -119,7 +118,7 @@ document.addEventListener('DOMContentLoaded', function() {
         var emptyRow = paymentBody.querySelector('[data-payment-empty]');
         var noResultRow = document.createElement('tr');
         noResultRow.className = 'hidden';
-        noResultRow.innerHTML = '<td colspan="9" class="px-4 py-8 text-center text-[#a1b0cb]">Tidak ada data pembayaran yang cocok.</td>';
+        noResultRow.innerHTML = '<td colspan="7" class="px-4 py-8 text-center text-[#a1b0cb]">Tidak ada data pembayaran yang cocok.</td>';
         paymentBody.appendChild(noResultRow);
 
         paymentSearch.addEventListener('input', function() {

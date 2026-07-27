@@ -19,6 +19,9 @@ class SiswaExport implements FromCollection, WithHeadings, WithMapping
         return Siswa::with('user')->get();
     }
 
+    /**
+     * Membuat Baris Pertama (Judul Kolom) di Excel
+     */
     public function headings(): array
     {
         return [
@@ -27,9 +30,6 @@ class SiswaExport implements FromCollection, WithHeadings, WithMapping
             'NISN',
             'Jenis Kelamin',
             'Tempat, Tgl Lahir',
-            'Tinggal Bersama',
-            'Nama Wali',
-            'Hubungan Wali',
             'Nama Orang Tua / Wali',
             'Sumber Data',
             'No. HP Wali',
@@ -51,9 +51,6 @@ class SiswaExport implements FromCollection, WithHeadings, WithMapping
             $siswa->nisn ?? '-',
             $siswa->jenis_kelamin,
             $siswa->tempat_lahir.', '.($siswa->tanggal_lahir ? Carbon::parse($siswa->tanggal_lahir)->format('d/m/Y') : '-'),
-            $siswa->tinggal_bersama === 'wali' ? 'Wali' : 'Orang Tua',
-            $siswa->nama_wali ?? '-',
-            $siswa->hubungan_wali ?? '-',
             $siswa->user?->name ?? '-',
             $siswa->input_source === Siswa::INPUT_SOURCE_MANUAL_ADMIN ? 'Manual Admin' : 'Online',
             $siswa->user?->no_telpon ?? $siswa->no_telpon ?? '-',

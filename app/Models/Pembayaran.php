@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Pembayaran extends Model
 {
@@ -27,20 +26,11 @@ class Pembayaran extends Model
         'bukti_bayar',
         'status',
         'catatan_admin',
-        'verified_by',
-        'verified_at',
     ];
-
-    protected $casts = ['verified_at' => 'datetime'];
 
     public function pendaftaranDetail()
     {
         return $this->belongsTo(PendaftaranDetail::class, 'pendaftaran_detail_id');
-    }
-
-    public function verifiedBy(): BelongsTo
-    {
-        return $this->belongsTo(User::class, 'verified_by');
     }
 
     public function isMenungguVerifikasi(): bool

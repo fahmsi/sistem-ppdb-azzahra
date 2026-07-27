@@ -9,9 +9,9 @@ use App\Models\Setting;
 use App\Models\Siswa;
 use App\Models\User;
 use App\Observers\ActivityLogObserver;
+use Illuminate\Support\ServiceProvider;
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Notifications\Messages\MailMessage;
-use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -37,16 +37,16 @@ class AppServiceProvider extends ServiceProvider
         Setting::observe(ActivityLogObserver::class);
 
         ResetPassword::toMailUsing(function (object $notifiable, string $token) {
-            return (new MailMessage)
-                ->subject('Pemberitahuan Reset Password')
-                ->greeting('Halo!')
-                ->line('Anda menerima email ini karena kami menerima permintaan reset password untuk akun Anda.')
-                ->action('Reset Password', url(route('password.reset', [
-                    'token' => $token,
-                    'email' => $notifiable->getEmailForPasswordReset(),
-                ], false)))
-                ->line('Tautan reset password ini akan kedaluwarsa dalam 60 menit.')
-                ->line('Jika Anda tidak merasa meminta reset password, abaikan email ini.');
-        });
+        return (new MailMessage)
+            ->subject('Pemberitahuan Reset Password')
+            ->greeting('Halo!')
+            ->line('Anda menerima email ini karena kami menerima permintaan reset password untuk akun Anda.')
+            ->action('Reset Password', url(route('password.reset', [
+                'token' => $token,
+                'email' => $notifiable->getEmailForPasswordReset(),
+            ], false)))
+            ->line('Tautan reset password ini akan kedaluwarsa dalam 60 menit.')
+            ->line('Jika Anda tidak merasa meminta reset password, abaikan email ini.');
+    });
     }
 }
