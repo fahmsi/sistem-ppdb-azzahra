@@ -12,7 +12,7 @@
                 </span>
 
                 <h2 class="section-heading section-heading-left font-heading text-gray-900">
-                    <span>Gerakan 7 Kebiasaan <span class="gradient-text">Hebat Anak Indonesia</span></span>
+                    <span>Gerakan 7 Kebiasaan <span class="gradient-text">Anak Indonesia Hebat</span></span>
                 </h2>
 
                 <p class="mt-6 max-w-xl text-base text-justify leading-8 text-gray-600 sm:text-lg">
@@ -93,6 +93,15 @@
                     'text' => 'text-orange-700',
                 ],
                 [
+                    'title' => 'Gemar Belajar',
+                    'desc' => 'Menumbuhkan rasa ingin tahu, literasi, dan keberanian bertanya.',
+                    'icon' => 'book-open',
+                    'gradient' => 'from-cyan-500 to-teal-600',
+                    'soft' => 'bg-cyan-50',
+                    'border' => 'border-cyan-100',
+                    'text' => 'text-cyan-700',
+                ],
+                [
                     'title' => 'Makan Bergizi',
                     'desc' => 'Mengenalkan pilihan makanan sehat untuk mendukung tumbuh kembang anak.',
                     'icon' => 'utensils',
@@ -100,15 +109,6 @@
                     'soft' => 'bg-lime-50',
                     'border' => 'border-lime-100',
                     'text' => 'text-lime-700',
-                ],
-                [
-                    'title' => 'Tidur Cepat',
-                    'desc' => 'Menjaga istirahat cukup agar anak lebih fokus, ceria, dan siap beraktivitas.',
-                    'icon' => 'moon',
-                    'gradient' => 'from-indigo-500 to-violet-600',
-                    'soft' => 'bg-indigo-50',
-                    'border' => 'border-indigo-100',
-                    'text' => 'text-indigo-700',
                 ],
                 [
                     'title' => 'Bermasyarakat',
@@ -120,13 +120,13 @@
                     'text' => 'text-rose-700',
                 ],
                 [
-                    'title' => 'Gemar Belajar',
-                    'desc' => 'Menumbuhkan rasa ingin tahu, literasi, dan keberanian bertanya.',
-                    'icon' => 'book-open',
-                    'gradient' => 'from-cyan-500 to-teal-600',
-                    'soft' => 'bg-cyan-50',
-                    'border' => 'border-cyan-100',
-                    'text' => 'text-cyan-700',
+                    'title' => 'Tidur Cepat',
+                    'desc' => 'Menjaga istirahat cukup agar anak lebih fokus, ceria, dan siap beraktivitas.',
+                    'icon' => 'moon',
+                    'gradient' => 'from-indigo-500 to-violet-600',
+                    'soft' => 'bg-indigo-50',
+                    'border' => 'border-indigo-100',
+                    'text' => 'text-indigo-700',
                 ],
             ];
         @endphp

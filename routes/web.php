@@ -1,15 +1,19 @@
 <?php
 
-use App\Http\Controllers\Admin\AdminManageController;
+use App\Http\Controllers\AchievementImageController;
 use App\Http\Controllers\Admin\AchievementController;
+use App\Http\Controllers\Admin\AdminManageController;
+use App\Http\Controllers\Admin\AdmissionDecisionController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
+use App\Http\Controllers\Admin\FinalEnrollmentController;
 use App\Http\Controllers\Admin\GalleryController;
+use App\Http\Controllers\Admin\ObservasiController;
 use App\Http\Controllers\Admin\PaymentSettingController;
 use App\Http\Controllers\Admin\PembayaranController;
 use App\Http\Controllers\Admin\PendaftaranManageController;
 use App\Http\Controllers\Admin\SettingController;
-use App\Http\Controllers\Admin\VerifikasiController;
 use App\Http\Controllers\Admin\TestimonialController;
+use App\Http\Controllers\Admin\VerifikasiController;
 use App\Http\Controllers\Auth\ConfirmablePasswordController;
 use App\Http\Controllers\Auth\EmailVerificationNotificationController;
 use App\Http\Controllers\Auth\EmailVerificationPromptController;
@@ -17,16 +21,15 @@ use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\VerifyEmailController;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\AchievementImageController;
-use App\Http\Controllers\GalleryImageController;
 use App\Http\Controllers\DokumenController;
+use App\Http\Controllers\GalleryImageController;
+use App\Http\Controllers\ParentDashboardController;
 use App\Http\Controllers\PendaftaranController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SiswaController;
-use App\Models\Setting;
 use App\Models\Achievement;
 use App\Models\Gallery;
-use App\Models\PaymentSetting;
+use App\Models\Setting;
 use App\Models\Testimonial;
 use Illuminate\Support\Facades\Route;
 
@@ -101,10 +104,11 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'updateProfile'])->name('profile.update');
     Route::put('/password', [ProfileController::class, 'updatePassword'])->name('password.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    
+
     // Notifications
     Route::post('/notifications/mark-all-read', function () {
         auth()->user()->unreadNotifications->markAsRead();
+
         return back();
     })->name('notifications.markAllRead');
 
@@ -131,26 +135,30 @@ Route::middleware('auth')->group(function () {
     |----------------------------------------------------------------------
     */
     Route::middleware('role:parent')->prefix('parent')->name('parent.')->group(function () {
-        Route::get('/dashboard', function () {
-            return view('parent.dashboard', [
-                'paymentSetting' => PaymentSetting::current(),
-            ]);
-        })->name('dashboard');
+        $legacyChildSelectionRedirect = function () {
+            return redirect()
+                ->route('parent.siswa.index')
+                ->with('warning', 'Silakan pilih anak untuk melanjutkan proses pendaftaran.');
+        };
+
+        Route::get('/dashboard', ParentDashboardController::class)->name('dashboard');
+        Route::get('/pendaftaran', $legacyChildSelectionRedirect)->name('pendaftaran.index');
+        Route::get('/status', $legacyChildSelectionRedirect)->name('pendaftaran.status');
 
         // Siswa (child data) management
+        Route::get('/siswa', [SiswaController::class, 'index'])->name('siswa.index');
         Route::get('/siswa/create', [SiswaController::class, 'create'])->name('siswa.create');
         Route::post('/siswa', [SiswaController::class, 'store'])->name('siswa.store');
-        Route::get('/siswa/kartu', [SiswaController::class, 'kartu'])->name('siswa.kartu');
+        Route::get('/siswa/kartu', $legacyChildSelectionRedirect)->name('siswa.kartu');
+        Route::get('/siswa/{siswa}/pendaftaran', [PendaftaranController::class, 'index'])->name('siswa.pendaftaran.index');
+        Route::get('/siswa/{siswa}/pendaftaran/{pendaftaran}', [PendaftaranController::class, 'show'])->name('siswa.pendaftaran.show');
+        Route::post('/siswa/{siswa}/pendaftaran/{pendaftaran}/daftar', [PendaftaranController::class, 'daftar'])->name('siswa.pendaftaran.daftar');
+        Route::get('/siswa/{siswa}/pendaftaran/{detail}/kartu', [SiswaController::class, 'kartu'])->name('siswa.pendaftaran.kartu');
+        Route::get('/siswa/{siswa}/status', [PendaftaranController::class, 'status'])->name('siswa.pendaftaran.status');
         Route::get('/siswa/{siswa}', [SiswaController::class, 'show'])->name('siswa.show');
         Route::get('/siswa/{siswa}/edit', [SiswaController::class, 'edit'])->name('siswa.edit');
         Route::put('/siswa/{siswa}', [SiswaController::class, 'update'])->name('siswa.update');
         Route::delete('/siswa/{siswa}', [SiswaController::class, 'destroy'])->name('siswa.destroy');
-
-        // Registration (pendaftaran)
-        Route::get('/pendaftaran', [PendaftaranController::class, 'index'])->name('pendaftaran.index');
-        Route::get('/pendaftaran/{pendaftaran}', [PendaftaranController::class, 'show'])->name('pendaftaran.show');
-        Route::post('/pendaftaran/{pendaftaran}/daftar', [PendaftaranController::class, 'daftar'])->name('pendaftaran.daftar');
-        Route::get('/status', [PendaftaranController::class, 'status'])->name('pendaftaran.status');
 
         // Pembayaran
         Route::post('/pembayaran/{detail}', [App\Http\Controllers\PembayaranController::class, 'store'])->name('pembayaran.store');
@@ -179,11 +187,24 @@ Route::middleware('auth')->group(function () {
         Route::get('/verifikasi/export', [VerifikasiController::class, 'export'])->name('verifikasi.export');
         Route::get('/verifikasi/{detail}', [VerifikasiController::class, 'show'])->name('verifikasi.show');
         Route::patch('/verifikasi/{detail}/start', [VerifikasiController::class, 'startVerifikasi'])->name('verifikasi.start');
-        Route::patch('/verifikasi/{detail}/terima', [VerifikasiController::class, 'terima'])->name('verifikasi.terima');
-        Route::patch('/verifikasi/{detail}/tolak', [VerifikasiController::class, 'tolak'])->name('verifikasi.tolak');
         Route::patch('/verifikasi/{detail}/revisi', [VerifikasiController::class, 'revisi'])->name('verifikasi.revisi');
+        Route::patch('/verifikasi/{detail}/kelompok', [VerifikasiController::class, 'setKelompok'])->name('verifikasi.kelompok');
         Route::delete('/verifikasi/{detail}', [VerifikasiController::class, 'destroy'])->name('verifikasi.destroy');
-        Route::patch('/pembayaran/{pembayaran}/verify', [VerifikasiController::class, 'verifyPembayaran'])->name('pembayaran.verify');
+        Route::post('/verifikasi/{detail}/keputusan', [AdmissionDecisionController::class, 'store'])->name('verifikasi.keputusan.store');
+        Route::post('/verifikasi/{detail}/tidak-dilanjutkan', [FinalEnrollmentController::class, 'discontinue'])->name('verifikasi.final.tidak-dilanjutkan');
+        Route::patch('/pembayaran/{pembayaran}/verify', [PembayaranController::class, 'verify'])->name('pembayaran.verify');
+
+        // Administrasi Lengkap
+        Route::post('/verifikasi/{detail}/administrasi-lengkap', [VerifikasiController::class, 'administrasiLengkap'])->name('verifikasi.administrasi-lengkap');
+
+        // Observasi routes (scoped to detail)
+        Route::post('/verifikasi/{detail}/observasi', [ObservasiController::class, 'store'])->name('verifikasi.observasi.store');
+
+        // Observasi routes (individual observation record)
+        Route::patch('/observasi/{observasi}/hadir', [ObservasiController::class, 'hadir'])->name('observasi.hadir');
+        Route::patch('/observasi/{observasi}/tidak-hadir', [ObservasiController::class, 'tidakHadir'])->name('observasi.tidak-hadir');
+        Route::post('/observasi/{observasi}/jadwal-ulang', [ObservasiController::class, 'jadwalUlang'])->name('observasi.jadwal-ulang');
+        Route::patch('/observasi/{observasi}/selesai', [ObservasiController::class, 'selesai'])->name('observasi.selesai');
 
         // Route Export Siswa (Letakkan sebelum resource siswa)
         Route::get('/siswa/create', [App\Http\Controllers\Admin\SiswaController::class, 'create'])->name('siswa.create');
@@ -208,11 +229,10 @@ Route::middleware('auth')->group(function () {
         Route::put('/settings/achievements/{achievement}', [AchievementController::class, 'update'])->name('settings.achievements.update');
         Route::delete('/settings/achievements/{achievement}', [AchievementController::class, 'destroy'])->name('settings.achievements.destroy');
 
-        Route::resource('testimonials', TestimonialController::class);
+        Route::resource('testimonials', TestimonialController::class)->except(['show']);
 
         // Gallery CRUD
-        Route::resource('gallery', GalleryController::class);
-        // ... rute create, store, dll ...
+        Route::resource('gallery', GalleryController::class)->except(['show']);
 
         /*
         |------------------------------------------------------------------
