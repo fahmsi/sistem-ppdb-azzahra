@@ -16,7 +16,7 @@ class UpdateSiswaRequest extends FormRequest
 
     public function rules(): array
     {
-        return $this->siswaRules(documentsRequired: false, isStore: false);
+        return $this->siswaRules(documentsRequired: false);
     }
 
     public function messages(): array

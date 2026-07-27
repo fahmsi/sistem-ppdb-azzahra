@@ -19,9 +19,6 @@
                 <th>Nama</th>
                 <th>Nama Panggilan</th>
                 <th>Jenis Kelamin</th>
-                <th>Tinggal Bersama</th>
-                <th>Nama Wali</th>
-                <th>Hubungan Wali</th>
                 <th>Orang Tua</th>
                 <th>Sumber Data</th>
                 <th>No. Telp</th>
@@ -34,9 +31,6 @@
                     <td>{{ $s->nama }}</td>
                     <td>{{ $s->nama_panggilan ?? '-' }}</td>
                     <td>{{ $s->jenis_kelamin === 'L' ? 'Laki-laki' : 'Perempuan' }}</td>
-                    <td>{{ $s->tinggal_bersama === 'wali' ? 'Wali' : 'Orang Tua' }}</td>
-                    <td>{{ $s->nama_wali ?? '-' }}</td>
-                    <td>{{ $s->hubungan_wali ?? '-' }}</td>
                     <td>{{ $s->user?->name ?? '-' }}</td>
                     <td>{{ $s->input_source === \App\Models\Siswa::INPUT_SOURCE_MANUAL_ADMIN ? 'Manual Admin' : 'Online' }}</td>
                     <td>{{ $s->no_telpon ?? $s->user?->no_telpon ?? '-' }}</td>

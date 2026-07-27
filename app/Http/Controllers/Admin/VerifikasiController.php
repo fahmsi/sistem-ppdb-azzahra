@@ -14,6 +14,7 @@ use App\Services\WhatsAppNotificationService;
 use Barryvdh\DomPDF\Facade;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\View\View;
 use Maatwebsite\Excel\Facades\Excel;
@@ -144,34 +145,12 @@ class VerifikasiController extends Controller
     }
 
     /**
-     * Bulk update status for multiple registrations at once.
-     */
-    public function bulkUpdate(Request $request): RedirectResponse
-    {
-        $validated = $request->validate([
-            'detail_ids' => ['required', 'array', 'min:1'],
-            'detail_ids.*' => ['required', 'integer', 'exists:spmb_pendaftaran_detail,id'],
-            // Restricted to verification phase states (no administrasi_lengkap, diterima, ditolak, or menunggu_keputusan)
-            'status' => ['required', 'in:menunggu_verifikasi,perlu_revisi'],
-            'notifikasi' => ['nullable', 'string', 'max:1000'],
-        ]);
-
-        PendaftaranDetail::whereIn('id', $validated['detail_ids'])
-            ->update([
-                'status' => $validated['status'],
-                'notifikasi' => $validated['notifikasi'] ?? null,
-            ]);
-
-        return back()->with('success', count($validated['detail_ids']).' pendaftaran berhasil diperbarui.');
-    }
-
-    /**
      * Delete a registration detail.
      */
     public function destroy(PendaftaranDetail $detail): RedirectResponse
     {
         $deleted = false;
-        \Illuminate\Support\Facades\DB::transaction(function () use ($detail, &$deleted) {
+        DB::transaction(function () use ($detail, &$deleted) {
             $locked = PendaftaranDetail::whereKey($detail->id)->lockForUpdate()->firstOrFail();
             if (! $locked->isPending() || $locked->observasis()->exists() || $locked->keputusanHistories()->exists() || $locked->finalisasiHistories()->exists() || $locked->pembayaran()->exists() || ! $locked->isFinalDalamProses()) {
                 return;

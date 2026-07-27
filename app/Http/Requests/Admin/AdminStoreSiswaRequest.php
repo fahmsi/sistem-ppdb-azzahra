@@ -16,7 +16,7 @@ class AdminStoreSiswaRequest extends FormRequest
 
     public function rules(): array
     {
-        return $this->siswaRules(documentsRequired: true, isStore: true);
+        return $this->siswaRules(documentsRequired: true);
     }
 
     public function attributes(): array

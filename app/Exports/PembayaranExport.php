@@ -31,15 +31,12 @@ class PembayaranExport implements FromCollection, WithHeadings, WithMapping
             'No',
             'No. Pendaftaran',
             'Nama Orang Tua / Pembayar',
-            'Nama Siswa',
             'Gelombang Pendaftaran',
-            'Tahun Ajaran',
-            'Keputusan',
-            'Status Akhir',
+            'Metode Pembayaran',
             'Jumlah Bayar',
             'Status Pembayaran',
-            'Diverifikasi Pada',
-            'Finalisasi Pada',
+            'Tanggal Bayar',
+            'Catatan Admin',
         ];
     }
 
@@ -61,23 +58,22 @@ class PembayaranExport implements FromCollection, WithHeadings, WithMapping
 
         // Ambil nama dari relasi pendaftaranDetail -> siswa -> user
         $namaPembayar = $pembayaran->pendaftaranDetail?->siswa?->user?->name ?? '-';
-        $detail = $pembayaran->pendaftaranDetail;
 
         $gelombang = $pembayaran->pendaftaranDetail?->pendaftaran?->gelombang ?? '-';
 
+        // Metode pembayaran tidak disimpan di tabel pada skema saat ini; tampilkan '-' jika tidak ada
+        $metode = $pembayaran->metode ?? '-';
+
         return [
             $no,
-            $detail?->nomor_pendaftaran ?? '-',
+            $pembayaran->pendaftaranDetail?->nomor_pendaftaran ?? '-',
             $namaPembayar,
-            $detail?->siswa?->nama ?? '-',
             $gelombang,
-            $detail?->pendaftaran?->tahun_ajaran ?? '-',
-            $detail?->keputusan_status ? ucwords(str_replace('_', ' ', $detail->keputusan_status)) : '-',
-            $detail?->final_status ? ucwords(str_replace('_', ' ', $detail->final_status)) : '-',
+            strtoupper($metode),
             $jumlahBayar,
             ucfirst($pembayaran->status),
-            $pembayaran->verified_at?->format('d/m/Y H:i') ?? '-',
-            $detail?->final_ditetapkan_at?->format('d/m/Y H:i') ?? '-',
+            $tanggalBayar,
+            $pembayaran->catatan_admin ?? '-',
         ];
     }
 }

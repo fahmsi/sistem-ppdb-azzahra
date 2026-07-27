@@ -26,14 +26,6 @@ class Pendaftaran extends Model
         'status',
         'tanggal_mulai',
         'tanggal_selesai',
-        'tanggal_mpls',
-        'jam_mpls_mulai',
-        'jam_mpls_selesai',
-        'lokasi_mpls',
-        'informasi_mpls',
-        'tanggal_mulai_kbm',
-        'jam_masuk_kbm',
-        'informasi_kbm',
         'gambar',
     ];
 
@@ -47,8 +39,6 @@ class Pendaftaran extends Model
         return [
             'tanggal_mulai' => 'date',
             'tanggal_selesai' => 'date',
-            'tanggal_mpls' => 'date',
-            'tanggal_mulai_kbm' => 'date',
             'kuota' => 'integer',
         ];
     }
@@ -104,11 +94,10 @@ class Pendaftaran extends Model
      */
     public function getSisaKuotaAttribute(): int
     {
-        if (! $this->kuota || $this->kuota <= 0) {
+        if (!$this->kuota || $this->kuota <= 0) {
             return 999999; // unlimited
         }
         $sisa = $this->kuota - $this->pendaftaranDetails()->count();
-
         return $sisa > 0 ? $sisa : 0;
     }
 
@@ -118,10 +107,9 @@ class Pendaftaran extends Model
      */
     public function getIsPenuhAttribute(): bool
     {
-        if (! $this->kuota || $this->kuota <= 0) {
+        if (!$this->kuota || $this->kuota <= 0) {
             return false; // unlimited, never full
         }
-
         return $this->sisa_kuota <= 0;
     }
 
@@ -131,10 +119,9 @@ class Pendaftaran extends Model
      */
     public function getIsExpiredAttribute(): bool
     {
-        if (! $this->tanggal_selesai) {
+        if (!$this->tanggal_selesai) {
             return false;
         }
-
         return now()->startOfDay()->greaterThan($this->tanggal_selesai->endOfDay());
     }
 
@@ -144,6 +131,6 @@ class Pendaftaran extends Model
      */
     public function getIsBisaDipilihAttribute(): bool
     {
-        return $this->isOpen() && ! $this->is_penuh && ! $this->is_expired;
+        return $this->isOpen() && !$this->is_penuh && !$this->is_expired;
     }
 }

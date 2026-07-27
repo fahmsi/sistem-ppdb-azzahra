@@ -86,23 +86,6 @@
         </div>
     </div>
 
-    <div class="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-8">
-        @foreach([
-            'Administrasi Lengkap' => 'administrasi_lengkap',
-            'Menunggu Keputusan' => 'menunggu_keputusan',
-            'Diterima: Daftar Ulang' => 'diterima_dalam_proses',
-            'Bayar Menunggu' => 'pembayaran_menunggu_verifikasi',
-            'Siswa Resmi' => 'siswa_resmi_terdaftar',
-            'Tidak Dilanjutkan' => 'pendaftaran_tidak_dilanjutkan',
-            'Mengundurkan Diri' => 'mengundurkan_diri',
-        ] as $label => $key)
-            <div class="rounded-lg border border-[#d9dee3] bg-white p-3 shadow-sneat dark:border-[#434463] dark:bg-[#2b2c40] dark:shadow-sneat-dark">
-                <p class="text-xs leading-4 text-[#697a8d] dark:text-[#a1b0cb]">{{ $label }}</p>
-                <p class="mt-1 text-lg font-bold text-[#566a7f] dark:text-[#d5d5e2]">{{ number_format($stats[$key] ?? 0) }}</p>
-            </div>
-        @endforeach
-    </div>
-
     <!-- Analytics Charts -->
     <div class="grid grid-cols-1 gap-4 animate-fade-up sm:gap-6 lg:grid-cols-3" style="animation-delay: 0.1s;">
         <!-- Gender Chart -->
@@ -171,7 +154,7 @@
                             </td>
                             <td class="whitespace-nowrap">
                                 @if($reg->status === 'pending')
-                                    <span class="sneat-badge bg-[#f5f5f9] dark:bg-[#232333] text-[#697a8d] dark:text-[#a1b0cb]">Pendaftaran Tercatat</span>
+                                    <span class="sneat-badge bg-[#f5f5f9] dark:bg-[#232333] text-[#697a8d] dark:text-[#a1b0cb]">Pending</span>
                                 @elseif($reg->status === 'menunggu_verifikasi')
                                     <span class="sneat-badge bg-amber-50 dark:bg-amber-500/10 text-amber-600 dark:text-amber-400">Verifikasi</span>
                                 @elseif($reg->status === 'diterima')

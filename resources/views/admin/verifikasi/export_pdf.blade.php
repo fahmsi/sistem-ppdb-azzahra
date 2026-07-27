@@ -19,12 +19,7 @@
                 <th>Nama Anak</th>
                 <th>Wali</th>
                 <th>Gelombang</th>
-                <th>Usia (1 Juli)</th>
-                <th>Rekomendasi</th>
-                <th>Final</th>
-                <th>Status Adm</th>
-                <th>Keputusan</th>
-                <th>Diputuskan Oleh</th>
+                <th>Status</th>
             </tr>
         </thead>
         <tbody>
@@ -34,12 +29,7 @@
                     <td>{{ $it->siswa->nama ?? '-' }}</td>
                     <td>{{ $it->siswa?->user?->name ?? '-' }}</td>
                     <td>{{ $it->pendaftaran->gelombang ?? '-' }}</td>
-                    <td>{{ $it->usia_bulan_saat_acuan !== null ? ((int) floor($it->usia_bulan_saat_acuan / 12)) . ' th ' . ($it->usia_bulan_saat_acuan % 12) . ' bln' : '-' }}</td>
-                    <td>{{ $it->kelompok_rekomendasi ?? '-' }}</td>
-                    <td>{{ $it->kelompok_final ?? '-' }}</td>
-                    <td>{{ ucwords(str_replace('_', ' ', $it->status)) }}</td>
-                    <td>{{ $it->keputusan_status ? ucwords(str_replace('_', ' ', $it->keputusan_status)) : '-' }}</td>
-                    <td>{{ $it->keputusanDiputuskanOleh?->name ?? '-' }}</td>
+                    <td>{{ $it->status }}</td>
                 </tr>
             @endforeach
         </tbody>

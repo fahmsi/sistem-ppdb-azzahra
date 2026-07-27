@@ -1,9 +1,9 @@
 <?php
 
-use App\Models\PaymentSetting;
 use App\Models\Pembayaran;
 use App\Models\Pendaftaran;
 use App\Models\PendaftaranDetail;
+use App\Models\PaymentSetting;
 use App\Models\Siswa;
 use App\Models\User;
 use Illuminate\Http\UploadedFile;
@@ -85,18 +85,18 @@ test('parent dashboard registration pages and every registration status render',
     ]);
 
     $this->actingAs($parent)->get(route('parent.dashboard'))->assertOk();
-    $this->actingAs($parent)->get(route('parent.siswa.pendaftaran.index', $siswa))->assertOk();
+    $this->actingAs($parent)->get(route('parent.pendaftaran.index'))->assertOk();
     $this->actingAs($parent)
-        ->get(route('parent.siswa.pendaftaran.show', ['siswa' => $siswa, 'pendaftaran' => $availablePeriod]))
+        ->get(route('parent.pendaftaran.show', $availablePeriod))
         ->assertOk()
         ->assertSee($availablePeriod->gelombang);
     $this->actingAs($parent)
-        ->get(route('parent.siswa.pendaftaran.status', $siswa))
+        ->get(route('parent.pendaftaran.status'))
         ->assertOk()
-        ->assertSee('Menunggu Verifikasi Administrasi')
-        ->assertSee('Perlu Perbaikan Data')
-        ->assertSee('Administrasi Lengkap')
-        ->assertSee('Pendaftaran Tidak Dilanjutkan');
+        ->assertSee('Menunggu Verifikasi Admin')
+        ->assertSee('Perlu Revisi Dokumen')
+        ->assertSee('Diterima')
+        ->assertSee('Ditolak');
 });
 
 test('payment upload uses the amount configured by admin and can be verified', function () {
@@ -109,9 +109,7 @@ test('payment upload uses the amount configured by admin and can be verified', f
     $detail = PendaftaranDetail::create([
         'siswa_id' => $siswa->id,
         'pendaftaran_id' => $period->id,
-        'status' => PendaftaranDetail::STATUS_KEPUTUSAN_SELESAI,
-        'keputusan_status' => PendaftaranDetail::KEPUTUSAN_DITERIMA,
-        'keputusan_diputuskan_at' => now(),
+        'status' => PendaftaranDetail::STATUS_DITERIMA,
     ]);
 
     PaymentSetting::create([
@@ -141,7 +139,7 @@ test('payment upload uses the amount configured by admin and can be verified', f
     $this->actingAs($admin)
         ->get(route('admin.verifikasi.show', $detail))
         ->assertOk()
-        ->assertSee('Pembayaran Daftar Ulang')
+        ->assertSee('Bukti Daftar Ulang (Pembayaran)')
         ->assertSee('Simpan Verifikasi Bayar');
     $this->actingAs($admin)
         ->patch(route('admin.pembayaran.verify', $payment), ['status' => Pembayaran::STATUS_LUNAS])
@@ -163,9 +161,7 @@ test('payment upload is rejected until admin configuration exists', function () 
     $detail = PendaftaranDetail::create([
         'siswa_id' => $siswa->id,
         'pendaftaran_id' => Pendaftaran::factory()->create()->id,
-        'status' => PendaftaranDetail::STATUS_KEPUTUSAN_SELESAI,
-        'keputusan_status' => PendaftaranDetail::KEPUTUSAN_DITERIMA,
-        'keputusan_diputuskan_at' => now(),
+        'status' => PendaftaranDetail::STATUS_DITERIMA,
     ]);
 
     $this->actingAs($parent)
@@ -190,23 +186,12 @@ test('registration card remains unavailable until registration is accepted', fun
     ]);
 
     $this->actingAs($parent)
-        ->get(route('parent.siswa.pendaftaran.kartu', ['siswa' => $siswa, 'detail' => $detail]))
+        ->get(route('parent.siswa.kartu'))
         ->assertForbidden();
 
-    $detail->update([
-        'status' => PendaftaranDetail::STATUS_KEPUTUSAN_SELESAI,
-        'keputusan_status' => PendaftaranDetail::KEPUTUSAN_DITERIMA,
-        'keputusan_diputuskan_at' => now(),
-    ]);
-    Pembayaran::create([
-        'pendaftaran_detail_id' => $detail->id,
-        'jumlah' => 100000,
-        'bukti_bayar' => 'bukti.png',
-        'status' => Pembayaran::STATUS_LUNAS,
-    ]);
-    $detail->update(['final_status' => PendaftaranDetail::FINAL_SISWA_RESMI_TERDAFTAR, 'final_ditetapkan_at' => now()]);
+    $detail->update(['status' => PendaftaranDetail::STATUS_DITERIMA]);
 
     $this->actingAs($parent)
-        ->get(route('parent.siswa.pendaftaran.kartu', ['siswa' => $siswa, 'detail' => $detail]))
+        ->get(route('parent.siswa.kartu'))
         ->assertOk();
 });

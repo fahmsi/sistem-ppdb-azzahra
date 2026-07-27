@@ -78,11 +78,11 @@
                 Fami
             </a>
 
-            <!-- <span class="hidden sm:inline text-gray-600">|</span>
+            <span class="hidden sm:inline text-gray-600">|</span>
                 
             <a href="https://nurulfikri.ac.id/" target="_blank" rel="noopener noreferrer" class="font-medium text-primary-500 hover:text-primary-400 hover:underline tracking-wide transition-colors text-center">
                 Student of Nurul Fikri College of Integrated Technology
-            </a> -->
+            </a>
         </div>
     </div>
 </footer>

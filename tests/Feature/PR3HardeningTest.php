@@ -8,6 +8,7 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
@@ -283,27 +284,8 @@ test('hardening: legacy accept and reject routes are deleted', function () {
     route('admin.verifikasi.terima', $detail->id);
 });
 
-test('hardening: bulk update rejects status diterima, ditolak, menunggu_keputusan, and administrasi_lengkap', function () {
-    $admin = User::factory()->create(['role' => 'admin']);
-    $detail = createDetailForHardening([
-        'status' => PendaftaranDetail::STATUS_MENUNGGU_VERIFIKASI,
-    ]);
-
-    // 1. Try updating to administrasi_lengkap
-    $response = $this->actingAs($admin)
-        ->post(route('admin.verifikasi.bulkUpdate'), [
-            'detail_ids' => [$detail->id],
-            'status' => 'administrasi_lengkap',
-        ]);
-    $response->assertSessionHasErrors(['status']);
-
-    // 2. Try updating to menunggu_keputusan
-    $response = $this->actingAs($admin)
-        ->post(route('admin.verifikasi.bulkUpdate'), [
-            'detail_ids' => [$detail->id],
-            'status' => 'menunggu_keputusan',
-        ]);
-    $response->assertSessionHasErrors(['status']);
+test('hardening: unused bulk verification mutation is not routable', function () {
+    expect(Route::has('admin.verifikasi.bulkUpdate'))->toBeFalse();
 });
 
 test('hardening: cascade delete of PendaftaranDetail cleans up observation attempts', function () {

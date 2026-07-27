@@ -5,8 +5,8 @@ use App\Http\Controllers\Admin\AchievementController;
 use App\Http\Controllers\Admin\AdminManageController;
 use App\Http\Controllers\Admin\AdmissionDecisionController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
-use App\Http\Controllers\Admin\GalleryController;
 use App\Http\Controllers\Admin\FinalEnrollmentController;
+use App\Http\Controllers\Admin\GalleryController;
 use App\Http\Controllers\Admin\ObservasiController;
 use App\Http\Controllers\Admin\PaymentSettingController;
 use App\Http\Controllers\Admin\PembayaranController;
@@ -185,7 +185,6 @@ Route::middleware('auth')->group(function () {
         Route::get('/verifikasi', [VerifikasiController::class, 'index'])->name('verifikasi.index');
         // Route Export Verifikasi (define before parameterized routes to avoid conflicts)
         Route::get('/verifikasi/export', [VerifikasiController::class, 'export'])->name('verifikasi.export');
-        Route::post('/verifikasi/bulk-update', [VerifikasiController::class, 'bulkUpdate'])->name('verifikasi.bulkUpdate');
         Route::get('/verifikasi/{detail}', [VerifikasiController::class, 'show'])->name('verifikasi.show');
         Route::patch('/verifikasi/{detail}/start', [VerifikasiController::class, 'startVerifikasi'])->name('verifikasi.start');
         Route::patch('/verifikasi/{detail}/revisi', [VerifikasiController::class, 'revisi'])->name('verifikasi.revisi');
@@ -230,11 +229,10 @@ Route::middleware('auth')->group(function () {
         Route::put('/settings/achievements/{achievement}', [AchievementController::class, 'update'])->name('settings.achievements.update');
         Route::delete('/settings/achievements/{achievement}', [AchievementController::class, 'destroy'])->name('settings.achievements.destroy');
 
-        Route::resource('testimonials', TestimonialController::class);
+        Route::resource('testimonials', TestimonialController::class)->except(['show']);
 
         // Gallery CRUD
-        Route::resource('gallery', GalleryController::class);
-        // ... rute create, store, dll ...
+        Route::resource('gallery', GalleryController::class)->except(['show']);
 
         /*
         |------------------------------------------------------------------

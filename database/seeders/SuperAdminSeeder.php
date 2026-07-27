@@ -15,10 +15,10 @@ class SuperAdminSeeder extends Seeder
         User::updateOrCreate(
             ['email' => 'superadmin@azzahra.sch.id'],
             [
-                'name' => 'Super Admin',
-                'email' => 'superadmin@azzahra.sch.id',
-                'password' => '@dmin098',
-                'role' => 'super_admin',
+                'name'              => 'Super Admin',
+                'email'             => 'superadmin@azzahra.sch.id',
+                'password'          => '@dmin098',
+                'role'              => 'super_admin',
                 'email_verified_at' => now(),
             ]
         );

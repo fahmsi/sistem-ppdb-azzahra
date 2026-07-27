@@ -48,6 +48,13 @@
 
 </head>
 
+@php
+    $currentUser = auth()->user();
+    $parentHasSiswa = $currentUser?->isParent()
+        ? $currentUser->siswas()->exists()
+        : false;
+@endphp
+
 <body
     class="dashboard-readable {{ request()->routeIs('parent.dashboard') ? 'parent-dashboard-performance' : '' }} bg-[#f5f5f9] dark:bg-[#232333] font-body text-[#697a8d] dark:text-[#a1b0cb] antialiased overflow-hidden h-screen transition-colors duration-300">
 
@@ -87,19 +94,19 @@
                 <a href="{{ route('admin.pendaftaran.index') }}"
                     class="sidebar-menu-link flex items-center px-6 py-2.5 mx-3 rounded-lg overflow-hidden whitespace-nowrap {{ request()->routeIs('admin.pendaftaran.*') ? 'active bg-[#696cff] text-white' : 'text-[#697a8d] hover:bg-gray-100 dark:hover:bg-[#232333]' }}">
                     <i data-lucide="calendar" class="w-5 h-5 flex-shrink-0"></i>
-                    <span class="menu-text ml-3 transition-opacity duration-300">Gelombang Pendaftaran</span>
+                    <span class="menu-text ml-3 transition-opacity duration-300">Gelombang SPMB</span>
                 </a>
 
                 <a href="{{ route('admin.verifikasi.index') }}"
                     class="sidebar-menu-link flex items-center px-6 py-2.5 mx-3 rounded-lg overflow-hidden whitespace-nowrap {{ request()->routeIs('admin.verifikasi.*') ? 'active bg-[#696cff] text-white' : 'text-[#697a8d] hover:bg-gray-100 dark:hover:bg-[#232333]' }}">
                     <i data-lucide="check-square" class="w-5 h-5 flex-shrink-0"></i>
-                    <span class="menu-text ml-3 transition-opacity duration-300">Verifikasi dan Observasi</span>
+                    <span class="menu-text ml-3 transition-opacity duration-300">Verifikasi Data</span>
                 </a>
 
                 <a href="{{ route('admin.pembayaran.index') }}"
                     class="sidebar-menu-link flex items-center px-6 py-2.5 mx-3 rounded-lg overflow-hidden whitespace-nowrap {{ request()->routeIs('admin.pembayaran.*') ? 'active bg-[#696cff] text-white' : 'text-[#697a8d] hover:bg-gray-100 dark:hover:bg-[#232333]' }}">
                     <i data-lucide="credit-card" class="w-5 h-5 flex-shrink-0"></i>
-                    <span class="menu-text ml-3 transition-opacity duration-300">Pembayaran</span>
+                    <span class="menu-text ml-3 transition-opacity duration-300">Rekap Pembayaran</span>
                 </a>
 
                 <a href="{{ route('admin.siswa.index') }}"
@@ -119,7 +126,7 @@
                 <a href="{{ route('admin.gallery.index') }}"
                     class="sidebar-menu-link flex items-center px-6 py-2.5 mx-3 rounded-lg overflow-hidden whitespace-nowrap {{ request()->routeIs('admin.gallery.*') ? 'active bg-[#696cff] text-white' : 'text-[#697a8d] hover:bg-gray-100 dark:hover:bg-[#232333]' }}">
                     <i data-lucide="images" class="w-5 h-5 flex-shrink-0"></i>
-                    <span class="menu-text ml-3 transition-opacity duration-300">Galeri</span>
+                    <span class="menu-text ml-3 transition-opacity duration-300">Gallery</span>
                 </a>
 
                 <p class="sneat-section-label menu-text mt-4 mb-2 whitespace-nowrap px-6 transition-opacity duration-300">Sistem</p>
@@ -133,7 +140,7 @@
                 <a href="{{ route('admin.settings.index') }}"
                     class="sidebar-menu-link flex items-center px-6 py-2.5 mx-3 rounded-lg overflow-hidden whitespace-nowrap {{ request()->routeIs('admin.settings.*') ? 'active bg-[#696cff] text-white' : 'text-[#697a8d] hover:bg-gray-100 dark:hover:bg-[#232333]' }}">
                     <i data-lucide="settings" class="w-5 h-5 flex-shrink-0"></i>
-                    <span class="menu-text ml-3 transition-opacity duration-300">Pengaturan Konten</span>
+                    <span class="menu-text ml-3 transition-opacity duration-300">Pengaturan Situs</span>
                 </a>
 
                 @if(auth()->user()->isSuperAdmin())
@@ -477,10 +484,17 @@
                                                 class="flex items-center gap-2 text-sm text-[#566a7f] dark:text-[#d5d5e2] hover:text-[#696cff] transition-colors"><i
                                                     data-lucide="layout-dashboard" class="w-4 h-4"></i> Dashboard Saya</a>
                                         </li>
-                                        <li><a href="{{ route('parent.siswa.index') }}"
-                                                class="flex items-center gap-2 text-sm text-[#566a7f] dark:text-[#d5d5e2] hover:text-[#696cff] transition-colors"><i
-                                                    data-lucide="users" class="w-4 h-4"></i> Anak Saya</a>
-                                        </li>
+                                        @if($parentHasSiswa)
+                                            <li><a href="{{ route('parent.siswa.index') }}"
+                                                    class="flex items-center gap-2 text-sm text-[#566a7f] dark:text-[#d5d5e2] hover:text-[#696cff] transition-colors"><i
+                                                        data-lucide="users" class="w-4 h-4"></i> Kelola Data Anak</a>
+                                            </li>
+                                        @else
+                                            <li><a href="{{ route('parent.siswa.create') }}"
+                                                    class="flex items-center gap-2 text-sm text-[#566a7f] dark:text-[#d5d5e2] hover:text-[#696cff] transition-colors"><i
+                                                        data-lucide="user-plus" class="w-4 h-4"></i> Lengkapi Data Anak</a>
+                                            </li>
+                                        @endif
                                     </ul>
                                 </div>
                                 <div class="flex-1">

@@ -20,7 +20,7 @@ class DokumenController extends Controller
         }
 
         $path = match ($field) {
-            'foto_kk', 'foto_akta', 'foto_ktp_ayah', 'foto_ktp_ibu', 'foto_ktp_wali' => $siswa->{$field},
+            'foto_kk', 'foto_akta' => $siswa->{$field},
             'bukti_bayar' => $this->paymentProofPath($siswa, $pembayaran),
             default => null,
         };

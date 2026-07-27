@@ -15,9 +15,12 @@ class VerifikasiExport implements FromCollection, WithHeadings, WithMapping
     public function collection()
     {
         // Memuat relasi siswa (beserta user/wali) dan pendaftaran (gelombang)
-        return PendaftaranDetail::with(['siswa.user', 'pendaftaran', 'observasiTerbaru', 'keputusanDiputuskanOleh'])->get();
+        return PendaftaranDetail::with(['siswa.user', 'pendaftaran'])->get();
     }
 
+    /**
+     * Membuat Baris Pertama (Judul Kolom) di Excel
+     */
     public function headings(): array
     {
         return [
@@ -27,17 +30,8 @@ class VerifikasiExport implements FromCollection, WithHeadings, WithMapping
             'Nama Orang Tua / Wali',
             'Gelombang',
             'Tahun Ajaran',
-            'Usia (Bulan) Saat 1 Juli',
-            'Rekomendasi Kelompok',
-            'Kelompok Final',
-            'Status Administrasi',
-            'Status Observasi',
-            'Jadwal Observasi',
-            'Keputusan Status',
-            'Tanggal Keputusan',
-            'Diputuskan Oleh',
-            'Status Akhir',
-            'Tanggal Finalisasi',
+            'Status Dokumen',
+            'Catatan Admin',
             'Tanggal Upload',
         ];
     }
@@ -52,12 +46,6 @@ class VerifikasiExport implements FromCollection, WithHeadings, WithMapping
 
         // Memformat status agar lebih rapi (misal: perlu_revisi -> Perlu Revisi)
         $statusFormatted = ucwords(str_replace('_', ' ', $detail->status));
-        $observasi = $detail->observasiTerbaru;
-        $observasiStatus = $observasi ? ucwords(str_replace('_', ' ', $observasi->status)) : '-';
-        $jadwalObservasi = $observasi?->scheduled_at?->format('d/m/Y H:i') ?? '-';
-        $keputusanStatus = $detail->keputusan_status ? ucwords(str_replace('_', ' ', $detail->keputusan_status)) : '-';
-        $tanggalKeputusan = $detail->keputusan_diputuskan_at ? $detail->keputusan_diputuskan_at->format('d/m/Y H:i') : '-';
-        $diputuskanOleh = $detail->keputusanDiputuskanOleh?->name ?? '-';
 
         return [
             $no,
@@ -66,17 +54,8 @@ class VerifikasiExport implements FromCollection, WithHeadings, WithMapping
             $detail->siswa?->user?->name ?? '-',
             $detail->pendaftaran->gelombang ?? '-',
             $detail->pendaftaran->tahun_ajaran ?? '-',
-            $detail->usia_bulan_saat_acuan ?? '-',
-            $detail->kelompok_rekomendasi ?? '-',
-            $detail->kelompok_final ?? '-',
             $statusFormatted,
-            $observasiStatus,
-            $jadwalObservasi,
-            $keputusanStatus,
-            $tanggalKeputusan,
-            $diputuskanOleh,
-            $detail->final_status ? ucwords(str_replace('_', ' ', $detail->final_status)) : '-',
-            $detail->final_ditetapkan_at?->format('d/m/Y H:i') ?? '-',
+            $detail->catatan ?? '-',
             $detail->created_at ? $detail->created_at->format('d/m/Y H:i').' WIB' : '-',
         ];
     }

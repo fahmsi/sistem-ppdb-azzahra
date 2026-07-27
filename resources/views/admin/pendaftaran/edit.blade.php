@@ -50,19 +50,6 @@
                     @error('status') <p class="mt-1 text-xs text-red-500">{{ $message }}</p> @enderror
                 </div>
             </div>
-            <div class="border-t border-[#d9dee3] pt-6 dark:border-[#434463]">
-                <h3 class="mb-4 font-heading text-base font-semibold text-[#566a7f] dark:text-[#d5d5e2]">Informasi MPLS dan Awal KBM</h3>
-                <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
-                    <div><label class="mb-1 block text-sm font-medium text-[#566a7f] dark:text-[#d5d5e2]">Tanggal MPLS <span class="text-red-500">*</span></label><input type="date" name="tanggal_mpls" value="{{ old('tanggal_mpls', $pendaftaran->tanggal_mpls?->format('Y-m-d')) }}" class="sneat-input @error('tanggal_mpls') !border-red-500 @enderror">@error('tanggal_mpls') <p class="mt-1 text-xs text-red-500">{{ $message }}</p> @enderror</div>
-                    <div><label class="mb-1 block text-sm font-medium text-[#566a7f] dark:text-[#d5d5e2]">Lokasi MPLS</label><input name="lokasi_mpls" value="{{ old('lokasi_mpls', $pendaftaran->lokasi_mpls) }}" class="sneat-input"></div>
-                    <div><label class="mb-1 block text-sm font-medium text-[#566a7f] dark:text-[#d5d5e2]">Jam MPLS Mulai</label><input type="time" name="jam_mpls_mulai" value="{{ old('jam_mpls_mulai', $pendaftaran->jam_mpls_mulai ? substr((string) $pendaftaran->jam_mpls_mulai, 0, 5) : null) }}" class="sneat-input @error('jam_mpls_mulai') !border-red-500 @enderror">@error('jam_mpls_mulai') <p class="mt-1 text-xs text-red-500">{{ $message }}</p> @enderror</div>
-                    <div><label class="mb-1 block text-sm font-medium text-[#566a7f] dark:text-[#d5d5e2]">Jam MPLS Selesai</label><input type="time" name="jam_mpls_selesai" value="{{ old('jam_mpls_selesai', $pendaftaran->jam_mpls_selesai ? substr((string) $pendaftaran->jam_mpls_selesai, 0, 5) : null) }}" class="sneat-input @error('jam_mpls_selesai') !border-red-500 @enderror">@error('jam_mpls_selesai') <p class="mt-1 text-xs text-red-500">{{ $message }}</p> @enderror</div>
-                    <div><label class="mb-1 block text-sm font-medium text-[#566a7f] dark:text-[#d5d5e2]">Tanggal Mulai KBM</label><input type="date" name="tanggal_mulai_kbm" value="{{ old('tanggal_mulai_kbm', $pendaftaran->tanggal_mulai_kbm?->format('Y-m-d')) }}" class="sneat-input">@error('tanggal_mulai_kbm') <p class="mt-1 text-xs text-red-500">{{ $message }}</p> @enderror</div>
-                    <div><label class="mb-1 block text-sm font-medium text-[#566a7f] dark:text-[#d5d5e2]">Jam Masuk KBM</label><input type="time" name="jam_masuk_kbm" value="{{ old('jam_masuk_kbm', $pendaftaran->jam_masuk_kbm ? substr((string) $pendaftaran->jam_masuk_kbm, 0, 5) : null) }}" class="sneat-input @error('jam_masuk_kbm') !border-red-500 @enderror">@error('jam_masuk_kbm') <p class="mt-1 text-xs text-red-500">{{ $message }}</p> @enderror</div>
-                    <div class="sm:col-span-2"><label class="mb-1 block text-sm font-medium text-[#566a7f] dark:text-[#d5d5e2]">Informasi MPLS</label><textarea name="informasi_mpls" rows="2" class="sneat-input">{{ old('informasi_mpls', $pendaftaran->informasi_mpls) }}</textarea></div>
-                    <div class="sm:col-span-2"><label class="mb-1 block text-sm font-medium text-[#566a7f] dark:text-[#d5d5e2]">Informasi KBM</label><textarea name="informasi_kbm" rows="2" class="sneat-input">{{ old('informasi_kbm', $pendaftaran->informasi_kbm) }}</textarea></div>
-                </div>
-            </div>
             <div>
                 <label class="block text-sm font-medium text-[#566a7f] dark:text-[#d5d5e2] mb-2">Ganti Banner Gambar (Opsional)</label>
                 @if($pendaftaran->gambar)
@@ -72,7 +59,7 @@
                 </div>
                 @endif
                 <div class="relative border-2 border-dashed border-[#d9dee3] dark:border-[#434463] rounded-lg bg-[#f5f5f9] dark:bg-[#232333] hover:bg-[#e7e7ff]/30 dark:hover:bg-[#696cff]/10 hover:border-[#696cff] transition-colors cursor-pointer group p-6 text-center">
-                    <input type="file" name="gambar" value="{{ old('gambar', $pendaftaran->gambar)}}" accept="image/jpeg,image/png,image/jpg" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" onchange="previewFile(this, 'preview-gambar')">
+                    <input type="file" name="gambar" accept="image/jpeg,image/png,image/jpg" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" onchange="previewFile(this, 'preview-gambar')">
                     <i data-lucide="image" class="w-10 h-10 text-[#a1b0cb] mx-auto mb-3 group-hover:text-[#696cff] transition-colors"></i>
                     <p class="text-sm font-medium text-[#696cff]">Pilih File Baru</p>
                     <p class="text-xs text-[#a1b0cb] mt-1">Format: JPG, PNG (Max 2MB). Biarkan kosong jika tidak ingin mengubah.</p>
