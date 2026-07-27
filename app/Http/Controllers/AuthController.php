@@ -9,7 +9,6 @@ use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\View\View;
 
 class AuthController extends Controller
@@ -120,36 +119,5 @@ class AuthController extends Controller
         $request->session()->regenerateToken();
 
         return redirect()->route('login');
-    }
-
-    /**
-     * Handle change password request.
-     */
-    public function changePassword(Request $request): RedirectResponse
-    {
-        $request->validate([
-            'old_password' => ['required'],
-            'password' => [
-                'required',
-                'min:8',
-                'regex:/[A-Z]/',
-                'regex:/[a-z]/',
-                'regex:/[0-9]/',
-                'confirmed',
-            ],
-        ]);
-
-        /** @var User $user */
-        $user = Auth::user();
-
-        if (! Hash::check($request->old_password, $user->password)) {
-            return back()->withErrors(['old_password' => 'Password lama salah.']);
-        }
-
-        $user->update([
-            'password' => $request->password, // hashed via model cast
-        ]);
-
-        return back()->with('success', 'Password berhasil diubah.');
     }
 }
