@@ -2,7 +2,6 @@
 
 use App\Http\Controllers\Admin\GalleryController;
 use App\Http\Controllers\Admin\TestimonialController;
-use App\Http\Controllers\Admin\VerifikasiController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProfileController;
 use App\Models\Setting;
@@ -54,19 +53,6 @@ test('every application controller route points to an available action', functio
     }
 });
 
-test('unused bulk verification mutation has no route method or rendered form', function () {
-    $admin = User::factory()->create(['role' => 'admin']);
-
-    expect(Route::has('admin.verifikasi.bulkUpdate'))->toBeFalse()
-        ->and(method_exists(VerifikasiController::class, 'bulkUpdate'))->toBeFalse();
-
-    $this->actingAs($admin)
-        ->get(route('admin.verifikasi.index'))
-        ->assertOk()
-        ->assertDontSee('bulk-update', false)
-        ->assertDontSee('bulkUpdate', false);
-});
-
 test('password update uses only the profile controller flow', function () {
     $route = Route::getRoutes()->getByName('password.update');
 
@@ -83,27 +69,33 @@ test('password update uses only the profile controller flow', function () {
         ->assertSee(route('password.update'), false);
 });
 
-test('parent without child data sees the create destination in search modal', function () {
+test('parent without child data sees the streamlined parent destinations and first action', function () {
     $parent = User::factory()->create(['role' => 'parent']);
 
     $this->actingAs($parent)
         ->get(route('parent.dashboard'))
         ->assertOk()
-        ->assertSee('Lengkapi Data Anak')
+        ->assertSee('Dashboard')
+        ->assertSee(route('parent.dashboard'), false)
+        ->assertSee('Data Anak')
+        ->assertSee(route('parent.siswa.index'), false)
+        ->assertSee('Isi Data Anak')
         ->assertSee(route('parent.siswa.create'), false)
-        ->assertDontSee('Kelola Data Anak');
+        ->assertDontSee('>Panduan Pendaftaran<', false);
 });
 
-test('parent with child data sees the management destination in search modal', function () {
+test('parent with child data sees the same simple navigation and its next action', function () {
     $parent = User::factory()->create(['role' => 'parent']);
-    Siswa::factory()->for($parent)->create();
+    $siswa = Siswa::factory()->for($parent)->create();
 
     $this->actingAs($parent)
         ->get(route('parent.dashboard'))
         ->assertOk()
-        ->assertSee('Kelola Data Anak')
+        ->assertSee('Data Anak')
         ->assertSee(route('parent.siswa.index'), false)
-        ->assertDontSee('Lengkapi Data Anak');
+        ->assertSee('Daftar Gelombang')
+        ->assertSee(route('parent.siswa.pendaftaran.index', $siswa), false)
+        ->assertDontSee('>Panduan Pendaftaran<', false);
 });
 
 test('database seeder installs baseline settings without creating a super admin', function () {

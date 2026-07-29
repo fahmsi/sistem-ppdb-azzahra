@@ -4,6 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    @if(session('clear_parent_draft'))
+        <meta name="parent-draft-clear" content="{{ session('clear_parent_draft') }}">
+    @endif
     <title>@yield('title', 'Sistem Penerimaan Murid Baru (SPMB) PAUD Az-Zahra')</title>
 
     <!-- Favicon -->
@@ -47,13 +50,6 @@
     </script>
 
 </head>
-
-@php
-    $currentUser = auth()->user();
-    $parentHasSiswa = $currentUser?->isParent()
-        ? $currentUser->siswas()->exists()
-        : false;
-@endphp
 
 <body
     class="dashboard-readable {{ request()->routeIs('parent.dashboard') ? 'parent-dashboard-performance' : '' }} bg-[#f5f5f9] dark:bg-[#232333] font-body text-[#697a8d] dark:text-[#a1b0cb] antialiased overflow-hidden h-screen transition-colors duration-300">
@@ -120,13 +116,13 @@
                 <a href="{{ route('admin.testimonials.index') }}"
                     class="sidebar-menu-link flex items-center px-6 py-2.5 mx-3 rounded-lg overflow-hidden whitespace-nowrap {{ request()->routeIs('admin.testimonials.*') ? 'active bg-[#696cff] text-white' : 'text-[#697a8d] hover:bg-gray-100 dark:hover:bg-[#232333]' }}">
                     <i data-lucide="message-circle" class="w-5 h-5 flex-shrink-0"></i>
-                    <span class="menu-text ml-3 transition-opacity duration-300">Testimoni</span>
+                    <span class="menu-text ml-3 transition-opacity duration-300">Kelola Testimoni</span>
                 </a>
 
                 <a href="{{ route('admin.gallery.index') }}"
                     class="sidebar-menu-link flex items-center px-6 py-2.5 mx-3 rounded-lg overflow-hidden whitespace-nowrap {{ request()->routeIs('admin.gallery.*') ? 'active bg-[#696cff] text-white' : 'text-[#697a8d] hover:bg-gray-100 dark:hover:bg-[#232333]' }}">
                     <i data-lucide="images" class="w-5 h-5 flex-shrink-0"></i>
-                    <span class="menu-text ml-3 transition-opacity duration-300">Gallery</span>
+                    <span class="menu-text ml-3 transition-opacity duration-300">Kelola Gallery</span>
                 </a>
 
                 <p class="sneat-section-label menu-text mt-4 mb-2 whitespace-nowrap px-6 transition-opacity duration-300">Sistem</p>
@@ -175,8 +171,9 @@
                 <a href="{{ route('parent.siswa.index') }}"
                     class="sidebar-menu-link flex items-center px-6 py-2.5 mx-3 rounded-lg overflow-hidden whitespace-nowrap {{ request()->routeIs('parent.siswa.*') ? 'active bg-[#696cff] text-white' : 'text-[#697a8d] hover:bg-gray-100 dark:hover:bg-[#232333]' }}">
                     <i data-lucide="users" class="w-5 h-5 flex-shrink-0"></i>
-                    <span class="menu-text ml-3 transition-opacity duration-300">Anak Saya</span>
+                    <span class="menu-text ml-3 transition-opacity duration-300">Data Anak</span>
                 </a>
+
             @endif
         </nav>
 
@@ -387,20 +384,28 @@
         <!-- ============================================
              MAIN CONTENT SCROLLABLE AREA
              ============================================ -->
-        <main id="mainScrollArea" class="flex h-full flex-col overflow-x-hidden overflow-y-auto p-3 pb-12 pt-20 sm:p-6 sm:pb-16 sm:pt-24">
+        <main id="mainScrollArea" class="flex h-full flex-col overflow-x-hidden overflow-y-auto p-3 pb-12 pt-24 sm:p-6 sm:pb-16 sm:pt-24">
 
             @yield('content')
 
             <!-- ============================================
                  FOOTER
                  ============================================ -->
-            <div class="mt-auto pt-8">
-                <footer class="border-t border-[#d9dee3] px-3 py-4 text-center text-xs text-[#a1b0cb] dark:border-[#434463] sm:px-6 sm:text-sm">
-                    <p>&copy; {{ date('Y') }} PAUD Al Qur'an Az-Zahra. Hak Cipta Dilindungi.</p>
-                    <nav class="mt-2 flex flex-wrap justify-center gap-x-4 gap-y-1" aria-label="Informasi legal">
-                        <a href="{{ route('terms') }}" class="hover:text-[#696cff] hover:underline">Syarat dan Ketentuan</a>
-                        <a href="{{ route('privacy') }}" class="hover:text-[#696cff] hover:underline">Kebijakan Privasi</a>
-                    </nav>
+            <div class="mt-auto pt-5">
+                <footer class="border-t border-[#d9dee3] py-3 text-xs text-[#a1b0cb] dark:border-[#434463]">
+                    <div class="flex min-w-0 flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                        <p class="min-w-0 leading-5">
+                            &copy; {{ now()->year }} PAUD Al-Qur’an Azzahra Depok. All rights reserved.
+                        </p>
+                        <nav class="flex min-w-0 flex-wrap items-center gap-x-4 gap-y-1 sm:shrink-0 sm:justify-end" aria-label="Informasi legal dashboard">
+                            <a href="{{ route('terms') }}" class="font-medium transition-colors hover:text-[#696cff] focus:outline-none focus-visible:text-[#696cff] focus-visible:underline">
+                                Ketentuan Layanan
+                            </a>
+                            <a href="{{ route('privacy') }}" class="font-medium transition-colors hover:text-[#696cff] focus:outline-none focus-visible:text-[#696cff] focus-visible:underline">
+                                Kebijakan Privasi
+                            </a>
+                        </nav>
+                    </div>
                 </footer>
             </div>
 
@@ -482,31 +487,12 @@
                                     <ul class="space-y-3">
                                         <li><a href="{{ route('parent.dashboard') }}"
                                                 class="flex items-center gap-2 text-sm text-[#566a7f] dark:text-[#d5d5e2] hover:text-[#696cff] transition-colors"><i
-                                                    data-lucide="layout-dashboard" class="w-4 h-4"></i> Dashboard Saya</a>
+                                                    data-lucide="layout-dashboard" class="w-4 h-4"></i> Dashboard</a>
                                         </li>
-                                        @if($parentHasSiswa)
-                                            <li><a href="{{ route('parent.siswa.index') }}"
-                                                    class="flex items-center gap-2 text-sm text-[#566a7f] dark:text-[#d5d5e2] hover:text-[#696cff] transition-colors"><i
-                                                        data-lucide="users" class="w-4 h-4"></i> Kelola Data Anak</a>
-                                            </li>
-                                        @else
-                                            <li><a href="{{ route('parent.siswa.create') }}"
-                                                    class="flex items-center gap-2 text-sm text-[#566a7f] dark:text-[#d5d5e2] hover:text-[#696cff] transition-colors"><i
-                                                        data-lucide="user-plus" class="w-4 h-4"></i> Lengkapi Data Anak</a>
-                                            </li>
-                                        @endif
-                                    </ul>
-                                </div>
-                                <div class="flex-1">
-                                    <h3 class="text-xs font-semibold text-[#a1b0cb] uppercase tracking-wider mb-3">Data
-                                        Pendaftaran</h3>
-                                    <ul class="space-y-3">
-                                        <li><a href="{{ route('parent.siswa.create') }}"
-                                                class="flex items-center gap-2 text-sm text-[#566a7f] dark:text-[#d5d5e2] hover:text-[#696cff] transition-colors"><i
-                                                    data-lucide="user-plus" class="w-4 h-4"></i> Tambah Anak</a></li>
                                         <li><a href="{{ route('parent.siswa.index') }}"
                                                 class="flex items-center gap-2 text-sm text-[#566a7f] dark:text-[#d5d5e2] hover:text-[#696cff] transition-colors"><i
-                                                    data-lucide="activity" class="w-4 h-4"></i> Status per Anak</a></li>
+                                                    data-lucide="users" class="w-4 h-4"></i> Data Anak</a>
+                                        </li>
                                     </ul>
                                 </div>
                             @endif

@@ -44,9 +44,9 @@ trait SiswaValidationRules
             'pendidikan_ibu' => ['required', 'string', 'max:50'],
             'pekerjaan_ibu' => ['required', 'string', 'max:100'],
             'penghasilan_ibu' => ['required', 'string', 'max:50'],
-            'foto' => [$documentPresence, 'image', 'mimes:jpg,jpeg,png', 'max:2048'],
-            'foto_kk' => [$documentPresence, 'image', 'mimes:jpg,jpeg,png', 'max:2048'],
-            'foto_akta' => [$documentPresence, 'image', 'mimes:jpg,jpeg,png', 'max:2048'],
+            'foto' => [$documentPresence, 'file', 'mimes:jpg,jpeg,png', 'max:2048'],
+            'foto_kk' => [$documentPresence, 'file', 'mimes:jpg,jpeg,png', 'max:2048'],
+            'foto_akta' => [$documentPresence, 'file', 'mimes:jpg,jpeg,png', 'max:2048'],
         ];
     }
 
@@ -138,17 +138,17 @@ trait SiswaValidationRules
 
             // Dokumen Upload
             'foto.required' => 'Mohon unggah foto anak (pas foto terbaru).',
-            'foto.image' => 'File foto anak harus berupa gambar (JPG/PNG).',
-            'foto.mimes' => 'Format foto anak harus JPG atau PNG.',
-            'foto.max' => 'Ukuran foto anak terlalu besar (maks. 2 MB). Coba foto ulang atau perkecil ukuran file.',
+            'foto.file' => 'File yang diunggah tidak valid.',
+            'foto.mimes' => 'Format file tidak didukung.',
+            'foto.max' => 'Ukuran file maksimal 2 MB.',
             'foto_kk.required' => 'Mohon unggah foto Kartu Keluarga (KK).',
-            'foto_kk.image' => 'File KK harus berupa gambar (JPG/PNG). Jika KK berbentuk PDF, silakan screenshot terlebih dahulu.',
-            'foto_kk.mimes' => 'Format foto KK harus JPG atau PNG.',
-            'foto_kk.max' => 'Ukuran foto KK terlalu besar (maks. 2 MB). Coba foto ulang atau perkecil ukuran file.',
+            'foto_kk.file' => 'File yang diunggah tidak valid.',
+            'foto_kk.mimes' => 'Format file tidak didukung.',
+            'foto_kk.max' => 'Ukuran file maksimal 2 MB.',
             'foto_akta.required' => 'Mohon unggah foto Akta Kelahiran.',
-            'foto_akta.image' => 'File akta kelahiran harus berupa gambar (JPG/PNG).',
-            'foto_akta.mimes' => 'Format foto akta harus JPG atau PNG.',
-            'foto_akta.max' => 'Ukuran foto akta terlalu besar (maks. 2 MB). Coba foto ulang atau perkecil ukuran file.',
+            'foto_akta.file' => 'File yang diunggah tidak valid.',
+            'foto_akta.mimes' => 'Format file tidak didukung.',
+            'foto_akta.max' => 'Ukuran file maksimal 2 MB.',
         ];
     }
 }

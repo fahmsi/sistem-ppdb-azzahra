@@ -61,18 +61,19 @@ test('super admin sidebar includes admin and super admin menus', function () {
     }
 });
 
-test('parent sidebar contains only parent destinations before child data exists', function () {
+test('parent sidebar contains only the required parent destinations before child data exists', function () {
     $parent = User::factory()->create(['role' => 'parent']);
 
     $response = $this->actingAs($parent)
         ->get(route('parent.dashboard'))
         ->assertOk()
-        ->assertSee('Lengkapi Data Anak')
+        ->assertSee('Isi Data Anak')
         ->assertSee(route('parent.siswa.create'), false)
-        ->assertSee('Daftar Gelombang')
-        ->assertSee(route('parent.pendaftaran.index'), false)
-        ->assertSee('Status Pendaftaran')
-        ->assertSee(route('parent.pendaftaran.status'), false);
+        ->assertSee('Data Anak')
+        ->assertSee(route('parent.siswa.index'), false)
+        ->assertSee('Dashboard')
+        ->assertSee(route('parent.dashboard'), false)
+        ->assertDontSee('>Panduan Pendaftaran<', false);
 
     foreach (baselineAdminMenuRoutes() + baselineSuperAdminMenuRoutes() as $routeName) {
         $response->assertDontSee(route($routeName), false);
@@ -178,8 +179,9 @@ test('every sidebar destination is a registered get route', function (string $ro
     'super admin activity log' => ['admin.activity-log.index', 'admin/activity-log'],
     'parent dashboard' => ['parent.dashboard', 'parent/dashboard'],
     'parent child form' => ['parent.siswa.create', 'parent/siswa/create'],
-    'parent registration periods' => ['parent.pendaftaran.index', 'parent/pendaftaran'],
-    'parent registration status' => ['parent.pendaftaran.status', 'parent/status'],
+    'parent child list' => ['parent.siswa.index', 'parent/siswa'],
+    'parent legacy registration selection' => ['parent.pendaftaran.index', 'parent/pendaftaran'],
+    'parent legacy status selection' => ['parent.pendaftaran.status', 'parent/status'],
 ]);
 
 /**

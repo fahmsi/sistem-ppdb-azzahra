@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreSiswaRequest;
 use App\Http\Requests\UpdateSiswaRequest;
 use App\Models\ActivityLog;
+use App\Models\PendaftaranDetail;
 use App\Models\Siswa;
+use App\Support\AuthorizesParentSiswa;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -13,6 +15,23 @@ use Illuminate\View\View;
 
 class SiswaController extends Controller
 {
+    use AuthorizesParentSiswa;
+
+    public function index(): View
+    {
+        $siswas = Auth::user()
+            ->siswas()
+            ->with([
+                'pendaftaranDetails' => fn ($query) => $query
+                    ->with(['pendaftaran', 'pembayaran'])
+                    ->latest(),
+            ])
+            ->latest()
+            ->get();
+
+        return view('parent.siswa.index', compact('siswas'));
+    }
+
     /**
      * Show the form to register a new child (siswa).
      */
@@ -40,9 +59,10 @@ class SiswaController extends Controller
         $validated['user_id'] = Auth::id();
         $validated['input_source'] = Siswa::INPUT_SOURCE_ONLINE;
 
-        Siswa::create($validated);
+        $siswa = Siswa::create($validated);
 
-        return redirect()->route('parent.dashboard')
+        return redirect()->route('parent.siswa.show', $siswa)
+            ->with('clear_parent_draft', 'spmb:parent:siswa:create:'.Auth::id())
             ->with('success', 'Data anak berhasil disimpan.');
     }
 
@@ -51,7 +71,7 @@ class SiswaController extends Controller
      */
     public function show(Siswa $siswa): View
     {
-        $this->authorizeParent($siswa);
+        $this->authorizeParentSiswa($siswa);
 
         $siswa->load('pendaftaranDetails.pendaftaran');
 
@@ -63,7 +83,7 @@ class SiswaController extends Controller
      */
     public function edit(Siswa $siswa): View
     {
-        $this->authorizeParent($siswa);
+        $this->authorizeParentSiswa($siswa);
 
         $userPhone = Auth::user()->no_telpon;
 
@@ -75,7 +95,7 @@ class SiswaController extends Controller
      */
     public function update(UpdateSiswaRequest $request, Siswa $siswa): RedirectResponse
     {
-        $this->authorizeParent($siswa);
+        $this->authorizeParentSiswa($siswa);
 
         $validated = $request->validated();
 
@@ -103,10 +123,11 @@ class SiswaController extends Controller
 
         // If there's a registration with status 'perlu_revisi', set it back to 'menunggu_verifikasi'
         $siswa->pendaftaranDetails()
-            ->where('status', \App\Models\PendaftaranDetail::STATUS_PERLU_REVISI)
-            ->update(['status' => \App\Models\PendaftaranDetail::STATUS_MENUNGGU_VERIFIKASI]);
+            ->where('status', PendaftaranDetail::STATUS_PERLU_REVISI)
+            ->update(['status' => PendaftaranDetail::STATUS_MENUNGGU_VERIFIKASI]);
 
-        return redirect()->route('parent.pendaftaran.status')
+        return redirect()->route('parent.siswa.pendaftaran.status', $siswa)
+            ->with('clear_parent_draft', 'spmb:parent:siswa:edit:'.Auth::id().':'.$siswa->id)
             ->with('success', 'Data anak berhasil diperbarui. Status telah dikembalikan ke Menunggu Verifikasi.');
     }
 
@@ -115,7 +136,7 @@ class SiswaController extends Controller
      */
     public function destroy(Siswa $siswa): RedirectResponse
     {
-        $this->authorizeParent($siswa);
+        $this->authorizeParentSiswa($siswa);
 
         // Check if there are any non-rejected registrations
         $activeRegistrations = $siswa->pendaftaranDetails()
@@ -127,9 +148,15 @@ class SiswaController extends Controller
         }
 
         // Delete associated files
-        if ($siswa->foto) Storage::disk('public')->delete($siswa->foto);
-        if ($siswa->foto_kk) Storage::disk('local')->delete($siswa->foto_kk);
-        if ($siswa->foto_akta) Storage::disk('local')->delete($siswa->foto_akta);
+        if ($siswa->foto) {
+            Storage::disk('public')->delete($siswa->foto);
+        }
+        if ($siswa->foto_kk) {
+            Storage::disk('local')->delete($siswa->foto_kk);
+        }
+        if ($siswa->foto_akta) {
+            Storage::disk('local')->delete($siswa->foto_akta);
+        }
 
         $nama = $siswa->nama;
 
@@ -139,46 +166,24 @@ class SiswaController extends Controller
 
         ActivityLog::log('deleted', null, "Orang tua menghapus data anak: {$nama}");
 
-        return redirect()->route('parent.dashboard')
+        return redirect()->route('parent.siswa.index')
             ->with('success', 'Data anak berhasil dihapus.');
     }
 
     /**
      * Show printable ID card for accepted registration.
      */
-    public function kartu(): View
+    public function kartu(Siswa $siswa, PendaftaranDetail $detail): View
     {
-        $siswa = Auth::user()->siswa;
-        
-        if (!$siswa) {
-            abort(404, 'Data anak belum ada.');
-        }
+        $this->authorizeParentSiswa($siswa);
+        abort_unless($detail->siswa_id === $siswa->id, 404);
 
-        // Get the latest 'diterima' registration for this child
-        $registration = $siswa->pendaftaranDetails()
-            ->where('status', 'diterima')
-            ->with('pendaftaran')
-            ->latest()
-            ->first();
+        $registration = $detail->load('pendaftaran');
 
-        if (!$registration) {
+        if ($registration->status !== PendaftaranDetail::STATUS_DITERIMA) {
             abort(403, 'Belum ada pendaftaran yang diterima untuk dicetak kartunya.');
         }
 
         return view('parent.siswa.kartu', compact('siswa', 'registration'));
-    }
-
-    /**
-     * Ensure the authenticated parent can only access their own child data.
-     */
-    private function authorizeParent(Siswa $siswa): void
-    {
-        if (Auth::user()->isAdmin()) {
-            return; // Admin can see all
-        }
-
-        if ($siswa->user_id !== Auth::id()) {
-            abort(403, 'Anda tidak memiliki akses ke data ini.');
-        }
     }
 }

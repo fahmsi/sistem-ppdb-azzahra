@@ -1,9 +1,8 @@
 <?php
 
-use App\Models\ActivityLog;
+use App\Models\PaymentSetting;
 use App\Models\Pendaftaran;
 use App\Models\PendaftaranDetail;
-use App\Models\PaymentSetting;
 use App\Models\Siswa;
 use App\Models\User;
 use Illuminate\Http\UploadedFile;
@@ -101,7 +100,7 @@ test('admin can replace and remove qris', function () {
 
 test('parent registration status shows configured payment information without an empty qris', function () {
     $parent = User::factory()->create(['role' => 'parent']);
-    createAcceptedRegistrationForPaymentSettingTest($parent);
+    $detail = createAcceptedRegistrationForPaymentSettingTest($parent);
 
     PaymentSetting::create([
         'bank_name' => 'Bank Muamalat',
@@ -112,7 +111,7 @@ test('parent registration status shows configured payment information without an
     ]);
 
     $this->actingAs($parent)
-        ->get(route('parent.pendaftaran.status'))
+        ->get(route('parent.siswa.pendaftaran.status', $detail->siswa))
         ->assertOk()
         ->assertSee('Bank Muamalat')
         ->assertSee('0099887766')
@@ -137,7 +136,7 @@ test('parent page hides qris when its stored file is missing', function () {
     Storage::fake('public');
 
     $parent = User::factory()->create(['role' => 'parent']);
-    createAcceptedRegistrationForPaymentSettingTest($parent);
+    $detail = createAcceptedRegistrationForPaymentSettingTest($parent);
 
     PaymentSetting::create([
         'bank_name' => 'Bank BRI',
@@ -148,7 +147,7 @@ test('parent page hides qris when its stored file is missing', function () {
     ]);
 
     $this->actingAs($parent)
-        ->get(route('parent.pendaftaran.status'))
+        ->get(route('parent.siswa.pendaftaran.status', $detail->siswa))
         ->assertOk()
         ->assertSee('Bank BRI')
         ->assertDontSee('alt="QRIS pembayaran"', false);
@@ -158,7 +157,7 @@ test('parent page displays qris when its stored file exists', function () {
     Storage::fake('public');
 
     $parent = User::factory()->create(['role' => 'parent']);
-    createAcceptedRegistrationForPaymentSettingTest($parent);
+    $detail = createAcceptedRegistrationForPaymentSettingTest($parent);
 
     $qrisPath = 'payment/qris/qris-sekolah.png';
     Storage::disk('public')->put($qrisPath, 'qris image');
@@ -172,7 +171,7 @@ test('parent page displays qris when its stored file exists', function () {
     ]);
 
     $this->actingAs($parent)
-        ->get(route('parent.pendaftaran.status'))
+        ->get(route('parent.siswa.pendaftaran.status', $detail->siswa))
         ->assertOk()
         ->assertSee('alt="QRIS pembayaran"', false)
         ->assertSee('/storage/payment/qris/qris-sekolah.png', false);
