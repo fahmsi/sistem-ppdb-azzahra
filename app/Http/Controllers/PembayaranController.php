@@ -35,6 +35,10 @@ class PembayaranController extends Controller
 
         $request->validate([
             'bukti_bayar' => ['required', 'file', 'mimes:jpg,jpeg,png,pdf', 'max:2048'],
+        ], [
+            'bukti_bayar.file' => 'File yang diunggah tidak valid.',
+            'bukti_bayar.mimes' => 'Format file tidak didukung.',
+            'bukti_bayar.max' => 'Ukuran file maksimal 2 MB.',
         ]);
 
         $isReupload = (bool) $detail->pembayaran;

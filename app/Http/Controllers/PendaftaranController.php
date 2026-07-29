@@ -2,49 +2,41 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\PaymentSetting;
 use App\Models\Pendaftaran;
 use App\Models\PendaftaranDetail;
-use App\Models\PaymentSetting;
 use App\Models\Siswa;
-use App\Models\User;
+use App\Support\AuthorizesParentSiswa;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 use RuntimeException;
 
 class PendaftaranController extends Controller
 {
+    use AuthorizesParentSiswa;
+
     /**
      * Show available registration periods for the parent.
      */
-    public function index(): View
+    public function index(Siswa $siswa): View
     {
+        $this->authorizeParentSiswa($siswa);
+
         $pendaftarans = Pendaftaran::orderBy('tanggal_mulai', 'desc')
             ->get()
             ->filter(function ($pendaftaran) {
                 return $pendaftaran->is_bisa_dipilih;
             });
 
-        /** @var User $user */
-        $user = Auth::user();
-        $siswa = $user->siswa;
+        $isAccepted = $siswa->pendaftaranDetails()
+            ->where('status', PendaftaranDetail::STATUS_DITERIMA)
+            ->exists();
 
-        // Check if child is already accepted anywhere (block further registration)
-        $isAccepted = false;
-        $hasActiveRegistration = false;
-
-        if ($siswa) {
-            $isAccepted = $siswa->pendaftaranDetails()
-                ->where('status', PendaftaranDetail::STATUS_DITERIMA)
-                ->exists();
-
-            // Check if already registered to any open gelombang (limit 1)
-            $hasActiveRegistration = $siswa->pendaftaranDetails()
-                ->whereNotIn('status', [PendaftaranDetail::STATUS_DITOLAK])
-                ->exists();
-        }
+        $hasActiveRegistration = $siswa->pendaftaranDetails()
+            ->whereNotIn('status', [PendaftaranDetail::STATUS_DITOLAK])
+            ->exists();
 
         return view('parent.pendaftaran.index', compact('pendaftarans', 'siswa', 'isAccepted', 'hasActiveRegistration'));
     }
@@ -52,21 +44,17 @@ class PendaftaranController extends Controller
     /**
      * Show detail of a specific registration period.
      */
-    public function show(Pendaftaran $pendaftaran): View
+    public function show(Siswa $siswa, Pendaftaran $pendaftaran): View
     {
-        $siswa = Auth::user()->siswa;
+        $this->authorizeParentSiswa($siswa);
 
-        // Check if already registered
-        $existingDetail = null;
-        if ($siswa) {
-            $existingDetail = PendaftaranDetail::where('siswa_id', $siswa->id)
-                ->where('pendaftaran_id', $pendaftaran->id)
-                ->first();
-        }
+        $existingDetail = PendaftaranDetail::where('siswa_id', $siswa->id)
+            ->where('pendaftaran_id', $pendaftaran->id)
+            ->first();
 
-        $hasActiveRegistration = $siswa?->pendaftaranDetails()
+        $hasActiveRegistration = $siswa->pendaftaranDetails()
             ->whereNotIn('status', [PendaftaranDetail::STATUS_DITOLAK])
-            ->exists() ?? false;
+            ->exists();
 
         return view('parent.pendaftaran.show', compact(
             'pendaftaran',
@@ -79,23 +67,15 @@ class PendaftaranController extends Controller
     /**
      * Register the parent's child for a specific registration period.
      */
-    public function daftar(Request $request, Pendaftaran $pendaftaran): RedirectResponse
+    public function daftar(Request $request, Siswa $siswa, Pendaftaran $pendaftaran): RedirectResponse
     {
+        $this->authorizeParentSiswa($siswa);
+
         $request->validate([
             'data_declaration' => ['accepted'],
         ], [
             'data_declaration.accepted' => 'Anda harus menyatakan bahwa data dan dokumen yang diunggah adalah benar.',
         ]);
-
-        /** @var User $user */
-        $user = Auth::user();
-
-        // Ensure user has a siswa profile
-        $siswa = $user->siswa;
-        if (! $siswa) {
-            return redirect()->route('parent.siswa.create')
-                ->with('warning', 'Silakan lengkapi data anak terlebih dahulu sebelum mendaftar.');
-        }
 
         try {
             DB::transaction(function () use ($pendaftaran, $siswa): void {
@@ -162,27 +142,24 @@ class PendaftaranController extends Controller
             return back()->with('error', $exception->getMessage());
         }
 
-        return back()->with('success', 'Pendaftaran berhasil! Status: menunggu verifikasi.');
+        return redirect()->route('parent.siswa.pendaftaran.status', $siswa)
+            ->with('success', 'Pendaftaran berhasil! Status: menunggu verifikasi.');
     }
 
     /**
      * Show the registration status for the parent's child.
      */
-    public function status(): View
+    public function status(Siswa $siswa): View
     {
-        /** @var User $user */
-        $user = Auth::user();
-        $siswa = $user->siswa;
+        $this->authorizeParentSiswa($siswa);
 
-        $registrations = collect();
-        if ($siswa) {
-            $registrations = PendaftaranDetail::with(['siswa', 'pendaftaran', 'pembayaran'])
-                ->where('siswa_id', $siswa->id)
-                ->latest()
-                ->get();
-        }
+        $registrations = PendaftaranDetail::with(['siswa', 'pendaftaran', 'pembayaran'])
+            ->where('siswa_id', $siswa->id)
+            ->latest()
+            ->get();
 
         return view('parent.pendaftaran.status', [
+            'siswa' => $siswa,
             'registrations' => $registrations,
             'paymentSetting' => PaymentSetting::current(),
         ]);

@@ -4,6 +4,12 @@
         const swalBg = isDark ? '#2b2c40' : '#fff';
         const swalColor = isDark ? '#d5d5e2' : '#566a7f';
 
+        @if(request()->query('upload_error') === 'too_large')
+            const cleanUrl = new URL(window.location.href);
+            cleanUrl.searchParams.delete('upload_error');
+            window.history.replaceState({}, document.title, cleanUrl.toString());
+        @endif
+
         // Global Alert Configuration
         const Alert = Swal.mixin({ 
             showConfirmButton: true,
@@ -61,6 +67,12 @@
                 icon: 'error',
                 title: 'Gagal!',
                 text: @json(session('error'))
+            });
+        @elseif(request()->query('upload_error') === 'too_large')
+            Alert.fire({
+                icon: 'error',
+                title: 'Ukuran File Terlalu Besar',
+                text: 'Total ukuran file terlalu besar. Pastikan setiap file maksimal 2 MB.'
             });
         @endif
 

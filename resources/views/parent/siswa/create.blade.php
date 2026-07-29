@@ -35,7 +35,12 @@
         </div>
 
         <!-- Form dengan jarak (padding top) yang lebih lega -->
-        <form action="{{ $formAction }}" method="POST" enctype="multipart/form-data" class="p-6 sm:p-10 pt-8">
+        <form action="{{ $formAction }}" method="POST" enctype="multipart/form-data" class="p-6 sm:p-10 pt-8"
+            data-parent-upload-form
+            data-parent-draft-form
+            data-draft-key="spmb:parent:siswa:create:{{ auth()->id() }}"
+            data-draft-mode="create"
+            data-draft-has-old="{{ session()->hasOldInput() ? 'true' : 'false' }}">
             @csrf
 
             <!-- Section 1: Data Pribadi Anak -->
@@ -201,7 +206,7 @@
                     <div class="md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6 bg-gray-50 p-5 rounded-xl border border-gray-200 mb-4">
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Nomor Kartu Keluarga (KK) <span class="text-red-500">*</span></label>
-                            <input type="text" name="no_kk" id="no_kk" value="{{ old('no_kk') }}" maxlength="16" class="w-full rounded-lg focus:ring-primary-500 focus:border-primary-500 @error('no_kk') border-red-500 @else border-gray-300 @enderror">
+                            <input type="text" name="no_kk" id="no_kk" value="{{ old('no_kk') }}" maxlength="16" data-draft-ignore class="w-full rounded-lg focus:ring-primary-500 focus:border-primary-500 @error('no_kk') border-red-500 @else border-gray-300 @enderror">
                             <p id="no_kk_feedback" class="mt-1 text-xs font-medium hidden"></p>
                             @error('no_kk') <p class="mt-1 text-sm text-red-500">{{ $message }}</p> @enderror
                         </div>
@@ -223,7 +228,7 @@
                         </div>
                         <div>
                             <label class="block text-sm text-gray-700 mb-1">NIK Ayah <span class="text-red-500">*</span></label>
-                            <input type="text" name="nik_ayah" id="nik_ayah" value="{{ old('nik_ayah') }}" maxlength="16" class="w-full rounded-lg focus:ring-primary-500 focus:border-primary-500 @error('nik_ayah') border-red-500 @else border-gray-300 @enderror">
+                            <input type="text" name="nik_ayah" id="nik_ayah" value="{{ old('nik_ayah') }}" maxlength="16" data-draft-ignore class="w-full rounded-lg focus:ring-primary-500 focus:border-primary-500 @error('nik_ayah') border-red-500 @else border-gray-300 @enderror">
                             <p id="nik_ayah_feedback" class="mt-1 text-xs font-medium hidden"></p>
                             @error('nik_ayah') <p class="mt-1 text-sm text-red-500">{{ $message }}</p> @enderror
                         </div>
@@ -305,7 +310,7 @@
                         </div>
                         <div>
                             <label class="block text-sm text-gray-700 mb-1">NIK Ibu <span class="text-red-500">*</span></label>
-                            <input type="text" name="nik_ibu" id="nik_ibu" value="{{ old('nik_ibu') }}" maxlength="16" class="w-full rounded-lg focus:ring-primary-500 focus:border-primary-500 @error('nik_ibu') border-red-500 @else border-gray-300 @enderror">
+                            <input type="text" name="nik_ibu" id="nik_ibu" value="{{ old('nik_ibu') }}" maxlength="16" data-draft-ignore class="w-full rounded-lg focus:ring-primary-500 focus:border-primary-500 @error('nik_ibu') border-red-500 @else border-gray-300 @enderror">
                             <p id="nik_ibu_feedback" class="mt-1 text-xs font-medium hidden"></p>
                             @error('nik_ibu') <p class="mt-1 text-sm text-red-500">{{ $message }}</p> @enderror
                         </div>
@@ -388,42 +393,54 @@
                     <!-- Foto Anak -->
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">Pas Foto Anak (Warna) <span class="text-red-500">*</span></label>
-                        <div class="relative border-2 border-dashed border-gray-300 rounded-xl bg-gray-50 hover:bg-gray-100 hover:border-primary-400 transition-colors cursor-pointer group p-6 text-center">
-                            <input type="file" name="foto" accept="image/jpeg,image/png,image/jpg" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" onchange="previewFile(this, 'preview-foto')">
+                        <div data-file-field class="relative border-2 border-dashed border-gray-300 rounded-xl bg-gray-50 hover:bg-gray-100 hover:border-primary-400 transition-colors cursor-pointer group p-6 text-center">
+                            <input type="file" name="foto" accept="image/jpeg,image/png,image/jpg" required
+                                data-file-input data-file-max-size="2097152" data-file-error="foto-size-error" data-file-preview="preview-foto"
+                                class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
                             <i data-lucide="image" class="w-10 h-10 text-gray-400 mx-auto mb-3 group-hover:text-primary-500 transition-colors"></i>
                             <p class="text-sm font-medium text-primary-600">Klik atau Drop file</p>
                             <p class="text-xs text-gray-500 mt-1">Format: JPG, PNG (Max 2MB)</p>
                             <p id="preview-foto" class="text-xs font-semibold text-secondary-600 mt-3 truncate"></p>
                         </div>
+                        <p id="foto-size-error" class="mt-1 hidden text-sm text-red-600 dark:text-red-400" role="alert"></p>
                         @error('foto') <p class="mt-1 text-sm text-red-500">{{ $message }}</p> @enderror
                     </div>
 
                     <!-- KK -->
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">Scan Kartu Keluarga <span class="text-red-500">*</span></label>
-                        <div class="relative border-2 border-dashed border-gray-300 rounded-xl bg-gray-50 hover:bg-gray-100 hover:border-primary-400 transition-colors cursor-pointer group p-6 text-center">
-                            <input type="file" name="foto_kk" accept="image/jpeg,image/png,image/jpg" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" onchange="previewFile(this, 'preview-kk')">
+                        <div data-file-field class="relative border-2 border-dashed border-gray-300 rounded-xl bg-gray-50 hover:bg-gray-100 hover:border-primary-400 transition-colors cursor-pointer group p-6 text-center">
+                            <input type="file" name="foto_kk" accept="image/jpeg,image/png,image/jpg" required
+                                data-file-input data-file-max-size="2097152" data-file-error="foto-kk-size-error" data-file-preview="preview-kk"
+                                class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
                             <i data-lucide="file-text" class="w-10 h-10 text-gray-400 mx-auto mb-3 group-hover:text-primary-500 transition-colors"></i>
                             <p class="text-sm font-medium text-primary-600">Klik atau Drop file</p>
                             <p class="text-xs text-gray-500 mt-1">Format: JPG, PNG (Max 2MB)</p>
                             <p id="preview-kk" class="text-xs font-semibold text-secondary-600 mt-3 truncate"></p>
                         </div>
+                        <p id="foto-kk-size-error" class="mt-1 hidden text-sm text-red-600 dark:text-red-400" role="alert"></p>
                         @error('foto_kk') <p class="mt-1 text-sm text-red-500">{{ $message }}</p> @enderror
                     </div>
 
                     <!-- Akta -->
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">Scan Akta Kelahiran <span class="text-red-500">*</span></label>
-                        <div class="relative border-2 border-dashed border-gray-300 rounded-xl bg-gray-50 hover:bg-gray-100 hover:border-primary-400 transition-colors cursor-pointer group p-6 text-center">
-                            <input type="file" name="foto_akta" accept="image/jpeg,image/png,image/jpg" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" onchange="previewFile(this, 'preview-akta')">
+                        <div data-file-field class="relative border-2 border-dashed border-gray-300 rounded-xl bg-gray-50 hover:bg-gray-100 hover:border-primary-400 transition-colors cursor-pointer group p-6 text-center">
+                            <input type="file" name="foto_akta" accept="image/jpeg,image/png,image/jpg" required
+                                data-file-input data-file-max-size="2097152" data-file-error="foto-akta-size-error" data-file-preview="preview-akta"
+                                class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
                             <i data-lucide="file-badge-2" class="w-10 h-10 text-gray-400 mx-auto mb-3 group-hover:text-primary-500 transition-colors"></i>
                             <p class="text-sm font-medium text-primary-600">Klik atau Drop file</p>
                             <p class="text-xs text-gray-500 mt-1">Format: JPG, PNG (Max 2MB)</p>
                             <p id="preview-akta" class="text-xs font-semibold text-secondary-600 mt-3 truncate"></p>
                         </div>
+                        <p id="foto-akta-size-error" class="mt-1 hidden text-sm text-red-600 dark:text-red-400" role="alert"></p>
                         @error('foto_akta') <p class="mt-1 text-sm text-red-500">{{ $message }}</p> @enderror
                     </div>
                 </div>
+                <p class="mt-3 text-xs text-gray-500 dark:text-[#a1b0cb]">
+                    Jika validasi gagal, nilai formulir tetap tersimpan. File yang bermasalah saja yang perlu dipilih ulang.
+                </p>
             </div>
 
             <!-- Submit -->
@@ -438,19 +455,6 @@
 </div>
 
 <script>
-    function previewFile(input, targetId) {
-        const previewElement = document.getElementById(targetId);
-        if (input.files && input.files[0]) {
-            previewElement.textContent = "File: " + input.files[0].name;
-            input.parentElement.classList.add('border-primary-500', 'bg-primary-50');
-            input.parentElement.classList.remove('border-gray-300', 'bg-gray-50');
-        } else {
-            previewElement.textContent = "";
-            input.parentElement.classList.remove('border-primary-500', 'bg-primary-50');
-            input.parentElement.classList.add('border-gray-300', 'bg-gray-50');
-        }
-    }
-
     // =============================================
     // Real-time NIK/KK 16-digit Validation
     // =============================================

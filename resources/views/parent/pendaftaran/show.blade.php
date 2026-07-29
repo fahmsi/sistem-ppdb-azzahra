@@ -5,7 +5,7 @@
 
 @section('content')
 <div class="mx-auto max-w-3xl space-y-5">
-    <a href="{{ route('parent.pendaftaran.index') }}" class="inline-flex items-center gap-2 text-sm font-semibold text-[#696cff] hover:text-[#5a5de6]">
+    <a href="{{ route('parent.siswa.pendaftaran.index', $siswa) }}" class="inline-flex items-center gap-2 text-sm font-semibold text-[#696cff] hover:text-[#5a5de6]">
         <i data-lucide="arrow-left" class="h-4 w-4"></i>
         Kembali ke Daftar Gelombang
     </a>
@@ -49,20 +49,15 @@
                         ];
                         $displayStatus = $statusNames[$existingDetail->status] ?? str($existingDetail->status)->replace('_', ' ')->title();
                     @endphp
-                    Anak Anda sudah terdaftar pada gelombang ini dengan status <strong>{{ $displayStatus }}</strong>.
-                    <a href="{{ route('parent.pendaftaran.status') }}" class="mt-2 block font-semibold underline">Lihat status pendaftaran</a>
-                </div>
-            @elseif(! $siswa)
-                <div class="rounded-lg border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800 dark:border-amber-500/20 dark:bg-amber-500/10 dark:text-amber-300">
-                    Lengkapi data anak sebelum mendaftar.
-                    <a href="{{ route('parent.siswa.create') }}" class="mt-2 block font-semibold underline">Lengkapi data anak</a>
+                    {{ $siswa->nama }} sudah terdaftar pada gelombang ini dengan status <strong>{{ $displayStatus }}</strong>.
+                    <a href="{{ route('parent.siswa.pendaftaran.status', $siswa) }}" class="mt-2 block font-semibold underline">Lihat status pendaftaran</a>
                 </div>
             @elseif($hasActiveRegistration)
                 <div class="rounded-lg border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800 dark:border-amber-500/20 dark:bg-amber-500/10 dark:text-amber-300">
-                    Anak Anda sudah memiliki pendaftaran aktif. Pantau prosesnya pada halaman status pendaftaran.
+                    {{ $siswa->nama }} sudah memiliki pendaftaran aktif. Pantau prosesnya pada halaman status pendaftaran.
                 </div>
             @elseif($pendaftaran->is_bisa_dipilih)
-                <form action="{{ route('parent.pendaftaran.daftar', $pendaftaran) }}" method="POST" class="space-y-4">
+                <form action="{{ route('parent.siswa.pendaftaran.daftar', ['siswa' => $siswa, 'pendaftaran' => $pendaftaran]) }}" method="POST" class="space-y-4">
                     @csrf
                     <label for="data_declaration" class="flex cursor-pointer items-start gap-3 text-sm leading-6 text-[#697a8d] dark:text-[#a1b0cb]">
                         <input id="data_declaration" type="checkbox" name="data_declaration" value="1" required @checked(old('data_declaration')) class="mt-1 h-4 w-4 flex-shrink-0 rounded border-[#d9dee3] text-[#696cff] focus:ring-[#696cff]">

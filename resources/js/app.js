@@ -2,11 +2,14 @@
 
 import './bootstrap';
 import { createIcons, icons } from 'lucide';
+import { initializeParentUploadGuard } from './parent-upload-guard';
 
 // ===========================
 // Initialize Lucide Icons
 // ===========================
 createIcons({ icons });
+
+document.addEventListener('DOMContentLoaded', initializeParentUploadGuard);
 
 // ===========================
 // Scroll Reveal Animations

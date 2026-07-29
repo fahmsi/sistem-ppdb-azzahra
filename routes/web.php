@@ -3,11 +3,8 @@
 use App\Http\Controllers\AchievementImageController;
 use App\Http\Controllers\Admin\AchievementController;
 use App\Http\Controllers\Admin\AdminManageController;
-use App\Http\Controllers\Admin\AdmissionDecisionController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
-use App\Http\Controllers\Admin\FinalEnrollmentController;
 use App\Http\Controllers\Admin\GalleryController;
-use App\Http\Controllers\Admin\ObservasiController;
 use App\Http\Controllers\Admin\PaymentSettingController;
 use App\Http\Controllers\Admin\PembayaranController;
 use App\Http\Controllers\Admin\PendaftaranManageController;
@@ -71,6 +68,33 @@ Route::get('/prestasi/{achievement}/gambar', AchievementImageController::class)
 
 Route::get('/gallery/{gallery}/gambar', GalleryImageController::class)
     ->name('galleries.image');
+
+/*
+|--------------------------------------------------------------------------
+| Miscellaneous & Error Preview Routes
+|--------------------------------------------------------------------------
+*/
+Route::prefix('misc')->name('misc.')->group(function () {
+    Route::get('/error', function () {
+        return view('misc.error');
+    })->name('error');
+
+    Route::get('/maintenance', function () {
+        return view('misc.maintenance');
+    })->name('maintenance');
+
+    Route::get('/coming-soon', function () {
+        return view('misc.coming-soon');
+    })->name('coming-soon');
+
+    Route::get('/not-authorized', function () {
+        return view('misc.not-authorized');
+    })->name('not-authorized');
+
+    Route::get('/page-expired', function () {
+        return view('misc.page-expired');
+    })->name('page-expired');
+});
 
 /*
 |--------------------------------------------------------------------------
@@ -141,7 +165,7 @@ Route::middleware('auth')->group(function () {
                 ->with('warning', 'Silakan pilih anak untuk melanjutkan proses pendaftaran.');
         };
 
-        Route::get('/dashboard', ParentDashboardController::class)->name('dashboard');
+        Route::get('/dashboard', [ParentDashboardController::class, 'index'])->name('dashboard');
         Route::get('/pendaftaran', $legacyChildSelectionRedirect)->name('pendaftaran.index');
         Route::get('/status', $legacyChildSelectionRedirect)->name('pendaftaran.status');
 
@@ -187,24 +211,11 @@ Route::middleware('auth')->group(function () {
         Route::get('/verifikasi/export', [VerifikasiController::class, 'export'])->name('verifikasi.export');
         Route::get('/verifikasi/{detail}', [VerifikasiController::class, 'show'])->name('verifikasi.show');
         Route::patch('/verifikasi/{detail}/start', [VerifikasiController::class, 'startVerifikasi'])->name('verifikasi.start');
+        Route::patch('/verifikasi/{detail}/terima', [VerifikasiController::class, 'terima'])->name('verifikasi.terima');
+        Route::patch('/verifikasi/{detail}/tolak', [VerifikasiController::class, 'tolak'])->name('verifikasi.tolak');
         Route::patch('/verifikasi/{detail}/revisi', [VerifikasiController::class, 'revisi'])->name('verifikasi.revisi');
-        Route::patch('/verifikasi/{detail}/kelompok', [VerifikasiController::class, 'setKelompok'])->name('verifikasi.kelompok');
         Route::delete('/verifikasi/{detail}', [VerifikasiController::class, 'destroy'])->name('verifikasi.destroy');
-        Route::post('/verifikasi/{detail}/keputusan', [AdmissionDecisionController::class, 'store'])->name('verifikasi.keputusan.store');
-        Route::post('/verifikasi/{detail}/tidak-dilanjutkan', [FinalEnrollmentController::class, 'discontinue'])->name('verifikasi.final.tidak-dilanjutkan');
-        Route::patch('/pembayaran/{pembayaran}/verify', [PembayaranController::class, 'verify'])->name('pembayaran.verify');
-
-        // Administrasi Lengkap
-        Route::post('/verifikasi/{detail}/administrasi-lengkap', [VerifikasiController::class, 'administrasiLengkap'])->name('verifikasi.administrasi-lengkap');
-
-        // Observasi routes (scoped to detail)
-        Route::post('/verifikasi/{detail}/observasi', [ObservasiController::class, 'store'])->name('verifikasi.observasi.store');
-
-        // Observasi routes (individual observation record)
-        Route::patch('/observasi/{observasi}/hadir', [ObservasiController::class, 'hadir'])->name('observasi.hadir');
-        Route::patch('/observasi/{observasi}/tidak-hadir', [ObservasiController::class, 'tidakHadir'])->name('observasi.tidak-hadir');
-        Route::post('/observasi/{observasi}/jadwal-ulang', [ObservasiController::class, 'jadwalUlang'])->name('observasi.jadwal-ulang');
-        Route::patch('/observasi/{observasi}/selesai', [ObservasiController::class, 'selesai'])->name('observasi.selesai');
+        Route::patch('/pembayaran/{pembayaran}/verify', [VerifikasiController::class, 'verifyPembayaran'])->name('pembayaran.verify');
 
         // Route Export Siswa (Letakkan sebelum resource siswa)
         Route::get('/siswa/create', [App\Http\Controllers\Admin\SiswaController::class, 'create'])->name('siswa.create');

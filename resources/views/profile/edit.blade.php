@@ -28,7 +28,7 @@
                         </div>
 
                         <!-- Hover trigger for photo upload -->
-                        <label for="avatarInput" class="absolute inset-1 w-30 h-30 flex flex-col items-center justify-center bg-black/50 text-white rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300 cursor-pointer text-xs font-semibold">
+                        <label id="avatarUploadTrigger" for="avatarInput" class="absolute inset-1 w-30 h-30 flex flex-col items-center justify-center bg-black/50 text-white rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300 cursor-pointer text-xs font-semibold">
                             <i data-lucide="camera" class="w-6 h-6 mb-1 text-white"></i>
                             Ganti Foto
                         </label>
@@ -87,10 +87,10 @@
                                 <span class="text-[#a1b0cb] flex items-center gap-2">
                                     <i data-lucide="smile" class="w-4 h-4 text-[#696cff]"></i> Anak Terdaftar
                                 </span>
-                                @if($user->siswa)
+                                @if($user->siswas->isNotEmpty())
                                     <span class="text-emerald-600 dark:text-emerald-400 font-semibold text-xs flex items-center gap-1 bg-emerald-50 dark:bg-emerald-500/10 px-2 py-0.5 rounded">
                                         <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-                                        {{ Str::limit($user->siswa->nama, 15) }}
+                                        {{ $user->siswas->count() }} anak
                                     </span>
                                 @else
                                     <span class="text-amber-600 dark:text-amber-400 font-semibold text-xs flex items-center gap-1 bg-amber-50 dark:bg-amber-500/10 px-2 py-0.5 rounded">
@@ -99,6 +99,19 @@
                                     </span>
                                 @endif
                             </div>
+                            @if($user->siswas->isNotEmpty())
+                                <div class="rounded-lg bg-[#f5f5f9] p-3 text-xs text-[#566a7f] dark:bg-[#232333] dark:text-[#d5d5e2]">
+                                    <p class="mb-2 font-semibold text-[#a1b0cb]">Daftar Anak</p>
+                                    <ul class="space-y-1">
+                                        @foreach($user->siswas as $siswa)
+                                            <li class="flex items-center gap-2">
+                                                <span class="h-1.5 w-1.5 rounded-full bg-[#696cff]"></span>
+                                                <span>{{ $siswa->nama }}</span>
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            @endif
                         @endif
                     </div>
                 </div>
@@ -119,12 +132,16 @@
                     </div>
                 </div>
 
-                <form method="POST" action="{{ route('profile.update') }}" class="space-y-5" enctype="multipart/form-data">
+                <form method="POST" action="{{ route('profile.update') }}" class="space-y-5" enctype="multipart/form-data" data-parent-upload-form>
                     @csrf
                     @method('patch')
 
                     <!-- Hidden file input triggered by outer label -->
-                    <input type="file" id="avatarInput" name="avatar" accept="image/jpeg,image/png,image/jpg" class="hidden" onchange="previewAvatar(this)">
+                    <input type="file" id="avatarInput" name="avatar" accept="image/jpeg,image/png,image/jpg"
+                        data-file-input data-file-max-size="2097152" data-file-error="avatar-size-error"
+                        data-file-field-target="#avatarUploadTrigger" data-file-image-preview="avatarPreview"
+                        class="hidden">
+                    <p id="avatar-size-error" class="hidden rounded-md border border-red-200 bg-red-50 p-3 text-xs text-red-600 dark:border-red-500/20 dark:bg-red-500/10 dark:text-red-400" role="alert"></p>
 
                     @error('avatar')
                         <div class="p-3 bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/20 text-red-500 text-xs rounded-md flex items-center gap-2">
@@ -493,18 +510,6 @@
             }
         });
     @endif
-</script>
-
-<script>
-function previewAvatar(input) {
-    if (input.files && input.files[0]) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            document.getElementById('avatarPreview').src = e.target.result;
-        };
-        reader.readAsDataURL(input.files[0]);
-    }
-}
 </script>
 
 <script>
